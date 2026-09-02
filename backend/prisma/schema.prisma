@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlayerPosition {
+  GOALKEEPER
+  FIELD_PLAYER
+}
+
+enum SquadStatus {
+  STARTER
+  BENCH
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  name         String
+  avatarUrl    String?
+  fantasyTeam  FantasyTeam?
+  memberships  LeagueMember[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model FantasyTeam {
+  id        String              @id @default(cuid())
+  userId    String              @unique
+  name      String
+  budget    Int                 @default(50000)
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  players   FantasyTeamPlayer[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model Club {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  logoUrl   String?
+  players   Player[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Player {
+  id        String         @id @default(cuid())
+  clubId    String
+  name      String
+  number    Int
+  position  PlayerPosition
+  price     Int
+  photoUrl  String?
+  club      Club           @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  fantasyTeams FantasyTeamPlayer[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([clubId, number])
+  @@index([clubId])
+  @@index([position])
+}
+
+model FantasyTeamPlayer {
+  id            String      @id @default(cuid())
+  fantasyTeamId String
+  playerId      String
+  status        SquadStatus @default(BENCH)
+  isCaptain     Boolean     @default(false)
+  fantasyTeam   FantasyTeam @relation(fields: [fantasyTeamId], references: [id], onDelete: Cascade)
+  player        Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([fantasyTeamId, playerId])
+  @@index([fantasyTeamId])
+}
+
+model League {
+  id         String         @id @default(cuid())
+  name       String         @unique
+  inviteCode String?
+  members    LeagueMember[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model LeagueMember {
+  id        String   @id @default(cuid())
+  leagueId  String
+  userId    String
+  league    League   @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([leagueId, userId])
+  @@index([userId])
+}
