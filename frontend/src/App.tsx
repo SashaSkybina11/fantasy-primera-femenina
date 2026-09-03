@@ -12,12 +12,13 @@ import { MyTeamPage } from "./pages/MyTeamPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { PurchasePlayersPage } from "./pages/PurchasePlayersPage";
 import { TeamsPage } from "./pages/TeamsPage";
+import { Loader } from "./components/Loader";
 
 function ProtectedLayout() {
   const { user, isLoading } = useAuth();
   const { t } = useLocale();
   const location = useLocation();
-  if (isLoading) return <main className="initial-loader">{t("loading.app")}</main>;
+  if (isLoading) return <main className="initial-loader"><Loader label={t("loading.app")} /></main>;
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
   return <AppShell />;
 }

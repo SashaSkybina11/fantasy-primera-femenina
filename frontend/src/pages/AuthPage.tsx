@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale } from "../contexts/LocaleContext";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
+import { Loader } from "../components/Loader";
 
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const { user, isLoading, login, register } = useAuth();
@@ -13,7 +14,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const isRegister = mode === "register";
   const [isPending, setIsPending] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  if (isLoading) return <main className="initial-loader">{t("loading.app")}</main>;
+  if (isLoading) return <main className="initial-loader"><Loader label={t("loading.app")} /></main>;
   if (user) return <Navigate to="/" replace />;
 
   const submit = async (event: React.FormEvent) => {
