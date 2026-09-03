@@ -4,6 +4,8 @@ import { IoIosFootball } from "react-icons/io";
 import { GiBuyCard } from "react-icons/gi";
 import { RiTeamLine } from "react-icons/ri";
 import { MdOutlinePersonOutline } from "react-icons/md";
+import { TbPlayFootball } from "react-icons/tb";
+import { IoCalendarOutline } from "react-icons/io5";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { Avatar } from "../components/Avatar";
@@ -12,17 +14,17 @@ import { useLocale } from "../contexts/LocaleContext";
 
 const projectName = <>Fantasy Primera División<br />Fútbol Sala Femenino</>;
 
-type IconName = "shirt" | "calendar" | "trophy" | "home" | "purchase" | "teams" | "profile";
+type IconName = "trophy" | "home" | "my-team" | "purchase" | "calendar" | "teams" | "profile";
 
 function FootballIcon({ name }: { name: IconName }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
   if (name === "home") return <IoIosFootball aria-hidden="true" />;
+  if (name === "my-team") return <TbPlayFootball aria-hidden="true" />;
   if (name === "purchase") return <GiBuyCard aria-hidden="true" />;
+  if (name === "calendar") return <IoCalendarOutline aria-hidden="true" />;
   if (name === "teams") return <RiTeamLine aria-hidden="true" />;
   if (name === "profile") return <MdOutlinePersonOutline aria-hidden="true" />;
-  if (name === "shirt") return <svg viewBox="0 0 24 24" aria-hidden="true" {...common}><path d="m8 4 4 2 4-2 4 3-2.4 4.1-2.1-1.2V20H8.5V9.9l-2.1 1.2L4 7l4-3Z" /></svg>;
-  if (name === "calendar") return <svg viewBox="0 0 24 24" aria-hidden="true" {...common}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4m10-4v4M3 10h18m-11 5h4m-2-2v4" /></svg>;
   if (name === "trophy") return <svg viewBox="0 0 24 24" aria-hidden="true" {...common}><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" /><path d="M8 6H4v1a4 4 0 0 0 4 4m8-5h4v1a4 4 0 0 1-4 4m-4-2v5m-3 6h6m-7 0h8" /></svg>;
   return <svg viewBox="0 0 24 24" aria-hidden="true" {...common}><path d="m8 4 4 2 4-2 4 3-2.4 4.1-2.1-1.2V20H8.5V9.9l-2.1 1.2L4 7l4-3Z" /></svg>;
 }
@@ -31,7 +33,7 @@ function NavLinks({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate
   const { t } = useLocale();
   const navigation = [
     { to: "/", label: t("nav.home"), icon: "home" as const, end: true },
-    { to: "/my-team", label: t("nav.myTeam"), mobile: t("nav.team"), icon: "shirt" as const },
+    { to: "/my-team", label: t("nav.myTeam"), mobile: t("nav.team"), icon: "my-team" as const },
     { to: "/purchase-players", label: t("nav.purchase"), icon: "purchase" as const },
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
