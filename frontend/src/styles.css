@@ -172,6 +172,7 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .home-concept p { color: var(--muted); font-size: .82rem; line-height: 1.55; }
 .home-concept__source { font-size: .74rem !important; }
 .home-concept__source a { color: var(--text); font-weight: 800; text-decoration: underline; text-underline-offset: .2em; }
+.home-concept__guide-controls { display: none; }
 .concept-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
 .concept-grid article { min-width: 0; padding: 1rem; border-radius: 14px; background: var(--surface-soft); }
 .concept-grid article > span { color: var(--primary); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .68rem; font-weight: 800; }
@@ -442,9 +443,12 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .home-concept { padding: 1rem; gap: .85rem; border-radius: 16px; }
   .home-concept h2 { font-size: clamp(1.25rem, 7vw, 1.6rem); }
   .home-concept p { font-size: .8rem; line-height: 1.45; }
-  .concept-grid { display: flex; overflow-x: auto; gap: .75rem; margin: 0 -1rem; padding: 0 1rem .5rem; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .home-concept__guide-controls { display: flex; justify-content: flex-end; gap: .55rem; }
+  .home-concept__guide-controls button { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: var(--surface-soft); color: var(--text); font-size: 1.2rem; line-height: 1; }
+  .home-concept__guide-controls button:active { transform: scale(.94); }
+  .concept-grid { display: flex; overflow-x: auto; gap: 1rem; margin: 0 -1rem; padding: .1rem 1rem .7rem; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .concept-grid::-webkit-scrollbar { display: none; }
-  .concept-grid article { min-width: 0; flex: 0 0 82%; min-height: 154px; padding: .95rem; scroll-snap-align: start; }
+  .concept-grid article { min-width: 0; flex: 0 0 80%; min-height: 154px; padding: 1.1rem; scroll-snap-align: start; }
   .concept-grid h3 { font-size: .86rem; }
   .concept-grid p { font-size: .73rem; }
   .profile-card { padding: 1rem; gap: 1.25rem; border-radius: 18px; }
