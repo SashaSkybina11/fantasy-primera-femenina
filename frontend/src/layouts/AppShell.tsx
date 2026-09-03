@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
@@ -43,9 +43,22 @@ export function AppShell() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const requestSignOut = () => { setMenuOpen(false); setLogoutDialogOpen(true); };
+  const logoutCloseButton = useRef<HTMLButtonElement>(null);
+  const logoutTrigger = useRef<HTMLElement | null>(null);
+  const requestSignOut = (event: React.MouseEvent<HTMLButtonElement>) => { logoutTrigger.current = event.currentTarget; setMenuOpen(false); setLogoutDialogOpen(true); };
   const signOut = async () => { await logout(); setLogoutDialogOpen(false); navigate("/login"); };
   const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    if (!logoutDialogOpen) {
+      logoutTrigger.current?.focus();
+      return;
+    }
+    logoutCloseButton.current?.focus();
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setLogoutDialogOpen(false); };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [logoutDialogOpen]);
 
   return <div className="app-shell">
     <aside className="sidebar">
@@ -71,11 +84,11 @@ export function AppShell() {
       <div className="mobile-menu__bottom"><LanguageSwitcher /><button className="theme-toggle" onClick={toggleTheme}><span>{theme === "light" ? "☼" : "☾"}</span>{theme === "light" ? t("theme.light") : t("theme.dark")}</button>{user && <div className="user-mini"><Avatar name={user.name} src={user.avatarUrl} size="sm" /><span>{user.name}</span></div>}<button className="logout-button" onClick={requestSignOut}>{t("nav.logout")} <span>↗</span></button></div>
     </aside></>}
     {logoutDialogOpen && <div className="logout-modal-backdrop" onClick={() => setLogoutDialogOpen(false)}>
-      <section className="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title" onClick={(event) => event.stopPropagation()}>
-        <button className="logout-modal__close" onClick={() => setLogoutDialogOpen(false)} aria-label={t("logout.close")}>×</button>
+      <section className="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title" aria-describedby="logout-modal-description" onClick={(event) => event.stopPropagation()}>
+        <button ref={logoutCloseButton} className="logout-modal__close" onClick={() => setLogoutDialogOpen(false)} aria-label={t("logout.close")}>×</button>
         <p className="eyebrow">{t("logout.eyebrow")}</p>
         <h2 id="logout-modal-title">{t("logout.title")}</h2>
-        <p>{t("logout.description")}</p>
+        <p id="logout-modal-description">{t("logout.description")}</p>
         <div className="logout-modal__actions"><button className="logout-modal__confirm" onClick={signOut}>{t("logout.confirm")}</button><button className="logout-modal__cancel" onClick={() => setLogoutDialogOpen(false)}>{t("logout.cancel")}</button></div>
       </section>
     </div>}
