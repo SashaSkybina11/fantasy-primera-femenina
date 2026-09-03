@@ -172,7 +172,6 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .home-concept p { color: var(--muted); font-size: .82rem; line-height: 1.55; }
 .home-concept__source { font-size: .74rem !important; }
 .home-concept__source a { color: var(--text); font-weight: 800; text-decoration: underline; text-underline-offset: .2em; }
-.home-concept__guide-controls { display: none; }
 .concept-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
 .concept-grid article { min-width: 0; padding: 1rem; border-radius: 14px; background: var(--surface-soft); }
 .concept-grid article > span { color: var(--primary); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .68rem; font-weight: 800; }
@@ -367,13 +366,13 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .mobile-theme-toggle, .menu-toggle { display: grid; width: 34px; height: 34px; flex: none; place-items: center; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--text); font-size: 1rem; box-shadow: var(--shadow); }
   .menu-toggle { font-size: 1.15rem; }
   .mobile-menu-backdrop { position: fixed; z-index: 19; inset: 0; display: block; width: 100%; border: 0; background: rgba(4, 6, 2, .48); }
-  .mobile-menu { position: fixed; z-index: 20; top: 0; right: 0; display: flex; width: min(330px, 88vw); height: 100vh; flex-direction: column; padding: .95rem; border-left: 1px solid var(--border); background: var(--surface); box-shadow: -18px 0 45px rgba(0,0,0,.18); overflow-y: auto; }
+  .mobile-menu { position: fixed; z-index: 20; top: 0; right: 0; display: flex; width: min(330px, 88vw); height: 100vh; flex-direction: column; padding: .95rem; border-left: 1px solid var(--border); background: var(--surface); box-shadow: -18px 0 45px rgba(0,0,0,.18); overflow: hidden; }
   .mobile-menu__head { display: flex; align-items: center; justify-content: space-between; padding: .25rem .2rem .95rem; border-bottom: 1px solid var(--border); color: var(--text); font-size: .8rem; font-weight: 800; }
   .mobile-menu .icon-button { font-size: 1.7rem; }
-  .mobile-menu nav { display: grid; gap: .3rem; padding-top: 1rem; }
+  .mobile-menu nav { display: grid; min-height: 0; flex: 1; align-content: start; gap: .3rem; padding-top: 1rem; overflow-y: auto; }
   .mobile-menu .nav-link { padding: .72rem .65rem; font-size: .86rem; }
-  .mobile-menu__bottom { display: grid; gap: .75rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-  .mobile-menu .logout-button { min-height: 42px; padding: .75rem; background: var(--surface-soft); }
+  .mobile-menu__bottom { display: grid; flex: none; gap: .75rem; margin-top: .75rem; padding-top: .9rem; border-top: 1px solid var(--border); background: var(--surface); box-shadow: 0 -10px 18px var(--surface); }
+  .mobile-menu .logout-button { min-height: 44px; padding: .75rem; background: var(--primary); color: var(--primary-text); }
   .team-heading { display: grid; align-items: start; gap: 1rem; margin-bottom: 1.1rem; }
   .team-grid { max-width: 100%; }
   .budget-card { width: 100%; min-width: 0; grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr); gap: .5rem; padding: .75rem .8rem; border-radius: 13px; }
@@ -443,12 +442,6 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .home-concept { padding: 1rem; gap: .85rem; border-radius: 16px; }
   .home-concept h2 { font-size: clamp(1.25rem, 7vw, 1.6rem); }
   .home-concept p { font-size: .8rem; line-height: 1.45; }
-  .home-concept__guide-controls { display: flex; justify-content: flex-end; gap: .55rem; }
-  .home-concept__guide-controls button { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: var(--surface-soft); color: var(--text); font-size: 1.2rem; line-height: 1; }
-  .home-concept__guide-controls button:active { transform: scale(.94); }
-  .concept-grid { display: flex; overflow-x: auto; gap: 1rem; margin: 0 -1rem; padding: .1rem 1rem .7rem; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .concept-grid::-webkit-scrollbar { display: none; }
-  .concept-grid article { min-width: 0; flex: 0 0 80%; min-height: 154px; padding: 1.1rem; scroll-snap-align: start; }
   .concept-grid h3 { font-size: .86rem; }
   .concept-grid p { font-size: .73rem; }
   .profile-card { padding: 1rem; gap: 1.25rem; border-radius: 18px; }
@@ -538,7 +531,6 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .filters { padding: 0 .75rem .75rem; }
   .selector-grid, .purchase-grid { padding: .75rem; }
   .league-member-card { align-items: flex-start; }
-  .concept-grid article { flex-basis: 86%; min-height: 166px; }
   .logout-modal { padding: 1.25rem; }
   .logout-modal__actions button { padding: .72rem .65rem; }
 }
@@ -567,10 +559,10 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .mobile-theme-toggle, .menu-toggle { display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font-size: 1.2rem; box-shadow: var(--shadow); }
   .menu-toggle { font-size: 1.35rem; }
   .mobile-menu-backdrop { position: fixed; z-index: 19; inset: 0; display: block; width: 100%; border: 0; background: rgba(4, 6, 2, .48); }
-  .mobile-menu { position: fixed; z-index: 20; top: 0; right: 0; display: flex; width: min(380px, 62vw); height: 100vh; flex-direction: column; padding: 1.2rem; border-left: 1px solid var(--border); background: var(--surface); box-shadow: -18px 0 45px rgba(0, 0, 0, .18); overflow-y: auto; }
+  .mobile-menu { position: fixed; z-index: 20; top: 0; right: 0; display: flex; width: min(380px, 62vw); height: 100vh; flex-direction: column; padding: 1.2rem; border-left: 1px solid var(--border); background: var(--surface); box-shadow: -18px 0 45px rgba(0, 0, 0, .18); overflow: hidden; }
   .mobile-menu__head { display: flex; align-items: center; justify-content: space-between; padding: .25rem .2rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); font-size: 1rem; font-weight: 800; }
-  .mobile-menu nav { display: grid; gap: .35rem; padding-top: 1rem; }
+  .mobile-menu nav { display: grid; min-height: 0; flex: 1; align-content: start; gap: .35rem; padding-top: 1rem; overflow-y: auto; }
   .mobile-menu .nav-link { padding: .85rem .7rem; font-size: .95rem; }
-  .mobile-menu__bottom { display: grid; gap: .8rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
-  .mobile-menu .logout-button { min-height: 44px; padding: .8rem; background: var(--surface-soft); }
+  .mobile-menu__bottom { display: grid; flex: none; gap: .8rem; margin-top: .75rem; padding-top: .95rem; border-top: 1px solid var(--border); background: var(--surface); box-shadow: 0 -10px 18px var(--surface); }
+  .mobile-menu .logout-button { min-height: 44px; padding: .8rem; background: var(--primary); color: var(--primary-text); }
 }
