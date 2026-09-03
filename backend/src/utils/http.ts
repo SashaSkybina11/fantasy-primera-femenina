@@ -1,6 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
 import { Prisma } from "@prisma/client";
-import multer from "multer";
 import { ZodError } from "zod";
 
 export class ApiError extends Error {
@@ -23,11 +22,6 @@ export function errorHandler(
   response: Response,
   _next: NextFunction,
 ) {
-  if (error instanceof multer.MulterError) {
-    console.error(error);
-    if (error.code === "LIMIT_FILE_SIZE") return response.status(413).json({ message: "Размер изображения не должен превышать 4 МБ" });
-    return response.status(400).json({ message: error.message });
-  }
   if (error instanceof ApiError) {
     return response.status(error.status).json({ message: error.message });
   }
@@ -43,3 +37,4 @@ export function errorHandler(
   console.error(error);
   return response.status(500).json({ message: "Внутренняя ошибка сервера" });
 }
+

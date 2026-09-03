@@ -14,5 +14,5 @@ export const env = {
   frontendUrl: process.env.FRONTEND_URL ?? "http://localhost:5173",
   isProduction:
     process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL),
-  blobReadWriteToken: process.env.AVATAR_BLOB_READ_WRITE_TOKEN ?? process.env.BLOB_READ_WRITE_TOKEN,
+  blobReadWriteToken: process.env.AVATAR_BLOB_READ_WRITE_TOKEN,
 };
