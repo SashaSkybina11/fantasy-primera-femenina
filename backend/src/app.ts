@@ -10,7 +10,7 @@ import profileRouter from "./routes/profile.js";
 import teamRouter from "./routes/team.js";
 import { errorHandler } from "./utils/http.js";
 
-mkdirSync(uploadsDirectory, { recursive: true });
+if (!env.isProduction) mkdirSync(uploadsDirectory, { recursive: true });
 
 export const app = express();
 app.use(cors({
@@ -20,7 +20,7 @@ app.use(cors({
     : [/^http:\/\/localhost(?::\d+)?$/, /^http:\/\/127\.0\.0\.1(?::\d+)?$/],
 }));
 app.use(express.json({ limit: "1mb" }));
-app.use("/uploads", express.static(uploadsDirectory));
+if (!env.isProduction) app.use("/uploads", express.static(uploadsDirectory));
 
 app.get("/api/health", (_request, response) => response.json({ ok: true }));
 app.use("/api/auth", authRouter);

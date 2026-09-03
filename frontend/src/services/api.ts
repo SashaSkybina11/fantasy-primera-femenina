@@ -1,4 +1,5 @@
 import type { Club, ClubSupport, FantasyTeam, League, LeagueMember, MemberDetail, Player, PlayerRole, Profile, SquadStatus, User } from "../types";
+import { upload } from "@vercel/blob/client";
 import { getStoredLocale, type Locale } from "../contexts/LocaleContext";
 
 // In production the Vercel function is served by the same origin. The localhost
@@ -97,13 +98,32 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return data as T;
 }
 
+async function uploadAvatar(file: File) {
+  if (!authToken.get()) throw new Error("Требуется авторизация");
+  const extension = file.name.match(/(\.[a-z0-9]+)$/i)?.[1] ?? ".jpg";
+  return upload(`avatars/avatar${extension}`, file, {
+    access: "public",
+    handleUploadUrl: `${API_URL}/profile/avatar-upload`,
+    clientPayload: authToken.get()!,
+    multipart: file.size > 4 * 1024 * 1024,
+  });
+}
+
 export const api = {
   register: (payload: { email: string; password: string; name: string }) => request<{ token: string; user: User }>("/auth/register", { method: "POST", body: JSON.stringify(payload) }),
   login: (payload: { email: string; password: string }) => request<{ token: string; user: User }>("/auth/login", { method: "POST", body: JSON.stringify(payload) }),
   logout: () => request<void>("/auth/logout", { method: "POST" }),
   me: () => request<{ user: User }>("/auth/me"),
   profile: () => request<Profile>("/profile"),
-  updateProfile: (form: FormData) => request<Profile>("/profile", { method: "PATCH", body: form }),
+  updateProfile: async (form: FormData) => {
+    const avatar = form.get("avatar");
+    if (import.meta.env.PROD && avatar instanceof File) {
+      const blob = await uploadAvatar(avatar);
+      form.delete("avatar");
+      form.set("avatarUrl", blob.url);
+    }
+    return request<Profile>("/profile", { method: "PATCH", body: form });
+  },
   setFavoriteClub: (clubId: string | null) => request<Profile>("/profile/favorite-club", { method: "PATCH", body: JSON.stringify({ clubId }) }),
   clubs: () => request<Club[]>("/clubs"),
   club: (id: string) => request<Club>(`/clubs/${id}`),
