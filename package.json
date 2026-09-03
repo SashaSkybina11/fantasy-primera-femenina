@@ -2,7 +2,10 @@
   "name": "fantasy-primera-division-futbol-sala-femenino",
   "private": true,
   "version": "1.0.0",
-  "workspaces": ["frontend", "backend"],
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
     "dev": "concurrently --kill-others-on-fail -n backend,frontend -c green,cyan \"npm run dev -w backend\" \"npm run dev -w frontend\"",
     "build": "npm run build -w backend && npm run build -w frontend",
@@ -10,7 +13,7 @@
     "db:migrate": "npm run prisma:migrate -w backend",
     "db:seed": "npm run prisma:seed -w backend",
     "db:clear-users": "npm run clear-users -w backend",
-    "vercel-build": "npm run prisma:generate -w backend && npm run prisma:migrate:deploy -w backend && npm run prisma:seed -w backend && npm run build"
+    "vercel-build": "npm run prisma:generate -w backend && npm run build"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",
