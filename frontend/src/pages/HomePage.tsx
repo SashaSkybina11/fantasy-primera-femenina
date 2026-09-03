@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { GiBuyCard } from "react-icons/gi";
 import { BudgetDisplay } from "../components/BudgetDisplay";
 import { useLocale } from "../contexts/LocaleContext";
 import { api } from "../services/api";
@@ -21,7 +22,7 @@ export function HomePage() {
     </section>
     <section className="home-actions" aria-label={t("home.actions")}>
       <Link className="home-action" to="/my-team"><span>▦</span><div><h2>{t("nav.myTeam")}</h2><p>{t("home.myTeam")}</p></div></Link>
-      <Link className="home-action" to="/purchase-players"><span>＋</span><div><h2>{t("nav.purchase")}</h2><p>{t("home.purchase")}</p></div></Link>
+      <Link className="home-action" to="/purchase-players"><span><GiBuyCard aria-hidden="true" /></span><div><h2>{t("nav.purchase")}</h2><p>{t("home.purchase")}</p></div></Link>
       <Link className="home-action" to="/calendar"><span>□</span><div><h2>{t("nav.calendar")}</h2><p>{t("home.calendar")}</p></div></Link>
     </section>
     {team.data && <section className="home-team-summary"><div><p className="eyebrow">{t("home.yourTeam")}</p><h2>{team.data.name}</h2></div><BudgetDisplay budget={team.data.budget} count={team.data.players.length} /></section>}

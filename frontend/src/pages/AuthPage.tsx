@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { IoIosFootball } from "react-icons/io";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale } from "../contexts/LocaleContext";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
@@ -28,7 +29,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
     finally { setIsPending(false); }
   };
 
-  return <main className="auth-page"><section className="auth-aside"><div className="auth-brand"><span className="brand-mark">F</span><span>Fantasy Primera División<br />Fútbol Sala Femenino</span></div><div><p className="eyebrow">{t("auth.privateLeague")}</p><h1>{t("auth.futsal")}<br /><em>{t("auth.your")}</em> {t("auth.team")}</h1><p>{t("auth.description")}</p></div><div className="auth-orb" /></section>
+  return <main className="auth-page"><section className="auth-aside"><div className="auth-brand"><span className="brand-mark"><IoIosFootball aria-hidden="true" /></span><span>Fantasy Primera División<br />Fútbol Sala Femenino</span></div><div><p className="eyebrow">{t("auth.privateLeague")}</p><h1>{t("auth.futsal")}<br /><em>{t("auth.your")}</em> {t("auth.team")}</h1><p>{t("auth.description")}</p></div><div className="auth-orb" /></section>
     <section className="auth-form-wrap"><div className="auth-language"><LanguageSwitcher /></div><form className="auth-form" onSubmit={submit}><p className="eyebrow">{isRegister ? t("auth.newMember") : t("auth.leagueMember")}</p><h2>{isRegister ? t("auth.createProfile") : t("auth.welcomeBack")}</h2><p className="muted">{isRegister ? t("auth.registerDescription") : t("auth.loginDescription")}</p>
       {isRegister && <label>{t("auth.name")}<input required minLength={2} autoComplete="name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder={t("auth.namePlaceholder")} /></label>}
       <label>{t("auth.email")}<input required type="email" autoComplete="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="you@example.com" /></label>
