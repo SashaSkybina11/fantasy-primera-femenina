@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { BudgetDisplay } from "../components/BudgetDisplay";
-import { useTheme } from "../contexts/ThemeContext";
 import { useLocale } from "../contexts/LocaleContext";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 
 export function HomePage() {
   const { t } = useLocale();
-  const { theme, toggleTheme } = useTheme();
   const { user, setUser } = useAuth();
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
@@ -20,7 +18,6 @@ export function HomePage() {
   return <div className="page home-page">
     <section className="home-hero">
       <div><p className="eyebrow">{t("home.eyebrow")}</p><h1>Fantasy Primera División Fútbol Sala Femenino</h1><p>{t("home.description")}</p></div>
-      <button className="home-theme-toggle" onClick={toggleTheme} aria-label={t("theme.switch")}><span>{theme === "light" ? "☾" : "☼"}</span>{theme === "light" ? t("theme.dark") : t("theme.light")}</button>
     </section>
     <section className="home-actions" aria-label={t("home.actions")}>
       <Link className="home-action" to="/my-team"><span>▦</span><div><h2>{t("nav.myTeam")}</h2><p>{t("home.myTeam")}</p></div></Link>
