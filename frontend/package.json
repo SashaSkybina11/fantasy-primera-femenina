@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npx vite --configLoader runner",
+    "dev": "npx vite --strictPort --configLoader runner",
     "build": "npx tsc -b && npx vite build --configLoader runner",
     "preview": "npx vite preview --configLoader runner"
   },

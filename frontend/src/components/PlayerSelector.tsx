@@ -9,7 +9,7 @@ import { useLocale } from "../contexts/LocaleContext";
 
 export function PlayerSelector({ team, onClose }: { team: FantasyTeam; onClose: () => void }) {
   const { t } = useLocale();
-  const [filters, setFilters] = useState<PlayerFilterState>({ clubId: "", position: "", search: "" });
+  const [filters, setFilters] = useState<PlayerFilterState>({ clubId: "", role: "", search: "" });
   const queryClient = useQueryClient();
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
   const players = useQuery({ queryKey: ["players", filters], queryFn: () => api.players(filters) });
@@ -23,6 +23,10 @@ export function PlayerSelector({ team, onClose }: { team: FantasyTeam; onClose: 
     onError: (error) => toast.error(error.message),
   });
   const selected = new Set(team.players.map((entry) => entry.playerId));
+  const clubCounts = team.players.reduce((counts, entry) => {
+    counts.set(entry.player.clubId, (counts.get(entry.player.clubId) ?? 0) + 1);
+    return counts;
+  }, new Map<string, number>());
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") onClose(); };
@@ -43,8 +47,9 @@ export function PlayerSelector({ team, onClose }: { team: FantasyTeam; onClose: 
             const isSelected = selected.has(player.id);
             const squadFull = team.players.length >= 10;
             const noBudget = team.budget < player.price;
-            const label = isSelected ? t("player.alreadySelected") : squadFull ? t("budget.full") : noBudget ? t("player.noBudget") : t("player.add");
-            return <PlayerCard key={player.id} player={player} label={label} disabled={isSelected || squadFull || noBudget || addPlayer.isPending} onClick={() => addPlayer.mutate(player.id)} />;
+            const clubLimitReached = (clubCounts.get(player.clubId) ?? 0) >= 2;
+            const label = isSelected ? t("player.alreadySelected") : clubLimitReached ? t("purchase.clubLimit") : squadFull ? t("budget.full") : noBudget ? t("player.noBudget") : t("player.add");
+            return <PlayerCard key={player.id} player={player} label={label} notice={clubLimitReached ? t("purchase.clubLimit") : undefined} disabled={isSelected || clubLimitReached || squadFull || noBudget || addPlayer.isPending} onClick={() => addPlayer.mutate(player.id)} />;
           })}
         </div>}
       </section>

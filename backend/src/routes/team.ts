@@ -4,7 +4,7 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { inTransaction } from "../lib/transaction.js";
 import { authenticate } from "../middleware/auth.js";
-import { ensureValidLineup, getOwnTeam, teamInclude } from "../services/team.js";
+import { ensureValidLineup, getOwnTeam, teamInclude, withTeamDisplayNumbers } from "../services/team.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 
 const router = Router();
@@ -25,7 +25,7 @@ router.post("/players", asyncRoute(async (request, response) => {
   const team = await inTransaction(async (tx) => {
     const current = await tx.fantasyTeam.findUnique({
       where: { userId: request.auth!.userId },
-      include: { players: true },
+      include: { players: { include: { player: { select: { clubId: true } } } } },
     });
     if (!current) throw new ApiError(404, "Fantasy-команда не найдена");
     if (current.players.length >= 10) throw new ApiError(400, "Состав уже заполнен");
@@ -34,6 +34,9 @@ router.post("/players", asyncRoute(async (request, response) => {
     const player = await tx.player.findUnique({ where: { id: playerId } });
     if (!player) throw new ApiError(404, "Игрок не найден");
     if (current.budget < player.price) throw new ApiError(400, "Недостаточно бюджета для этого игрока");
+    if (current.players.filter((entry) => entry.player.clubId === player.clubId).length >= 2) {
+      throw new ApiError(400, "Максимум 2 игрока из одной команды");
+    }
 
     await tx.fantasyTeamPlayer.create({ data: { fantasyTeamId: current.id, playerId, status: SquadStatus.BENCH } });
     return tx.fantasyTeam.update({
@@ -42,7 +45,7 @@ router.post("/players", asyncRoute(async (request, response) => {
       include: teamInclude,
     });
   });
-  response.status(201).json(team);
+  response.status(201).json(await withTeamDisplayNumbers(team));
 }));
 
 router.delete("/players/:playerId", asyncRoute(async (request, response) => {
@@ -62,7 +65,7 @@ router.delete("/players/:playerId", asyncRoute(async (request, response) => {
       include: teamInclude,
     });
   });
-  response.json(team);
+  response.json(await withTeamDisplayNumbers(team));
 }));
 
 router.patch("/players/:playerId", asyncRoute(async (request, response) => {
@@ -85,7 +88,7 @@ router.patch("/players/:playerId", asyncRoute(async (request, response) => {
     });
     return tx.fantasyTeam.findUniqueOrThrow({ where: { id: current.id }, include: teamInclude });
   });
-  response.json(team);
+  response.json(await withTeamDisplayNumbers(team));
 }));
 
 router.patch("/lineup", asyncRoute(async (request, response) => {
@@ -115,7 +118,7 @@ router.patch("/lineup", asyncRoute(async (request, response) => {
     })));
     return tx.fantasyTeam.findUniqueOrThrow({ where: { id: current.id }, include: teamInclude });
   });
-  response.json(team);
+  response.json(await withTeamDisplayNumbers(team));
 }));
 
 router.patch("/captain", asyncRoute(async (request, response) => {
@@ -132,7 +135,7 @@ router.patch("/captain", asyncRoute(async (request, response) => {
     await tx.fantasyTeamPlayer.update({ where: { id: entry.id }, data: { isCaptain: true } });
     return tx.fantasyTeam.findUniqueOrThrow({ where: { id: current.id }, include: teamInclude });
   });
-  response.json(team);
+  response.json(await withTeamDisplayNumbers(team));
 }));
 
 export default router;

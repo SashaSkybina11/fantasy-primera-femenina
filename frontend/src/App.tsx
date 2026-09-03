@@ -4,10 +4,13 @@ import { useLocale } from "./contexts/LocaleContext";
 import { AppShell } from "./layouts/AppShell";
 import { AuthPage } from "./pages/AuthPage";
 import { ClubPage } from "./pages/ClubPage";
+import { CalendarPage } from "./pages/CalendarPage";
+import { HomePage } from "./pages/HomePage";
 import { LeaguePage } from "./pages/LeaguePage";
 import { MemberTeamPage } from "./pages/MemberTeamPage";
 import { MyTeamPage } from "./pages/MyTeamPage";
 import { ProfilePage } from "./pages/ProfilePage";
+import { PurchasePlayersPage } from "./pages/PurchasePlayersPage";
 import { TeamsPage } from "./pages/TeamsPage";
 
 function ProtectedLayout() {
@@ -24,13 +27,16 @@ export function App() {
     <Route path="/login" element={<AuthPage mode="login" />} />
     <Route path="/register" element={<AuthPage mode="register" />} />
     <Route element={<ProtectedLayout />}>
+      <Route path="/" element={<HomePage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/my-team" element={<MyTeamPage />} />
+      <Route path="/purchase-players" element={<PurchasePlayersPage />} />
+      <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/teams" element={<TeamsPage />} />
       <Route path="/teams/:clubId" element={<ClubPage />} />
       <Route path="/league" element={<LeaguePage />} />
       <Route path="/league/member/:userId" element={<MemberTeamPage />} />
     </Route>
-    <Route path="*" element={<Navigate to="/profile" replace />} />
+    <Route path="*" element={<Navigate to="/" replace />} />
   </Routes>;
 }

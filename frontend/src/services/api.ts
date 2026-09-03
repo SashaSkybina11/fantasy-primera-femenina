@@ -1,8 +1,11 @@
-import type { Club, FantasyTeam, League, LeagueMember, MemberDetail, Player, Profile, SquadStatus, User } from "../types";
+import type { Club, ClubSupport, FantasyTeam, League, LeagueMember, MemberDetail, Player, PlayerRole, Profile, SquadStatus, User } from "../types";
 import { getStoredLocale, type Locale } from "../contexts/LocaleContext";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
-const SERVER_URL = API_URL.replace(/\/api\/?$/, "");
+// In production the Vercel function is served by the same origin. The localhost
+// fallback is intentionally development-only, so a deployed client never calls a
+// visitor's own computer.
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:4000/api" : "/api");
+const SERVER_URL = API_URL.startsWith("/") ? "" : API_URL.replace(/\/api\/?$/, "");
 const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
@@ -14,16 +17,67 @@ export const authToken = {
 
 export function imageUrl(path: string | null | undefined) {
   if (!path) return undefined;
-  return path.startsWith("http") ? path : `${SERVER_URL}${path}`;
+  if (path.startsWith("http")) return path;
+  if (path.startsWith("/logo/")) return encodeURI(path);
+  return encodeURI(`${SERVER_URL}${path}`);
 }
 
 export function formatEuro(value: number, locale: Locale = getStoredLocale()) {
   return new Intl.NumberFormat(locale === "uk" ? "uk-UA" : "es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
 }
 
-export function positionLabel(position: string, locale: Locale = getStoredLocale()) {
-  if (locale === "uk") return position === "GOALKEEPER" ? "Воротарка" : "Польова гравчиня";
-  return position === "GOALKEEPER" ? "Portera" : "Jugadora de campo";
+export function roleLabel(role: PlayerRole, locale: Locale = getStoredLocale()) {
+  if (locale === "uk") {
+    return {
+      PORTERA: "Воротарка",
+      CIERRE: "Захисниця",
+      ALA: "Фланг",
+      PIVOT: "Стовп",
+    }[role];
+  }
+  return {
+    PORTERA: "Portera",
+    CIERRE: "Cierre",
+    ALA: "Ala",
+    PIVOT: "Pívot",
+  }[role];
+}
+
+export function nationalityLabel(code: string | null | undefined, locale: Locale = getStoredLocale()) {
+  if (!code) return undefined;
+  const labels = locale === "uk"
+    ? {
+        ES: "Іспанія",
+        BR: "Бразилія",
+        UY: "Уругвай",
+        PT: "Португалія",
+        AR: "Аргентина",
+        IT: "Італія",
+        FI: "Фінляндія",
+        UA: "Україна",
+      }
+    : {
+        ES: "España",
+        BR: "Brasil",
+        UY: "Uruguay",
+        PT: "Portugal",
+        AR: "Argentina",
+        IT: "Italia",
+        FI: "Finlandia",
+        UA: "Ucrania",
+      };
+  return labels[code as keyof typeof labels] ?? code;
+}
+
+export function playerFactsLabel(player: Pick<Player, "age" | "nationality">, locale: Locale = getStoredLocale()) {
+  return [
+    player.age ? locale === "uk" ? `${player.age} років` : `${player.age} años` : null,
+    nationalityLabel(player.nationality, locale),
+  ].filter(Boolean).join(" · ");
+}
+
+export function playerSummaryLabel(player: Pick<Player, "role" | "age" | "nationality">, locale: Locale = getStoredLocale()) {
+  return [roleLabel(player.role, locale), playerFactsLabel(player, locale)].filter(Boolean).join(" · ");
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -50,10 +104,11 @@ export const api = {
   me: () => request<{ user: User }>("/auth/me"),
   profile: () => request<Profile>("/profile"),
   updateProfile: (form: FormData) => request<Profile>("/profile", { method: "PATCH", body: form }),
+  setFavoriteClub: (clubId: string | null) => request<Profile>("/profile/favorite-club", { method: "PATCH", body: JSON.stringify({ clubId }) }),
   clubs: () => request<Club[]>("/clubs"),
   club: (id: string) => request<Club>(`/clubs/${id}`),
   clubPlayers: (id: string) => request<Player[]>(`/clubs/${id}/players`),
-  players: (filters: { clubId?: string; position?: string; search?: string }) => {
+  players: (filters: { clubId?: string; role?: string; search?: string }) => {
     const params = new URLSearchParams(Object.entries(filters).filter(([, value]) => value) as [string, string][]);
     return request<Player[]>(`/players${params.size ? `?${params}` : ""}`);
   },
@@ -65,5 +120,6 @@ export const api = {
   setCaptain: (playerId: string) => request<FantasyTeam>("/my-team/captain", { method: "PATCH", body: JSON.stringify({ playerId }) }),
   league: () => request<League>("/league"),
   members: () => request<LeagueMember[]>("/league/members"),
+  supporters: () => request<ClubSupport[]>("/league/supporters"),
   member: (id: string) => request<MemberDetail>(`/league/members/${id}`),
 };

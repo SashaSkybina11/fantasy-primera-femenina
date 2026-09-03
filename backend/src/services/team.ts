@@ -1,6 +1,7 @@
 import { PlayerPosition, SquadStatus } from "@prisma/client";
 import { prisma } from "../lib/prisma.js";
 import { ApiError } from "../utils/http.js";
+import { withDisplayNumbers } from "../utils/players.js";
 
 export const teamInclude = {
   user: { select: { id: true, name: true, avatarUrl: true } },
@@ -16,7 +17,20 @@ export async function getOwnTeam(userId: string) {
     include: teamInclude,
   });
   if (!team) throw new ApiError(404, "Fantasy-команда не найдена");
-  return team;
+  return withTeamDisplayNumbers(team);
+}
+
+export async function withTeamDisplayNumbers<T extends { players: Array<{ player: { id: string; clubId: string; number: number } }> }>(team: T) {
+  const catalog = await prisma.player.findMany({ orderBy: [{ clubId: "asc" }, { role: "asc" }, { number: "asc" }] });
+  const displayNumbers = new Map(withDisplayNumbers(catalog).map((player) => [player.id, player.displayNumber]));
+
+  return {
+    ...team,
+    players: team.players.map((entry) => ({
+      ...entry,
+      player: { ...entry.player, displayNumber: displayNumbers.get(entry.player.id) ?? String(entry.player.number) },
+    })),
+  };
 }
 
 export function ensureValidLineup(

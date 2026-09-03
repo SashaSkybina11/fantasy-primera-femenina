@@ -9,13 +9,16 @@
     "start": "node dist/server.js",
     "prisma:generate": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
-    "prisma:seed": "npx prisma db seed"
+    "prisma:migrate:deploy": "npx prisma migrate deploy",
+    "prisma:seed": "npx prisma db seed",
+    "clear-users": "npx tsx prisma/clear-users.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
+    "@vercel/blob": "^2.8.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

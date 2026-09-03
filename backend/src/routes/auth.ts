@@ -17,12 +17,12 @@ const registerSchema = credentialsSchema.extend({
   name: z.string().trim().min(2, "Введите имя").max(50),
 });
 
-function publicUser(user: { id: string; email: string; name: string; avatarUrl: string | null }) {
-  return { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatarUrl };
+function publicUser(user: { id: string; email: string; name: string; avatarUrl: string | null; favoriteClub?: { id: string; name: string; logoUrl: string | null } | null }) {
+  return { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatarUrl, favoriteClub: user.favoriteClub ?? null };
 }
 
 function issueToken(userId: string) {
-  return jwt.sign({}, env.jwtSecret, { subject: userId, expiresIn: "7d" });
+  return jwt.sign({}, env.jwtSecret, { subject: userId, expiresIn: "30d" });
 }
 
 router.post("/register", asyncRoute(async (request, response) => {
@@ -34,9 +34,9 @@ router.post("/register", asyncRoute(async (request, response) => {
   const passwordHash = await bcrypt.hash(input.password, 12);
   const user = await inTransaction(async (tx) => {
     const league = await tx.league.upsert({
-      where: { name: "Fantasy Primera División Femenina" },
+      where: { name: "Fantasy Primera División Fútbol Sala Femenino" },
       update: {},
-      create: { name: "Fantasy Primera División Femenina" },
+      create: { name: "Fantasy Primera División Fútbol Sala Femenino" },
     });
     const created = await tx.user.create({
       data: {
@@ -65,7 +65,7 @@ router.post("/login", asyncRoute(async (request, response) => {
 router.post("/logout", authenticate, (_request, response) => response.status(204).send());
 
 router.get("/me", authenticate, asyncRoute(async (request, response) => {
-  const user = await prisma.user.findUnique({ where: { id: request.auth!.userId } });
+  const user = await prisma.user.findUnique({ where: { id: request.auth!.userId }, include: { favoriteClub: true } });
   if (!user) throw new ApiError(401, "Пользователь не найден");
   response.json({ user: publicUser(user) });
 }));

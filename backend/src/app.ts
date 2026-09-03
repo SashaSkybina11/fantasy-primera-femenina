@@ -13,7 +13,12 @@ import { errorHandler } from "./utils/http.js";
 mkdirSync(uploadsDirectory, { recursive: true });
 
 export const app = express();
-app.use(cors({ origin: env.frontendUrl }));
+app.use(cors({
+  // Vite may use another local port while a previous development server closes.
+  origin: env.isProduction
+    ? env.frontendUrl
+    : [/^http:\/\/localhost(?::\d+)?$/, /^http:\/\/127\.0\.0\.1(?::\d+)?$/],
+}));
 app.use(express.json({ limit: "1mb" }));
 app.use("/uploads", express.static(uploadsDirectory));
 
