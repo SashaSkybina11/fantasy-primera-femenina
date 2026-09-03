@@ -12,6 +12,7 @@ import { MyTeamPage } from "./pages/MyTeamPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { PurchasePlayersPage } from "./pages/PurchasePlayersPage";
 import { TeamsPage } from "./pages/TeamsPage";
+import { AdminPage } from "./pages/AdminPage";
 import { Loader } from "./components/Loader";
 
 function ProtectedLayout() {
@@ -30,6 +31,7 @@ export function App() {
     <Route element={<ProtectedLayout />}>
       <Route path="/" element={<HomePage />} />
       <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/admin" element={<AdminPage />} />
       <Route path="/my-team" element={<MyTeamPage />} />
       <Route path="/purchase-players" element={<PurchasePlayersPage />} />
       <Route path="/calendar" element={<CalendarPage />} />

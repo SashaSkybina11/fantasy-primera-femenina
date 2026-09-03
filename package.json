@@ -13,7 +13,8 @@
     "db:migrate": "npm run prisma:migrate -w backend",
     "db:seed": "npm run prisma:seed -w backend",
     "db:clear-users": "npm run clear-users -w backend",
-    "vercel-build": "npm run prisma:generate -w backend && npm run build"
+    "db:reset-users": "npm run reset-users -w backend",
+    "vercel-build": "npm run prisma:migrate:deploy -w backend && npm run prisma:generate -w backend && npm run build"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

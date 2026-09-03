@@ -1,4 +1,5 @@
 import { del, put } from "@vercel/blob";
+import bcrypt from "bcrypt";
 import { existsSync, unlinkSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { basename, join } from "node:path";
@@ -82,11 +83,16 @@ const profileSchema = z.object({
   ),
 });
 const favoriteClubSchema = z.object({ clubId: z.string().cuid().nullable() });
+const passwordSchema = z.object({
+  currentPassword: z.string().min(1, "Введите текущий пароль"),
+  newPassword: z.string().min(8, "Пароль должен содержать минимум 8 символов").max(72),
+});
 
 function serialize(user: {
   id: string;
   email: string;
   name: string;
+  role: "USER" | "ADMIN";
   avatarUrl: string | null;
   favoriteClub: { id: string; name: string; logoUrl: string | null } | null;
   fantasyTeam: { id: string; name: string; budget: number } | null;
@@ -95,6 +101,7 @@ function serialize(user: {
     id: user.id,
     email: user.email,
     name: user.name,
+    role: user.role,
     avatarUrl: user.avatarUrl,
     favoriteClub: user.favoriteClub,
     fantasyTeam: user.fantasyTeam,
@@ -232,6 +239,24 @@ router.patch(
         removeLocalAvatar(`/uploads/${request.file.filename}`);
       throw error;
     }
+  }),
+);
+
+router.patch(
+  "/password",
+  authenticate,
+  asyncRoute(async (request, response) => {
+    const input = passwordSchema.parse(request.body);
+    const user = await prisma.user.findUnique({ where: { id: request.auth!.userId } });
+    if (!user) throw new ApiError(404, "Профиль не найден");
+    if (!(await bcrypt.compare(input.currentPassword, user.passwordHash))) {
+      throw new ApiError(400, "Текущий пароль указан неверно");
+    }
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { passwordHash: await bcrypt.hash(input.newPassword, 12) },
+    });
+    response.status(204).send();
   }),
 );
 

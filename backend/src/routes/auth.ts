@@ -17,8 +17,8 @@ const registerSchema = credentialsSchema.extend({
   name: z.string().trim().min(2, "Введите имя").max(50),
 });
 
-function publicUser(user: { id: string; email: string; name: string; avatarUrl: string | null; favoriteClub?: { id: string; name: string; logoUrl: string | null } | null }) {
-  return { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatarUrl, favoriteClub: user.favoriteClub ?? null };
+function publicUser(user: { id: string; email: string; name: string; role: "USER" | "ADMIN"; avatarUrl: string | null; favoriteClub?: { id: string; name: string; logoUrl: string | null } | null }) {
+  return { id: user.id, email: user.email, name: user.name, role: user.role, avatarUrl: user.avatarUrl, favoriteClub: user.favoriteClub ?? null };
 }
 
 function issueToken(userId: string) {

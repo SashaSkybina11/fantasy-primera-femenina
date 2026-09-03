@@ -194,6 +194,22 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .profile-form { display: grid; gap: .2rem; }
 .avatar-edit { display: flex; align-items: center; flex-wrap: wrap; gap: .8rem; margin-top: 1.35rem; }
 .form-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.35rem; }
+.profile-card--password { gap: 1.25rem; margin-top: 1.2rem; }
+.profile-card--password h2 { margin: .35rem 0 .5rem; }
+.profile-card--password .profile-form { gap: .8rem; }
+.profile-form label { display: grid; gap: .4rem; color: var(--muted); font-size: .8rem; font-weight: 700; }
+
+/* Admin */
+.admin-card { overflow: hidden; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); box-shadow: var(--shadow); }
+.admin-card__head, .admin-user { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.25rem; }
+.admin-card__head { border-bottom: 1px solid var(--border); }
+.admin-card__head span, .admin-role { border-radius: 999px; background: var(--surface-soft); padding: .3rem .55rem; color: var(--text); font-size: .72rem; font-weight: 800; }
+.admin-user { border-bottom: 1px solid var(--border); }
+.admin-user:last-child { border-bottom: 0; }
+.admin-user > div { display: grid; gap: .3rem; min-width: 0; }
+.admin-user > div:last-child { justify-items: end; }
+.admin-user strong, .admin-user small { overflow-wrap: anywhere; }
+.admin-user small { color: var(--muted); font-size: .75rem; }
 
 /* Team */
 .team-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 1.5rem; }

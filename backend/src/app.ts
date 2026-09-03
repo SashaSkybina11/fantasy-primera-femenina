@@ -4,6 +4,7 @@ import express from "express";
 import { env } from "./config/env.js";
 import { uploadsDirectory } from "./config/paths.js";
 import authRouter from "./routes/auth.js";
+import adminRouter from "./routes/admin.js";
 import catalogRouter from "./routes/catalog.js";
 import leagueRouter from "./routes/league.js";
 import profileRouter from "./routes/profile.js";
@@ -24,6 +25,7 @@ app.use("/uploads", express.static(uploadsDirectory));
 
 app.get("/api/health", (_request, response) => response.json({ ok: true }));
 app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api", catalogRouter);
 app.use("/api/my-team", teamRouter);

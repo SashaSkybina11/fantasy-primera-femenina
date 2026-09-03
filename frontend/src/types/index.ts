@@ -45,6 +45,7 @@ export type User = {
   id: string;
   email: string;
   name: string;
+  role: "USER" | "ADMIN";
   avatarUrl: string | null;
   favoriteClub: Pick<Club, "id" | "name" | "logoUrl"> | null;
 };
@@ -65,3 +66,12 @@ export type LeagueMember = Pick<User, "id" | "name" | "avatarUrl"> & {
 export type ClubSupport = Pick<Club, "id" | "name" | "logoUrl"> & { count: number };
 
 export type MemberDetail = Pick<User, "id" | "name" | "avatarUrl"> & { fantasyTeam: FantasyTeam };
+
+export type AdminUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: "USER" | "ADMIN";
+  createdAt: string;
+  playerCount: number;
+};

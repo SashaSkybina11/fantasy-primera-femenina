@@ -4,6 +4,7 @@ import { IoIosFootball } from "react-icons/io";
 import { GiBuyCard } from "react-icons/gi";
 import { RiTeamLine } from "react-icons/ri";
 import { MdOutlinePersonOutline } from "react-icons/md";
+import { MdAdminPanelSettings } from "react-icons/md";
 import { TbPlayFootball } from "react-icons/tb";
 import { IoCalendarOutline } from "react-icons/io5";
 import { useAuth } from "../contexts/AuthContext";
@@ -14,7 +15,7 @@ import { useLocale } from "../contexts/LocaleContext";
 
 const projectName = <>Fantasy Primera División<br />Fútbol Sala Femenino</>;
 
-type IconName = "trophy" | "home" | "my-team" | "purchase" | "calendar" | "teams" | "profile";
+type IconName = "trophy" | "home" | "my-team" | "purchase" | "calendar" | "teams" | "profile" | "admin";
 
 function FootballIcon({ name }: { name: IconName }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -25,11 +26,12 @@ function FootballIcon({ name }: { name: IconName }) {
   if (name === "calendar") return <IoCalendarOutline aria-hidden="true" />;
   if (name === "teams") return <RiTeamLine aria-hidden="true" />;
   if (name === "profile") return <MdOutlinePersonOutline aria-hidden="true" />;
+  if (name === "admin") return <MdAdminPanelSettings aria-hidden="true" />;
   if (name === "trophy") return <svg viewBox="0 0 24 24" aria-hidden="true" {...common}><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" /><path d="M8 6H4v1a4 4 0 0 0 4 4m8-5h4v1a4 4 0 0 1-4 4m-4-2v5m-3 6h6m-7 0h8" /></svg>;
   return <svg viewBox="0 0 24 24" aria-hidden="true" {...common}><path d="m8 4 4 2 4-2 4 3-2.4 4.1-2.1-1.2V20H8.5V9.9l-2.1 1.2L4 7l4-3Z" /></svg>;
 }
 
-function NavLinks({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
+function NavLinks({ mobile = false, isAdmin = false, onNavigate }: { mobile?: boolean; isAdmin?: boolean; onNavigate?: () => void }) {
   const { t } = useLocale();
   const navigation = [
     { to: "/", label: t("nav.home"), icon: "home" as const, end: true },
@@ -39,6 +41,7 @@ function NavLinks({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/league", label: t("nav.league"), icon: "trophy" as const },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },
+    ...(isAdmin ? [{ to: "/admin", label: t("nav.admin"), icon: "admin" as const }] : []),
   ];
   return <>{navigation.map((item) => <NavLink key={item.to} to={item.to} end={item.end} onClick={onNavigate} className={({ isActive }) => `nav-link ${isActive ? "nav-link--active" : ""}`}><i><FootballIcon name={item.icon} /></i><span>{mobile ? item.mobile ?? item.label : item.label}</span></NavLink>)}</>;
 }
@@ -70,7 +73,7 @@ export function AppShell() {
   return <div className="app-shell">
     <aside className="sidebar">
       <NavLink to="/" end className="brand"><span className="brand-mark"><IoIosFootball aria-hidden="true" /></span><span>{projectName}</span></NavLink>
-      <nav className="sidebar__nav" aria-label={t("nav.primary")}><NavLinks /></nav>
+      <nav className="sidebar__nav" aria-label={t("nav.primary")}><NavLinks isAdmin={user?.role === "ADMIN"} /></nav>
       <div className="sidebar__bottom">
         <LanguageSwitcher />
         <button className="theme-toggle" onClick={toggleTheme}><span>{theme === "light" ? "☼" : "☾"}</span>{theme === "light" ? t("theme.light") : t("theme.dark")}</button>
@@ -87,7 +90,7 @@ export function AppShell() {
     </header>
     {menuOpen && <><button className="mobile-menu-backdrop" onClick={closeMenu} aria-label={t("nav.closeMenu")} /><aside className="mobile-menu" aria-label={t("nav.primary")}>
       <div className="mobile-menu__head"><span>{t("nav.menu")}</span><button className="icon-button" onClick={closeMenu} aria-label={t("nav.closeMenu")}>×</button></div>
-      <nav><NavLinks mobile onNavigate={closeMenu} /></nav>
+      <nav><NavLinks mobile isAdmin={user?.role === "ADMIN"} onNavigate={closeMenu} /></nav>
       <div className="mobile-menu__bottom"><LanguageSwitcher /><button className="theme-toggle" onClick={toggleTheme}><span>{theme === "light" ? "☼" : "☾"}</span>{theme === "light" ? t("theme.light") : t("theme.dark")}</button>{user && <div className="user-mini"><Avatar name={user.name} src={user.avatarUrl} size="sm" /><span>{user.name}</span></div>}<button className="logout-button" onClick={requestSignOut}>{t("nav.logout")} <span>↗</span></button></div>
     </aside></>}
     {logoutDialogOpen && <div className="logout-modal-backdrop" onClick={() => setLogoutDialogOpen(false)}>

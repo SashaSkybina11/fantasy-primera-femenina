@@ -1,4 +1,4 @@
-import type { Club, ClubSupport, FantasyTeam, League, LeagueMember, MemberDetail, Player, PlayerRole, Profile, SquadStatus, User } from "../types";
+import type { AdminUser, Club, ClubSupport, FantasyTeam, League, LeagueMember, MemberDetail, Player, PlayerRole, Profile, SquadStatus, User } from "../types";
 import { getStoredLocale, type Locale } from "../contexts/LocaleContext";
 
 // In production the Vercel function is served by the same origin. The localhost
@@ -148,6 +148,7 @@ export const api = {
   me: () => request<{ user: User }>("/auth/me"),
   profile: () => request<Profile>("/profile"),
   updateProfile: (form: FormData) => request<Profile>("/profile", { method: "PATCH", body: form }),
+  updatePassword: (payload: { currentPassword: string; newPassword: string }) => request<void>("/profile/password", { method: "PATCH", body: JSON.stringify(payload) }),
   setFavoriteClub: (clubId: string | null) => request<Profile>("/profile/favorite-club", { method: "PATCH", body: JSON.stringify({ clubId }) }),
   clubs: () => request<Club[]>("/clubs"),
   club: (id: string) => request<Club>(`/clubs/${id}`),
@@ -166,4 +167,6 @@ export const api = {
   members: () => request<LeagueMember[]>("/league/members"),
   supporters: () => request<ClubSupport[]>("/league/supporters"),
   member: (id: string) => request<MemberDetail>(`/league/members/${id}`),
+  adminUsers: () => request<AdminUser[]>("/admin/users"),
+  deleteAdminUser: (id: string) => request<void>(`/admin/users/${id}`, { method: "DELETE" }),
 };
