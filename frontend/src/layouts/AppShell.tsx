@@ -42,7 +42,9 @@ export function AppShell() {
   const { t } = useLocale();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const signOut = async () => { await logout(); navigate("/login"); };
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const requestSignOut = () => { setMenuOpen(false); setLogoutDialogOpen(true); };
+  const signOut = async () => { await logout(); setLogoutDialogOpen(false); navigate("/login"); };
   const closeMenu = () => setMenuOpen(false);
 
   return <div className="app-shell">
@@ -53,7 +55,7 @@ export function AppShell() {
         <LanguageSwitcher />
         <button className="theme-toggle" onClick={toggleTheme}><span>{theme === "light" ? "☼" : "☾"}</span>{theme === "light" ? t("theme.light") : t("theme.dark")}</button>
         {user && <div className="user-mini"><Avatar name={user.name} src={user.avatarUrl} size="sm" /><span>{user.name}</span></div>}
-        <button className="logout-button" onClick={signOut}>{t("nav.logout")} <span>↗</span></button>
+        <button className="logout-button" onClick={requestSignOut}>{t("nav.logout")} <span>↗</span></button>
       </div>
     </aside>
     <header className="mobile-header">
@@ -66,8 +68,17 @@ export function AppShell() {
     {menuOpen && <><button className="mobile-menu-backdrop" onClick={closeMenu} aria-label={t("nav.closeMenu")} /><aside className="mobile-menu" aria-label={t("nav.primary")}>
       <div className="mobile-menu__head"><span>{t("nav.menu")}</span><button className="icon-button" onClick={closeMenu} aria-label={t("nav.closeMenu")}>×</button></div>
       <nav><NavLinks mobile onNavigate={closeMenu} /></nav>
-      <div className="mobile-menu__bottom"><LanguageSwitcher /><button className="theme-toggle" onClick={toggleTheme}><span>{theme === "light" ? "☼" : "☾"}</span>{theme === "light" ? t("theme.light") : t("theme.dark")}</button>{user && <div className="user-mini"><Avatar name={user.name} src={user.avatarUrl} size="sm" /><span>{user.name}</span></div>}<button className="logout-button" onClick={signOut}>{t("nav.logout")} <span>↗</span></button></div>
+      <div className="mobile-menu__bottom"><LanguageSwitcher /><button className="theme-toggle" onClick={toggleTheme}><span>{theme === "light" ? "☼" : "☾"}</span>{theme === "light" ? t("theme.light") : t("theme.dark")}</button>{user && <div className="user-mini"><Avatar name={user.name} src={user.avatarUrl} size="sm" /><span>{user.name}</span></div>}<button className="logout-button" onClick={requestSignOut}>{t("nav.logout")} <span>↗</span></button></div>
     </aside></>}
+    {logoutDialogOpen && <div className="logout-modal-backdrop" onClick={() => setLogoutDialogOpen(false)}>
+      <section className="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title" onClick={(event) => event.stopPropagation()}>
+        <button className="logout-modal__close" onClick={() => setLogoutDialogOpen(false)} aria-label={t("logout.close")}>×</button>
+        <p className="eyebrow">{t("logout.eyebrow")}</p>
+        <h2 id="logout-modal-title">{t("logout.title")}</h2>
+        <p>{t("logout.description")}</p>
+        <div className="logout-modal__actions"><button className="logout-modal__confirm" onClick={signOut}>{t("logout.confirm")}</button><button className="logout-modal__cancel" onClick={() => setLogoutDialogOpen(false)}>{t("logout.cancel")}</button></div>
+      </section>
+    </div>}
     <main className="page-content"><Outlet /><footer className="site-footer">{t("footer.creator")}: <a href="https://www.instagram.com/s.skybina_19/" target="_blank" rel="noreferrer">Oleksandra Skybina</a></footer></main>
   </div>;
 }
