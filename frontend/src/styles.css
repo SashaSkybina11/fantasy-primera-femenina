@@ -37,7 +37,9 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--bg); }
+html, body, #root { width: 100%; max-width: 100%; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--bg); overflow-x: clip; }
+img, svg { display: block; max-width: 100%; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .52; }
@@ -112,11 +114,16 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .page-content { min-width: 0; }
 .page { width: min(100%, 1240px); min-width: 0; max-width: 1240px; margin: 0 auto; }
 .page--narrow { max-width: 880px; }
+.page > *, .page section, .page header, .page article, .page form { min-width: 0; max-width: 100%; }
 .page-heading { margin-bottom: 2.7rem; }
 .page-heading h1 { margin: .6rem 0 .7rem; }
 .mobile-header, .mobile-menu, .mobile-menu-backdrop { display: none; }
 .site-footer { width: min(1240px, 100%); margin: auto auto 0; padding-top: 3.5rem; color: var(--muted); font-size: .78rem; text-align: center; }
 .site-footer a { color: var(--text); font-weight: 800; text-decoration: underline; text-underline-offset: .2em; }
+.home-action, .home-team-summary, .home-support-card, .home-concept, .profile-card, .state-card, .calendar-card, .club-card, .club-meta-card, .roster-card, .league-member-card, .supporters-card, .comparison-card, .purchase-panel, .selector-modal { min-width: 0; max-width: 100%; }
+.profile-card__identity, .club-heading, .member-heading, .supporters-card__head, .supporter-row > div > div, .league-member-card h3, .team-toolbar, .save-bar { min-width: 0; }
+.profile-card__identity > div, .club-heading > div, .member-heading > div, .league-member-card div, .mobile-brand, .mobile-brand span:last-child { min-width: 0; }
+.profile-card__identity h2, .home-team-summary h2, .club-heading h1, .member-heading h1, .league-member-card h3, .roster-row strong { overflow-wrap: anywhere; }
 
 /* Home */
 .home-page { display: grid; gap: 1.2rem; }
@@ -334,57 +341,179 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .auth-aside { display: none; }
   .auth-form-wrap { min-height: 100vh; padding: 1.5rem; }
   .sidebar { display: none; }
-  .page-content { margin-left: 0; padding: 6.35rem 1rem 2rem; }
-  .mobile-header { position: fixed; z-index: 10; top: 0; right: 0; left: 0; display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(12px); }
-  .mobile-brand { display: flex; min-width: 0; align-items: center; gap: .5rem; color: var(--text); font-size: .67rem; font-weight: 800; line-height: 1.1; }
-  .mobile-brand .brand-mark { width: 30px; height: 30px; border-radius: 9px; font-size: .95rem; }
+  .page-content { margin-left: 0; padding: 5.15rem .78rem 1.5rem; }
+  .mobile-header { position: fixed; z-index: 10; top: 0; right: 0; left: 0; display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .65rem .75rem; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(12px); }
+  .mobile-brand { display: flex; min-width: 0; flex: 1; align-items: center; gap: .4rem; color: var(--text); font-size: .61rem; font-weight: 800; line-height: 1.05; overflow: hidden; }
+  .mobile-brand .brand-mark { width: 28px; height: 28px; border-radius: 8px; font-size: .85rem; }
+  .mobile-brand span:last-child { display: block; max-width: 11rem; overflow-wrap: anywhere; }
   .mobile-controls { display: flex; align-items: center; gap: .45rem; }
-  .mobile-theme-toggle, .menu-toggle { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); font-size: 1.1rem; box-shadow: var(--shadow); }
-  .menu-toggle { font-size: 1.35rem; }
+  .mobile-theme-toggle, .menu-toggle { display: grid; width: 34px; height: 34px; flex: none; place-items: center; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--text); font-size: 1rem; box-shadow: var(--shadow); }
+  .menu-toggle { font-size: 1.15rem; }
   .mobile-menu-backdrop { position: fixed; z-index: 19; inset: 0; display: block; width: 100%; border: 0; background: rgba(4, 6, 2, .48); }
-  .mobile-menu { position: fixed; z-index: 20; top: 0; right: 0; display: flex; width: min(340px, 88vw); height: 100vh; flex-direction: column; padding: 1rem; border-left: 1px solid var(--border); background: var(--surface); box-shadow: -18px 0 45px rgba(0,0,0,.18); }
-  .mobile-menu__head { display: flex; align-items: center; justify-content: space-between; padding: .35rem .35rem 1.15rem; border-bottom: 1px solid var(--border); color: var(--text); font-size: .84rem; font-weight: 800; }
+  .mobile-menu { position: fixed; z-index: 20; top: 0; right: 0; display: flex; width: min(300px, 84vw); height: 100vh; flex-direction: column; padding: .85rem; border-left: 1px solid var(--border); background: var(--surface); box-shadow: -18px 0 45px rgba(0,0,0,.18); }
+  .mobile-menu__head { display: flex; align-items: center; justify-content: space-between; padding: .25rem .2rem .95rem; border-bottom: 1px solid var(--border); color: var(--text); font-size: .8rem; font-weight: 800; }
   .mobile-menu .icon-button { font-size: 1.7rem; }
   .mobile-menu nav { display: grid; gap: .3rem; padding-top: 1rem; }
-  .mobile-menu .nav-link { padding: .8rem .75rem; }
+  .mobile-menu .nav-link { padding: .7rem .65rem; font-size: .82rem; }
   .mobile-menu__bottom { display: grid; gap: .75rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border); }
-  .team-heading { display: grid; align-items: start; gap: 1.25rem; }
+  .team-heading { display: grid; align-items: start; gap: 1rem; margin-bottom: 1.1rem; }
   .team-grid { max-width: 100%; }
-  .budget-card { width: 100%; min-width: 0; }
-  .team-toolbar { align-items: flex-start; gap: 1rem; }
-  .squad-player-card { gap: .55rem; padding: .7rem; }
-  .team-toolbar .button { flex: none; }
-  .save-bar { align-items: stretch; flex-direction: column; }
+  .budget-card { width: 100%; min-width: 0; grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr); gap: .5rem; padding: .75rem .8rem; border-radius: 13px; }
+  .budget-card strong { font-size: .96rem; }
+  .budget-card span, .budget-card small { font-size: .6rem; }
+  .budget-card__divider { height: 28px; }
+  .budget-card p { margin-top: 0; padding-top: .5rem; font-size: .62rem; }
+  .team-toolbar { align-items: stretch; flex-direction: column; gap: .75rem; margin-bottom: 1rem; }
+  .team-toolbar > div { font-size: .72rem; }
+  .squad-player-card { gap: .5rem; min-height: 60px; padding: .65rem; border-radius: 10px; align-items: flex-start; }
+  .team-toolbar .button { width: 100%; flex: none; text-align: center; }
+  .save-bar { align-items: stretch; flex-direction: column; gap: .7rem; margin-top: 1rem; padding: .85rem .9rem; border-radius: 13px; }
+  .save-bar strong { font-size: .76rem; }
+  .save-bar span { font-size: .64rem; line-height: 1.4; }
   .save-bar .button { width: 100%; }
-  .filters { grid-template-columns: 1fr 1fr; padding: 0 1rem 1rem; }
+  .modal-backdrop { padding: .75rem; }
+  .selector-modal { width: 100%; max-width: 100%; max-height: min(88vh, 700px); border-radius: 14px; }
+  .modal-header { gap: .75rem; padding: .85rem .85rem .75rem; }
+  .modal-header h2 { font-size: 1.2rem; }
+  .filters { grid-template-columns: 1fr; gap: .55rem; padding: 0 .85rem .85rem; }
   .filters__search { grid-column: 1 / -1; }
-  .selector-modal { max-height: 92vh; }
-  .modal-header { padding: 1rem; }
-  .selector-grid { grid-template-columns: 1fr; padding: 1rem; }
-  .purchase-grid { grid-template-columns: 1fr; padding: 1rem; }
+  .selector-grid, .purchase-grid { grid-template-columns: 1fr; gap: .65rem; padding: .85rem; }
+  .player-card { min-height: 0; padding: .85rem; border-radius: 13px; }
+  .player-card h3 { margin-top: .8rem; font-size: .9rem; overflow-wrap: anywhere; }
+  .player-card p, .player-card__meta, .player-card__notice { font-size: .64rem; line-height: 1.35; }
+  .player-card footer { align-items: stretch; flex-direction: column; gap: .5rem; padding-top: .8rem; }
+  .player-card footer .button { width: 100%; }
+  .purchase-panel { border-radius: 16px; }
   .purchase-panel .filters { padding-top: 1rem; }
   .clubs-grid { grid-template-columns: 1fr; }
-  .club-card { min-height: 82px; }
+  .club-card { min-height: 78px; gap: .75rem; padding: .85rem; border-radius: 14px; font-size: .75rem; }
+  .club-mark, .club-logo { width: 36px; height: 36px; border-radius: 11px; }
+  .club-mark--large, .club-logo--large { width: 58px; height: 58px; border-radius: 18px; font-size: .88rem; }
   .club-meta-grid { grid-template-columns: 1fr; }
-  .club-heading, .member-heading { align-items: flex-start; flex-wrap: wrap; }
+  .back-link { margin-bottom: 1.1rem; font-size: .72rem; }
+  .club-heading, .member-heading { align-items: flex-start; flex-wrap: wrap; gap: .85rem; margin-bottom: 1.4rem; }
+  .club-heading h1, .member-heading h1 { font-size: clamp(1.6rem, 8vw, 2.1rem); }
+  .club-meta-card { padding: .85rem .9rem; border-radius: 13px; }
+  .club-meta-card span { font-size: .66rem; }
+  .club-meta-card strong { font-size: .9rem; overflow-wrap: anywhere; }
+  .roster-card { padding: 1rem; border-radius: 16px; }
+  .roster-card h2 { margin-bottom: 1rem; font-size: 1.15rem; }
+  .roster-group__head { gap: .6rem; }
+  .roster-row { grid-template-columns: 40px minmax(0, 1fr); gap: .65rem; padding: .7rem 0; }
+  .roster-row strong { font-size: .82rem; }
+  .roster-row small { font-size: .66rem; }
   .member-heading .button { width: 100%; }
+  .comparison-card { margin-bottom: 1rem; padding: .95rem; border-radius: 15px; }
+  .comparison-card h2 { margin-bottom: .85rem; font-size: 1.1rem; }
   .comparison-card > div { grid-template-columns: 1fr; }
-  .comparison-group h3 { min-height: 0; }
-  .home-hero { flex-direction: column; gap: 1rem; }
-  .home-theme-toggle { align-self: flex-start; }
-  .home-team-summary { align-items: stretch; flex-direction: column; }
-  .site-footer { padding-top: 2.4rem; }
+  .comparison-group { padding: .75rem; }
+  .comparison-group h3 { min-height: 0; font-size: .69rem; }
+  .comparison-group li, .comparison-group p { font-size: .65rem; }
+  .home-hero { flex-direction: column; gap: .8rem; padding: 1.05rem; border-radius: 16px; }
+  .home-hero::after { right: -72px; bottom: -120px; width: 190px; height: 190px; box-shadow: 0 0 0 24px rgba(24,35,0,.06); }
+  .home-hero h1 { font-size: clamp(1.7rem, 9vw, 2.3rem); max-width: 12ch; }
+  .home-hero p:not(.eyebrow) { font-size: .84rem; line-height: 1.5; }
+  .home-theme-toggle { align-self: stretch; justify-content: center; padding: .55rem .75rem; font-size: .72rem; }
+  .home-team-summary { align-items: stretch; flex-direction: column; gap: .9rem; padding: 1rem; border-radius: 16px; }
+  .home-team-summary h2 { font-size: 1.05rem; }
+  .home-action { min-height: 0; gap: .75rem; padding: .9rem; border-radius: 15px; }
+  .home-action > span { width: 30px; height: 30px; border-radius: 9px; font-size: 1rem; }
+  .home-action h2 { font-size: .92rem; }
+  .home-action p { font-size: .72rem; }
+  .home-support-card { grid-template-columns: 1fr; align-items: start; gap: 1rem; padding: 1rem; border-radius: 14px; }
+  .home-support-card h2 { font-size: 1.15rem; }
+  .home-support-card p:not(.eyebrow) { font-size: .76rem; line-height: 1.45; }
+  .home-concept { padding: 1rem; gap: 1rem; border-radius: 16px; }
+  .home-concept h2 { font-size: clamp(1.25rem, 7vw, 1.6rem); }
+  .home-concept p { font-size: .76rem; line-height: 1.45; }
+  .concept-grid article { padding: .8rem; }
+  .concept-grid h3 { font-size: .86rem; }
+  .concept-grid p { font-size: .69rem; }
+  .profile-card { padding: 1rem; gap: 1.25rem; border-radius: 18px; }
+  .profile-card__identity { align-items: flex-start; gap: .85rem; }
+  .profile-card__identity h2 { font-size: 1.2rem; }
+  .profile-card__identity p { font-size: .78rem; overflow-wrap: anywhere; }
+  .profile-stat { padding: 1rem 0; }
+  .avatar--lg { width: 76px; height: 76px; font-size: 1.6rem; }
+  .avatar-edit { align-items: stretch; }
+  .avatar-edit .button, .form-actions .button { width: 100%; }
+  .form-actions { flex-direction: column; }
+  .squad-section { padding: .8rem; border-radius: 15px; }
+  .squad-section > header { align-items: flex-start; gap: .6rem; padding: 0 0 .75rem; }
+  .squad-section h2 { font-size: 1.05rem; }
+  .section-counter { width: 30px; height: 30px; font-size: .66rem; }
+  .squad-list { gap: .45rem; }
+  .jersey-number { width: 29px; height: 29px; border-radius: 8px; font-size: .64rem; }
+  .squad-player-card h3 { flex-wrap: wrap; font-size: .78rem; line-height: 1.25; }
+  .squad-player-card p { overflow: visible; font-size: .64rem; line-height: 1.35; text-overflow: clip; white-space: normal; }
+  .captain-badge { font-size: .48rem; }
+  .squad-actions { min-width: 40px; gap: .2rem; }
+  .text-button { font-size: .66rem; }
+  .squad-slot { height: 60px; font-size: .66rem; }
+  .calendar-card { gap: .75rem; padding: 1.1rem; border-radius: 18px; }
+  .calendar-card > p:not(.eyebrow) { font-size: .78rem; line-height: 1.5; }
+  .page { width: 100%; }
+  .page-heading { margin-bottom: 1.65rem; }
+  .page-heading h1 { font-size: clamp(1.7rem, 9vw, 2.2rem); }
+  .home-actions, .concept-grid, .supporters-list { grid-template-columns: 1fr; }
+  .team-heading, .save-bar, .home-team-summary { min-width: 0; }
+  .league-hero { padding: 1.1rem; border-radius: 16px; }
+  .league-hero::after { top: -70px; right: -65px; width: 170px; height: 170px; box-shadow: 0 0 0 18px rgba(24,35,0,.05); }
+  .league-hero h1 { max-width: 10ch; font-size: clamp(1.7rem, 8.5vw, 2.2rem); }
+  .league-hero span { font-size: .64rem; }
+  .supporters-card { padding: .9rem; border-radius: 14px; }
+  .supporters-card__head { align-items: start; flex-direction: column; gap: .65rem; margin-bottom: .85rem; }
+  .supporters-card__head h2 { font-size: 1.05rem; }
+  .supporters-card__head > span { padding: .35rem .55rem; font-size: .62rem; }
+  .supporter-row { gap: .55rem; }
+  .supporter-row .club-logo, .supporter-row .club-mark { width: 30px; height: 30px; border-radius: 9px; }
+  .supporter-row > div > div { flex-wrap: wrap; font-size: .68rem; }
+  .supporter-row strong { overflow: visible; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
+  .supporter-row i { height: 5px; }
+  .members-list { gap: .55rem; }
+  .member-row { grid-template-columns: 22px minmax(0, 1fr); gap: .3rem; }
+  .member-row > span { font-size: .62rem; }
+  .league-member-card { min-width: 0; gap: .6rem; padding: .7rem; border-radius: 12px; }
+  .league-member-card h3 { flex-wrap: wrap; font-size: .8rem; }
+  .league-member-card h3 small { font-size: .54rem; }
+  .league-member-card p { overflow: visible; font-size: .66rem; text-overflow: clip; white-space: normal; overflow-wrap: anywhere; }
+  .league-member-card > span { font-size: .64rem; }
+  .site-footer { padding-top: 2rem; font-size: .72rem; }
 }
 
 @media (max-width: 420px) {
-  .page-content { padding-right: .8rem; padding-left: .8rem; }
-  .team-toolbar { flex-direction: column; }
-  .team-toolbar .button { width: 100%; }
-  .squad-section { padding: .85rem; }
-  .squad-player-card { align-items: flex-start; }
-  .squad-actions { min-width: 47px; }
+  .auth-form-wrap { padding: 1rem .85rem 1.25rem; }
+  .auth-language { top: .85rem; right: .85rem; }
+  .auth-language .language-switcher { min-width: 112px; font-size: .72rem; }
+  .auth-form h2 { font-size: 1.8rem; }
+  .page-content { padding: 5rem .7rem 1.25rem; }
+  .mobile-header { gap: .45rem; padding: .6rem .7rem; }
+  .mobile-brand { font-size: .58rem; }
+  .mobile-brand span:last-child { max-width: 9.6rem; }
+  .mobile-theme-toggle, .menu-toggle { width: 32px; height: 32px; font-size: .95rem; }
+  .menu-toggle { font-size: 1.05rem; }
+  .mobile-menu { width: min(280px, 82vw); padding: .75rem; }
+  .page-heading h1 { font-size: clamp(1.55rem, 9vw, 2rem); }
+  .home-hero { padding: .95rem; }
+  .home-hero h1 { font-size: clamp(1.55rem, 9vw, 2rem); }
+  .home-theme-toggle { font-size: .68rem; }
+  .button { padding: .68rem .85rem; }
+  .button--small { padding: .5rem .65rem; font-size: .72rem; }
+  .budget-card { grid-template-columns: 1fr; gap: .45rem; }
+  .budget-card__divider { display: none; }
+  .budget-card div:not(.budget-card__divider) { gap: .1rem; }
+  .squad-section { padding: .7rem; }
+  .squad-actions { min-width: 0; align-items: flex-start; }
   .squad-player-card h3 { align-items: flex-start; flex-direction: column; }
-  .profile-card { padding: 1.15rem; }
+  .profile-card { padding: .85rem; }
+  .avatar--lg { width: 64px; height: 64px; font-size: 1.35rem; }
+  .club-mark--large, .club-logo--large { width: 52px; height: 52px; border-radius: 16px; }
+  .roster-row { grid-template-columns: 34px minmax(0, 1fr); gap: .55rem; }
+  .modal-backdrop { padding: .5rem; }
+  .selector-modal { max-height: 86vh; }
+  .filters { padding: 0 .75rem .75rem; }
+  .selector-grid, .purchase-grid { padding: .75rem; }
+  .league-member-card { align-items: flex-start; }
 }
 
 /* Tablet: preserve comfortable cards without consuming the viewport with navigation. */
@@ -396,34 +525,4 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .home-actions, .concept-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .clubs-grid, .selector-grid, .purchase-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .supporters-list { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 760px) {
-  body { overflow-x: hidden; }
-  .page { width: 100%; }
-  .page-content { padding-top: 5.65rem; }
-  .page-heading { margin-bottom: 1.65rem; }
-  .page-heading h1 { font-size: clamp(1.85rem, 10vw, 2.45rem); }
-  .home-hero { padding: 1.35rem; border-radius: 18px; }
-  .home-hero h1 { font-size: clamp(2rem, 10vw, 2.75rem); }
-  .home-actions, .concept-grid, .supporters-list { grid-template-columns: 1fr; }
-  .home-action { min-height: 0; padding: 1rem; }
-  .home-support-card { grid-template-columns: 1fr; align-items: start; padding: 1.15rem; border-radius: 16px; }
-  .home-concept { padding: 1.15rem; border-radius: 18px; }
-  .concept-grid article { padding: .9rem; }
-  .team-heading, .save-bar, .home-team-summary { min-width: 0; }
-  .budget-card { grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr); gap: .65rem; padding: .9rem; }
-  .filters { grid-template-columns: 1fr; padding: 0 1rem 1rem; }
-  .selector-grid, .purchase-grid { grid-template-columns: 1fr; padding: 1rem; }
-  .selector-modal { max-height: 92vh; border-radius: 16px; }
-  .modal-header { padding: 1rem; }
-  .clubs-grid { grid-template-columns: 1fr; }
-  .club-card { min-height: 86px; }
-  .league-hero { padding: 1.35rem; border-radius: 18px; }
-  .league-hero h1 { font-size: clamp(1.9rem, 9vw, 2.5rem); }
-  .supporters-card { padding: 1rem; border-radius: 16px; }
-  .supporters-card__head { align-items: start; flex-direction: column; }
-  .member-row { grid-template-columns: 26px minmax(0, 1fr); gap: .35rem; }
-  .league-member-card { min-width: 0; padding: .8rem; }
-  .league-member-card h3, .league-member-card p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
