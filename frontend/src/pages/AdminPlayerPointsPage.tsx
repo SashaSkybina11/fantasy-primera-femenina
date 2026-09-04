@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { api } from "../services/api";
+import { useLocale } from "../contexts/LocaleContext";
 
 const empty = {
   participated: false,
@@ -18,12 +19,14 @@ const empty = {
 
 export function AdminPlayerPointsPage() {
   const { user } = useAuth();
+  const { t } = useLocale();
   const queryClient = useQueryClient();
   const [gameweekId, setGameweekId] = useState("");
   const [search, setSearch] = useState("");
   const [club, setClub] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const [form, setForm] = useState(empty);
+  const [price, setPrice] = useState(3000);
   const gameweeks = useQuery({
     queryKey: ["admin-gameweeks"],
     queryFn: api.adminGameweeks,
@@ -37,7 +40,7 @@ export function AdminPlayerPointsPage() {
   const save = useMutation({
     mutationFn: () => api.savePlayerStats(gameweekId, selected!, form),
     onSuccess: () => {
-      toast.success("Статистика сохранена, рейтинг пересчитан");
+      toast.success(t("adminStats.saved"));
       void queryClient.invalidateQueries({ queryKey: ["admin-player-points"] });
     },
     onError: (error) => toast.error(error.message),
@@ -45,7 +48,7 @@ export function AdminPlayerPointsPage() {
   const complete = useMutation({
     mutationFn: (id: string) => api.completeGameweek(id),
     onSuccess: () => {
-      toast.success("Тур завершён");
+      toast.success(t("adminStats.completed"));
       void queryClient.invalidateQueries({ queryKey: ["admin-gameweeks"] });
     },
     onError: (error) => toast.error(error.message),
@@ -53,8 +56,17 @@ export function AdminPlayerPointsPage() {
   const reopen = useMutation({
     mutationFn: (id: string) => api.reopenGameweek(id),
     onSuccess: () => {
-      toast.success("Тур открыт для исправлений");
+      toast.success(t("adminStats.reopened"));
       void queryClient.invalidateQueries({ queryKey: ["admin-gameweeks"] });
+    },
+    onError: (error) => toast.error(error.message),
+  });
+  const updatePrice = useMutation({
+    mutationFn: () => api.updatePlayerPrice(selected!, price),
+    onSuccess: () => {
+      toast.success(t("adminStats.priceSaved"));
+      void queryClient.invalidateQueries({ queryKey: ["admin-player-points"] });
+      void queryClient.invalidateQueries({ queryKey: ["players"] });
     },
     onError: (error) => toast.error(error.message),
   });
@@ -74,12 +86,10 @@ export function AdminPlayerPointsPage() {
   return (
     <div className="page admin-stats">
       <header className="page-heading">
-        <p className="eyebrow">Администрирование</p>
-        <h1>Очки игроков</h1>
-        <p className="muted">
-          События матча автоматически пересчитывают fantasy-очки и рейтинг.
-        </p>
-        <Link to="/admin/users">Пользователи →</Link>
+        <p className="eyebrow">{t("adminStats.eyebrow")}</p>
+        <h1>{t("adminStats.title")}</h1>
+        <p className="muted">{t("adminStats.description")}</p>
+        <Link to="/admin/users">{t("adminStats.usersLink")} →</Link>
       </header>
       <section className="admin-toolbar">
         <select
@@ -89,20 +99,20 @@ export function AdminPlayerPointsPage() {
             setSelected(null);
           }}
         >
-          <option value="">Выберите тур (1–30)</option>
+          <option value="">{t("adminStats.selectGameweek")}</option>
           {gameweeks.data?.map((item) => (
             <option key={item.id} value={item.id}>
-              {item.name} · {item.status}
+              {item.name} · {t(`gameweek.${item.status}`)}
             </option>
           ))}
         </select>
         <input
-          placeholder="Поиск по имени или клубу"
+          placeholder={t("adminStats.searchPlaceholder")}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
         <select value={club} onChange={(event) => setClub(event.target.value)}>
-          <option value="">Все клубы</option>
+          <option value="">{t("adminStats.allClubs")}</option>
           {Array.from(
             new Map(
               players.data?.map((player) => [
@@ -121,28 +131,28 @@ export function AdminPlayerPointsPage() {
             <button
               className="button button--secondary"
               onClick={() =>
-                window.confirm("Повторно открыть тур?") &&
+                window.confirm(t("adminStats.reopenConfirm")) &&
                 reopen.mutate(current.id)
               }
             >
-              Повторно открыть
+              {t("adminStats.reopen")}
             </button>
           ) : (
             <button
               className="button"
               onClick={() =>
-                window.confirm("Завершить тур и зафиксировать победителей?") &&
+                window.confirm(t("adminStats.completeConfirm")) &&
                 complete.mutate(current.id)
               }
             >
-              Завершить тур
+              {t("adminStats.complete")}
             </button>
           ))}
       </section>
       <div className="admin-stats-grid">
         <section className="admin-card">
           <div className="admin-card__head">
-            <h2>Игроки</h2>
+            <h2>{t("adminStats.players")}</h2>
             <span>{filtered.length}</span>
           </div>
           {filtered.map((player) => (
@@ -151,6 +161,7 @@ export function AdminPlayerPointsPage() {
               key={player.id}
               onClick={() => {
                 setSelected(player.id);
+                setPrice(player.price);
                 const stat = player.gameweekStats[0] as
                   | typeof empty
                   | undefined;
@@ -176,7 +187,7 @@ export function AdminPlayerPointsPage() {
                   {player.club?.name} · {player.role}
                 </small>
               </span>
-              <b>{player.lastGameweekPoints} pts</b>
+              <b>{player.lastGameweekPoints} {t("common.pointsShort")}</b>
             </button>
           ))}
         </section>
@@ -200,26 +211,26 @@ export function AdminPlayerPointsPage() {
                     setForm({ ...form, participated: e.target.checked })
                   }
                 />{" "}
-                Участвовала
+                {t("adminStats.participated")}
               </label>
               <label>
-                Результат
+                {t("adminStats.result")}
                 <select
                   value={form.result}
                   onChange={(e) => setForm({ ...form, result: e.target.value })}
                 >
-                  <option value="WIN">Победа</option>
-                  <option value="DRAW">Ничья</option>
-                  <option value="LOSS">Поражение</option>
+                  <option value="WIN">{t("adminStats.win")}</option>
+                  <option value="DRAW">{t("adminStats.draw")}</option>
+                  <option value="LOSS">{t("adminStats.loss")}</option>
                 </select>
               </label>
               {(["goals", "yellowCards", "redCards"] as const).map((key) => (
                 <label key={key}>
                   {key === "goals"
-                    ? "Голы"
+                    ? t("adminStats.goals")
                     : key === "yellowCards"
-                      ? "Жёлтые карточки"
-                      : "Красные карточки"}
+                      ? t("adminStats.yellowCards")
+                      : t("adminStats.redCards")}
                   <input
                     type="number"
                     min="0"
@@ -240,11 +251,11 @@ export function AdminPlayerPointsPage() {
                       setForm({ ...form, cleanSheet: e.target.checked })
                     }
                   />{" "}
-                  Сухой матч
+                  {t("adminStats.cleanSheet")}
                 </label>
               )}
               <label>
-                Корректировка
+                {t("adminStats.adjustment")}
                 <input
                   type="number"
                   value={form.adjustmentPoints}
@@ -257,7 +268,7 @@ export function AdminPlayerPointsPage() {
                 />
               </label>
               <label>
-                Причина
+                {t("adminStats.reason")}
                 <textarea
                   value={form.adjustmentReason}
                   onChange={(e) =>
@@ -265,12 +276,21 @@ export function AdminPlayerPointsPage() {
                   }
                 />
               </label>
+              <div className="admin-price-control">
+                <label>
+                  {t("adminStats.price")}
+                  <input type="number" min="0" step="100" value={price} onChange={(event) => setPrice(Number(event.target.value))} />
+                </label>
+                <button type="button" className="button button--secondary" disabled={updatePrice.isPending} onClick={() => updatePrice.mutate()}>
+                  {t("adminStats.savePrice")}
+                </button>
+              </div>
               <button className="button" disabled={save.isPending}>
-                Сохранить и пересчитать
+                {t("adminStats.save")}
               </button>
             </form>
           ) : (
-            <p className="muted">Выберите тур и игрока.</p>
+            <p className="muted">{t("adminStats.selectHint")}</p>
           )}
         </section>
       </div>

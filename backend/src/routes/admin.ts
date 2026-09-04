@@ -55,6 +55,14 @@ router.get("/player-points", asyncRoute(async (request, response) => {
   response.json(players.map((player) => ({ ...player, totalFantasyPoints: player.gameweekStats.reduce((sum, stat) => sum + stat.totalPoints, 0), lastGameweekPoints: player.gameweekStats[0]?.totalPoints ?? 0 })));
 }));
 
+router.patch("/players/:id/price", asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  const { price } = z.object({ price: z.number().int().min(0).max(1_000_000) }).parse(request.body);
+  const player = await prisma.player.update({ where: { id }, data: { price } }).catch(() => null);
+  if (!player) throw new ApiError(404, "Игрок не найден");
+  response.json(player);
+}));
+
 const statsSchema = z.object({ participated: z.boolean(), result: z.nativeEnum(MatchResult), goals: z.number().int().min(0).max(99), yellowCards: z.number().int().min(0).max(9), redCards: z.number().int().min(0).max(9), cleanSheet: z.boolean(), adjustmentPoints: z.number().int().min(-100).max(100).default(0), adjustmentReason: z.string().trim().max(500).optional() });
 router.put("/gameweeks/:gameweekId/players/:playerId/stats", asyncRoute(async (request, response) => {
   const gameweekId = z.string().cuid().parse(request.params.gameweekId); const playerId = z.string().cuid().parse(request.params.playerId); const input = statsSchema.parse(request.body);

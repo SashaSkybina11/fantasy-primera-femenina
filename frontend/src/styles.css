@@ -620,6 +620,8 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .purchase-deadline p { margin: 0; color: var(--muted); line-height: 1.45; }
 .purchase-deadline__schedule { display: grid; gap: .2rem; }
 .purchase-deadline__schedule p:last-child { font-size: .74rem; }
+.price-change-notice { margin-bottom: 1rem; padding: .8rem 1rem; border-radius: 12px; background: var(--surface-soft); color: var(--muted); font-size: .78rem; line-height: 1.5; }
+.admin-price-control { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .7rem; align-items: end; padding-top: .35rem; border-top: 1px solid var(--border); }
 .purchase-deadline small { color: var(--muted); white-space: nowrap; }
 .leaderboard-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto auto; gap: .8rem; align-items: center; padding: .8rem 12px; border-bottom: 1px solid var(--border); }
 .leaderboard-row em { color: var(--primary); font-style: normal; font-weight: 800; }
@@ -644,6 +646,8 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .market-status { align-items: flex-start; flex-direction: column; }
   .market-status p { text-align: left; }
   .purchase-deadline { grid-template-columns: 1fr; gap: .55rem; padding: .9rem 10px; }
+  .admin-price-control { grid-template-columns: 1fr; }
+  .admin-price-control .button { width: 100%; }
   .admin-toolbar { grid-template-columns: 1fr; }
   .admin-toolbar .button { width: 100%; }
   .admin-card__head, .admin-user { padding: .85rem 10px; }

@@ -175,6 +175,7 @@ export const api = {
   adminGameweeks: () => request<Array<Gameweek & { winners: Array<{ id: string; points: number; user: AdminUser }> }>>("/admin/gameweeks"),
   adminPlayerPoints: (gameweekId?: string) => request<Array<Player & { totalFantasyPoints: number; lastGameweekPoints: number; gameweekStats: Array<Record<string, unknown>> }>>(`/admin/player-points${gameweekId ? `?gameweekId=${gameweekId}` : ""}`),
   savePlayerStats: (gameweekId: string, playerId: string, payload: Record<string, unknown>) => request<unknown>(`/admin/gameweeks/${gameweekId}/players/${playerId}/stats`, { method: "PUT", body: JSON.stringify(payload) }),
+  updatePlayerPrice: (playerId: string, price: number) => request<Player>(`/admin/players/${playerId}/price`, { method: "PATCH", body: JSON.stringify({ price }) }),
   completeGameweek: (id: string) => request<Gameweek>(`/admin/gameweeks/${id}/complete`, { method: "POST" }),
   reopenGameweek: (id: string) => request<Gameweek>(`/admin/gameweeks/${id}/reopen`, { method: "POST" }),
   deleteAdminUser: (id: string) => request<void>(`/admin/users/${id}`, { method: "DELETE" }),

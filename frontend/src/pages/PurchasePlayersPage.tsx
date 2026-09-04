@@ -112,6 +112,7 @@ export function PurchasePlayersPage() {
           </small>
         </section>
       )}
+      <aside className="price-change-notice">{t("purchase.dynamicPriceNotice")}</aside>
       <section className="purchase-panel">
         <PlayerFilters
           clubs={clubs.data ?? []}

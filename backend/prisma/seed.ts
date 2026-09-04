@@ -72,7 +72,7 @@ async function main() {
     const clubId = createdClubs.get(player.club);
     if (!clubId) throw new Error(`Не найден клуб ${player.club}`);
     const role = resolvePlayerRole(player);
-    const price = 2000;
+    const price = 3000;
 
     await prisma.player.upsert({
       where: { clubId_number_name: { clubId, number: player.number, name: player.name } },
@@ -99,7 +99,7 @@ async function main() {
 
   // Also normalize any player that was added manually and is not present in
   // the static seed catalog.
-  await prisma.player.updateMany({ data: { price: 2000 } });
+  await prisma.player.updateMany({ data: { price: 3000 } });
 
   await prisma.league.upsert({
     where: { name: "Fantasy Primera División Fútbol Sala Femenino" },

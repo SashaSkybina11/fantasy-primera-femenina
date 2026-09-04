@@ -117,7 +117,7 @@ export function ProfilePage() {
               )}
             </div>
             <small className="muted">
-              Registro: {new Date(data.createdAt).toLocaleDateString()}
+              {t("profile.registeredAt")}: {new Date(data.createdAt).toLocaleDateString()}
             </small>
             <button className="button" onClick={() => setEdit(true)}>
               {t("profile.edit")}
