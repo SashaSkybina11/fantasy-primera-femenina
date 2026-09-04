@@ -13,7 +13,9 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { PurchasePlayersPage } from "./pages/PurchasePlayersPage";
 import { TeamsPage } from "./pages/TeamsPage";
 import { AdminPage } from "./pages/AdminPage";
+import { AdminPlayerPointsPage } from "./pages/AdminPlayerPointsPage";
 import { Loader } from "./components/Loader";
+import { LeaderboardPage } from "./pages/LeaderboardPage";
 
 function ProtectedLayout() {
   const { user, isLoading } = useAuth();
@@ -32,12 +34,15 @@ export function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/admin" element={<AdminPage />} />
+      <Route path="/admin/users" element={<AdminPage />} />
+      <Route path="/admin/player-points" element={<AdminPlayerPointsPage />} />
       <Route path="/my-team" element={<MyTeamPage />} />
       <Route path="/purchase-players" element={<PurchasePlayersPage />} />
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/teams" element={<TeamsPage />} />
       <Route path="/teams/:clubId" element={<ClubPage />} />
       <Route path="/league" element={<LeaguePage />} />
+      <Route path="/leaderboard" element={<LeaderboardPage />} />
       <Route path="/league/member/:userId" element={<MemberTeamPage />} />
     </Route>
     <Route path="*" element={<Navigate to="/" replace />} />

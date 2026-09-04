@@ -72,6 +72,9 @@ const profileSchema = z.object({
     .min(2, "Введите название команды")
     .max(60)
     .optional(),
+  instagram: z.string().trim().max(200).optional(),
+  whatsapp: z.string().trim().max(30).optional(),
+  contactConsent: z.preprocess((value) => value === true || value === "true", z.boolean()).optional(),
   removeAvatar: z.preprocess(
     (value) =>
       value === "true" || value === true
@@ -94,6 +97,10 @@ function serialize(user: {
   name: string;
   role: "USER" | "ADMIN";
   avatarUrl: string | null;
+  instagram: string | null;
+  whatsapp: string | null;
+  contactConsent: boolean;
+  createdAt: Date;
   favoriteClub: { id: string; name: string; logoUrl: string | null } | null;
   fantasyTeam: { id: string; name: string; budget: number } | null;
 }) {
@@ -103,6 +110,12 @@ function serialize(user: {
     name: user.name,
     role: user.role,
     avatarUrl: user.avatarUrl,
+    instagram: user.instagram,
+    instagramUrl: user.instagram ? `https://instagram.com/${user.instagram}` : null,
+    whatsapp: user.whatsapp,
+    whatsappUrl: user.whatsapp ? `https://wa.me/${user.whatsapp.slice(1)}` : null,
+    contactConsent: user.contactConsent,
+    createdAt: user.createdAt,
     favoriteClub: user.favoriteClub,
     fantasyTeam: user.fantasyTeam,
   };
@@ -191,6 +204,7 @@ router.patch(
       if (
         input.name === undefined &&
         input.teamName === undefined &&
+        input.instagram === undefined && input.whatsapp === undefined && input.contactConsent === undefined &&
         !request.file &&
         input.removeAvatar !== true
       ) {
@@ -217,6 +231,9 @@ router.patch(
           where: { id: current.id },
           data: {
             ...(input.name !== undefined ? { name: input.name } : {}),
+            ...(input.instagram !== undefined ? { instagram: normalizeInstagram(input.instagram) } : {}),
+            ...(input.whatsapp !== undefined ? { whatsapp: normalizeWhatsapp(input.whatsapp) } : {}),
+            ...(input.contactConsent !== undefined ? { contactConsent: input.contactConsent } : {}),
             ...(avatarUrl !== undefined ? { avatarUrl } : {}),
           },
           include: {
@@ -287,3 +304,18 @@ router.patch(
 );
 
 export default router;
+
+function normalizeInstagram(value: string) {
+  const normalized = value.trim().replace(/^https?:\/\/(?:www\.)?instagram\.com\//i, "").replace(/^@/, "").replace(/\?.*$/, "").replace(/\/$/, "");
+  if (!normalized) return null;
+  if (!/^[a-zA-Z0-9._]{1,30}$/.test(normalized)) throw new ApiError(400, "Некорректный Instagram");
+  return normalized.toLowerCase();
+}
+
+function normalizeWhatsapp(value: string) {
+  const digits = value.replace(/[^\d+]/g, "").replace(/(?!^)\+/g, "");
+  if (!digits) return null;
+  const normalized = digits.startsWith("+") ? digits : `+${digits}`;
+  if (!/^\+[1-9]\d{7,14}$/.test(normalized)) throw new ApiError(400, "Введите WhatsApp в международном формате");
+  return normalized;
+}

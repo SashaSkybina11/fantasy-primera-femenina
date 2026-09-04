@@ -29,19 +29,56 @@ enum UserRole {
   ADMIN
 }
 
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum GameweekStatus {
+  UPCOMING
+  OPEN
+  LOCKED
+  CALCULATING
+  COMPLETED
+}
+
+enum MatchResult {
+  WIN
+  DRAW
+  LOSS
+}
+
+enum AdminActionType {
+  PLAYER_STATS_UPDATED
+  PLAYER_POINTS_ADJUSTED
+  GAMEWEEK_COMPLETED
+  GAMEWEEK_REOPENED
+  WINNERS_CHANGED
+}
+
 model User {
-  id           String         @id @default(cuid())
-  email        String         @unique
-  passwordHash String
-  name         String
-  role         UserRole       @default(USER)
-  avatarUrl    String?
-  favoriteClubId String?
-  fantasyTeam  FantasyTeam?
-  memberships  LeagueMember[]
-  favoriteClub Club?          @relation("FavoriteClub", fields: [favoriteClubId], references: [id], onDelete: SetNull)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  id                    String                @id @default(cuid())
+  email                 String                @unique
+  passwordHash          String
+  name                  String
+  role                  UserRole              @default(USER)
+  status                AccountStatus         @default(ACTIVE)
+  avatarUrl             String?
+  instagram             String?
+  whatsapp              String?
+  contactConsent        Boolean               @default(false)
+  favoriteClubId        String?
+  fantasyTeam           FantasyTeam?
+  memberships           LeagueMember[]
+  gameweekSquads        UserGameweekSquad[]
+  gameweekPoints        UserGameweekPoints[]
+  pointAdjustments      UserPointAdjustment[]
+  adminPointAdjustments UserPointAdjustment[] @relation("PointAdjustmentAdmin")
+  adminAuditLogs        AdminAuditLog[]       @relation("AuditAdmin")
+  gameweekWins          GameweekWinner[]
+  favoriteClub          Club?                 @relation("FavoriteClub", fields: [favoriteClubId], references: [id], onDelete: SetNull)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
 
   @@index([favoriteClubId])
 }
@@ -58,39 +95,180 @@ model FantasyTeam {
 }
 
 model Club {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  logoUrl   String?
-  coach     String?
-  president String?
-  players   Player[]
-  supporters User[] @relation("FavoriteClub")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  name       String   @unique
+  logoUrl    String?
+  coach      String?
+  president  String?
+  players    Player[]
+  supporters User[]   @relation("FavoriteClub")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Player {
-  id           String         @id @default(cuid())
-  clubId       String
-  name         String
-  number       Int
-  position     PlayerPosition
-  role         PlayerRole
-  price        Int
-  age          Int?
-  nationality  String?
-  photoUrl     String?
+  id          String         @id @default(cuid())
+  clubId      String
+  name        String
+  number      Int
+  position    PlayerPosition
+  role        PlayerRole
+  price       Int
+  age         Int?
+  nationality String?
+  photoUrl    String?
 
-  club         Club           @relation(fields: [clubId], references: [id], onDelete: Cascade)
-  fantasyTeams FantasyTeamPlayer[]
+  club            Club                  @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  fantasyTeams    FantasyTeamPlayer[]
+  gameweekStats   PlayerGameweekStats[]
+  snapshotEntries UserGameweekPlayer[]
 
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([clubId, number, name])
   @@index([clubId])
   @@index([position])
   @@index([role])
+}
+
+model Gameweek {
+  id             String                @id @default(cuid())
+  number         Int                   @unique
+  name           String
+  status         GameweekStatus        @default(UPCOMING)
+  startsAt       DateTime
+  endsAt         DateTime
+  marketOpenAt   DateTime
+  deadlineAt     DateTime
+  completedAt    DateTime?
+  entryFeeCents  Int                   @default(0)
+  currency       String                @default("EUR")
+  prizePoolCents Int                   @default(0)
+  squads         UserGameweekSquad[]
+  playerStats    PlayerGameweekStats[]
+  userPoints     UserGameweekPoints[]
+  adjustments    UserPointAdjustment[]
+  winners        GameweekWinner[]
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  @@index([status, deadlineAt])
+}
+
+model PlayerGameweekStats {
+  id               String      @id @default(cuid())
+  gameweekId       String
+  playerId         String
+  participated     Boolean     @default(false)
+  result           MatchResult @default(LOSS)
+  goals            Int         @default(0)
+  yellowCards      Int         @default(0)
+  redCards         Int         @default(0)
+  cleanSheet       Boolean     @default(false)
+  calculatedPoints Int         @default(0)
+  adjustmentPoints Int         @default(0)
+  totalPoints      Int         @default(0)
+  adjustmentReason String?
+  adjustedById     String?
+  adjustedAt       DateTime?
+  gameweek         Gameweek    @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  player           Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@unique([gameweekId, playerId])
+  @@index([playerId])
+}
+
+model UserGameweekSquad {
+  id              String               @id @default(cuid())
+  gameweekId      String
+  userId          String
+  fantasyTeamName String
+  snapshottedAt   DateTime             @default(now())
+  gameweek        Gameweek             @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  players         UserGameweekPlayer[]
+
+  @@unique([gameweekId, userId])
+  @@index([userId])
+}
+
+model UserGameweekPlayer {
+  id        String            @id @default(cuid())
+  squadId   String
+  playerId  String
+  status    SquadStatus
+  isCaptain Boolean           @default(false)
+  squad     UserGameweekSquad @relation(fields: [squadId], references: [id], onDelete: Cascade)
+  player    Player            @relation(fields: [playerId], references: [id], onDelete: Restrict)
+
+  @@unique([squadId, playerId])
+  @@index([playerId])
+}
+
+model UserGameweekPoints {
+  id               String   @id @default(cuid())
+  gameweekId       String
+  userId           String
+  playerPoints     Int      @default(0)
+  captainBonus     Int      @default(0)
+  adjustmentPoints Int      @default(0)
+  totalPoints      Int      @default(0)
+  starterGoals     Int      @default(0)
+  rank             Int?
+  isFinal          Boolean  @default(false)
+  breakdown        Json?
+  gameweek         Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updatedAt        DateTime @updatedAt
+
+  @@unique([gameweekId, userId])
+  @@index([userId, totalPoints])
+}
+
+model UserPointAdjustment {
+  id         String   @id @default(cuid())
+  gameweekId String
+  userId     String
+  points     Int
+  reason     String
+  adminId    String
+  gameweek   Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  admin      User     @relation("PointAdjustmentAdmin", fields: [adminId], references: [id], onDelete: Restrict)
+  createdAt  DateTime @default(now())
+
+  @@index([gameweekId, userId])
+}
+
+model GameweekWinner {
+  id         String   @id @default(cuid())
+  gameweekId String
+  userId     String
+  rank       Int
+  points     Int
+  gameweek   Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt  DateTime @default(now())
+
+  @@unique([gameweekId, userId])
+}
+
+model AdminAuditLog {
+  id          String          @id @default(cuid())
+  adminUserId String
+  action      AdminActionType
+  entityType  String
+  entityId    String
+  oldData     Json?
+  newData     Json?
+  admin       User            @relation("AuditAdmin", fields: [adminUserId], references: [id], onDelete: Restrict)
+  createdAt   DateTime        @default(now())
+
+  @@index([entityType, entityId])
+  @@index([adminUserId, createdAt])
 }
 
 model FantasyTeamPlayer {

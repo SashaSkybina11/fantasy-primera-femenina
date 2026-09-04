@@ -6,6 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useLocale } from "../contexts/LocaleContext";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { Loader } from "../components/Loader";
+import { PasswordInput } from "../components/PasswordInput";
 
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const { user, isLoading, login, register } = useAuth();
@@ -33,7 +34,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
     <section className="auth-form-wrap"><div className="auth-language"><LanguageSwitcher /></div><form className="auth-form" onSubmit={submit}><p className="eyebrow">{isRegister ? t("auth.newMember") : t("auth.leagueMember")}</p><h2>{isRegister ? t("auth.createProfile") : t("auth.welcomeBack")}</h2><p className="muted">{isRegister ? t("auth.registerDescription") : t("auth.loginDescription")}</p>
       {isRegister && <label>{t("auth.name")}<input required minLength={2} autoComplete="name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} placeholder={t("auth.namePlaceholder")} /></label>}
       <label>{t("auth.email")}<input required type="email" autoComplete="email" value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} placeholder="you@example.com" /></label>
-      <label>{t("auth.password")}<input required type="password" minLength={8} autoComplete={isRegister ? "new-password" : "current-password"} value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder={t("auth.passwordPlaceholder")} /></label>
+      <label>{t("auth.password")}<PasswordInput required minLength={8} autoComplete={isRegister ? "new-password" : "current-password"} value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} placeholder={t("auth.passwordPlaceholder")} /></label>
       <button className="button button--wide" disabled={isPending}>{isPending ? t("auth.wait") : isRegister ? t("auth.createAccount") : t("auth.signIn")}</button>
       <p className="switch-auth">{isRegister ? t("auth.hasAccount") : t("auth.newHere")} <button type="button" onClick={() => navigate(isRegister ? "/login" : "/register")}>{isRegister ? t("auth.signIn") : t("auth.signUp")}</button></p>
     </form></section>

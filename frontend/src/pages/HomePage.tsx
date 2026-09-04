@@ -13,6 +13,7 @@ export function HomePage() {
   const { user, setUser } = useAuth();
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
+  const gameweek = useQuery({ queryKey: ["current-gameweek"], queryFn: api.currentGameweek });
   const favoriteClub = useMutation({
     mutationFn: api.setFavoriteClub,
     onSuccess: (profile) => setUser(profile),
@@ -22,6 +23,7 @@ export function HomePage() {
     <section className="home-hero">
       <div><p className="eyebrow">{t("home.eyebrow")}</p><h1>Fantasy Primera División Fútbol Sala Femenino</h1><p>{t("home.description")}</p></div>
     </section>
+    {gameweek.data && <section className={`market-status market-status--${gameweek.data.status.toLowerCase()}`}><div><p className="eyebrow">{gameweek.data.name}</p><h2>{gameweek.data.status === "OPEN" ? "Рынок открыт" : gameweek.data.status === "COMPLETED" ? "Тур завершён" : "Состав зафиксирован"}</h2></div><p>{gameweek.data.status === "OPEN" ? "Изменения доступны до" : "Следующая контрольная дата"}: <strong>{new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Madrid", dateStyle: "full", timeStyle: "short" }).format(new Date(gameweek.data.status === "OPEN" ? gameweek.data.deadlineAt : gameweek.data.endsAt))}</strong> <small>Europe/Madrid</small></p></section>}
     <section className="home-actions" aria-label={t("home.actions")}>
       <Link className="home-action" to="/my-team"><span><TbPlayFootball aria-hidden="true" /></span><div><h2>{t("nav.myTeam")}</h2><p>{t("home.myTeam")}</p></div></Link>
       <Link className="home-action" to="/purchase-players"><span><GiBuyCard aria-hidden="true" /></span><div><h2>{t("nav.purchase")}</h2><p>{t("home.purchase")}</p></div></Link>

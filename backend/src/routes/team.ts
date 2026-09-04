@@ -6,6 +6,7 @@ import { inTransaction } from "../lib/transaction.js";
 import { authenticate } from "../middleware/auth.js";
 import { ensureValidLineup, getOwnTeam, teamInclude, withTeamDisplayNumbers } from "../services/team.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
+import { requireOpenMarket } from "../services/gameweeks.js";
 
 const router = Router();
 const playerIdSchema = z.object({ playerId: z.string().cuid() });
@@ -21,6 +22,7 @@ router.get("/", asyncRoute(async (request, response) => {
 }));
 
 router.post("/players", asyncRoute(async (request, response) => {
+  await requireOpenMarket();
   const { playerId } = playerIdSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
     const current = await tx.fantasyTeam.findUnique({
@@ -49,6 +51,7 @@ router.post("/players", asyncRoute(async (request, response) => {
 }));
 
 router.delete("/players/:playerId", asyncRoute(async (request, response) => {
+  await requireOpenMarket();
   const playerId = z.string().cuid().parse(request.params.playerId);
   const team = await inTransaction(async (tx) => {
     const current = await tx.fantasyTeam.findUnique({ where: { userId: request.auth!.userId } });
@@ -69,6 +72,7 @@ router.delete("/players/:playerId", asyncRoute(async (request, response) => {
 }));
 
 router.patch("/players/:playerId", asyncRoute(async (request, response) => {
+  await requireOpenMarket();
   const playerId = z.string().cuid().parse(request.params.playerId);
   const { status } = statusSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
@@ -92,6 +96,7 @@ router.patch("/players/:playerId", asyncRoute(async (request, response) => {
 }));
 
 router.patch("/lineup", asyncRoute(async (request, response) => {
+  await requireOpenMarket();
   const input = lineupSchema.parse(request.body);
   const uniqueIds = new Set(input.players.map((player) => player.playerId));
   if (uniqueIds.size !== 10) throw new ApiError(400, "В составе есть повторяющиеся игроки");
@@ -122,6 +127,7 @@ router.patch("/lineup", asyncRoute(async (request, response) => {
 }));
 
 router.patch("/captain", asyncRoute(async (request, response) => {
+  await requireOpenMarket();
   const { playerId } = playerIdSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
     const current = await tx.fantasyTeam.findUnique({ where: { userId: request.auth!.userId } });

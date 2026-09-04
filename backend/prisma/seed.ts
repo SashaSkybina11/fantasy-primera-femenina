@@ -109,6 +109,20 @@ async function main() {
     create: { name: "Fantasy Primera División Fútbol Sala Femenino" },
   });
 
+  await prisma.gameweek.upsert({
+    where: { number: 1 },
+    update: {},
+    create: {
+      number: 1,
+      name: "Jornada 1",
+      status: "OPEN",
+      marketOpenAt: new Date("2026-08-31T06:00:00.000Z"),
+      deadlineAt: new Date("2026-09-04T17:00:00.000Z"),
+      startsAt: new Date("2026-09-04T17:00:00.000Z"),
+      endsAt: new Date("2026-09-06T21:59:59.000Z"),
+    },
+  });
+
   await syncFantasyTeamBudgets();
 
   console.info(`Seed complete: ${clubs.length} клубов, ${players.length} игроков.`);

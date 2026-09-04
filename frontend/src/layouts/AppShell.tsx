@@ -40,6 +40,7 @@ function NavLinks({ mobile = false, isAdmin = false, onNavigate }: { mobile?: bo
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/league", label: t("nav.league"), icon: "trophy" as const },
+    { to: "/leaderboard", label: "Рейтинг", icon: "trophy" as const },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },
     ...(isAdmin ? [{ to: "/admin", label: t("nav.admin"), icon: "admin" as const }] : []),
   ];

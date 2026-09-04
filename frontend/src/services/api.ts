@@ -1,4 +1,4 @@
-import type { AdminUser, Club, ClubSupport, FantasyTeam, League, LeagueMember, MemberDetail, Player, PlayerRole, Profile, SquadStatus, User } from "../types";
+import type { AdminUser, Club, ClubSupport, FantasyTeam, Gameweek, LeaderboardRow, League, LeagueMember, MemberDetail, Player, PlayerRole, Profile, SquadStatus, User } from "../types";
 import { getStoredLocale, type Locale } from "../contexts/LocaleContext";
 
 // In production the Vercel function is served by the same origin. The localhost
@@ -168,5 +168,14 @@ export const api = {
   supporters: () => request<ClubSupport[]>("/league/supporters"),
   member: (id: string) => request<MemberDetail>(`/league/members/${id}`),
   adminUsers: () => request<AdminUser[]>("/admin/users"),
+  currentGameweek: () => request<Gameweek | null>("/gameweeks/current"),
+  overallLeaderboard: () => request<LeaderboardRow[]>("/gameweeks/leaderboard"),
+  gameweekLeaderboard: (id: string) => request<LeaderboardRow[]>(`/gameweeks/${id}/leaderboard`),
+  gameweekHistory: () => request<Array<{ id: string; totalPoints: number; breakdown: Array<{ playerId: string; name: string; isCaptain: boolean; basePoints: number; points: number }>; gameweek: Gameweek }>>("/gameweeks/history/me"),
+  adminGameweeks: () => request<Array<Gameweek & { winners: Array<{ id: string; points: number; user: AdminUser }> }>>("/admin/gameweeks"),
+  adminPlayerPoints: (gameweekId?: string) => request<Array<Player & { totalFantasyPoints: number; lastGameweekPoints: number; gameweekStats: Array<Record<string, unknown>> }>>(`/admin/player-points${gameweekId ? `?gameweekId=${gameweekId}` : ""}`),
+  savePlayerStats: (gameweekId: string, playerId: string, payload: Record<string, unknown>) => request<unknown>(`/admin/gameweeks/${gameweekId}/players/${playerId}/stats`, { method: "PUT", body: JSON.stringify(payload) }),
+  completeGameweek: (id: string) => request<Gameweek>(`/admin/gameweeks/${id}/complete`, { method: "POST" }),
+  reopenGameweek: (id: string) => request<Gameweek>(`/admin/gameweeks/${id}/reopen`, { method: "POST" }),
   deleteAdminUser: (id: string) => request<void>(`/admin/users/${id}`, { method: "DELETE" }),
 };
