@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoIosFootball } from "react-icons/io";
 import { GiBuyCard } from "react-icons/gi";
+import { GiRaceCar } from "react-icons/gi";
 import { RiTeamLine } from "react-icons/ri";
 import { MdOutlinePersonOutline } from "react-icons/md";
 import { MdAdminPanelSettings } from "react-icons/md";
@@ -15,7 +16,7 @@ import { useLocale } from "../contexts/LocaleContext";
 
 const projectName = <>Fantasy Primera División<br />Fútbol Sala Femenino</>;
 
-type IconName = "trophy" | "home" | "my-team" | "purchase" | "calendar" | "teams" | "profile" | "admin";
+type IconName = "trophy" | "ranking" | "home" | "my-team" | "purchase" | "calendar" | "teams" | "profile" | "admin";
 
 function FootballIcon({ name }: { name: IconName }) {
   const common = { fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
@@ -23,6 +24,7 @@ function FootballIcon({ name }: { name: IconName }) {
   if (name === "home") return <IoIosFootball aria-hidden="true" />;
   if (name === "my-team") return <TbPlayFootball aria-hidden="true" />;
   if (name === "purchase") return <GiBuyCard aria-hidden="true" />;
+  if (name === "ranking") return <GiRaceCar aria-hidden="true" />;
   if (name === "calendar") return <IoCalendarOutline aria-hidden="true" />;
   if (name === "teams") return <RiTeamLine aria-hidden="true" />;
   if (name === "profile") return <MdOutlinePersonOutline aria-hidden="true" />;
@@ -40,7 +42,7 @@ function NavLinks({ mobile = false, isAdmin = false, onNavigate }: { mobile?: bo
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/league", label: t("nav.league"), icon: "trophy" as const },
-    { to: "/leaderboard", label: "Рейтинг", icon: "trophy" as const },
+    { to: "/leaderboard", label: "Рейтинг", icon: "ranking" as const },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },
     ...(isAdmin ? [{ to: "/admin", label: t("nav.admin"), icon: "admin" as const }] : []),
   ];

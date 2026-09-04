@@ -177,7 +177,7 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .home-concept p { color: var(--muted); font-size: .82rem; line-height: 1.55; }
 .home-concept__source { font-size: .74rem !important; }
 .home-concept__source a { color: var(--text); font-weight: 800; text-decoration: underline; text-underline-offset: .2em; }
-.concept-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
+.concept-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
 .concept-grid article { min-width: 0; padding: 1rem; border-radius: 14px; background: var(--surface-soft); }
 .concept-grid article > span { color: var(--primary); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .68rem; font-weight: 800; }
 .concept-grid h3 { margin: .65rem 0 .4rem; font-size: .92rem; }
@@ -614,8 +614,51 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .consent-check { display: flex !important; flex-direction: row !important; align-items: flex-start; gap: .6rem; }
 .consent-check input { width: auto; margin-top: .2rem; }
 .contact-links { display: flex; flex-wrap: wrap; gap: .7rem; }
-.leaderboard-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto auto; gap: .8rem; align-items: center; padding: .8rem 0; border-bottom: 1px solid var(--border); }
+.purchase-deadline { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 1rem; align-items: center; margin-bottom: 1rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-left: 5px solid #8aa621; border-radius: 16px; background: var(--surface); }
+.purchase-deadline--closed { border-left-color: #e4a11b; }
+.purchase-deadline > div { display: grid; gap: .15rem; }
+.purchase-deadline p { margin: 0; color: var(--muted); line-height: 1.45; }
+.purchase-deadline small { color: var(--muted); white-space: nowrap; }
+.leaderboard-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto auto; gap: .8rem; align-items: center; padding: .8rem 12px; border-bottom: 1px solid var(--border); }
 .leaderboard-row em { color: var(--primary); font-style: normal; font-weight: 800; }
 .history-row { padding: .8rem 0; border-bottom: 1px solid var(--border); }
 .history-row summary, .history-row div { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem; cursor: pointer; }
-@media (max-width: 760px) { .market-status { align-items: flex-start; flex-direction: column; } .market-status p { text-align: left; } .admin-toolbar, .admin-stats-grid { grid-template-columns: 1fr; } }
+.stats-form { padding: 1.25rem; }
+.admin-stats-grid > .admin-card > .muted { padding: 10px; }
+.admin-user > div { min-width: 0; overflow-wrap: anywhere; }
+
+@media (min-width: 761px) and (max-width: 1180px) {
+  .leaderboard-row { padding-right: 10px; padding-left: 10px; }
+  .admin-toolbar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stats-form { padding: 1rem; }
+}
+
+@media (max-width: 900px) {
+  .admin-stats-grid { grid-template-columns: 1fr; }
+  .admin-stats-grid > .admin-card { min-width: 0; }
+}
+
+@media (max-width: 760px) {
+  .market-status { align-items: flex-start; flex-direction: column; }
+  .market-status p { text-align: left; }
+  .purchase-deadline { grid-template-columns: 1fr; gap: .55rem; padding: .9rem 10px; }
+  .admin-toolbar { grid-template-columns: 1fr; }
+  .admin-toolbar .button { width: 100%; }
+  .admin-card__head, .admin-user { padding: .85rem 10px; }
+  .admin-user { align-items: flex-start; flex-direction: column; }
+  .admin-user > div:last-child { display: flex; width: 100%; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; }
+  .stats-form { padding: 10px; }
+  .stats-player { gap: .6rem; padding: .7rem 10px; }
+  .stats-player b { flex: none; }
+  .leaderboard-row { grid-template-columns: 1.5rem minmax(0, 1fr) auto; gap: .45rem; padding-right: 8px; padding-left: 8px; font-size: .82rem; }
+  .leaderboard-row > span { display: none; }
+  .history-row summary, .history-row div { gap: .6rem; padding-right: 8px; padding-left: 8px; }
+}
+
+@media (max-width: 420px) {
+  .admin-stats .page-heading { margin-bottom: 1.1rem; }
+  .admin-toolbar { gap: .55rem; }
+  .stats-player { align-items: flex-start; }
+  .stats-form textarea { min-height: 88px; }
+  .leaderboard-row { font-size: .76rem; }
+}

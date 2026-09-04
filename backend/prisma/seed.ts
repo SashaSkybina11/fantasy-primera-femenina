@@ -20,12 +20,6 @@ function resolvePlayerRole(player: SeedPlayer): NonNullable<SeedPlayer["role"]> 
   return rolePool[hashValue(`${player.club}:${player.number}:${player.name}:role`) % rolePool.length];
 }
 
-function resolvePlayerPrice(player: SeedPlayer) {
-  const seed = hashValue(`${player.club}:${player.number}:${player.name}:price`);
-  if (player.position === PlayerPosition.GOALKEEPER) return 2200 + (seed % 1601);
-  return 2600 + (seed % 2901);
-}
-
 async function syncFantasyTeamBudgets() {
   const teams = await prisma.fantasyTeam.findMany({
     select: {
@@ -78,7 +72,7 @@ async function main() {
     const clubId = createdClubs.get(player.club);
     if (!clubId) throw new Error(`Не найден клуб ${player.club}`);
     const role = resolvePlayerRole(player);
-    const price = resolvePlayerPrice(player);
+    const price = 2000;
 
     await prisma.player.upsert({
       where: { clubId_number_name: { clubId, number: player.number, name: player.name } },
@@ -103,25 +97,31 @@ async function main() {
     });
   }
 
+  // Also normalize any player that was added manually and is not present in
+  // the static seed catalog.
+  await prisma.player.updateMany({ data: { price: 2000 } });
+
   await prisma.league.upsert({
     where: { name: "Fantasy Primera División Fútbol Sala Femenino" },
     update: {},
     create: { name: "Fantasy Primera División Fútbol Sala Femenino" },
   });
 
-  await prisma.gameweek.upsert({
-    where: { number: 1 },
-    update: {},
-    create: {
-      number: 1,
-      name: "Jornada 1",
-      status: "OPEN",
-      marketOpenAt: new Date("2026-08-31T06:00:00.000Z"),
-      deadlineAt: new Date("2026-09-04T17:00:00.000Z"),
-      startsAt: new Date("2026-09-04T17:00:00.000Z"),
-      endsAt: new Date("2026-09-06T21:59:59.000Z"),
-    },
-  });
+  const firstMonday = Date.UTC(2026, 7, 31);
+  for (let number = 1; number <= 30; number += 1) {
+    const monday = firstMonday + (number - 1) * 7 * 24 * 60 * 60 * 1000;
+    // Europe/Madrid is UTC+2 through Jornada 8, then UTC+1 for the rest
+    // of this 2026/27 schedule. Store UTC instants, never a fixed offset rule.
+    const utcOffsetHours = number <= 8 ? 2 : 1;
+    const marketOpenAt = new Date(monday + (8 - utcOffsetHours) * 60 * 60 * 1000);
+    const deadlineAt = new Date(monday + 4 * 24 * 60 * 60 * 1000 + (19 - utcOffsetHours) * 60 * 60 * 1000);
+    const endsAt = new Date(monday + 6 * 24 * 60 * 60 * 1000 + (23 - utcOffsetHours) * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000);
+    await prisma.gameweek.upsert({
+      where: { number },
+      update: { name: `Jornada ${number}`, marketOpenAt, deadlineAt, startsAt: deadlineAt, endsAt },
+      create: { number, name: `Jornada ${number}`, status: number === 1 ? "OPEN" : "UPCOMING", marketOpenAt, deadlineAt, startsAt: deadlineAt, endsAt },
+    });
+  }
 
   await syncFantasyTeamBudgets();
 
