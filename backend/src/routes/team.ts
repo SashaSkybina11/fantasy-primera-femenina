@@ -6,10 +6,11 @@ import { inTransaction } from "../lib/transaction.js";
 import { authenticate } from "../middleware/auth.js";
 import { ensureValidLineup, getOwnTeam, teamInclude, withTeamDisplayNumbers } from "../services/team.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
-import { requireOpenMarket } from "../services/gameweeks.js";
+import { requireOpenMarket, synchronizeGameweeks } from "../services/gameweeks.js";
 
 const router = Router();
 const playerIdSchema = z.object({ playerId: z.string().cuid() });
+const captainSchema = z.object({ playerId: z.string().cuid().nullable() });
 const statusSchema = z.object({ status: z.nativeEnum(SquadStatus) });
 const lineupSchema = z.object({
   players: z.array(z.object({ playerId: z.string().cuid(), status: z.nativeEnum(SquadStatus) })).length(10),
@@ -21,8 +22,21 @@ router.get("/", asyncRoute(async (request, response) => {
   response.json(await getOwnTeam(request.auth!.userId));
 }));
 
+router.get("/transfers", asyncRoute(async (request, response) => {
+  await synchronizeGameweeks();
+  const now = new Date();
+  const gameweek = await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
+    ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { number: "asc" } });
+  if (!gameweek) return response.json({ gameweek: null, bought: 0, sold: 0, limit: 2, initialSquad: true });
+  const [team, grouped] = await Promise.all([
+    prisma.fantasyTeam.findUnique({ where: { userId: request.auth!.userId }, select: { isInitialSquadComplete: true } }),
+    prisma.userTransfer.groupBy({ by: ["type"], where: { userId: request.auth!.userId, gameweekId: gameweek.id }, _count: true }),
+  ]);
+  response.json({ gameweek, bought: grouped.find((row) => row.type === "BUY")?._count ?? 0, sold: grouped.find((row) => row.type === "SELL")?._count ?? 0, limit: 2, initialSquad: !team?.isInitialSquadComplete });
+}));
+
 router.post("/players", asyncRoute(async (request, response) => {
-  await requireOpenMarket();
+  const gameweek = await requireOpenMarket();
   const { playerId } = playerIdSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
     const current = await tx.fantasyTeam.findUnique({
@@ -39,11 +53,16 @@ router.post("/players", asyncRoute(async (request, response) => {
     if (current.players.filter((entry) => entry.player.clubId === player.clubId).length >= 2) {
       throw new ApiError(400, "Максимум 2 игрока из одной команды");
     }
+    if (current.isInitialSquadComplete) {
+      const purchases = await tx.userTransfer.count({ where: { userId: request.auth!.userId, gameweekId: gameweek.id, type: "BUY" } });
+      if (purchases >= 2) throw new ApiError(409, "Лимит покупок этого тура исчерпан");
+    }
 
     await tx.fantasyTeamPlayer.create({ data: { fantasyTeamId: current.id, playerId, status: SquadStatus.BENCH } });
+    if (current.isInitialSquadComplete) await tx.userTransfer.create({ data: { userId: request.auth!.userId, gameweekId: gameweek.id, playerId, type: "BUY", price: player.price } });
     return tx.fantasyTeam.update({
       where: { id: current.id },
-      data: { budget: { decrement: player.price } },
+      data: { budget: { decrement: player.price }, ...(current.players.length + 1 >= 10 ? { isInitialSquadComplete: true } : {}) },
       include: teamInclude,
     });
   });
@@ -51,7 +70,7 @@ router.post("/players", asyncRoute(async (request, response) => {
 }));
 
 router.delete("/players/:playerId", asyncRoute(async (request, response) => {
-  await requireOpenMarket();
+  const gameweek = await requireOpenMarket();
   const playerId = z.string().cuid().parse(request.params.playerId);
   const team = await inTransaction(async (tx) => {
     const current = await tx.fantasyTeam.findUnique({ where: { userId: request.auth!.userId } });
@@ -61,6 +80,11 @@ router.delete("/players/:playerId", asyncRoute(async (request, response) => {
       include: { player: true },
     });
     if (!entry) throw new ApiError(404, "Этот игрок не состоит в вашей команде");
+    if (current.isInitialSquadComplete) {
+      const sales = await tx.userTransfer.count({ where: { userId: request.auth!.userId, gameweekId: gameweek.id, type: "SELL" } });
+      if (sales >= 2) throw new ApiError(409, "Лимит продаж этого тура исчерпан");
+      await tx.userTransfer.create({ data: { userId: request.auth!.userId, gameweekId: gameweek.id, playerId, type: "SELL", price: entry.player.price } });
+    }
     await tx.fantasyTeamPlayer.delete({ where: { id: entry.id } });
     return tx.fantasyTeam.update({
       where: { id: current.id },
@@ -117,6 +141,7 @@ router.patch("/lineup", asyncRoute(async (request, response) => {
       })),
     };
     ensureValidLineup(preview);
+    await tx.fantasyTeam.update({ where: { id: current.id }, data: { isInitialSquadComplete: true } });
     await Promise.all(input.players.map((entry) => tx.fantasyTeamPlayer.updateMany({
       where: { fantasyTeamId: current.id, playerId: entry.playerId },
       data: { status: entry.status },
@@ -128,10 +153,14 @@ router.patch("/lineup", asyncRoute(async (request, response) => {
 
 router.patch("/captain", asyncRoute(async (request, response) => {
   await requireOpenMarket();
-  const { playerId } = playerIdSchema.parse(request.body);
+  const { playerId } = captainSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
     const current = await tx.fantasyTeam.findUnique({ where: { userId: request.auth!.userId } });
     if (!current) throw new ApiError(404, "Fantasy-команда не найдена");
+    if (playerId === null) {
+      await tx.fantasyTeamPlayer.updateMany({ where: { fantasyTeamId: current.id }, data: { isCaptain: false } });
+      return tx.fantasyTeam.findUniqueOrThrow({ where: { id: current.id }, include: teamInclude });
+    }
     const entry = await tx.fantasyTeamPlayer.findUnique({
       where: { fantasyTeamId_playerId: { fantasyTeamId: current.id, playerId } },
     });

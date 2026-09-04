@@ -10,6 +10,7 @@ import leagueRouter from "./routes/league.js";
 import profileRouter from "./routes/profile.js";
 import teamRouter from "./routes/team.js";
 import gameweeksRouter from "./routes/gameweeks.js";
+import privateLeaguesRouter from "./routes/private-leagues.js";
 import { errorHandler } from "./utils/http.js";
 
 mkdirSync(uploadsDirectory, { recursive: true });
@@ -32,4 +33,5 @@ app.use("/api", catalogRouter);
 app.use("/api/my-team", teamRouter);
 app.use("/api/league", leagueRouter);
 app.use("/api/gameweeks", gameweeksRouter);
+app.use("/api/private-leagues", privateLeaguesRouter);
 app.use(errorHandler);

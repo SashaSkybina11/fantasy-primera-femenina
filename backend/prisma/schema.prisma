@@ -48,6 +48,11 @@ enum MatchResult {
   LOSS
 }
 
+enum TransferType {
+  BUY
+  SELL
+}
+
 enum AdminActionType {
   PLAYER_STATS_UPDATED
   PLAYER_POINTS_ADJUSTED
@@ -57,41 +62,45 @@ enum AdminActionType {
 }
 
 model User {
-  id                    String                @id @default(cuid())
-  email                 String                @unique
-  passwordHash          String
-  name                  String
-  role                  UserRole              @default(USER)
-  status                AccountStatus         @default(ACTIVE)
-  avatarUrl             String?
-  instagram             String?
-  whatsapp              String?
-  contactConsent        Boolean               @default(false)
-  favoriteClubId        String?
-  fantasyTeam           FantasyTeam?
-  memberships           LeagueMember[]
-  gameweekSquads        UserGameweekSquad[]
-  gameweekPoints        UserGameweekPoints[]
-  pointAdjustments      UserPointAdjustment[]
-  adminPointAdjustments UserPointAdjustment[] @relation("PointAdjustmentAdmin")
-  adminAuditLogs        AdminAuditLog[]       @relation("AuditAdmin")
-  gameweekWins          GameweekWinner[]
-  favoriteClub          Club?                 @relation("FavoriteClub", fields: [favoriteClubId], references: [id], onDelete: SetNull)
-  createdAt             DateTime              @default(now())
-  updatedAt             DateTime              @updatedAt
+  id                       String                @id @default(cuid())
+  email                    String                @unique
+  passwordHash             String
+  name                     String
+  role                     UserRole              @default(USER)
+  status                   AccountStatus         @default(ACTIVE)
+  avatarUrl                String?
+  instagram                String?
+  whatsapp                 String?
+  contactConsent           Boolean               @default(false)
+  favoriteClubId           String?
+  fantasyTeam              FantasyTeam?
+  memberships              LeagueMember[]
+  gameweekSquads           UserGameweekSquad[]
+  gameweekPoints           UserGameweekPoints[]
+  pointAdjustments         UserPointAdjustment[]
+  adminPointAdjustments    UserPointAdjustment[] @relation("PointAdjustmentAdmin")
+  adminAuditLogs           AdminAuditLog[]       @relation("AuditAdmin")
+  gameweekWins             GameweekWinner[]
+  transfers                UserTransfer[]
+  ownedPrivateLeagues      PrivateLeague[]       @relation("PrivateLeagueOwner")
+  privateLeagueMemberships PrivateLeagueMember[]
+  favoriteClub             Club?                 @relation("FavoriteClub", fields: [favoriteClubId], references: [id], onDelete: SetNull)
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
 
   @@index([favoriteClubId])
 }
 
 model FantasyTeam {
-  id        String              @id @default(cuid())
-  userId    String              @unique
-  name      String
-  budget    Int                 @default(50000)
-  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  players   FantasyTeamPlayer[]
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
+  id                     String              @id @default(cuid())
+  userId                 String              @unique
+  name                   String
+  budget                 Int                 @default(50000)
+  isInitialSquadComplete Boolean             @default(false)
+  user                   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  players                FantasyTeamPlayer[]
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
 }
 
 model Club {
@@ -122,6 +131,7 @@ model Player {
   fantasyTeams    FantasyTeamPlayer[]
   gameweekStats   PlayerGameweekStats[]
   snapshotEntries UserGameweekPlayer[]
+  transfers       UserTransfer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -150,10 +160,52 @@ model Gameweek {
   userPoints     UserGameweekPoints[]
   adjustments    UserPointAdjustment[]
   winners        GameweekWinner[]
+  transfers      UserTransfer[]
   createdAt      DateTime              @default(now())
   updatedAt      DateTime              @updatedAt
 
   @@index([status, deadlineAt])
+}
+
+model UserTransfer {
+  id         String       @id @default(cuid())
+  userId     String
+  gameweekId String
+  playerId   String
+  type       TransferType
+  price      Int
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gameweek   Gameweek     @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  player     Player       @relation(fields: [playerId], references: [id], onDelete: Restrict)
+  createdAt  DateTime     @default(now())
+
+  @@index([userId, gameweekId, type])
+  @@index([playerId])
+}
+
+model PrivateLeague {
+  id         String                @id @default(cuid())
+  name       String
+  inviteCode String                @unique
+  ownerId    String
+  owner      User                  @relation("PrivateLeagueOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members    PrivateLeagueMember[]
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+
+  @@index([ownerId])
+}
+
+model PrivateLeagueMember {
+  id       String        @id @default(cuid())
+  leagueId String
+  userId   String
+  league   PrivateLeague @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt DateTime      @default(now())
+
+  @@unique([leagueId, userId])
+  @@index([userId])
 }
 
 model PlayerGameweekStats {

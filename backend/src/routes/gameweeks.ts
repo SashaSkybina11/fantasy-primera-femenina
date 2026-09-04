@@ -2,11 +2,13 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { authenticate } from "../middleware/auth.js";
-import { synchronizeGameweeks } from "../services/gameweeks.js";
+import { scoringRules, synchronizeGameweeks } from "../services/gameweeks.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 
 const router = Router();
 router.use(authenticate);
+
+router.get("/scoring-rules", (_request, response) => response.json(scoringRules));
 
 router.get("/current", asyncRoute(async (_request, response) => {
   await synchronizeGameweeks();

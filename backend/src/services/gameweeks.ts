@@ -4,6 +4,18 @@ import { ApiError } from "../utils/http.js";
 
 type Db = Prisma.TransactionClient;
 
+export const scoringRules = {
+  participation: 1,
+  win: 2,
+  draw: 1,
+  fieldGoal: 5,
+  goalkeeperGoal: 8,
+  goalkeeperCleanSheet: 5,
+  hatTrickBonus: 3,
+  yellowCard: -1,
+  redCard: -4,
+} as const;
+
 export async function ensureSeasonGameweeks() {
   const firstMonday = Date.UTC(2026, 7, 31);
   await prisma.$transaction(async (tx) => {
@@ -27,13 +39,13 @@ export function calculatePlayerPoints(input: {
   redCards: number; cleanSheet: boolean; position: PlayerPosition;
 }) {
   if (!input.participated) return 0;
-  return 1
-    + (input.result === MatchResult.WIN ? 2 : input.result === MatchResult.DRAW ? 1 : 0)
-    + input.goals * (input.position === PlayerPosition.GOALKEEPER ? 8 : 5)
-    + (input.goals >= 3 ? 3 : 0)
-    + (input.position === PlayerPosition.GOALKEEPER && input.cleanSheet ? 5 : 0)
-    - input.yellowCards
-    - input.redCards * 4;
+  return scoringRules.participation
+    + (input.result === MatchResult.WIN ? scoringRules.win : input.result === MatchResult.DRAW ? scoringRules.draw : 0)
+    + input.goals * (input.position === PlayerPosition.GOALKEEPER ? scoringRules.goalkeeperGoal : scoringRules.fieldGoal)
+    + (input.goals >= 3 ? scoringRules.hatTrickBonus : 0)
+    + (input.position === PlayerPosition.GOALKEEPER && input.cleanSheet ? scoringRules.goalkeeperCleanSheet : 0)
+    + input.yellowCards * scoringRules.yellowCard
+    + input.redCards * scoringRules.redCard;
 }
 
 export async function snapshotGameweek(tx: Db, gameweekId: string) {

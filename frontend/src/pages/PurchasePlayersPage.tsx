@@ -8,7 +8,7 @@ import {
   type PlayerFilterState,
 } from "../components/PlayerFilters";
 import { useLocale } from "../contexts/LocaleContext";
-import { api } from "../services/api";
+import { api, formatEuro, roleLabel } from "../services/api";
 
 export function PurchasePlayersPage() {
   const { locale, t } = useLocale();
@@ -17,6 +17,7 @@ export function PurchasePlayersPage() {
     role: "",
     search: "",
   });
+  const [squadOpen, setSquadOpen] = useState(false);
   const queryClient = useQueryClient();
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
@@ -28,11 +29,16 @@ export function PurchasePlayersPage() {
     queryKey: ["current-gameweek"],
     queryFn: api.currentGameweek,
   });
+  const transfers = useQuery({
+    queryKey: ["transfer-status"],
+    queryFn: api.transferStatus,
+  });
   const buy = useMutation({
     mutationFn: api.addPlayer,
     onSuccess: (updatedTeam) => {
       queryClient.setQueryData(["team"], updatedTeam);
       void queryClient.invalidateQueries({ queryKey: ["team"] });
+      void queryClient.invalidateQueries({ queryKey: ["transfer-status"] });
       toast.success(t("purchase.success"));
     },
     onError: (error) => toast.error(error.message),
@@ -63,10 +69,18 @@ export function PurchasePlayersPage() {
           <h1>{t("purchase.title")}</h1>
           <p className="muted">{t("purchase.description")}</p>
         </div>
-        <BudgetDisplay
-          budget={team.data.budget}
-          count={team.data.players.length}
-        />
+        <div className="purchase-heading-actions">
+          <BudgetDisplay
+            budget={team.data.budget}
+            count={team.data.players.length}
+          />
+          <button
+            className="button button--secondary"
+            onClick={() => setSquadOpen(true)}
+          >
+            {t("purchase.viewSquad")}
+          </button>
+        </div>
       </header>
       {gameweek.isLoading && (
         <section className="purchase-deadline purchase-deadline--loading">
@@ -77,9 +91,7 @@ export function PurchasePlayersPage() {
         <section className="purchase-deadline purchase-deadline--closed">
           <strong>{t("purchase.scheduleUnavailable")}</strong>
           <p>{t("purchase.weeklySchedule")}</p>
-          <small>
-            {t("purchase.timezoneLabel")}: Europe/Madrid
-          </small>
+          <small>{t("purchase.timezoneLabel")}: Europe/Madrid</small>
         </section>
       )}
       {gameweek.data && (
@@ -107,12 +119,35 @@ export function PurchasePlayersPage() {
             </p>
             <p>{t("purchase.weeklySchedule")}</p>
           </div>
-          <small>
-            {t("purchase.timezoneLabel")}: Europe/Madrid
-          </small>
+          <small>{t("purchase.timezoneLabel")}: Europe/Madrid</small>
         </section>
       )}
-      <aside className="price-change-notice">{t("purchase.dynamicPriceNotice")}</aside>
+      <aside className="price-change-notice">
+        {t("purchase.dynamicPriceNotice")}
+      </aside>
+      {transfers.data && (
+        <section className="transfer-counter">
+          <strong>{t("purchase.transfersTitle")}</strong>
+          {transfers.data.initialSquad ? (
+            <span>{t("purchase.initialSquad")}</span>
+          ) : (
+            <>
+              <span>
+                {t("purchase.sold")}:{" "}
+                <b>
+                  {transfers.data.sold} / {transfers.data.limit}
+                </b>
+              </span>
+              <span>
+                {t("purchase.bought")}:{" "}
+                <b>
+                  {transfers.data.bought} / {transfers.data.limit}
+                </b>
+              </span>
+            </>
+          )}
+        </section>
+      )}
       <section className="purchase-panel">
         <PlayerFilters
           clubs={clubs.data ?? []}
@@ -173,6 +208,50 @@ export function PurchasePlayersPage() {
           </div>
         )}
       </section>
+      {squadOpen && (
+        <div
+          className="modal-backdrop squad-preview-backdrop"
+          onClick={() => setSquadOpen(false)}
+        >
+          <section
+            className="compact-modal squad-preview-modal"
+            role="dialog"
+            aria-modal="true"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="compact-modal__close"
+              onClick={() => setSquadOpen(false)}
+              aria-label={t("friends.close")}
+            >
+              ×
+            </button>
+            <div className="squad-preview-head">
+              <h2>
+                {t("purchase.squadCount", { count: team.data.players.length })}
+              </h2>
+              <strong>
+                {t("purchase.budgetLabel")}:{" "}
+                {formatEuro(team.data.budget, locale)}
+              </strong>
+            </div>
+            {team.data.players.length ? (
+              <div className="squad-preview-list">
+                {team.data.players.map((entry) => (
+                  <div key={entry.id}>
+                    <b>#{entry.player.displayNumber ?? entry.player.number}</b>
+                    <span>{entry.player.name}</span>
+                    <small>{roleLabel(entry.player.role, locale)}</small>
+                    <small>{entry.player.club.name}</small>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="muted">{t("purchase.emptySquad")}</p>
+            )}
+          </section>
+        </div>
+      )}
     </div>
   );
 }

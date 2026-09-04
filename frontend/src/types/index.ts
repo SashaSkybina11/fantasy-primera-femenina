@@ -50,10 +50,45 @@ export type User = {
   favoriteClub: Pick<Club, "id" | "name" | "logoUrl"> | null;
 };
 
-export type Profile = User & { fantasyTeam: Pick<FantasyTeam, "id" | "name" | "budget">; instagram: string | null; instagramUrl: string | null; whatsapp: string | null; whatsappUrl: string | null; contactConsent: boolean; createdAt: string };
-export type GameweekStatus = "UPCOMING" | "OPEN" | "LOCKED" | "CALCULATING" | "COMPLETED";
-export type Gameweek = { id: string; number: number; name: string; status: GameweekStatus; startsAt: string; endsAt: string; marketOpenAt: string; deadlineAt: string; completedAt: string | null };
-export type LeaderboardRow = { id?: string; userId?: string; name?: string; user?: { name: string; avatarUrl: string | null }; avatarUrl?: string | null; rank: number | null; totalPoints: number; lastGameweekPoints?: number; playerPoints?: number; captainBonus?: number; isFinal?: boolean };
+export type Profile = User & {
+  fantasyTeam: Pick<FantasyTeam, "id" | "name" | "budget">;
+  instagram: string | null;
+  instagramUrl: string | null;
+  whatsapp: string | null;
+  whatsappUrl: string | null;
+  contactConsent: boolean;
+  createdAt: string;
+};
+export type GameweekStatus =
+  | "UPCOMING"
+  | "OPEN"
+  | "LOCKED"
+  | "CALCULATING"
+  | "COMPLETED";
+export type Gameweek = {
+  id: string;
+  number: number;
+  name: string;
+  status: GameweekStatus;
+  startsAt: string;
+  endsAt: string;
+  marketOpenAt: string;
+  deadlineAt: string;
+  completedAt: string | null;
+};
+export type LeaderboardRow = {
+  id?: string;
+  userId?: string;
+  name?: string;
+  user?: { name: string; avatarUrl: string | null };
+  avatarUrl?: string | null;
+  rank: number | null;
+  totalPoints: number;
+  lastGameweekPoints?: number;
+  playerPoints?: number;
+  captainBonus?: number;
+  isFinal?: boolean;
+};
 
 export type League = {
   id: string;
@@ -66,9 +101,13 @@ export type LeagueMember = Pick<User, "id" | "name" | "avatarUrl"> & {
   fantasyTeam: { id: string; name: string; _count: { players: number } } | null;
 };
 
-export type ClubSupport = Pick<Club, "id" | "name" | "logoUrl"> & { count: number };
+export type ClubSupport = Pick<Club, "id" | "name" | "logoUrl"> & {
+  count: number;
+};
 
-export type MemberDetail = Pick<User, "id" | "name" | "avatarUrl"> & { fantasyTeam: FantasyTeam };
+export type MemberDetail = Pick<User, "id" | "name" | "avatarUrl"> & {
+  fantasyTeam: FantasyTeam;
+};
 
 export type AdminUser = {
   id: string;
@@ -82,4 +121,29 @@ export type AdminUser = {
   contactConsent: boolean;
   totalPoints: number;
   status: "ACTIVE" | "SUSPENDED";
+};
+
+export type TransferStatus = {
+  gameweek: Gameweek | null;
+  bought: number;
+  sold: number;
+  limit: number;
+  initialSquad: boolean;
+};
+export type PrivateLeagueSummary = {
+  id: string;
+  name: string;
+  inviteCode: string;
+  ownerId: string;
+  rank?: number;
+  _count?: { members: number };
+};
+export type PrivateLeagueDetail = PrivateLeagueSummary & {
+  members: Array<{
+    id: string;
+    name: string;
+    avatarUrl: string | null;
+    points: number;
+    rank: number;
+  }>;
 };
