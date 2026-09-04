@@ -4,6 +4,24 @@ import { ApiError } from "../utils/http.js";
 
 type Db = Prisma.TransactionClient;
 
+export async function ensureSeasonGameweeks() {
+  const firstMonday = Date.UTC(2026, 7, 31);
+  await prisma.$transaction(async (tx) => {
+    for (let number = 1; number <= 30; number += 1) {
+      const monday = firstMonday + (number - 1) * 7 * 24 * 60 * 60 * 1000;
+      const utcOffsetHours = number <= 8 ? 2 : 1;
+      const marketOpenAt = new Date(monday + (8 - utcOffsetHours) * 60 * 60 * 1000);
+      const deadlineAt = new Date(monday + 4 * 24 * 60 * 60 * 1000 + (19 - utcOffsetHours) * 60 * 60 * 1000);
+      const endsAt = new Date(monday + 6 * 24 * 60 * 60 * 1000 + (23 - utcOffsetHours) * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000);
+      await tx.gameweek.upsert({
+        where: { number },
+        update: {},
+        create: { number, name: `Jornada ${number}`, marketOpenAt, deadlineAt, startsAt: deadlineAt, endsAt },
+      });
+    }
+  });
+}
+
 export function calculatePlayerPoints(input: {
   participated: boolean; result: MatchResult; goals: number; yellowCards: number;
   redCards: number; cleanSheet: boolean; position: PlayerPosition;
@@ -39,6 +57,7 @@ export async function snapshotGameweek(tx: Db, gameweekId: string) {
 }
 
 export async function synchronizeGameweeks(now = new Date()) {
+  await ensureSeasonGameweeks();
   await prisma.$transaction(async (tx) => {
     await tx.gameweek.updateMany({
       where: { status: GameweekStatus.UPCOMING, marketOpenAt: { lte: now }, deadlineAt: { gt: now } },

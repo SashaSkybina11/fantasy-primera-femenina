@@ -5,7 +5,7 @@ import { prisma } from "../lib/prisma.js";
 import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { inTransaction } from "../lib/transaction.js";
-import { audit, calculatePlayerPoints, recalculateGameweek, snapshotGameweek } from "../services/gameweeks.js";
+import { audit, calculatePlayerPoints, recalculateGameweek, snapshotGameweek, synchronizeGameweeks } from "../services/gameweeks.js";
 
 const router = Router();
 
@@ -39,7 +39,10 @@ router.get("/users/:id", asyncRoute(async (request, response) => {
 }));
 
 const gameweekSchema = z.object({ number: z.number().int().positive(), name: z.string().trim().min(2), startsAt: z.coerce.date(), endsAt: z.coerce.date(), marketOpenAt: z.coerce.date(), deadlineAt: z.coerce.date() });
-router.get("/gameweeks", asyncRoute(async (_request, response) => response.json(await prisma.gameweek.findMany({ orderBy: { number: "desc" }, include: { winners: { include: { user: { select: { id: true, name: true, email: true, instagram: true, whatsapp: true, contactConsent: true } } } } } }))));
+router.get("/gameweeks", asyncRoute(async (_request, response) => {
+  await synchronizeGameweeks();
+  response.json(await prisma.gameweek.findMany({ orderBy: { number: "asc" }, include: { winners: { include: { user: { select: { id: true, name: true, email: true, instagram: true, whatsapp: true, contactConsent: true } } } } } }));
+}));
 router.post("/gameweeks", asyncRoute(async (request, response) => {
   const input = gameweekSchema.parse(request.body);
   if (!(input.marketOpenAt < input.deadlineAt && input.startsAt <= input.endsAt)) throw new ApiError(400, "Некорректный диапазон дат тура");

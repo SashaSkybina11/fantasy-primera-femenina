@@ -618,6 +618,8 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .purchase-deadline--closed { border-left-color: #e4a11b; }
 .purchase-deadline > div { display: grid; gap: .15rem; }
 .purchase-deadline p { margin: 0; color: var(--muted); line-height: 1.45; }
+.purchase-deadline__schedule { display: grid; gap: .2rem; }
+.purchase-deadline__schedule p:last-child { font-size: .74rem; }
 .purchase-deadline small { color: var(--muted); white-space: nowrap; }
 .leaderboard-row { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto auto; gap: .8rem; align-items: center; padding: .8rem 12px; border-bottom: 1px solid var(--border); }
 .leaderboard-row em { color: var(--primary); font-style: normal; font-weight: 800; }
