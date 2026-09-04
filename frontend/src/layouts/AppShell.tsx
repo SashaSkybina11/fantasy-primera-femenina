@@ -104,7 +104,7 @@ function NavLinks({
       special: true,
     },
     ...(isAdmin
-      ? [{ to: "/admin", label: t("nav.admin"), icon: "admin" as const }]
+      ? [{ to: "/admin", label: t("nav.admin"), icon: "admin" as const, end: true }, { to: "/admin/player-points", label: t("adminStats.title"), icon: "admin" as const }, { to: "/admin/player-prices", label: t("prices.title"), icon: "admin" as const }]
       : []),
   ];
   return (

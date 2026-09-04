@@ -66,6 +66,7 @@ export type GameweekStatus =
   | "CALCULATING"
   | "COMPLETED";
 export type Gameweek = {
+  marketIsOpen?: boolean;
   id: string;
   number: number;
   name: string;
@@ -124,6 +125,7 @@ export type AdminUser = {
 };
 
 export type TransferStatus = {
+  marketIsOpen: boolean;
   gameweek: Gameweek | null;
   bought: number;
   sold: number;

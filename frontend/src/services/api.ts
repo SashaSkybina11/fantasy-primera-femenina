@@ -32,6 +32,12 @@ const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, { es: string; uk: string }> = {
+  "LINEUP_MARKET_CLOSED": { es: "Los cambios de alineación solo están disponibles mientras el mercado está abierto.", uk: "Зміни складу доступні лише під час відкритого трансферного вікна." },
+  "INVALID_GOALKEEPER_STATS": { es: "Comprueba los goles recibidos y la portería a cero.", uk: "Перевірте пропущені голи та сухий матч." },
+  "NEGATIVE_PLAYER_PRICE": { es: "El precio resultante es negativo. Revisa las estadísticas.", uk: "Отримана ціна від’ємна. Перевірте статистику." },
+  "PRICE_PREVIEW_STALE": { es: "Los datos han cambiado. Vuelve a calcular los precios.", uk: "Дані змінилися. Розрахуйте ціни ще раз." },
+  "PRICE_GAMEWEEK_NOT_COMPLETED": { es: "Finaliza la jornada antes de aplicar los precios.", uk: "Завершіть тур перед застосуванням цін." },
+
   "Fantasy-команда не найдена": {
     es: "No se encontró el equipo fantasy",
     uk: "Fantasy-команду не знайдено",
@@ -379,6 +385,11 @@ export const api = {
   members: () => request<LeagueMember[]>("/league/members"),
   supporters: () => request<ClubSupport[]>("/league/supporters"),
   member: (id: string) => request<MemberDetail>(`/league/members/${id}`),
+  applyTeamResults: (gameweekId: string, results: Array<{ clubId: string; result: string }>) => request<{ ok: boolean }>(`/admin/gameweeks/${gameweekId}/team-results`, { method: "PUT", body: JSON.stringify({ results }) }),
+  priceSettings: () => request<{ teamWin: number | null }>("/admin/price-settings"),
+  savePriceSettings: (teamWin: number | null) => request<{ teamWin: number | null }>("/admin/price-settings", { method: "PUT", body: JSON.stringify({ teamWin }) }),
+  previewPrices: (gameweekId: string) => request<PricePreview>(`/admin/gameweeks/${gameweekId}/player-prices`),
+  applyPrices: (gameweekId: string, revision: string) => request<PricePreview>(`/admin/gameweeks/${gameweekId}/player-prices`, { method: "POST", body: JSON.stringify({ revision }) }),
   adminUsers: () => request<AdminUser[]>("/admin/users"),
   currentGameweek: () => request<Gameweek | null>("/gameweeks/current"),
   scoringRules: () =>
@@ -413,6 +424,7 @@ export const api = {
     request<
       Array<
         Player & {
+          lastPriceDelta: number;
           totalFantasyPoints: number;
           lastGameweekPoints: number;
           gameweekStats: Array<Record<string, unknown>>;
@@ -428,11 +440,6 @@ export const api = {
       `/admin/gameweeks/${gameweekId}/players/${playerId}/stats`,
       { method: "PUT", body: JSON.stringify(payload) },
     ),
-  updatePlayerPrice: (playerId: string, price: number) =>
-    request<Player>(`/admin/players/${playerId}/price`, {
-      method: "PATCH",
-      body: JSON.stringify({ price }),
-    }),
   completeGameweek: (id: string) =>
     request<Gameweek>(`/admin/gameweeks/${id}/complete`, { method: "POST" }),
   reopenGameweek: (id: string) =>
@@ -456,4 +463,15 @@ export const api = {
     request<void>(`/private-leagues/${id}`, { method: "DELETE" }),
   deleteAdminUser: (id: string) =>
     request<void>(`/admin/users/${id}`, { method: "DELETE" }),
+};
+
+export type PricePreview = {
+  gameweekId: string; teamWin: number | null; revision: string;
+  rows: Array<{
+    playerId: string; number: number; name: string; clubId: string; club: string;
+    position: "GOALKEEPER" | "FIELD_PLAYER"; currentPrice: number; lastDelta: number;
+    priceBefore: number; priceDelta: number; priceAfter: number; newCurrentPrice: number;
+    teamResultDelta: number; goalsDelta: number; startedDelta: number; yellowCardsDelta: number;
+    redCardsDelta: number; goalkeeperDelta: number; applied: boolean; missingStats: boolean;
+  }>;
 };

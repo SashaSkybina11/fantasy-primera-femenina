@@ -39,6 +39,7 @@ export function AdminPage() {
         <p className="eyebrow">{t("admin.eyebrow")}</p>
         <h1>{t("admin.title")}</h1>
         <p className="muted">{t("admin.description")}</p>
+        <Link to="/admin/player-prices">{t("prices.title")} →</Link>
         <Link to="/admin/player-points">{t("admin.playerPointsLink")} →</Link>
       </header>
       <section className="admin-card">

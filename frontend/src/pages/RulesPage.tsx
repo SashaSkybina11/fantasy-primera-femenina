@@ -10,10 +10,10 @@ export function RulesPage() {
   });
   const rule = (key: string, label: Parameters<typeof t>[0]) => (
     <li>
-      <span>{t(label)}</span>
+      <span>{t(label)}:</span>
       <strong>
         {(scoring.data?.[key] ?? 0) > 0 ? "+" : ""}
-        {scoring.data?.[key] ?? 0} {t("common.pointsShort")}
+        {scoring.data?.[key] ?? 0} {t("rules.pointsUnit")}
       </strong>
     </li>
   );
@@ -36,8 +36,9 @@ export function RulesPage() {
         <article className="rules-points">
           <h2>🏆 {t("rules.pointsTitle")}</h2>
           <p>{t("rules.pointsBody")}</p>
+          <p>{t("rules.allPlayers")}</p>
           <ul>
-            {rule("participation", "rules.participation")}
+            {rule("started", "rules.started")}
             {rule("win", "rules.win")}
             {rule("draw", "rules.draw")}
             {rule("fieldGoal", "rules.fieldGoal")}
@@ -55,6 +56,7 @@ export function RulesPage() {
         <article>
           <h2>🔄 {t("rules.marketTitle")}</h2>
           <p>{t("rules.marketBody")}</p>
+          <p>{t("rules.marketRestrictions")}</p>
         </article>
         <article>
           <h2>📊 {t("rules.ratingTitle")}</h2>

@@ -630,8 +630,9 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .stats-form { padding: 1.25rem; }
 .admin-stats-grid > .admin-card > .muted { padding: 10px; }
 .admin-user > div { min-width: 0; overflow-wrap: anywhere; }
-.nav-link--rules { margin-top: .2rem; background: color-mix(in srgb, var(--primary) 7%, transparent); }
-.nav-link--rules::after { content: "•"; margin-left: auto; color: var(--accent-strong); }
+.nav-link--rules, .nav-link--rules:hover, .nav-link--rules.nav-link--active { margin-top: .2rem; margin-bottom: 12px; background: var(--accent); color: var(--accent-text); }
+.nav-link--rules:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.nav-link--rules::after { content: "•"; margin-left: auto; color: currentColor; }
 .rules-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .rules-grid article { min-width: 0; padding: 1.25rem; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
 .rules-grid h2 { margin-bottom: .65rem; font-size: 1.05rem; }
@@ -712,3 +713,16 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
   .squad-actions { width: 100%; min-width: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .squad-actions .text-button--danger { grid-column: 1 / -1; }
 }
+
+.text-button:disabled { opacity: .45; cursor: not-allowed; text-decoration: none; }
+.team-results { margin-bottom: 1rem; }
+.team-results-grid, .price-preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 1rem; margin-block: 1rem; }
+.team-results-grid label, .price-settings { display: grid; gap: .5rem; }
+.admin-prices .admin-toolbar > *, .team-results select { min-width: 0; max-width: 100%; }
+.price-table-scroll { max-width: 100%; overflow-x: auto; }
+.price-table { width: 100%; border-collapse: collapse; }
+.price-table th, .price-table td { padding: .75rem; text-align: left; border-bottom: 1px solid var(--border); }
+.price-preview-grid dl { display: grid; grid-template-columns: 1fr auto; gap: .5rem; }
+.price-preview-grid dd { margin: 0; }
+.price-preview-grid article { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 1024px) { .nav-link--rules, .nav-link--rules:hover, .nav-link--rules.nav-link--active { margin-bottom: 8px; } }

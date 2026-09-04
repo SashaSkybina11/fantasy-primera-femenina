@@ -12,6 +12,7 @@ import { MyTeamPage } from "./pages/MyTeamPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { PurchasePlayersPage } from "./pages/PurchasePlayersPage";
 import { TeamsPage } from "./pages/TeamsPage";
+import { AdminPlayerPricesPage } from "./pages/AdminPlayerPricesPage";
 import { AdminPage } from "./pages/AdminPage";
 import { AdminPlayerPointsPage } from "./pages/AdminPlayerPointsPage";
 import { Loader } from "./components/Loader";
@@ -41,6 +42,7 @@ export function App() {
       <Route element={<ProtectedLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/admin/player-prices" element={<AdminPlayerPricesPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/users" element={<AdminPage />} />
         <Route

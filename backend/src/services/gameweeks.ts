@@ -1,11 +1,12 @@
 import { AdminActionType, GameweekStatus, MatchResult, PlayerPosition, Prisma, SquadStatus } from "@prisma/client";
+import { marketDatesForWeek } from "./market-schedule.js";
 import { prisma } from "../lib/prisma.js";
 import { ApiError } from "../utils/http.js";
 
 type Db = Prisma.TransactionClient;
 
 export const scoringRules = {
-  participation: 1,
+  started: 2,
   win: 2,
   draw: 1,
   fieldGoal: 5,
@@ -21,13 +22,12 @@ export async function ensureSeasonGameweeks() {
   await prisma.$transaction(async (tx) => {
     for (let number = 1; number <= 30; number += 1) {
       const monday = firstMonday + (number - 1) * 7 * 24 * 60 * 60 * 1000;
-      const utcOffsetHours = number <= 8 ? 2 : 1;
-      const marketOpenAt = new Date(monday + (8 - utcOffsetHours) * 60 * 60 * 1000);
-      const deadlineAt = new Date(monday + 4 * 24 * 60 * 60 * 1000 + (19 - utcOffsetHours) * 60 * 60 * 1000);
-      const endsAt = new Date(monday + 6 * 24 * 60 * 60 * 1000 + (23 - utcOffsetHours) * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000);
+      const { marketOpenAt, deadlineAt, endsAt } = marketDatesForWeek(new Date(monday));
+      const existing = await tx.gameweek.findUnique({ where: { number } });
+      if (existing && existing.marketOpenAt.getTime() === marketOpenAt.getTime() && existing.deadlineAt.getTime() === deadlineAt.getTime()) continue;
       await tx.gameweek.upsert({
         where: { number },
-        update: {},
+        update: { marketOpenAt, deadlineAt },
         create: { number, name: `Jornada ${number}`, marketOpenAt, deadlineAt, startsAt: deadlineAt, endsAt },
       });
     }
@@ -35,11 +35,10 @@ export async function ensureSeasonGameweeks() {
 }
 
 export function calculatePlayerPoints(input: {
-  participated: boolean; result: MatchResult; goals: number; yellowCards: number;
+  started: boolean; result: MatchResult; goals: number; yellowCards: number;
   redCards: number; cleanSheet: boolean; position: PlayerPosition;
 }) {
-  if (!input.participated) return 0;
-  return scoringRules.participation
+  return (input.started ? scoringRules.started : 0)
     + (input.result === MatchResult.WIN ? scoringRules.win : input.result === MatchResult.DRAW ? scoringRules.draw : 0)
     + input.goals * (input.position === PlayerPosition.GOALKEEPER ? scoringRules.goalkeeperGoal : scoringRules.fieldGoal)
     + (input.goals >= 3 ? scoringRules.hatTrickBonus : 0)
@@ -75,7 +74,7 @@ export async function synchronizeGameweeks(now = new Date()) {
       where: { status: GameweekStatus.UPCOMING, marketOpenAt: { lte: now }, deadlineAt: { gt: now } },
       data: { status: GameweekStatus.OPEN },
     });
-    const expired = await tx.gameweek.findMany({ where: { status: GameweekStatus.OPEN, deadlineAt: { lte: now } } });
+    const expired = await tx.gameweek.findMany({ where: { status: { in: [GameweekStatus.OPEN, GameweekStatus.UPCOMING] }, deadlineAt: { lte: now } } });
     for (const gameweek of expired) {
       await snapshotGameweek(tx, gameweek.id);
       await tx.gameweek.update({ where: { id: gameweek.id }, data: { status: GameweekStatus.LOCKED } });
@@ -83,14 +82,17 @@ export async function synchronizeGameweeks(now = new Date()) {
   });
 }
 
-export async function requireOpenMarket() {
+export async function requireOpenMarket(lineup = false) {
   await synchronizeGameweeks();
-  const now = new Date();
-  const gameweek = await prisma.gameweek.findFirst({
+  return assertOpenMarket(prisma, lineup);
+}
+
+export async function assertOpenMarket(tx: Db, lineup = false, now = new Date()) {
+  const gameweek = await tx.gameweek.findFirst({
     where: { status: GameweekStatus.OPEN, marketOpenAt: { lte: now }, deadlineAt: { gt: now } },
     orderBy: { number: "asc" },
   });
-  if (!gameweek) throw new ApiError(423, "Трансферный рынок закрыт");
+  if (!gameweek) throw new ApiError(lineup ? 409 : 423, lineup ? "LINEUP_MARKET_CLOSED" : "Трансферный рынок закрыт");
   return gameweek;
 }
 

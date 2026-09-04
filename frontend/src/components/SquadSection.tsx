@@ -9,6 +9,7 @@ export function SquadSection({
   players,
   showEmptySlots = true,
   readOnly,
+  disabled = false,
   onMove,
   onCaptain,
   onRemove,
@@ -19,6 +20,7 @@ export function SquadSection({
   players: SquadEntry[];
   showEmptySlots?: boolean;
   readOnly?: boolean;
+  disabled?: boolean;
   onMove?: (entry: SquadEntry) => void;
   onCaptain?: (entry: SquadEntry) => void;
   onRemove?: (entry: SquadEntry) => void;
@@ -40,6 +42,7 @@ export function SquadSection({
             key={entry.id}
             entry={entry}
             readOnly={readOnly}
+            disabled={disabled}
             onMove={() => onMove?.(entry)}
             onCaptain={() => onCaptain?.(entry)}
             onRemove={() => onRemove?.(entry)}

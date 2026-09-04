@@ -129,6 +129,7 @@ model Player {
 
   club            Club                  @relation(fields: [clubId], references: [id], onDelete: Cascade)
   fantasyTeams    FantasyTeamPlayer[]
+  priceChanges    PlayerPriceChange[]
   gameweekStats   PlayerGameweekStats[]
   snapshotEntries UserGameweekPlayer[]
   transfers       UserTransfer[]
@@ -156,6 +157,7 @@ model Gameweek {
   currency       String                @default("EUR")
   prizePoolCents Int                   @default(0)
   squads         UserGameweekSquad[]
+  priceChanges   PlayerPriceChange[]
   playerStats    PlayerGameweekStats[]
   userPoints     UserGameweekPoints[]
   adjustments    UserPointAdjustment[]
@@ -212,7 +214,9 @@ model PlayerGameweekStats {
   id               String      @id @default(cuid())
   gameweekId       String
   playerId         String
-  participated     Boolean     @default(false)
+  legacyParticipated Boolean @default(false) @ignore
+  started          Boolean     @default(false)
+  goalsConceded    Int?
   result           MatchResult @default(LOSS)
   goals            Int         @default(0)
   yellowCards      Int         @default(0)
@@ -357,4 +361,32 @@ model LeagueMember {
 
   @@unique([leagueId, userId])
   @@index([userId])
+}
+
+model PriceSettings {
+  id String @id @default("default")
+  teamWin Int?
+  updatedAt DateTime @updatedAt
+}
+
+model PlayerPriceChange {
+  id String @id @default(cuid())
+  playerId String
+  gameweekId String
+  priceBefore Int
+  priceDelta Int
+  priceAfter Int
+  teamResultDelta Int
+  goalsDelta Int
+  startedDelta Int
+  yellowCardsDelta Int
+  redCardsDelta Int
+  goalkeeperDelta Int
+  teamWinBonus Int?
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  gameweek Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([playerId, gameweekId])
+  @@index([gameweekId])
 }

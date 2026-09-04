@@ -1,4 +1,5 @@
 import { PlayerPosition, PrismaClient } from "@prisma/client";
+import { marketDatesForWeek } from "../src/services/market-schedule.js";
 import { clubs } from "./data/clubs.js";
 import { players, type SeedPlayer } from "./data/players.js";
 
@@ -72,15 +73,16 @@ async function main() {
     const clubId = createdClubs.get(player.club);
     if (!clubId) throw new Error(`Не найден клуб ${player.club}`);
     const role = resolvePlayerRole(player);
-    const price = 2000;
+    const price = player.price;
 
+    const existing = await prisma.player.findUnique({ where: { clubId_number_name: { clubId, number: player.number, name: player.name } }, select: { _count: { select: { priceChanges: true } } } });
     await prisma.player.upsert({
       where: { clubId_number_name: { clubId, number: player.number, name: player.name } },
       update: {
         name: player.name,
         position: player.position,
         role,
-        price,
+        ...(existing?._count.priceChanges ? {} : { price }),
         age: player.age ?? null,
         nationality: player.nationality ?? null,
       },
@@ -97,10 +99,6 @@ async function main() {
     });
   }
 
-  // Also normalize any player that was added manually and is not present in
-  // the static seed catalog.
-  await prisma.player.updateMany({ data: { price: 2000 } });
-
   await prisma.league.upsert({
     where: { name: "Fantasy Primera División Fútbol Sala Femenino" },
     update: {},
@@ -110,16 +108,11 @@ async function main() {
   const firstMonday = Date.UTC(2026, 7, 31);
   for (let number = 1; number <= 30; number += 1) {
     const monday = firstMonday + (number - 1) * 7 * 24 * 60 * 60 * 1000;
-    // Europe/Madrid is UTC+2 through Jornada 8, then UTC+1 for the rest
-    // of this 2026/27 schedule. Store UTC instants, never a fixed offset rule.
-    const utcOffsetHours = number <= 8 ? 2 : 1;
-    const marketOpenAt = new Date(monday + (8 - utcOffsetHours) * 60 * 60 * 1000);
-    const deadlineAt = new Date(monday + 4 * 24 * 60 * 60 * 1000 + (19 - utcOffsetHours) * 60 * 60 * 1000);
-    const endsAt = new Date(monday + 6 * 24 * 60 * 60 * 1000 + (23 - utcOffsetHours) * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000);
+    const { marketOpenAt, deadlineAt, endsAt } = marketDatesForWeek(new Date(monday));
     await prisma.gameweek.upsert({
       where: { number },
-      update: { name: `Jornada ${number}`, marketOpenAt, deadlineAt, startsAt: deadlineAt, endsAt },
-      create: { number, name: `Jornada ${number}`, status: number === 1 ? "OPEN" : "UPCOMING", marketOpenAt, deadlineAt, startsAt: deadlineAt, endsAt },
+      update: { name: `Jornada ${number}`, marketOpenAt, deadlineAt },
+      create: { number, name: `Jornada ${number}`, marketOpenAt, deadlineAt, startsAt: deadlineAt, endsAt },
     });
   }
 

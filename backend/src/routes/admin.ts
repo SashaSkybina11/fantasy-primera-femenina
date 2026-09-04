@@ -5,7 +5,11 @@ import { prisma } from "../lib/prisma.js";
 import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { inTransaction } from "../lib/transaction.js";
+import { marketDatesForWeek } from "../services/market-schedule.js";
 import { audit, calculatePlayerPoints, recalculateGameweek, snapshotGameweek, synchronizeGameweeks } from "../services/gameweeks.js";
+
+import { applyTeamResults, normalizeGoalkeeperStats } from "../services/player-stats.js";
+import { applyPlayerPrices, previewPlayerPrices } from "../services/player-prices.js";
 
 const router = Router();
 
@@ -44,36 +48,30 @@ router.get("/gameweeks", asyncRoute(async (_request, response) => {
   response.json(await prisma.gameweek.findMany({ orderBy: { number: "asc" }, include: { winners: { include: { user: { select: { id: true, name: true, email: true, instagram: true, whatsapp: true, contactConsent: true } } } } } }));
 }));
 router.post("/gameweeks", asyncRoute(async (request, response) => {
-  const input = gameweekSchema.parse(request.body);
+  const parsed = gameweekSchema.parse(request.body);
+  const input = { ...parsed, ...marketDatesForWeek(parsed.startsAt) };
   if (!(input.marketOpenAt < input.deadlineAt && input.startsAt <= input.endsAt)) throw new ApiError(400, "Некорректный диапазон дат тура");
   response.status(201).json(await prisma.gameweek.create({ data: input }));
 }));
 
 router.get("/player-points", asyncRoute(async (request, response) => {
   const gameweekId = z.string().cuid().optional().parse(request.query.gameweekId);
-  const players = await prisma.player.findMany({ include: { club: true, gameweekStats: { ...(gameweekId ? { where: { gameweekId } } : {}), orderBy: { gameweek: { number: "desc" } }, include: { gameweek: true } } }, orderBy: { name: "asc" } });
-  response.json(players.map((player) => ({ ...player, totalFantasyPoints: player.gameweekStats.reduce((sum, stat) => sum + stat.totalPoints, 0), lastGameweekPoints: player.gameweekStats[0]?.totalPoints ?? 0 })));
+  const players = await prisma.player.findMany({ include: { club: true, priceChanges: { orderBy: { gameweek: { number: "desc" } }, take: 1 }, gameweekStats: { ...(gameweekId ? { where: { gameweekId } } : {}), orderBy: { gameweek: { number: "desc" } }, include: { gameweek: true } } }, orderBy: { name: "asc" } });
+  response.json(players.map((player) => ({ ...player, lastPriceDelta: player.priceChanges[0]?.priceDelta ?? 0, totalFantasyPoints: player.gameweekStats.reduce((sum, stat) => sum + stat.totalPoints, 0), lastGameweekPoints: player.gameweekStats[0]?.totalPoints ?? 0 })));
 }));
 
-router.patch("/players/:id/price", asyncRoute(async (request, response) => {
-  const id = z.string().cuid().parse(request.params.id);
-  const { price } = z.object({ price: z.number().int().min(0).max(1_000_000) }).parse(request.body);
-  const player = await prisma.player.update({ where: { id }, data: { price } }).catch(() => null);
-  if (!player) throw new ApiError(404, "Игрок не найден");
-  response.json(player);
-}));
 
-const statsSchema = z.object({ participated: z.boolean(), result: z.nativeEnum(MatchResult), goals: z.number().int().min(0).max(99), yellowCards: z.number().int().min(0).max(9), redCards: z.number().int().min(0).max(9), cleanSheet: z.boolean(), adjustmentPoints: z.number().int().min(-100).max(100).default(0), adjustmentReason: z.string().trim().max(500).optional() });
+const statsSchema = z.object({ started: z.boolean(), result: z.nativeEnum(MatchResult), goals: z.number().int().min(0).max(99), yellowCards: z.number().int().min(0).max(9), redCards: z.number().int().min(0).max(9), cleanSheet: z.boolean(), goalsConceded: z.number().int().min(0).max(99).nullable().default(null), adjustmentPoints: z.number().int().min(-100).max(100).default(0), adjustmentReason: z.string().trim().max(500).optional() });
 router.put("/gameweeks/:gameweekId/players/:playerId/stats", asyncRoute(async (request, response) => {
   const gameweekId = z.string().cuid().parse(request.params.gameweekId); const playerId = z.string().cuid().parse(request.params.playerId); const input = statsSchema.parse(request.body);
   const result = await inTransaction(async (tx) => {
     const [gameweek, player, old] = await Promise.all([tx.gameweek.findUnique({ where: { id: gameweekId } }), tx.player.findUnique({ where: { id: playerId } }), tx.playerGameweekStats.findUnique({ where: { gameweekId_playerId: { gameweekId, playerId } } })]);
     if (!gameweek || !player) throw new ApiError(404, "Тур или игрок не найден");
     if (gameweek.status === GameweekStatus.COMPLETED) throw new ApiError(409, "Сначала повторно откройте завершённый тур");
-    if (player.position !== PlayerPosition.GOALKEEPER && input.cleanSheet) throw new ApiError(400, "Сухой матч доступен только вратарям");
+    Object.assign(input, normalizeGoalkeeperStats(player.position, input));
     if (input.adjustmentPoints !== 0 && !input.adjustmentReason) throw new ApiError(400, "Укажите причину корректировки");
     const calculatedPoints = calculatePlayerPoints({ ...input, position: player.position });
-    const data = { ...input, calculatedPoints, totalPoints: calculatedPoints + input.adjustmentPoints, adjustedById: input.adjustmentPoints !== 0 ? request.auth!.userId : null, adjustedAt: input.adjustmentPoints !== 0 ? new Date() : null };
+    const data = { ...input, calculatedPoints, totalPoints: Math.max(0, calculatedPoints + input.adjustmentPoints), adjustedById: input.adjustmentPoints !== 0 ? request.auth!.userId : null, adjustedAt: input.adjustmentPoints !== 0 ? new Date() : null };
     const saved = await tx.playerGameweekStats.upsert({ where: { gameweekId_playerId: { gameweekId, playerId } }, update: data, create: { gameweekId, playerId, ...data } });
     await audit(tx, request.auth!.userId, old?.adjustmentPoints !== input.adjustmentPoints ? AdminActionType.PLAYER_POINTS_ADJUSTED : AdminActionType.PLAYER_STATS_UPDATED, "PlayerGameweekStats", saved.id, old, saved);
     await recalculateGameweek(tx, gameweekId);
@@ -129,6 +127,32 @@ router.delete("/users/:id", asyncRoute(async (request, response) => {
   const result = await prisma.user.deleteMany({ where: { id } });
   if (!result.count) throw new ApiError(404, "Пользователь не найден");
   response.status(204).send();
+}));
+
+
+router.put("/gameweeks/:gameweekId/team-results", asyncRoute(async (request, response) => {
+  const gameweekId = z.string().cuid().parse(request.params.gameweekId);
+  const { results } = z.object({ results: z.array(z.object({ clubId: z.string().cuid(), result: z.nativeEnum(MatchResult) })).min(1).max(16) }).parse(request.body);
+  if (new Set(results.map(row => row.clubId)).size !== results.length) throw new ApiError(400, "Некорректные данные");
+  await inTransaction(tx => applyTeamResults(tx, gameweekId, results, request.auth!.userId));
+  response.json({ ok: true });
+}));
+
+router.get("/price-settings", asyncRoute(async (_request, response) => {
+  response.json({ teamWin: (await prisma.priceSettings.findUnique({ where: { id: "default" } }))?.teamWin ?? null });
+}));
+router.put("/price-settings", asyncRoute(async (request, response) => {
+  const data = z.object({ teamWin: z.number().int().min(0).max(100000).nullable() }).parse(request.body);
+  response.json(await inTransaction(tx => tx.priceSettings.upsert({ where: { id: "default" }, create: { id: "default", ...data }, update: data })));
+}));
+router.get("/gameweeks/:gameweekId/player-prices", asyncRoute(async (request, response) => {
+  const gameweekId = z.string().cuid().parse(request.params.gameweekId);
+  response.json(await inTransaction(tx => previewPlayerPrices(tx, gameweekId)));
+}));
+router.post("/gameweeks/:gameweekId/player-prices", asyncRoute(async (request, response) => {
+  const gameweekId = z.string().cuid().parse(request.params.gameweekId);
+  const { revision } = z.object({ revision: z.string().length(64) }).parse(request.body);
+  response.json(await inTransaction(tx => applyPlayerPrices(tx, gameweekId, revision)));
 }));
 
 export default router;

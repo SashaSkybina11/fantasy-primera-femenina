@@ -5,12 +5,14 @@ import { useLocale } from "../contexts/LocaleContext";
 export function SquadPlayerCard({
   entry,
   readOnly = false,
+  disabled = false,
   onMove,
   onCaptain,
   onRemove,
 }: {
   entry: SquadEntry;
   readOnly?: boolean;
+  disabled?: boolean;
   onMove?: () => void;
   onCaptain?: () => void;
   onRemove?: () => void;
@@ -39,17 +41,17 @@ export function SquadPlayerCard({
           {entry.status === "STARTER" && (
             <button
               className={`text-button ${entry.isCaptain ? "text-button--active" : ""}`}
-              onClick={onCaptain}
+              disabled={disabled} onClick={onCaptain}
             >
               {entry.isCaptain ? t("squad.removeCaptain") : t("squad.captain")}
             </button>
           )}
-          <button className="text-button" onClick={onMove}>
+          <button className="text-button" disabled={disabled} onClick={onMove}>
             {moveLabel}
           </button>
           <button
             className="text-button text-button--danger"
-            onClick={onRemove}
+            disabled={disabled} onClick={onRemove}
           >
             {t("squad.remove")}
           </button>

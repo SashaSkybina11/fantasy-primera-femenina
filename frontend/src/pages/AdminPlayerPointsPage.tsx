@@ -7,12 +7,13 @@ import { api } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
 
 const empty = {
-  participated: false,
+  started: false,
   result: "LOSS",
   goals: 0,
   yellowCards: 0,
   redCards: 0,
   cleanSheet: false,
+  goalsConceded: null as number | null,
   adjustmentPoints: 0,
   adjustmentReason: "",
 };
@@ -26,7 +27,7 @@ export function AdminPlayerPointsPage() {
   const [club, setClub] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const [form, setForm] = useState(empty);
-  const [price, setPrice] = useState(3000);
+  const [teamResults, setTeamResults] = useState<Record<string, string>>({});
   const gameweeks = useQuery({
     queryKey: ["admin-gameweeks"],
     queryFn: api.adminGameweeks,
@@ -41,7 +42,7 @@ export function AdminPlayerPointsPage() {
     mutationFn: () => api.savePlayerStats(gameweekId, selected!, form),
     onSuccess: () => {
       toast.success(t("adminStats.saved"));
-      void queryClient.invalidateQueries({ queryKey: ["admin-player-points"] });
+      void queryClient.invalidateQueries();
     },
     onError: (error) => toast.error(error.message),
   });
@@ -61,13 +62,9 @@ export function AdminPlayerPointsPage() {
     },
     onError: (error) => toast.error(error.message),
   });
-  const updatePrice = useMutation({
-    mutationFn: () => api.updatePlayerPrice(selected!, price),
-    onSuccess: () => {
-      toast.success(t("adminStats.priceSaved"));
-      void queryClient.invalidateQueries({ queryKey: ["admin-player-points"] });
-      void queryClient.invalidateQueries({ queryKey: ["players"] });
-    },
+  const bulk = useMutation({
+    mutationFn: () => api.applyTeamResults(gameweekId, Object.entries(teamResults).map(([clubId, result]) => ({ clubId, result }))),
+    onSuccess: () => { setTeamResults({}); setSelected(null); toast.success(t("adminStats.saved")); void queryClient.invalidateQueries(); },
     onError: (error) => toast.error(error.message),
   });
   const filtered = useMemo(
@@ -76,6 +73,7 @@ export function AdminPlayerPointsPage() {
         (player) =>
           (!search ||
             player.name.toLowerCase().includes(search.toLowerCase()) ||
+            String(player.number).includes(search) ||
             player.club?.name.toLowerCase().includes(search.toLowerCase())) &&
           (!club || player.clubId === club),
       ) ?? [],
@@ -89,6 +87,7 @@ export function AdminPlayerPointsPage() {
         <p className="eyebrow">{t("adminStats.eyebrow")}</p>
         <h1>{t("adminStats.title")}</h1>
         <p className="muted">{t("adminStats.description")}</p>
+        <Link to="/admin/player-prices">{t("prices.title")} →</Link>
         <Link to="/admin/users">{t("adminStats.usersLink")} →</Link>
       </header>
       <section className="admin-toolbar">
@@ -97,6 +96,7 @@ export function AdminPlayerPointsPage() {
           onChange={(event) => {
             setGameweekId(event.target.value);
             setSelected(null);
+            setTeamResults({});
           }}
         >
           <option value="">{t("adminStats.selectGameweek")}</option>
@@ -149,6 +149,18 @@ export function AdminPlayerPointsPage() {
             </button>
           ))}
       </section>
+      <section className="admin-card team-results">
+        <h2>{t("adminStats.teamResults")}</h2>
+        <div className="team-results-grid">
+          {Array.from(new Map(players.data?.map(player => [player.clubId, player.club?.name]) ?? [])).map(([id, name]) => (
+            <label key={id}>{name}<select value={teamResults[id] ?? ""} onChange={e => setTeamResults(previous => { const next = { ...previous }; if (e.target.value) next[id] = e.target.value; else delete next[id]; return next; })}>
+              <option value="">{t("adminStats.unchanged")}</option>
+              <option value="WIN">{t("adminStats.win")}</option><option value="DRAW">{t("adminStats.draw")}</option><option value="LOSS">{t("adminStats.loss")}</option>
+            </select></label>
+          ))}
+        </div>
+        <button className="button" disabled={!gameweekId || current?.status === "COMPLETED" || bulk.isPending || !Object.keys(teamResults).length} onClick={() => bulk.mutate()}>{t("adminStats.applyResults")}</button>
+      </section>
       <div className="admin-stats-grid">
         <section className="admin-card">
           <div className="admin-card__head">
@@ -161,19 +173,19 @@ export function AdminPlayerPointsPage() {
               key={player.id}
               onClick={() => {
                 setSelected(player.id);
-                setPrice(player.price);
                 const stat = player.gameweekStats[0] as
                   | typeof empty
                   | undefined;
                 setForm(
                   stat
                     ? {
-                        participated: Boolean(stat.participated),
+                        started: Boolean(stat.started),
                         result: String(stat.result),
                         goals: Number(stat.goals),
                         yellowCards: Number(stat.yellowCards),
                         redCards: Number(stat.redCards),
                         cleanSheet: Boolean(stat.cleanSheet),
+                        goalsConceded: stat.goalsConceded == null ? null : Number(stat.goalsConceded),
                         adjustmentPoints: Number(stat.adjustmentPoints),
                         adjustmentReason: String(stat.adjustmentReason ?? ""),
                       }
@@ -182,7 +194,7 @@ export function AdminPlayerPointsPage() {
               }}
             >
               <span>
-                <strong>{player.name}</strong>
+                <strong>№{player.number} — {player.name}</strong>
                 <small>
                   {player.club?.name} · {player.role}
                 </small>
@@ -206,12 +218,12 @@ export function AdminPlayerPointsPage() {
               <label>
                 <input
                   type="checkbox"
-                  checked={form.participated}
+                  checked={form.started}
                   onChange={(e) =>
-                    setForm({ ...form, participated: e.target.checked })
+                    setForm({ ...form, started: e.target.checked })
                   }
                 />{" "}
-                {t("adminStats.participated")}
+                {t("adminStats.started")}
               </label>
               <label>
                 {t("adminStats.result")}
@@ -244,14 +256,9 @@ export function AdminPlayerPointsPage() {
               {players.data?.find((item) => item.id === selected)?.position ===
                 "GOALKEEPER" && (
                 <label>
-                  <input
-                    type="checkbox"
-                    checked={form.cleanSheet}
-                    onChange={(e) =>
-                      setForm({ ...form, cleanSheet: e.target.checked })
-                    }
-                  />{" "}
-                  {t("adminStats.cleanSheet")}
+                  {t("adminStats.goalsConceded")}
+                  <input type="number" min="0" max="99" value={form.goalsConceded ?? ""}
+                    onChange={e => { const value = e.target.value === "" ? null : Number(e.target.value); setForm({ ...form, goalsConceded: value, cleanSheet: value === 0 }); }} />
                 </label>
               )}
               <label>
@@ -276,16 +283,7 @@ export function AdminPlayerPointsPage() {
                   }
                 />
               </label>
-              <div className="admin-price-control">
-                <label>
-                  {t("adminStats.price")}
-                  <input type="number" min="0" step="100" value={price} onChange={(event) => setPrice(Number(event.target.value))} />
-                </label>
-                <button type="button" className="button button--secondary" disabled={updatePrice.isPending} onClick={() => updatePrice.mutate()}>
-                  {t("adminStats.savePrice")}
-                </button>
-              </div>
-              <button className="button" disabled={save.isPending}>
+              <button className="button" disabled={save.isPending || current?.status === "COMPLETED"}>
                 {t("adminStats.save")}
               </button>
             </form>

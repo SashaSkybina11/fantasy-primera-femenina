@@ -38,7 +38,15 @@ export function errorHandler(
     if (error.code === "UNSUPPORTED_IMAGE_FORMAT") {
       return response.status(400).json({ message: localMessage(request, "Formato no compatible. Usa JPEG, PNG, WebP, AVIF, GIF, HEIC o HEIF", "Непідтримуваний формат. Використовуйте JPEG, PNG, WebP, AVIF, GIF, HEIC або HEIF") });
     }
-    return response.status(error.status).json({ message: error.message });
+    const messages: Record<string, [string, string]> = {
+      LINEUP_MARKET_CLOSED: ["Los cambios de alineación solo están disponibles mientras el mercado está abierto.", "Зміни складу доступні лише під час відкритого трансферного вікна."],
+      INVALID_GOALKEEPER_STATS: ["Comprueba los goles recibidos y la portería a cero.", "Перевірте пропущені голи та сухий матч."],
+      NEGATIVE_PLAYER_PRICE: ["El precio resultante es negativo. Revisa las estadísticas.", "Отримана ціна від’ємна. Перевірте статистику."],
+      PRICE_PREVIEW_STALE: ["Los datos han cambiado. Vuelve a calcular los precios.", "Дані змінилися. Розрахуйте ціни ще раз."],
+      PRICE_GAMEWEEK_NOT_COMPLETED: ["Finaliza la jornada antes de aplicar los precios.", "Завершіть тур перед застосуванням цін."],
+    };
+    const translated = messages[error.message];
+    return response.status(error.status).json({ message: translated ? localMessage(request, ...translated) : error.message });
   }
   if (error instanceof ZodError) {
     return response.status(400).json({

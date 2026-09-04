@@ -15,7 +15,7 @@ router.get("/current", asyncRoute(async (_request, response) => {
   const now = new Date();
   const gameweek = await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
     ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { marketOpenAt: "asc" } });
-  response.json(gameweek);
+  response.json(gameweek ? { ...gameweek, marketIsOpen: gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt } : null);
 }));
 
 router.get("/leaderboard", asyncRoute(async (_request, response) => {

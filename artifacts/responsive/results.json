@@ -1,0 +1,789 @@
+{
+  "results": [
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 320,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 320,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 320,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 320,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 375,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 375,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 375,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 375,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 390,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 390,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 390,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 390,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 430,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 430,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 430,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 430,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 768,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 768,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 768,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 768,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1024,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1024,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1024,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1024,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1280,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1280,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1280,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1280,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 320,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 320,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 320,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 320,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 375,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 375,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 375,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 375,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 390,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 390,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 390,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 390,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 430,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 430,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 430,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 430,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 768,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 768,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 768,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 768,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 375,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 375,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 375,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 375,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 390,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 390,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 390,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 390,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 430,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 430,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 430,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 430,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 768,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 768,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 768,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 768,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1024,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1024,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1024,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1024,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 375,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 375,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 375,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 375,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 390,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 390,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 390,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 390,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 430,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 430,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 430,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 430,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 768,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 768,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 768,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 768,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/my-team",
+      "overflow": false
+    }
+  ],
+  "failures": []
+}

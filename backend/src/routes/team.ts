@@ -6,7 +6,7 @@ import { inTransaction } from "../lib/transaction.js";
 import { authenticate } from "../middleware/auth.js";
 import { ensureValidLineup, getOwnTeam, teamInclude, withTeamDisplayNumbers } from "../services/team.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
-import { requireOpenMarket, synchronizeGameweeks } from "../services/gameweeks.js";
+import { assertOpenMarket, requireOpenMarket, synchronizeGameweeks } from "../services/gameweeks.js";
 
 const router = Router();
 const playerIdSchema = z.object({ playerId: z.string().cuid() });
@@ -27,18 +27,19 @@ router.get("/transfers", asyncRoute(async (request, response) => {
   const now = new Date();
   const gameweek = await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
     ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { number: "asc" } });
-  if (!gameweek) return response.json({ gameweek: null, bought: 0, sold: 0, limit: 2, initialSquad: true });
+  if (!gameweek) return response.json({ gameweek: null, marketIsOpen: false, bought: 0, sold: 0, limit: 2, initialSquad: true });
   const [team, grouped] = await Promise.all([
     prisma.fantasyTeam.findUnique({ where: { userId: request.auth!.userId }, select: { isInitialSquadComplete: true } }),
     prisma.userTransfer.groupBy({ by: ["type"], where: { userId: request.auth!.userId, gameweekId: gameweek.id }, _count: true }),
   ]);
-  response.json({ gameweek, bought: grouped.find((row) => row.type === "BUY")?._count ?? 0, sold: grouped.find((row) => row.type === "SELL")?._count ?? 0, limit: 2, initialSquad: !team?.isInitialSquadComplete });
+  response.json({ gameweek, marketIsOpen: gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt, bought: grouped.find((row) => row.type === "BUY")?._count ?? 0, sold: grouped.find((row) => row.type === "SELL")?._count ?? 0, limit: 2, initialSquad: !team?.isInitialSquadComplete });
 }));
 
 router.post("/players", asyncRoute(async (request, response) => {
   const gameweek = await requireOpenMarket();
   const { playerId } = playerIdSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
+    await assertOpenMarket(tx, request.method === "PATCH");
     const current = await tx.fantasyTeam.findUnique({
       where: { userId: request.auth!.userId },
       include: { players: { include: { player: { select: { clubId: true } } } } },
@@ -73,6 +74,7 @@ router.delete("/players/:playerId", asyncRoute(async (request, response) => {
   const gameweek = await requireOpenMarket();
   const playerId = z.string().cuid().parse(request.params.playerId);
   const team = await inTransaction(async (tx) => {
+    await assertOpenMarket(tx, request.method === "PATCH");
     const current = await tx.fantasyTeam.findUnique({ where: { userId: request.auth!.userId } });
     if (!current) throw new ApiError(404, "Fantasy-команда не найдена");
     const entry = await tx.fantasyTeamPlayer.findUnique({
@@ -96,10 +98,11 @@ router.delete("/players/:playerId", asyncRoute(async (request, response) => {
 }));
 
 router.patch("/players/:playerId", asyncRoute(async (request, response) => {
-  await requireOpenMarket();
+  await requireOpenMarket(true);
   const playerId = z.string().cuid().parse(request.params.playerId);
   const { status } = statusSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
+    await assertOpenMarket(tx, request.method === "PATCH");
     const current = await tx.fantasyTeam.findUnique({
       where: { userId: request.auth!.userId },
       include: { players: true },
@@ -120,12 +123,13 @@ router.patch("/players/:playerId", asyncRoute(async (request, response) => {
 }));
 
 router.patch("/lineup", asyncRoute(async (request, response) => {
-  await requireOpenMarket();
+  await requireOpenMarket(true);
   const input = lineupSchema.parse(request.body);
   const uniqueIds = new Set(input.players.map((player) => player.playerId));
   if (uniqueIds.size !== 10) throw new ApiError(400, "В составе есть повторяющиеся игроки");
 
   const team = await inTransaction(async (tx) => {
+    await assertOpenMarket(tx, request.method === "PATCH");
     const current = await tx.fantasyTeam.findUnique({ where: { userId: request.auth!.userId }, include: teamInclude });
     if (!current) throw new ApiError(404, "Fantasy-команда не найдена");
     const ownedIds = new Set(current.players.map((entry) => entry.playerId));
@@ -152,9 +156,10 @@ router.patch("/lineup", asyncRoute(async (request, response) => {
 }));
 
 router.patch("/captain", asyncRoute(async (request, response) => {
-  await requireOpenMarket();
+  await requireOpenMarket(true);
   const { playerId } = captainSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
+    await assertOpenMarket(tx, request.method === "PATCH");
     const current = await tx.fantasyTeam.findUnique({ where: { userId: request.auth!.userId } });
     if (!current) throw new ApiError(404, "Fantasy-команда не найдена");
     if (playerId === null) {

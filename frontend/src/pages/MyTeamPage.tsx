@@ -11,6 +11,8 @@ import { useLocale } from "../contexts/LocaleContext";
 export function MyTeamPage() {
   const { t } = useLocale();
   const teamQuery = useQuery({ queryKey: ["team"], queryFn: api.team });
+  const market = useQuery({ queryKey: ["transfer-status"], queryFn: api.transferStatus, refetchInterval: 15000 });
+  const locked = market.data?.marketIsOpen !== true;
   const queryClient = useQueryClient();
   const [removeTarget, setRemoveTarget] = useState<SquadEntry | null>(null);
   const refresh = () =>
@@ -89,6 +91,7 @@ export function MyTeamPage() {
         </div>
         <BudgetDisplay budget={team.budget} count={team.players.length} />
       </header>
+      {locked && <p className="state-card">{t("team.marketLocked")}</p>}
       <div className="team-toolbar">
         <div>
           <span className="status-dot" />
@@ -117,6 +120,7 @@ export function MyTeamPage() {
               status="STARTER"
               players={starters}
               showEmptySlots={false}
+              disabled={locked || move.isPending || captain.isPending || remove.isPending}
               onMove={onMove}
               onCaptain={(entry) =>
                 captain.mutate(entry.isCaptain ? null : entry.playerId)
@@ -129,6 +133,7 @@ export function MyTeamPage() {
               status="BENCH"
               players={bench}
               showEmptySlots={false}
+              disabled={locked || move.isPending || captain.isPending || remove.isPending}
               onMove={onMove}
               onRemove={setRemoveTarget}
             />
@@ -140,7 +145,7 @@ export function MyTeamPage() {
             </div>
             <button
               className="button"
-              disabled={!isComplete || save.isPending}
+              disabled={locked || !isComplete || save.isPending}
               onClick={() => save.mutate()}
             >
               {save.isPending ? t("team.checking") : t("team.saveLineup")}
@@ -173,7 +178,7 @@ export function MyTeamPage() {
             <div className="modal-actions">
               <button
                 className="button button--danger"
-                disabled={remove.isPending}
+                disabled={locked || remove.isPending}
                 onClick={() => remove.mutate(removeTarget.playerId)}
               >
                 {t("squad.remove")}

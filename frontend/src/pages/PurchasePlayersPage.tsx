@@ -28,6 +28,7 @@ export function PurchasePlayersPage() {
   const gameweek = useQuery({
     queryKey: ["current-gameweek"],
     queryFn: api.currentGameweek,
+    refetchInterval: 15000,
   });
   const transfers = useQuery({
     queryKey: ["transfer-status"],
@@ -55,7 +56,7 @@ export function PurchasePlayersPage() {
     counts.set(entry.player.clubId, (counts.get(entry.player.clubId) ?? 0) + 1);
     return counts;
   }, new Map<string, number>());
-  const marketIsOpen = gameweek.data?.status === "OPEN";
+  const marketIsOpen = gameweek.data?.marketIsOpen === true;
   const dateFormatter = new Intl.DateTimeFormat(
     locale === "uk" ? "uk-UA" : "es-ES",
     { timeZone: "Europe/Madrid", dateStyle: "full", timeStyle: "short" },
