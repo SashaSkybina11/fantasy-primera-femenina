@@ -56,7 +56,7 @@ export function AdminPlayerPricesPage() {
     </section>
     {(players.isError || weeks.isError || settings.isError) && <p role="alert">{t("error.generic")}</p>}
     <div className="price-table-scroll"><table className="price-table"><thead><tr>{(["prices.number", "adminStats.players", "adminStats.allClubs", "prices.position", "prices.current", "prices.lastDelta", "prices.new"] as const).map(key => <th key={key}>{t(key)}</th>)}</tr></thead><tbody>
-      {players.data?.filter(matches).map(row => { const calculated = preview?.rows.find(item => item.playerId === row.id); return <tr key={row.id}><td>№{row.number}</td><td>{row.name}</td><td>{row.club?.name}</td><td>{t(row.position === "GOALKEEPER" ? "prices.goalkeeper" : "prices.field")}</td><td>{money(row.price)}</td><td>{delta(row.lastPriceDelta)}</td><td>{calculated ? money(calculated.newCurrentPrice) : "—"}</td></tr>; })}
+      {players.data?.filter(matches).map(row => { const calculated = preview?.rows.find(item => item.playerId === row.id); return <tr key={row.id}><td data-label={t("prices.number")}>№{row.number}</td><td className="price-player-name" data-label={t("adminStats.players")}>{row.name}</td><td data-label={t("adminStats.allClubs")}>{row.club?.name}</td><td data-label={t("prices.position")}>{t(row.position === "GOALKEEPER" ? "prices.goalkeeper" : "prices.field")}</td><td data-label={t("prices.current")}>{money(row.price)}</td><td data-label={t("prices.lastDelta")}>{delta(row.lastPriceDelta)}</td><td data-label={t("prices.new")}>{calculated ? money(calculated.newCurrentPrice) : "—"}</td></tr>; })}
     </tbody></table></div>
     {preview && <>
       {current?.status !== "COMPLETED" && <p>{t("prices.completeFirst")}</p>}

@@ -726,3 +726,48 @@ input:focus, select:focus { border-color: var(--accent-strong); box-shadow: 0 0 
 .price-preview-grid dd { margin: 0; }
 .price-preview-grid article { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 1024px) { .nav-link--rules, .nav-link--rules:hover, .nav-link--rules.nav-link--active { margin-bottom: 8px; } }
+
+/* Shared containment and touch targets for the management and market pages. */
+.admin-stats, .admin-prices, .friend-leagues-page { min-width: 0; overflow-wrap: anywhere; }
+.admin-stats-grid { grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); }
+.admin-toolbar > *, .stats-player > span, .stats-form > *, .team-results-grid > *, .price-settings > * { min-width: 0; max-width: 100%; }
+.stats-player { font: inherit; }
+.stats-player > span { overflow-wrap: anywhere; }
+.stats-player > b { flex: none; white-space: nowrap; }
+.stats-summary { line-height: 1.5; }
+.stats-form label:has(input[type="checkbox"]) { display: flex; align-items: center; min-height: 44px; gap: .65rem; }
+.stats-form input[type="checkbox"] { width: 22px; height: 22px; flex: none; }
+.team-results, .price-settings, .price-preview-grid article { padding: 1.25rem; }
+.team-results select, .price-settings input { width: 100%; min-height: 44px; padding: .65rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); font: inherit; }
+.admin-toolbar input, .admin-toolbar select, .stats-form input, .stats-form select, .stats-form textarea { min-width: 0; font: inherit; }
+.popular-player { width: 100%; max-width: 640px; margin: 0 auto 1rem; gap: .6rem; text-align: center; overflow-wrap: anywhere; }
+.popular-player h2 { font-size: 1.15rem; }
+.popular-player p { margin: 0; }
+.friend-leagues .button, .admin-stats .button, .admin-prices .button { min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+.friend-leagues .compact-modal h2 { padding-right: 2.5rem; }
+.friend-leagues .compact-modal__close { width: 44px; height: 44px; }
+.squad-preview-list span { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 900px) {
+  .admin-stats-grid { grid-template-columns: minmax(0, 1fr); }
+  .stats-editor:has(.stats-form) { grid-row: 1; }
+}
+@media (max-width: 760px) {
+  .team-results, .price-settings, .price-preview-grid article { padding: .85rem; }
+  .friend-league-list article { flex-direction: column; align-items: stretch; gap: .65rem; }
+  .friend-league-list .button { width: 100%; }
+  .price-table, .price-table tbody { display: block; }
+  .price-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .price-table tr { display: grid; grid-template-columns: minmax(0, 1fr); padding: .85rem; margin-bottom: .75rem; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); }
+  .price-table td { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: .7rem; padding: .5rem 0; font-size: .9rem; overflow-wrap: anywhere; }
+  .price-table td::before { content: attr(data-label); color: var(--muted); font-weight: 400; }
+  .price-table td.price-player-name { grid-row: 1; display: block; font-size: 1rem; font-weight: 700; }
+  .price-table td.price-player-name::before { content: none; }
+  .price-table td:last-child { border: 0; }
+  .price-preview-grid dl { grid-template-columns: minmax(0, 1fr) auto; }
+}
+.stats-editor { scroll-margin-top: 5.5rem; }
+@media (min-width: 761px) {
+  .price-table th, .price-table td:nth-child(4) { overflow-wrap: normal; }
+  .price-table td:first-child, .price-table td:nth-child(n + 5) { white-space: nowrap; }
+  .price-table td:nth-child(2), .price-table td:nth-child(3) { max-width: 240px; }
+}

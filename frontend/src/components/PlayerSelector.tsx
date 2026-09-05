@@ -18,6 +18,7 @@ export function PlayerSelector({ team, onClose }: { team: FantasyTeam; onClose: 
     onSuccess: (updatedTeam) => {
       queryClient.setQueryData(["team"], updatedTeam);
       void queryClient.invalidateQueries({ queryKey: ["team"] });
+      void queryClient.invalidateQueries({ queryKey: ["popular-player"] });
       toast.success(t("player.added"));
     },
     onError: (error) => toast.error(error.message),

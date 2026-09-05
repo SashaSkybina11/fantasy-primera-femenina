@@ -26,6 +26,62 @@
       "theme": "light",
       "width": 320,
       "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 320,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 320,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 360,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 360,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 360,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 360,
+      "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 360,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 360,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -59,6 +115,20 @@
     {
       "locale": "es",
       "theme": "light",
+      "width": 375,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 375,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
       "width": 390,
       "path": "/rules",
       "overflow": false
@@ -82,6 +152,20 @@
       "theme": "light",
       "width": 390,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 390,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 390,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -115,6 +199,20 @@
     {
       "locale": "es",
       "theme": "light",
+      "width": 430,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 430,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
       "width": 768,
       "path": "/rules",
       "overflow": false
@@ -143,6 +241,20 @@
     {
       "locale": "es",
       "theme": "light",
+      "width": 768,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 768,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
       "width": 1024,
       "path": "/rules",
       "overflow": false
@@ -171,6 +283,20 @@
     {
       "locale": "es",
       "theme": "light",
+      "width": 1024,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1024,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
       "width": 1280,
       "path": "/rules",
       "overflow": false
@@ -194,6 +320,20 @@
       "theme": "light",
       "width": 1280,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1280,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "light",
+      "width": 1280,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -222,6 +362,62 @@
       "theme": "dark",
       "width": 320,
       "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 320,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 320,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 360,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 360,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 360,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 360,
+      "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 360,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 360,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -255,6 +451,20 @@
     {
       "locale": "es",
       "theme": "dark",
+      "width": 375,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 375,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
       "width": 390,
       "path": "/rules",
       "overflow": false
@@ -278,6 +488,20 @@
       "theme": "dark",
       "width": 390,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 390,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 390,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -311,6 +535,20 @@
     {
       "locale": "es",
       "theme": "dark",
+      "width": 430,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 430,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
       "width": 768,
       "path": "/rules",
       "overflow": false
@@ -339,6 +577,20 @@
     {
       "locale": "es",
       "theme": "dark",
+      "width": 768,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 768,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
       "width": 1024,
       "path": "/rules",
       "overflow": false
@@ -367,6 +619,20 @@
     {
       "locale": "es",
       "theme": "dark",
+      "width": 1024,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
       "width": 1280,
       "path": "/rules",
       "overflow": false
@@ -390,6 +656,20 @@
       "theme": "dark",
       "width": 1280,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -418,6 +698,62 @@
       "theme": "light",
       "width": 320,
       "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 360,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 360,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 360,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 360,
+      "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 360,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 360,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -451,6 +787,20 @@
     {
       "locale": "uk",
       "theme": "light",
+      "width": 375,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 375,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
       "width": 390,
       "path": "/rules",
       "overflow": false
@@ -474,6 +824,20 @@
       "theme": "light",
       "width": 390,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 390,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 390,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -507,6 +871,20 @@
     {
       "locale": "uk",
       "theme": "light",
+      "width": 430,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 430,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
       "width": 768,
       "path": "/rules",
       "overflow": false
@@ -535,6 +913,20 @@
     {
       "locale": "uk",
       "theme": "light",
+      "width": 768,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 768,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
       "width": 1024,
       "path": "/rules",
       "overflow": false
@@ -563,6 +955,20 @@
     {
       "locale": "uk",
       "theme": "light",
+      "width": 1024,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1024,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
       "width": 1280,
       "path": "/rules",
       "overflow": false
@@ -586,6 +992,20 @@
       "theme": "light",
       "width": 1280,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -614,6 +1034,62 @@
       "theme": "dark",
       "width": 320,
       "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 360,
+      "path": "/rules",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 360,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 360,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 360,
+      "path": "/my-team",
+      "overflow": true
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 360,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 360,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -647,6 +1123,20 @@
     {
       "locale": "uk",
       "theme": "dark",
+      "width": 375,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 375,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
       "width": 390,
       "path": "/rules",
       "overflow": false
@@ -670,6 +1160,20 @@
       "theme": "dark",
       "width": 390,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 390,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 390,
+      "path": "/friend-leagues",
       "overflow": false
     },
     {
@@ -703,6 +1207,20 @@
     {
       "locale": "uk",
       "theme": "dark",
+      "width": 430,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 430,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
       "width": 768,
       "path": "/rules",
       "overflow": false
@@ -731,6 +1249,20 @@
     {
       "locale": "uk",
       "theme": "dark",
+      "width": 768,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 768,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
       "width": 1024,
       "path": "/rules",
       "overflow": false
@@ -759,6 +1291,20 @@
     {
       "locale": "uk",
       "theme": "dark",
+      "width": 1024,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1024,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
       "width": 1280,
       "path": "/rules",
       "overflow": false
@@ -782,8 +1328,31 @@
       "theme": "dark",
       "width": 1280,
       "path": "/my-team",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/friend-leagues",
       "overflow": false
     }
   ],
-  "failures": []
+  "failures": [
+    "Horizontal overflow es/light/320/my-team",
+    "Horizontal overflow es/light/360/my-team",
+    "Horizontal overflow es/dark/320/my-team",
+    "Horizontal overflow es/dark/360/my-team",
+    "Horizontal overflow uk/light/320/my-team",
+    "Horizontal overflow uk/light/360/my-team",
+    "Horizontal overflow uk/dark/320/my-team",
+    "Horizontal overflow uk/dark/360/my-team"
+  ]
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
@@ -27,6 +27,12 @@ export function AdminPlayerPointsPage() {
   const [club, setClub] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const [form, setForm] = useState(empty);
+  const editor = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (selected && gameweekId && window.matchMedia("(max-width: 900px)").matches) {
+      editor.current?.scrollIntoView({ block: "start" });
+    }
+  }, [selected, gameweekId]);
   const [teamResults, setTeamResults] = useState<Record<string, string>>({});
   const gameweeks = useQuery({
     queryKey: ["admin-gameweeks"],
@@ -92,6 +98,7 @@ export function AdminPlayerPointsPage() {
       </header>
       <section className="admin-toolbar">
         <select
+          aria-label={t("adminStats.selectGameweek")}
           value={gameweekId}
           onChange={(event) => {
             setGameweekId(event.target.value);
@@ -107,11 +114,12 @@ export function AdminPlayerPointsPage() {
           ))}
         </select>
         <input
+          aria-label={t("adminStats.searchPlaceholder")}
           placeholder={t("adminStats.searchPlaceholder")}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-        <select value={club} onChange={(event) => setClub(event.target.value)}>
+        <select aria-label={t("adminStats.allClubs")} value={club} onChange={(event) => setClub(event.target.value)}>
           <option value="">{t("adminStats.allClubs")}</option>
           {Array.from(
             new Map(
@@ -171,6 +179,7 @@ export function AdminPlayerPointsPage() {
             <button
               className={`stats-player ${selected === player.id ? "stats-player--active" : ""}`}
               key={player.id}
+              aria-pressed={selected === player.id}
               onClick={() => {
                 setSelected(player.id);
                 const stat = player.gameweekStats[0] as
@@ -198,12 +207,15 @@ export function AdminPlayerPointsPage() {
                 <small>
                   {player.club?.name} · {player.role}
                 </small>
+                {player.gameweekStats[0] && <small className="stats-summary">
+                  {t("adminStats.goals")}: {Number(player.gameweekStats[0].goals)} · {t("adminStats.yellowCards")}: {Number(player.gameweekStats[0].yellowCards)} · {t("adminStats.redCards")}: {Number(player.gameweekStats[0].redCards)}
+                </small>}
               </span>
               <b>{player.lastGameweekPoints} {t("common.pointsShort")}</b>
             </button>
           ))}
         </section>
-        <section className="admin-card">
+        <section className="admin-card stats-editor" ref={editor}>
           {selected && gameweekId ? (
             <form
               className="stats-form"

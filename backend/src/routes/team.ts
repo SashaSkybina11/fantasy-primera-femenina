@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { inTransaction } from "../lib/transaction.js";
 import { authenticate } from "../middleware/auth.js";
+import { getPlayerPopularity } from "../services/player-popularity.js";
 import { ensureValidLineup, getOwnTeam, teamInclude, withTeamDisplayNumbers } from "../services/team.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { assertOpenMarket, requireOpenMarket, synchronizeGameweeks } from "../services/gameweeks.js";
@@ -17,6 +18,10 @@ const lineupSchema = z.object({
 });
 
 router.use(authenticate);
+
+router.get("/popular-player", asyncRoute(async (_request, response) => {
+  response.json(await inTransaction(getPlayerPopularity));
+}));
 
 router.get("/", asyncRoute(async (request, response) => {
   response.json(await getOwnTeam(request.auth!.userId));

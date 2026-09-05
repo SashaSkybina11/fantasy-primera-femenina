@@ -46,6 +46,7 @@ export function MyTeamPage() {
     mutationFn: api.removePlayer,
     onSuccess: () => {
       setRemoveTarget(null);
+      void queryClient.invalidateQueries({ queryKey: ["popular-player"] });
       refresh();
       toast.success(t("team.playerRemoved"));
     },

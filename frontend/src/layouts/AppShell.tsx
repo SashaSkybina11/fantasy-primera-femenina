@@ -91,6 +91,7 @@ function NavLinks({
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/league", label: t("nav.league"), icon: "trophy" as const },
+    { to: "/friend-leagues", label: t("nav.friends"), icon: "trophy" as const },
     {
       to: "/leaderboard",
       label: t("nav.leaderboard"),

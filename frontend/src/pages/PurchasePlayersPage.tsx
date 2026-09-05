@@ -20,6 +20,7 @@ export function PurchasePlayersPage() {
   const [squadOpen, setSquadOpen] = useState(false);
   const queryClient = useQueryClient();
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
+  const popularity = useQuery({ queryKey: ["popular-player"], queryFn: api.popularPlayer });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
   const players = useQuery({
     queryKey: ["players", filters],
@@ -40,6 +41,7 @@ export function PurchasePlayersPage() {
       queryClient.setQueryData(["team"], updatedTeam);
       void queryClient.invalidateQueries({ queryKey: ["team"] });
       void queryClient.invalidateQueries({ queryKey: ["transfer-status"] });
+      void queryClient.invalidateQueries({ queryKey: ["popular-player"] });
       toast.success(t("purchase.success"));
     },
     onError: (error) => toast.error(error.message),
@@ -126,6 +128,14 @@ export function PurchasePlayersPage() {
       <aside className="price-change-notice">
         {t("purchase.dynamicPriceNotice")}
       </aside>
+      <section className="profile-card popular-player" aria-live="polite">
+        <h2>{t("purchase.popularTitle")}</h2>
+        {popularity.isPending ? <p>{t("loading.players")}</p> : popularity.isError ? <p role="alert">{t("error.generic")} <button className="button button--secondary" onClick={() => void popularity.refetch()}>{t("friends.retry")}</button></p> : popularity.data.player ? <>
+          <h3>{popularity.data.player.name}</h3>
+          <p>{popularity.data.player.club.name} · №{popularity.data.player.number}</p>
+          <p>{t("purchase.popularOwners", { count: popularity.data.ownerCount, total: popularity.data.totalUsers, percentage: popularity.data.percentage })}</p>
+        </> : <p className="muted">{t("purchase.popularEmpty")}</p>}
+      </section>
       {transfers.data && (
         <section className="transfer-counter">
           <strong>{t("purchase.transfersTitle")}</strong>

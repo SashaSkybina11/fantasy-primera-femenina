@@ -358,6 +358,7 @@ export const api = {
     return request<Player[]>(`/players${params.size ? `?${params}` : ""}`);
   },
   team: () => request<FantasyTeam>("/my-team"),
+  popularPlayer: () => request<{ player: { id: string; name: string; number: number; club: { id: string; name: string } } | null; ownerCount: number; totalUsers: number; percentage: number }>("/my-team/popular-player"),
   addPlayer: (playerId: string) =>
     request<FantasyTeam>("/my-team/players", {
       method: "POST",

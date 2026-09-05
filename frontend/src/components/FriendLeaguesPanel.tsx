@@ -39,10 +39,9 @@ export function FriendLeaguesPanel() {
   });
   return (
     <section className="profile-card friend-leagues">
-      <div>
-        <p className="eyebrow">Fantasy</p>
-        <h2>{t("friends.title")}</h2>
-      </div>
+      {leagues.isPending && <p role="status">{t("loading.app")}</p>}
+      {leagues.isError && <p role="alert">{t("error.generic")} <button className="button button--secondary" onClick={() => void leagues.refetch()}>{t("friends.retry")}</button></p>}
+      {leagues.isSuccess && leagues.data.length === 0 && <p className="muted">{t("friends.empty")}</p>}
       <div className="friend-league-list">
         {leagues.data?.map((league) => (
           <article key={league.id}>

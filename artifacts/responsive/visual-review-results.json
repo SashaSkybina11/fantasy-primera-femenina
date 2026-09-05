@@ -1,0 +1,117 @@
+{
+  "results": [
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 320,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "light",
+      "width": 1280,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 320,
+      "path": "/friend-leagues",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/admin/player-points",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/admin/player-prices",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/purchase-players",
+      "overflow": false
+    },
+    {
+      "locale": "uk",
+      "theme": "dark",
+      "width": 1280,
+      "path": "/friend-leagues",
+      "overflow": false
+    }
+  ],
+  "failures": []
+}

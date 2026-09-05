@@ -20,7 +20,7 @@ export function PrivateLeaguePage() {
     mutationFn: () => api.leavePrivateLeague(id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["private-leagues"] });
-      navigate("/profile");
+      navigate("/friend-leagues");
     },
     onError: (error) => toast.error(error.message),
   });
@@ -28,7 +28,7 @@ export function PrivateLeaguePage() {
     mutationFn: () => api.deletePrivateLeague(id),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["private-leagues"] });
-      navigate("/profile");
+      navigate("/friend-leagues");
     },
     onError: (error) => toast.error(error.message),
   });
@@ -41,8 +41,8 @@ export function PrivateLeaguePage() {
   const isOwner = league.data.ownerId === user?.id;
   return (
     <div className="page page--narrow">
-      <Link className="back-link" to="/profile">
-        ← {t("nav.profile")}
+      <Link className="back-link" to="/friend-leagues">
+        ← {t("nav.friends")}
       </Link>
       <header className="page-heading">
         <p className="eyebrow">{t("friends.title")}</p>

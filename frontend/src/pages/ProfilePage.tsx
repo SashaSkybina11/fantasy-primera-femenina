@@ -7,7 +7,6 @@ import { api } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
 import { optimizeAvatar } from "../utils/avatar";
 import { PasswordInput } from "../components/PasswordInput";
-import { FriendLeaguesPanel } from "../components/FriendLeaguesPanel";
 
 export function ProfilePage() {
   const profile = useQuery({ queryKey: ["profile"], queryFn: api.profile });
@@ -217,7 +216,6 @@ export function ProfilePage() {
           </form>
         )}
       </section>
-    <FriendLeaguesPanel />
     <section className="profile-card profile-card--password">
         <div>
           <p className="eyebrow">{t("profile.security")}</p>
