@@ -25,7 +25,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 18,
-    name: "Bea Parrón",
+    name: "Parron Duce, Beatriz",
     position: goalkeeper,
     price: 3000,
     age: 22,
@@ -43,7 +43,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 25,
-    name: "Mavi",
+    name: "Rosendo Lima, Maravillas De Jesús",
     position: fieldPlayer,
     price: 3000,
     age: 20,
@@ -52,7 +52,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 7,
-    name: "Laura Cordoba",
+    name: "Cordoba Monedero, Laura",
     position: fieldPlayer,
     price: 5000,
     age: 23,
@@ -61,7 +61,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 5,
-    name: "Ariane (Ari)",
+    name: "Nascimento Da Silva, Ariane",
     position: fieldPlayer,
     price: 5000,
     age: 38,
@@ -70,7 +70,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 9,
-    name: "Luchi",
+    name: "Rodriguez Gil, Lucia",
     position: fieldPlayer,
     price: 3500,
     age: 21,
@@ -79,7 +79,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 12,
-    name: "Eli",
+    name: "Pastor Molina, Elisabeth",
     position: fieldPlayer,
     price: 3000,
     age: 19,
@@ -97,7 +97,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 19,
-    name: "Marian",
+    name: "Vicente Martinez, Maria Angeles",
     position: fieldPlayer,
     price: 5000,
     age: 30,
@@ -106,7 +106,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 11,
-    name: "Maria Sans",
+    name: "Sanz Navarro, Maria",
     position: fieldPlayer,
     price: 5000,
     age: 28,
@@ -124,7 +124,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 13,
-    name: "Rocio",
+    name: "Rubio Ibañez, Noa",
     position: fieldPlayer,
     price: 3000,
     age: 17,
@@ -133,7 +133,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 10,
-    name: "Riscos",
+    name: "De Los Riscos Alemany, Marta",
     position: fieldPlayer,
     price: 3000,
     age: 26,
@@ -142,7 +142,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 8,
-    name: "Irene Cordoba",
+    name: "Cordoba Monedero, Irene",
     position: fieldPlayer,
     price: 6000,
     age: 23,
@@ -151,7 +151,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Futsi Atlético Navalcarnero",
     number: 2,
-    name: "Ju Delgado",
+    name: "Lautenschlager Delgado, Juliana",
     position: fieldPlayer,
     price: 4000,
     age: 42,
@@ -170,7 +170,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 34,
-    name: "Daniela",
+    name: "Martinez Albertos, Daniela",
     position: goalkeeper,
     price: 2000,
     age: 19,
@@ -179,7 +179,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 1,
-    name: "Almudena",
+    name: "Pagan Sanchez, Almudena",
     position: goalkeeper,
     price: 2000,
     age: 38,
@@ -188,7 +188,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 23,
-    name: "Carmen",
+    name: "Garcia Molina, Carmen Maria",
     position: fieldPlayer,
     price: 3000,
     age: 21,
@@ -197,7 +197,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 10,
-    name: "Andrea",
+    name: "Marín García, Andrea",
     position: fieldPlayer,
     price: 3500,
     age: 26,
@@ -206,7 +206,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 24,
-    name: "Cecilia (Ceci)",
+    name: "Zarzuela Sanchez, Cecilia",
     position: fieldPlayer,
     price: 3500,
     age: 23,
@@ -215,7 +215,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 9,
-    name: "Eva González",
+    name: "González Navas, Eva",
     position: fieldPlayer,
     price: 3500,
     age: 23,
@@ -224,7 +224,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 21,
-    name: "Irene",
+    name: "Fenoll Juan, Irene",
     position: fieldPlayer,
     price: 3500,
     age: 29,
@@ -233,7 +233,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 8,
-    name: "Mayte Mateo",
+    name: "Mateo González, María Teresa",
     position: fieldPlayer,
     price: 6000,
     age: 32,
@@ -242,7 +242,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 19,
-    name: "Eva Ardil",
+    name: "Ardil Mena, Eva",
     position: fieldPlayer,
     price: 3000,
     age: 18,
@@ -251,7 +251,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 28,
-    name: "Rocío",
+    name: "Gomez Sordo, Rocio",
     position: fieldPlayer,
     price: 3000,
     age: 28,
@@ -260,7 +260,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 22,
-    name: "María Valverde",
+    name: "Valverde Hernández, Maria",
     position: fieldPlayer,
     price: 3500,
     age: 23,
@@ -287,7 +287,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 2,
-    name: "Julia",
+    name: "Vila Gimeno, Julia",
     position: fieldPlayer,
     price: 3000,
     age: 20,
@@ -296,7 +296,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 3,
-    name: "Laura",
+    name: "Fernández Martín, Laura",
     position: fieldPlayer,
     price: 3000,
     age: 26,
@@ -314,7 +314,7 @@ export const players: SeedPlayer[] = [
   {
     club: "STV Roldán",
     number: 20,
-    name: "Ángela Górriz",
+    name: "Górriz Martínez, Ángela",
     position: fieldPlayer,
     price: 3000,
     age: 27,
@@ -333,7 +333,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 13,
-    name: "María Arcas",
+    name: "Arcas Abril, Maria",
     position: goalkeeper,
     price: 2000,
     age: 21,
@@ -342,7 +342,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 29,
-    name: "María Valsera",
+    name: "Valsera Ramos, Maria",
     position: goalkeeper,
     price: 3500,
     age: 22,
@@ -352,7 +352,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 10,
-    name: "Amandinha",
+    name: "De Oliveira Crisostomo, Amanda Lyssa",
     position: fieldPlayer,
     price: 5000,
     age: 31,
@@ -361,7 +361,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 8,
-    name: "Lydia",
+    name: "Torreblanca Fernandez, Lydia Maria",
     position: fieldPlayer,
     price: 4000,
     age: 28,
@@ -371,7 +371,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 14,
-    name: "Dasha",
+    name: "Kowshyk, Daria",
     position: fieldPlayer,
     price: 2000,
     age: 20,
@@ -380,7 +380,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 99,
-    name: "Emilly",
+    name: "Marcondes, Emilly Micaela",
     position: fieldPlayer,
     price: 6000,
     age: 31,
@@ -389,7 +389,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 16,
-    name: "Irene Samper",
+    name: "Samper Bilbao, Irene",
     position: fieldPlayer,
     price: 5000,
     age: 28,
@@ -397,8 +397,8 @@ export const players: SeedPlayer[] = [
   },
   {
     club: "Melilla CD Torreblanca",
-    number: 17,
-    name: "Silvina",
+    number: 11,
+    name: "Nava, Silvina Alejandra",
     position: fieldPlayer,
     price: 4000,
     age: 24,
@@ -407,7 +407,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 22,
-    name: "Sofia",
+    name: "Kowshyk, Sofiia",
     position: fieldPlayer,
     price: 2000,
     age: 20,
@@ -426,7 +426,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Melilla CD Torreblanca",
     number: 98,
-    name: "Bia Souza",
+    name: "Souza Fernandes, Beatriz",
     position: fieldPlayer,
     price: 4000,
     age: 28,
@@ -445,7 +445,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 12,
-    name: "Pitu",
+    name: "Aragoneses Gonzalez, Miriam",
     position: goalkeeper,
     role: portera,
     price: 3500,
@@ -455,7 +455,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 1,
-    name: "Silvia García",
+    name: "Garcia Milla Remirez, Silvia",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -465,7 +465,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 4,
-    name: "Irene",
+    name: "Garcia De Vega, Irene",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -485,7 +485,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 17,
-    name: "Montufo",
+    name: "Benete Montufo, Marina",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -495,7 +495,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 14,
-    name: "Piti",
+    name: "Voto Martinez, Alicia",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -505,7 +505,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 5,
-    name: "Tampa",
+    name: "Marcolan, Lediane",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -515,7 +515,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 6,
-    name: "Nere Moldes",
+    name: "Moldes Boveda, Nerea",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -525,7 +525,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 11,
-    name: "Claudia",
+    name: "Bollero Sanchez, Claudia",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -535,7 +535,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 19,
-    name: "Miriam Serrano",
+    name: "Serrano Fernandez, Miriam",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -545,7 +545,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 9,
-    name: "Benete",
+    name: "Benete Montufo, Alicia",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -555,7 +555,7 @@ export const players: SeedPlayer[] = [
   {
     club: "MRB Móstoles FSF",
     number: 10,
-    name: "Clau Gómez",
+    name: "Gomez Mulero, Claudia",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -566,7 +566,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 13,
-    name: "Zaira Obaya",
+    name: "Obaya Felgueres, Zaira",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -576,7 +576,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 12,
-    name: "Irati Marín",
+    name: "Marin Gonzalez, Irati",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -596,7 +596,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 75,
-    name: "Jane",
+    name: "Marques De Oliveira, Maria Leidjane",
     position: fieldPlayer,
     role: cierre,
     price: 5000,
@@ -616,7 +616,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 55,
-    name: "Dani",
+    name: "Fleitas Machado, Daniele",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -626,7 +626,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 31,
-    name: "Gabi",
+    name: "Machado De Barros, Gabriela",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -636,7 +636,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 5,
-    name: "Villazón",
+    name: "Villazon Vallina, Lucia",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -646,7 +646,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 2,
-    name: "Ángela",
+    name: "Batista Guimaraes, Angela Maria",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -656,7 +656,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 11,
-    name: "Quixadá",
+    name: "De Oliveira Almeida, Tainara",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -666,7 +666,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 7,
-    name: "Romi",
+    name: "Rivero Fernández, Romina",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -686,7 +686,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 6,
-    name: "Clara",
+    name: "Rodriguez Garcia, Clara",
     position: fieldPlayer,
     role: ala,
     price: 2000,
@@ -696,7 +696,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 16,
-    name: "Sofi",
+    name: "Gonzalez Gonzalez, Sofia",
     position: fieldPlayer,
     role: pivot,
     price: 3500,
@@ -706,7 +706,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Rodiles FS",
     number: 24,
-    name: "Nicole",
+    name: "Simonetti, Nicole",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -737,7 +737,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 3,
-    name: "Area",
+    name: "Loureiro Villasante, Area",
     position: goalkeeper,
     role: portera,
     price: 2500,
@@ -746,8 +746,8 @@ export const players: SeedPlayer[] = [
   },
   {
     club: "Les Corts UBAE",
-    number: 21,
-    name: "Claudia",
+    number: 23,
+    name: "Hernández Rodríguez, Clàudia",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -757,7 +757,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 8,
-    name: "Rojo",
+    name: "Rojo Querol, Laia",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -767,7 +767,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 6,
-    name: "Silvia",
+    name: "Cuartero Bermejo, Sílvia",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -787,7 +787,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 11,
-    name: "Julia Peña",
+    name: "Peña Zapater, Julia",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -797,7 +797,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 13,
-    name: "Oliva",
+    name: "Oliva Ripoll, Laura",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -817,7 +817,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 17,
-    name: "Peke",
+    name: "Tremps Rodríguez, Mireia",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -827,7 +827,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 24,
-    name: "Ona",
+    name: "Solans Casadesus, Ona",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -837,7 +837,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 9,
-    name: "Paula Guix",
+    name: "Guix Claramunt, Paula",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -847,7 +847,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 22,
-    name: "Bet",
+    name: "Santamaria Peris, Elisabet",
     position: fieldPlayer,
     role: pivot,
     price: 3500,
@@ -857,7 +857,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Les Corts UBAE",
     number: 7,
-    name: "Martita",
+    name: "Gonzalez Alamos, Marta",
     position: fieldPlayer,
     role: pivot,
     price: 3500,
@@ -868,7 +868,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 28,
-    name: "Ana Eliza",
+    name: "Ribeiro De Oliveira, Ana Eliza",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -898,7 +898,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 8,
-    name: "C. Gadeia",
+    name: "Gadeia Silva, Camila",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -918,7 +918,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 21,
-    name: "Maretti",
+    name: "Maretti, Greta",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -938,7 +938,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 7,
-    name: "M. Ravadelli",
+    name: "Ravadelli, Morgana",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -948,7 +948,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 23,
-    name: "Ale Giménez",
+    name: "Gayoso Gimenez, Alejandra Rocio",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -968,7 +968,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 24,
-    name: "Claudia Navas",
+    name: "Navas Pinazo, Claudia",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -998,7 +998,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 13,
-    name: "Mailén",
+    name: "Romero, Mailen Agustina",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -1028,7 +1028,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 11,
-    name: "Gi Costa",
+    name: "Costa, Gislene",
     position: fieldPlayer,
     role: pivot,
     price: 3500,
@@ -1038,7 +1038,7 @@ export const players: SeedPlayer[] = [
   {
     club: "AD Ceuta FC",
     number: 9,
-    name: "M. Scaletti",
+    name: "Scaletti Chirico, Maura Valeria",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1059,7 +1059,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 28,
-    name: "Bia",
+    name: "Da Silva, Beatriz",
     position: goalkeeper,
     role: portera,
     price: 3500,
@@ -1069,7 +1069,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 2,
-    name: "Lucía Paz",
+    name: "Paz Lopez, Lucia",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -1079,7 +1079,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 99,
-    name: "Anita Ontiveros",
+    name: "Ontiveros, Ana Laura",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -1099,7 +1099,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 19,
-    name: "Rafinha",
+    name: "Da Silva, Rafaela Nicacio",
     position: fieldPlayer,
     role: cierre,
     price: 3500,
@@ -1109,7 +1109,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 5,
-    name: "Adriana",
+    name: "García Soria, Adriana",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1119,7 +1119,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 13,
-    name: "Malak",
+    name: "Hotait, Malak",
     position: fieldPlayer,
     role: ala,
     price: 2500,
@@ -1129,7 +1129,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 6,
-    name: "María",
+    name: "León Alvarez, Maria",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1139,7 +1139,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 9,
-    name: "Pau",
+    name: "Garcia Blanco, Paula",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -1149,7 +1149,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 22,
-    name: "Candela",
+    name: "Soria Lopez, Candela",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1159,7 +1159,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 8,
-    name: "Delise",
+    name: "Geraldo, Delise",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1179,7 +1179,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 18,
-    name: "Nora",
+    name: "Martinez Rodriguez, Nora",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1189,7 +1189,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 29,
-    name: "Rafa Pato",
+    name: "Dal Maz, Rafaela",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -1199,7 +1199,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Estrela Revoltosa Verín FSF",
     number: 10,
-    name: "Sara Santos",
+    name: "Santos Da Costa, Sara Saiona",
     position: fieldPlayer,
     role: pivot,
     price: 3500,
@@ -1210,7 +1210,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 1,
-    name: "Celia Nuin",
+    name: "Nuin Martinez, Celia",
     position: goalkeeper,
     role: portera,
     price: 2500,
@@ -1220,7 +1220,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 19,
-    name: "Elisa",
+    name: "Robles Sanchez, Elisabeth",
     position: goalkeeper,
     role: portera,
     price: 2500,
@@ -1230,7 +1230,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 17,
-    name: "Sandra Buzón",
+    name: "Buzon Camus, Sandra",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -1240,7 +1240,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 3,
-    name: "Guti",
+    name: "Gutierrez Montero, Carmen Delia",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -1250,7 +1250,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 10,
-    name: "Elena Aragón",
+    name: "Aragon De La Torre, Elena",
     position: fieldPlayer,
     role: cierre,
     price: 3500,
@@ -1260,7 +1260,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 14,
-    name: "Jussara",
+    name: "Da Silva Rodrigues, Jussara",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -1270,7 +1270,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 9,
-    name: "Ame Romero",
+    name: "Romero De La Flor, Amelia",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -1280,7 +1280,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 23,
-    name: "Carla",
+    name: "Sanchez Moreno, Carla",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1290,7 +1290,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 6,
-    name: "Miriam",
+    name: "Ruiz Diago, Miriam",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -1300,7 +1300,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 22,
-    name: "Naomi",
+    name: "Matsumoto, Naomi",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1310,7 +1310,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 7,
-    name: "Pellegry",
+    name: "Pellegry, Faustine Michel Severine",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1320,7 +1320,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Cajasol Guadalcacin FS",
     number: 8,
-    name: "Lara Díaz",
+    name: "Diaz Garcia, Lara",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1331,7 +1331,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 1,
-    name: "Izarbe",
+    name: "Tricas Cameo, Izarbe",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -1340,8 +1340,8 @@ export const players: SeedPlayer[] = [
   },
   {
     club: "Wanapix Aldelis",
-    number: 7,
-    name: "María",
+    number: 12,
+    name: "Solans Palos, Maria",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -1351,7 +1351,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 13,
-    name: "Ale",
+    name: "Gutierrez Logroño, Maria Alejandra",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -1361,7 +1361,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 4,
-    name: "Cardona",
+    name: "Cardona Gomez, Emma",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -1371,7 +1371,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 6,
-    name: "Irene",
+    name: "Ducar Relancio, Irene",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -1381,7 +1381,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 7,
-    name: "Ibáñez",
+    name: "Ibañez Soro, Marta",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -1401,7 +1401,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 14,
-    name: "Clau",
+    name: "Garcia Cabrera, Claudia",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1421,7 +1421,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 22,
-    name: "Marina",
+    name: "Escaño Lasheras, Marina",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1431,7 +1431,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 10,
-    name: "Marta",
+    name: "Garcia Robles, Marta",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1441,7 +1441,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 99,
-    name: "Noa",
+    name: "Gimeno Borderas, Noa",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1461,7 +1461,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 9,
-    name: "Yaiza",
+    name: "Sien Dominguez, Yaiza",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1471,7 +1471,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 29,
-    name: "Belén",
+    name: "Checa Nebot, Belen",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1481,7 +1481,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 8,
-    name: "Eider",
+    name: "Goñi Hernandez, Eider",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1491,7 +1491,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Wanapix Aldelis",
     number: 17,
-    name: "Juls",
+    name: "Sanz Lopez, Julia",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1502,7 +1502,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 12,
-    name: "Ana Romero",
+    name: "Romero Pérez, Ana Belén",
     position: goalkeeper,
     role: portera,
     price: 3500,
@@ -1511,8 +1511,8 @@ export const players: SeedPlayer[] = [
   },
   {
     club: "Ourense Ontime",
-    number: 31,
-    name: "Uxía Rodríguez",
+    number: 13,
+    name: "Rodriguez Yañez, Uxia",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -1522,7 +1522,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 4,
-    name: "Anita",
+    name: "Pino Cabrera, Ana Maria",
     position: fieldPlayer,
     role: cierre,
     price: 2500,
@@ -1532,7 +1532,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 3,
-    name: "Chiky",
+    name: "Dieguez Fernandez, Jessica",
     position: fieldPlayer,
     role: cierre,
     price: 3500,
@@ -1542,7 +1542,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 7,
-    name: "Alice",
+    name: "Duarte, Alice",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1552,7 +1552,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 2,
-    name: "Ana Rivera",
+    name: "Rivera Chaves, Ana",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1562,7 +1562,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 20,
-    name: "Catarina",
+    name: "Lourenço Rosa Lopes, Catarina",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1582,7 +1582,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 19,
-    name: "Melli",
+    name: "Pino Cabrera, Maria De Los Angeles",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1592,7 +1592,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 10,
-    name: "Marta",
+    name: "Rodriguez Figueiredo, Marta",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1602,7 +1602,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 8,
-    name: "Raquelilla",
+    name: "Martinez Sadoc, Raquel",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1612,7 +1612,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Ourense Ontime",
     number: 17,
-    name: "Carla Ayensa",
+    name: "Ayensa Arano, Carla",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1623,7 +1623,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 99,
-    name: "Marina",
+    name: "Carrillo Garcia, Marina",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -1633,7 +1633,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 12,
-    name: "Teresa Julve",
+    name: "Julve Saura, Teresa Francisca",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -1643,7 +1643,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 13,
-    name: "Yolanda",
+    name: "Lopez Zaragoza, Yolanda",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -1653,7 +1653,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 21,
-    name: "Toñi",
+    name: "Martinez Martinez, Antonia",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -1663,7 +1663,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 4,
-    name: "Bet",
+    name: "Carrasco Bonet, Elisabet",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -1683,7 +1683,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 18,
-    name: "Ana",
+    name: "Maldonado López, Ana",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -1703,7 +1703,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 3,
-    name: "Blanca",
+    name: "Gómez García, Blanca",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -1713,7 +1713,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 9,
-    name: "Clara",
+    name: "Leon Gomez, Clara",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1753,7 +1753,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 10,
-    name: "Esther",
+    name: "Polo Martinez, Esther",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1763,7 +1763,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 19,
-    name: "Lydia G.",
+    name: "González Parra, Lydia",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1773,7 +1773,7 @@ export const players: SeedPlayer[] = [
   {
     club: "LBTL Futsal Alcantarilla",
     number: 16,
-    name: "Mariángeles V.",
+    name: "Villa Ato, Maria De Los Angeles",
     position: fieldPlayer,
     role: pivot,
     price: 3000,
@@ -1786,7 +1786,7 @@ export const players: SeedPlayer[] = [
     name: "Paola",
     position: fieldPlayer,
     role: pivot,
-    price: 300,
+    price: 3000,
     age: 21,
     nationality: "ES",
   },
@@ -1794,7 +1794,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 23,
-    name: "Ari",
+    name: "Perez Castilla Fernandez, Ariadna",
     position: goalkeeper,
     role: portera,
     price: 4000,
@@ -1814,7 +1814,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 16,
-    name: "N. Montoro",
+    name: "Montoro Susarte, Noelia",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -1824,7 +1824,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 44,
-    name: "Thais",
+    name: "Amaral Fernandes Moreira, Thais",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -1834,7 +1834,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 7,
-    name: "Clau López",
+    name: "López Quesada, Claudia",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -1844,7 +1844,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 8,
-    name: "Lora",
+    name: "Dias Correa, Lorrana",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -1854,7 +1854,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 14,
-    name: "Lucy",
+    name: "Jimenez Martin, Lucia",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -1864,7 +1864,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 21,
-    name: "María B.",
+    name: "Barcelona Guerra, Maria",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -1873,8 +1873,8 @@ export const players: SeedPlayer[] = [
   },
   {
     club: "Arriva AD Alcorcón",
-    number: 21,
-    name: "Patri Blázquez",
+    number: 11,
+    name: "Blazquez Roldan, Patricia",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -1884,7 +1884,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 5,
-    name: "Sarita",
+    name: "Martinez Gomez, Sara",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1894,7 +1894,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 10,
-    name: "Tania Benito",
+    name: "Benito Iglesias, Tania",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -1914,7 +1914,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Arriva AD Alcorcón",
     number: 19,
-    name: "Vane Sotelo",
+    name: "Sotelo Quintela, Vanessa",
     position: fieldPlayer,
     role: pivot,
     price: 6000,
@@ -1925,7 +1925,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 1,
-    name: "Elena",
+    name: "González De Pablos, Elena",
     position: goalkeeper,
     role: portera,
     price: 4000,
@@ -1945,7 +1945,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 28,
-    name: "Yanira",
+    name: "Guizán Montes, Yanira",
     position: goalkeeper,
     role: portera,
     price: 2000,
@@ -1955,7 +1955,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 25,
-    name: "Bravo",
+    name: "Bravo Curbelo, Carolina",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -1965,7 +1965,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 8,
-    name: "Martita",
+    name: "Lopez-Pardo Gonzalez-Tejero, Marta",
     position: fieldPlayer,
     role: cierre,
     price: 4000,
@@ -1975,7 +1975,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 11,
-    name: "Alba García",
+    name: "Garcia Silverio, Alba Del Carmen",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -1985,7 +1985,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 7,
-    name: "Ale De Paz",
+    name: "De Paz Gonzalez, Alejandra",
     position: fieldPlayer,
     role: ala,
     price: 6000,
@@ -1995,7 +1995,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 13,
-    name: "Carolina Pedreira",
+    name: "De Assis Olim Mendonça Pedreira, Carolina",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -2005,7 +2005,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 6,
-    name: "Débora",
+    name: "Fernandes Lavrador, Debora Marisa",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -2025,7 +2025,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 16,
-    name: "Laura Sánchez",
+    name: "Sánchez Arcediano, Laura",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -2035,7 +2035,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 19,
-    name: "Luci",
+    name: "Gómez González, Lucía",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -2045,7 +2045,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 10,
-    name: "Miri",
+    name: "Esteban Sastre, Miriam",
     position: fieldPlayer,
     role: ala,
     price: 3500,
@@ -2055,7 +2055,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 14,
-    name: "Chuli",
+    name: "Noreña Rodríguez, Carmen",
     position: fieldPlayer,
     role: pivot,
     price: 3500,
@@ -2065,7 +2065,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Poio Pescamar",
     number: 21,
-    name: "Laura Uña",
+    name: "Uña Canales, Laura",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -2085,7 +2085,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 21,
-    name: "Caridad",
+    name: "García Díaz, Caridad",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -2095,7 +2095,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 22,
-    name: "Falconi",
+    name: "Falconi, Tamara Agostina",
     position: goalkeeper,
     role: portera,
     price: 2500,
@@ -2105,7 +2105,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 17,
-    name: "Cris Loures",
+    name: "Lourés Casal, Cristina",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -2115,7 +2115,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 10,
-    name: "Antía Pérez",
+    name: "Perez Garcia, Antia",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -2124,8 +2124,8 @@ export const players: SeedPlayer[] = [
   },
   {
     club: "FSF Castro Bloques Cando",
-    number: 3,
-    name: "Jenny",
+    number: 6,
+    name: "Santos Rodrigues, Jennifer",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -2135,7 +2135,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 97,
-    name: "Juliana",
+    name: "Brito Silva, Juliana",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -2145,7 +2145,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 27,
-    name: "Luana Moura",
+    name: "De Moura, Luana Verucia",
     position: fieldPlayer,
     role: ala,
     price: 4000,
@@ -2155,7 +2155,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 12,
-    name: "Luisa Mayara",
+    name: "Da Silva Borges, Luisa Mayara",
     position: fieldPlayer,
     role: ala,
     price: 5000,
@@ -2165,7 +2165,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 16,
-    name: "Clara",
+    name: "Soares Rodrigues, Maria Clara",
     position: fieldPlayer,
     role: ala,
     price: 2000,
@@ -2175,7 +2175,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 13,
-    name: "Dani Sousa",
+    name: "Oliveira Sousa, Daniella",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -2185,7 +2185,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 11,
-    name: "Natalinha",
+    name: "Dos Santos Fernandes, Natalia",
     position: fieldPlayer,
     role: pivot,
     price: 5000,
@@ -2195,7 +2195,7 @@ export const players: SeedPlayer[] = [
   {
     club: "FSF Castro Bloques Cando",
     number: 20,
-    name: "Patricia",
+    name: "Ortega Medina, Patricia",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -2206,7 +2206,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 2,
-    name: "Andrea",
+    name: "Da Costa Passos, Andrea",
     position: goalkeeper,
     role: portera,
     price: 3000,
@@ -2216,7 +2216,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 1,
-    name: "Valeria",
+    name: "Galvez Lopez, Valeria",
     position: goalkeeper,
     role: portera,
     price: 3500,
@@ -2226,7 +2226,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 14,
-    name: "Cris Blanco",
+    name: "Blanco Basanta, Cristina",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -2236,7 +2236,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 4,
-    name: "Collado",
+    name: "Collado Saavedra, Marta",
     position: fieldPlayer,
     role: cierre,
     price: 3000,
@@ -2246,7 +2246,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 12,
-    name: "Susana",
+    name: "Montalban Laredo, Susana",
     position: fieldPlayer,
     role: cierre,
     price: 3500,
@@ -2256,7 +2256,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 17,
-    name: "Catarina Barra",
+    name: "Da Cunha Barra, Catarina",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -2266,7 +2266,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 20,
-    name: "Guida",
+    name: "Dos Santos Carvalho, Margarida",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -2276,7 +2276,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 22,
-    name: "Unami",
+    name: "Escribano Herranz, Marta",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -2286,7 +2286,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 24,
-    name: "Rebecka",
+    name: "Parhiala, Rebecka Felicia",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -2296,7 +2296,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 19,
-    name: "Sandra",
+    name: "Garcia Fernandez, Sandra",
     position: fieldPlayer,
     role: ala,
     price: 3000,
@@ -2306,7 +2306,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 8,
-    name: "África",
+    name: "Lozano Colon, Africa",
     position: fieldPlayer,
     role: pivot,
     price: 4000,
@@ -2316,7 +2316,7 @@ export const players: SeedPlayer[] = [
   {
     club: "Nueces de Ronda Atlético Torcal",
     number: 10,
-    name: "Alejandra",
+    name: "Rochel Cuevas, Alejandra",
     position: fieldPlayer,
     role: pivot,
     price: 3500,
