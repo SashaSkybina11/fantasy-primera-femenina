@@ -1,0 +1,7 @@
+import {chromium} from 'playwright';import assert from 'node:assert/strict';import {writeFileSync}from'node:fs';
+const browser=await chromium.launch();const page=await browser.newPage();await page.clock.install();
+await page.addInitScript(()=>{localStorage.setItem('fantasy-futsal-token','test');localStorage.setItem('fantasy-locale','uk')});
+let goals=3;const club={id:'club',name:'Club',coach:null,president:null,logoUrl:null};
+await page.route('**/api/**',async route=>{const path=new URL(route.request().url()).pathname;const data=path==='/api/auth/me'?{user:{id:'user',name:'User',role:'USER'}}:path==='/api/clubs/club'?club:path==='/api/clubs/club/players'?[{id:'p',clubId:'club',name:'Player',number:1,role:'ALA',position:'FIELD_PLAYER',price:3000,goals}]:[];await route.fulfill({json:data})});
+await page.goto('http://localhost:5173/teams/club');await page.getByLabel('Голи: 3',{exact:true}).waitFor();goals=2;await page.clock.fastForward(16000);await page.getByLabel('Голи: 2',{exact:true}).waitFor();goals=0;await page.clock.fastForward(16000);await page.locator('.roster-goals').waitFor({state:'detached'});assert.equal(await page.locator('.roster-goals').count(),0);
+writeFileSync('artifacts/prelaunch/cache-refresh.json',JSON.stringify({passed:true,goals:'3 -> 2 -> 0',hardRefresh:false,zeroGoalsHidden:true},null,2));console.log('Club goals refresh 3 -> 2 -> 0 without navigation or reload: passed');await browser.close();

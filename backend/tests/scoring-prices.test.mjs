@@ -97,3 +97,7 @@ test("price application replaces a week, rebases later weeks, rejects stale prev
   await apply("w1"); assert.equal(player.price, 3400);
   assert.deepEqual(rebasePriceHistory(3000, [230, -45]).map(r => r.priceAfter), [3230, 3185]);
 });
+
+test("a price cannot be reduced to zero", () => {
+  assert.throws(() => rebasePriceHistory(100, [-100]), error => error.message === "INVALID_PLAYER_PRICE");
+});

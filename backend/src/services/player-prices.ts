@@ -26,6 +26,7 @@ export function rebasePriceHistory(priceBefore: number, deltas: number[]) {
   return deltas.map(priceDelta => {
     const row = { priceBefore, priceDelta, priceAfter: priceBefore + priceDelta };
     priceBefore = row.priceAfter;
+    if (priceBefore === 0) throw new ApiError(409, "INVALID_PLAYER_PRICE");
     if (priceBefore < 0) throw new ApiError(409, "NEGATIVE_PLAYER_PRICE");
     return row;
   });

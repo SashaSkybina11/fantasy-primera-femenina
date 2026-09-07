@@ -32,6 +32,7 @@ const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, { es: string; uk: string }> = {
+  "Недостаточно прав администратора": { es: "No tienes permisos de administrador.", uk: "Недостатньо прав адміністратора." },
   "LINEUP_NOT_FOUND": { es: "No se pudo cargar la plantilla del usuario.", uk: "Не вдалося завантажити склад користувача." },
   "FRIEND_LEAGUE_NOT_FOUND": { es: "No se encontró la liga.", uk: "Лігу не знайдено." },
   "SQUAD_POSITION_LIMIT": { es: "La plantilla debe tener 2 porteras y 8 jugadoras de campo.", uk: "У складі мають бути 2 воротарки та 8 польових гравчинь." },

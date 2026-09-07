@@ -77,6 +77,11 @@ test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin
     const catalog = await api("/players");
     assert.equal(catalog.length, seed.length);
     for (const row of catalog) { const source = seed.find((s) => s.club === row.club.name && s.name === row.name && s.number === row.number)!; assert.equal(row.price, source.price); assert.ok(Number.isSafeInteger(row.price) && row.price > 0); }
+    await prisma.fantasyTeam.update({ where: { userId: fresh.user.id }, data: { budget: 1 } });
+    await api("/my-team/players", fresh.token, "POST", { playerId: catalog[0].id }, 400);
+    const rejected = await api("/my-team", fresh.token);
+    assert.equal(rejected.budget, 1); assert.equal(rejected.players.length, 0);
+    await prisma.fantasyTeam.update({ where: { userId: fresh.user.id }, data: { budget: 40000 } });
     const sorted = [...catalog].sort((a, b) => a.price - b.price);
     const chosen: any[] = []; const clubs = new Map<string, number>();
     for (const [position, count] of [["GOALKEEPER", 2], ["FIELD_PLAYER", 8]] as const) for (const p of sorted.filter((p) => p.position === position)) {
@@ -90,6 +95,8 @@ test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin
     for (const p of chosen.slice(2)) await api("/my-team/players", fresh.token, "POST", { playerId: p.id }, 201);
     const full = await api("/my-team", fresh.token);
     assert.equal(full.players.length, 10); assert.ok(full.budget >= 0);
+    const extra = catalog.find((p: any) => !chosen.some((c) => c.id === p.id));
+    await api("/my-team/players", fresh.token, "POST", { playerId: extra.id }, 400);
     const ranking = await api("/gameweeks/leaderboard", fresh.token);
     assert.equal(ranking.find((row: any) => row.id === fresh.user.id).totalPoints, 0);
     const starters = [chosen[0], ...chosen.slice(2,6)];
@@ -113,6 +120,6 @@ test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin
     await api("/admin/friend-leagues/" + league.id, login.token, "DELETE", undefined, 204);
     assert.equal(await prisma.privateLeagueMember.count({ where: { leagueId: league.id } }), 0);
     assert.equal(digest(await snapshot(prisma, gameTables)), stateBeforeDelete);
-    writeFileSync("artifacts/prelaunch/integration.json", JSON.stringify({ passed: true, playersChecked: catalog.length, reset: result, scenarios: ["transaction rollback", "backup restore", "accounts preserved", "old/new parity", "2 goalkeeper limit", "10-player ranking", "no retroactive scoring", "private-safe starters", "goals correction", "403 admin guard", "league cascade isolation"] }, null, 2));
+    writeFileSync("artifacts/prelaunch/integration.json", JSON.stringify({ passed: true, playersChecked: catalog.length, reset: result, scenarios: ["transaction rollback", "backup restore", "accounts preserved", "old/new parity", "2 goalkeeper limit", "insufficient budget rejected", "11th player rejected", "10-player ranking", "no retroactive scoring", "private-safe starters", "goals correction", "403 admin guard", "league cascade isolation"] }, null, 2));
   } finally { server.close(); await appPrisma.$disconnect(); await prisma.$disconnect(); mock.timers.reset(); }
 });
