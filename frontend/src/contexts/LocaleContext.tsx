@@ -353,7 +353,7 @@ const spanish = {
   "home.gameweekCompleted": "Jornada finalizada",
   "home.squadLocked": "Plantilla bloqueada",
   "home.changesUntil": "Cambios disponibles hasta",
-  "home.nextControlDate": "Próxima fecha de control",
+  "home.nextControlDate": "La plantilla quedará fijada",
   "home.actions": "Acciones principales",
   "home.myTeam": "Consulta y gestiona las jugadoras que ya has comprado.",
   "home.purchase": "Encuentra jugadoras disponibles para tu fantasy.",
@@ -396,7 +396,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "lineup.error": "Не вдалося завантажити склад користувача.",
   "lineup.empty": "Основний склад ще не сформовано.",
   "lineup.view": "Переглянути склад: {{name}}",
-  "lineup.rankingEmpty": "Рейтинг з’явиться, коли будуть повні склади: 2 воротарки та 8 польових гравчинь.",
+  "lineup.rankingEmpty":
+    "Рейтинг з’явиться, коли будуть повні склади: 2 воротарки та 8 польових гравчинь.",
   "club.goals": "Голи: {{count}}",
   "purchase.positionLimit": "2 воротарки та 8 польових гравчинь",
   "rules.initialBudget": "Стартовий бюджет: {{budget}}.",
@@ -411,7 +412,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "rules.pointsUnit": "очки",
   "prices.title": "Ціни гравчинь",
   "prices.teamWin": "Бонус за перемогу команди (€)",
-  "prices.settingsHint": "Без значення бонус не нараховується. Зміни діють для ще не застосованих турів; попередні зберігають свої налаштування.",
+  "prices.settingsHint":
+    "Без значення бонус не нараховується. Зміни діють для ще не застосованих турів; попередні зберігають свої налаштування.",
   "prices.saveSettings": "Зберегти налаштування",
   "prices.calculate": "Розрахувати зміни",
   "prices.apply": "Застосувати нові ціни",
@@ -433,9 +435,12 @@ const ukrainian: Record<TranslationKey, string> = {
   "adminStats.applyResults": "Застосувати результати",
   "adminStats.unchanged": "Без змін",
   "adminStats.goalsConceded": "Пропущені голи (порожньо = не вказано)",
-  "rules.marketRestrictions": "Коли трансферне вікно закрите, не можна купувати гравчинь, продавати гравчинь або переводити гравчинь між основним складом та запасом.",
-  "rules.allPlayers": "Усі гравчині отримують очки за свої події та результат клубу, навіть якщо не стартували. Стартовий склад отримує додаткові +2 очки. Підсумок за тур не може бути від’ємним.",
-  "team.marketLocked": "Зміни складу доступні лише під час відкритого трансферного вікна.",
+  "rules.marketRestrictions":
+    "Коли трансферне вікно закрите, не можна купувати гравчинь, продавати гравчинь або переводити гравчинь між основним складом та запасом.",
+  "rules.allPlayers":
+    "Усі гравчині отримують очки за свої події та результат клубу, навіть якщо не стартували. Стартовий склад отримує додаткові +2 очки. Підсумок за тур не може бути від’ємним.",
+  "team.marketLocked":
+    "Зміни складу доступні лише під час відкритого трансферного вікна.",
   "language.label": "Мова",
   "language.es": "Іспанська",
   "language.uk": "Українська",
@@ -452,11 +457,13 @@ const ukrainian: Record<TranslationKey, string> = {
   "nav.teams": "Клуби",
   "nav.league": "Ліга",
   "nav.friends": "Ліга друзів",
-  "friends.empty": "Створіть власну лігу або приєднайтеся до ліги друзів за кодом.",
+  "friends.empty":
+    "Створіть власну лігу або приєднайтеся до ліги друзів за кодом.",
   "friends.retry": "Спробувати ще раз",
   "purchase.popularTitle": "Найпопулярніша гравчиня",
   "purchase.popularEmpty": "Поки недостатньо даних",
-  "purchase.popularOwners": "У складах {{count}} із {{total}} користувачів — {{percentage}}%",
+  "purchase.popularOwners":
+    "У складах {{count}} із {{total}} користувачів — {{percentage}}%",
   "nav.leaderboard": "Рейтинг",
   "nav.rules": "Правила гри",
   "nav.logout": "Вийти",
@@ -484,7 +491,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "auth.futsal": "Футзал.",
   "auth.your": "Твоя",
   "auth.team": "команда.",
-  "auth.description": "Обери 10 гравчинь Primera División Fútbol Sala Femenino, створи свій склад і змагайся за місце в рейтингу.",
+  "auth.description":
+    "Обери 10 гравчинь Primera División Fútbol Sala Femenino, створи свій склад і змагайся за місце в рейтингу.",
   "auth.newMember": "Нова учасниця",
   "auth.leagueMember": "Учасниця ліги",
   "auth.createProfile": "Створіть профіль",
@@ -518,14 +526,16 @@ const ukrainian: Record<TranslationKey, string> = {
   "profile.avatarRemoved": "Аватар видалено",
   "profile.security": "Безпека",
   "profile.passwordTitle": "Змінити пароль",
-  "profile.passwordDescription": "Підтвердьте поточний пароль, щоб захистити свій акаунт.",
+  "profile.passwordDescription":
+    "Підтвердьте поточний пароль, щоб захистити свій акаунт.",
   "profile.currentPassword": "Поточний пароль",
   "profile.newPassword": "Новий пароль",
   "profile.confirmPassword": "Підтвердіть новий пароль",
   "profile.changePassword": "Оновити пароль",
   "profile.passwordSaved": "Пароль оновлено",
   "profile.passwordMismatch": "Нові паролі не збігаються",
-  "profile.contactConsent": "Дозволити адміністрації використовувати мої контактні дані для зв’язку з питань гри та отримання призів.",
+  "profile.contactConsent":
+    "Дозволити адміністрації використовувати мої контактні дані для зв’язку з питань гри та отримання призів.",
   "profile.registeredAt": "Дата реєстрації",
   "admin.eyebrow": "Приватний простір",
   "admin.title": "Адміністрування",
@@ -536,7 +546,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "admin.roleAdmin": "Адміністраторка",
   "admin.roleUser": "Користувач",
   "admin.delete": "Видалити",
-  "admin.deleteConfirm": "Видалити акаунт {{name}}? Цю дію неможливо скасувати.",
+  "admin.deleteConfirm":
+    "Видалити акаунт {{name}}? Цю дію неможливо скасувати.",
   "admin.userDeleted": "Користувача видалено",
   "admin.playerPointsLink": "Очки гравчинь",
   "admin.searchPlaceholder": "Пошук за ім’ям, email, Instagram або WhatsApp",
@@ -544,7 +555,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "admin.statusSuspended": "Призупинений",
   "adminStats.eyebrow": "Адміністрування",
   "adminStats.title": "Очки гравчинь",
-  "adminStats.description": "Події матчу автоматично перераховують fantasy-очки та рейтинг.",
+  "adminStats.description":
+    "Події матчу автоматично перераховують fantasy-очки та рейтинг.",
   "adminStats.usersLink": "Користувачі",
   "adminStats.selectGameweek": "Оберіть тур (1–30)",
   "adminStats.searchPlaceholder": "Пошук за ім’ям, номером або клубом",
@@ -580,27 +592,36 @@ const ukrainian: Record<TranslationKey, string> = {
   "gameweek.COMPLETED": "Завершений",
   "leaderboard.eyebrow": "Fantasy",
   "leaderboard.title": "Рейтинг сезону",
-  "leaderboard.description": "Загальний результат та історія ваших щотижневих турів.",
+  "leaderboard.description":
+    "Загальний результат та історія ваших щотижневих турів.",
   "leaderboard.overall": "Загальний рейтинг",
   "leaderboard.myGameweeks": "Мої тури",
   "common.pointsShort": "оч.",
   "rules.badge": "Гід",
   "rules.title": "Правила гри",
-  "rules.intro": "Fantasy Futsal Femenino — це Fantasy-гра на основі жіночої іспанської Прімери з футзалу.",
+  "rules.intro":
+    "Fantasy Futsal Femenino — це Fantasy-гра на основі жіночої іспанської Прімери з футзалу.",
   "rules.howTitle": "Як грати?",
-  "rules.howBody": "Зареєструйтеся, купуйте реальних гравчинь, сформуйте основний склад і оберіть капітанку перед кожним туром.",
+  "rules.howBody":
+    "Зареєструйтеся, купуйте реальних гравчинь, сформуйте основний склад і оберіть капітанку перед кожним туром.",
   "rules.squadTitle": "Склад",
-  "rules.squadBody": "Команда складається з 10 гравчинь (2 воротарки та 8 польових): 5 в основі (1 воротарка і 4 польові гравчині) та 5 у запасі. Очки приносять лише гравчині основи.",
+  "rules.squadBody":
+    "Команда складається з 10 гравчинь (2 воротарки та 8 польових): 5 в основі (1 воротарка і 4 польові гравчині) та 5 у запасі. Очки приносять лише гравчині основи.",
   "rules.pointsTitle": "Як нараховуються бали?",
-  "rules.pointsBody": "Бали залежать від подій у реальних матчах. Після кожного туру система перераховує результати та рейтинг.",
+  "rules.pointsBody":
+    "Бали залежать від подій у реальних матчах. Після кожного туру система перераховує результати та рейтинг.",
   "rules.captainTitle": "Капітанка",
-  "rules.captainBody": "Капітанка повинна бути в основному складі, а її очки множаться на два.",
+  "rules.captainBody":
+    "Капітанка повинна бути в основному складі, а її очки множаться на два.",
   "rules.marketTitle": "Трансферний ринок",
-  "rules.marketBody": "Трансферне вікно відкривається щовівторка о 10:00 та закривається щоп'ятниці о 12:00 за часом Мадрида. Після формування першого складу можна продати 2 та придбати 2 гравчинь за тур; трансфери не накопичуються.",
+  "rules.marketBody":
+    "Трансферне вікно відкривається щовівторка о 10:00 та закривається щоп'ятниці о 12:00 за часом Мадрида. Після формування першого складу можна продати 2 та придбати 2 гравчинь за тур; трансфери не накопичуються.",
   "rules.ratingTitle": "Рейтинг",
-  "rules.ratingBody": "Усі учасниці змагаються в загальному рейтингу, використовуючи очки своєї єдиної fantasy-команди.",
+  "rules.ratingBody":
+    "Усі учасниці змагаються в загальному рейтингу, використовуючи очки своєї єдиної fantasy-команди.",
   "rules.leaguesTitle": "Ліги друзів",
-  "rules.leaguesBody": "Створюйте приватні ліги або приєднуйтеся за кодом. У них використовуються той самий склад і загальні очки.",
+  "rules.leaguesBody":
+    "Створюйте приватні ліги або приєднуйтеся за кодом. У них використовуються той самий склад і загальні очки.",
   "rules.started": "Стартовий склад",
   "rules.win": "Перемога",
   "rules.draw": "Нічия",
@@ -645,7 +666,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "team.bench": "Запасні",
   "team.benchSubtitle": "5 гравчинь",
   "team.checkLineup": "Перевірте склад перед збереженням",
-  "team.lineupRequirements": "10 гравчинь · 5 в основі · 1 воротарка · капітанка в основі",
+  "team.lineupRequirements":
+    "10 гравчинь · 5 в основі · 1 воротарка · капітанка в основі",
   "team.checking": "Перевіряємо…",
   "team.saveLineup": "Зберегти склад",
   "team.updated": "Склад оновлено",
@@ -653,7 +675,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "team.playerRemoved": "Гравчиню видалено — бюджет оновлено",
   "team.lineupSaved": "Склад успішно збережено",
   "team.emptyTitle": "Ваша команда ще не сформована",
-  "team.empty": "Ви ще не придбали гравчинь. Перейдіть до розділу «Купівля гравчинь», щоб сформувати команду.",
+  "team.empty":
+    "Ви ще не придбали гравчинь. Перейдіть до розділу «Купівля гравчинь», щоб сформувати команду.",
   "team.goToPurchase": "Перейти до купівлі гравчинь",
   "player.club": "Клуб",
   "player.allClubs": "Усі клуби",
@@ -675,7 +698,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "player.close": "Закрити",
   "purchase.eyebrow": "Fantasy-ринок",
   "purchase.title": "Купівля гравчинь",
-  "purchase.description": "Обирайте гравчинь для команди, не перевищуючи бюджет і ліміт двох гравчинь з одного клубу.",
+  "purchase.description":
+    "Обирайте гравчинь для команди, не перевищуючи бюджет і ліміт двох гравчинь з одного клубу.",
   "purchase.buy": "Купити",
   "purchase.success": "Гравчиню придбано та додано до вашої команди",
   "purchase.marketOpen": "Ринок відкрито",
@@ -685,8 +709,10 @@ const ukrainian: Record<TranslationKey, string> = {
   "purchase.timezoneLabel": "Часовий пояс",
   "purchase.scheduleLoading": "Завантажуємо розклад ринку…",
   "purchase.scheduleUnavailable": "Не вдалося завантажити розклад ринку.",
-  "purchase.weeklySchedule": "Ринок відкривається щопонеділка о 08:00 і закривається щоп’ятниці о 19:00.",
-  "purchase.dynamicPriceNotice": "Ціни гравчинь можуть зростати протягом сезону залежно від їхніх результатів і дій у матчах.",
+  "purchase.weeklySchedule":
+    "Ринок відкривається щопонеділка о 08:00 і закривається щоп’ятниці о 19:00.",
+  "purchase.dynamicPriceNotice":
+    "Ціни гравчинь можуть зростати протягом сезону залежно від їхніх результатів і дій у матчах.",
   "purchase.viewSquad": "Переглянути склад",
   "purchase.squadCount": "Склад: {{count}} / 10",
   "purchase.budgetLabel": "Бюджет",
@@ -702,7 +728,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "squad.removeCaptain": "Прибрати капітанку",
   "squad.remove": "Видалити",
   "squad.removeTitle": "Видалити гравчиню?",
-  "squad.removeQuestion": "Ви впевнені, що хочете видалити {{name}} зі свого складу?",
+  "squad.removeQuestion":
+    "Ви впевнені, що хочете видалити {{name}} зі свого складу?",
   "squad.keep": "Не видаляти",
   "squad.closeRemove": "Закрити підтвердження",
   "squad.freeSlot": "Вільне місце",
@@ -735,12 +762,13 @@ const ukrainian: Record<TranslationKey, string> = {
   "avatar.alt": "Аватар {{name}}",
   "clubLogo.alt": "Логотип {{name}}",
   "home.eyebrow": "Fantasy жіночого футзалу",
-  "home.description": "Збирайте команду, керуйте бюджетом і стежте за офіційним турніром.",
+  "home.description":
+    "Збирайте команду, керуйте бюджетом і стежте за офіційним турніром.",
   "home.marketOpen": "Ринок відкрито",
   "home.gameweekCompleted": "Тур завершено",
   "home.squadLocked": "Склад зафіксовано",
   "home.changesUntil": "Зміни доступні до",
-  "home.nextControlDate": "Наступна контрольна дата",
+  "home.nextControlDate": "Склад буде зафіксовано",
   "home.actions": "Основні дії",
   "home.myTeam": "Переглядайте й керуйте вже придбаними гравчинями.",
   "home.purchase": "Знаходьте доступних гравчинь для fantasy-команди.",
@@ -748,27 +776,36 @@ const ukrainian: Record<TranslationKey, string> = {
   "home.yourTeam": "Ваша fantasy-команда",
   "home.favoriteEyebrow": "Ваш клуб сезону",
   "home.favoriteTitle": "Оберіть, за кого вболіваєте",
-  "home.favoriteDescription": "Ваш голос враховується в рейтингу підтримки ліги. Його можна змінити будь-коли.",
+  "home.favoriteDescription":
+    "Ваш голос враховується в рейтингу підтримки ліги. Його можна змінити будь-коли.",
   "home.favoriteLabel": "Мій улюблений клуб",
   "home.favoritePlaceholder": "Обрати клуб",
   "home.conceptEyebrow": "Як працює гра",
   "home.conceptTitle": "Увесь жіночий футзал в одному місці",
-  "home.conceptDescription": "Ця приватна fantasy-гра поєднує стеження за Primera División, власну команду та спільноту ліги.",
+  "home.conceptDescription":
+    "Ця приватна fantasy-гра поєднує стеження за Primera División, власну команду та спільноту ліги.",
   "home.conceptSource": "Інформація про турнір взята з офіційного сайту RFEF.",
   "home.conceptFantasyTitle": "Створіть fantasy-команду",
-  "home.conceptFantasyDescription": "Купуйте до десяти гравчинь, контролюйте бюджет і формуйте основу, запас та капітанку.",
+  "home.conceptFantasyDescription":
+    "Купуйте до десяти гравчинь, контролюйте бюджет і формуйте основу, запас та капітанку.",
   "home.conceptClubTitle": "Дізнавайтеся про клуби",
-  "home.conceptClubDescription": "Переглядайте склади, позиції, вік, національності, тренерів і президентів усіх 16 клубів.",
+  "home.conceptClubDescription":
+    "Переглядайте склади, позиції, вік, національності, тренерів і президентів усіх 16 клубів.",
   "home.conceptLeagueTitle": "Беріть участь у лізі",
-  "home.conceptLeagueDescription": "Порівнюйте команди з друзями та дізнавайтеся, який клуб має найбільшу підтримку в сезоні.",
+  "home.conceptLeagueDescription":
+    "Порівнюйте команди з друзями та дізнавайтеся, який клуб має найбільшу підтримку в сезоні.",
   "home.conceptCalendarTitle": "Стежте за турніром",
-  "home.conceptCalendarDescription": "Відкривайте офіційний календар і результати RFEF, не виходячи з застосунку.",
+  "home.conceptCalendarDescription":
+    "Відкривайте офіційний календар і результати RFEF, не виходячи з застосунку.",
   "home.conceptPointsTitle": "Нараховуйте очки щотижня",
-  "home.conceptPointsDescription": "Реальні дії гравчинь основи перетворюються на fantasy-очки в кожному турі, а капітанка отримує подвійні очки.",
+  "home.conceptPointsDescription":
+    "Реальні дії гравчинь основи перетворюються на fantasy-очки в кожному турі, а капітанка отримує подвійні очки.",
   "home.conceptRatingTitle": "Підіймайтеся в рейтингу",
-  "home.conceptRatingDescription": "Порівнюйте свій результат за тиждень і загальну кількість очок сезону з іншими учасницями.",
+  "home.conceptRatingDescription":
+    "Порівнюйте свій результат за тиждень і загальну кількість очок сезону з іншими учасницями.",
   "calendar.title": "Календар",
-  "calendar.description": "Офіційний календар Primera División Fútbol Sala Femenino",
+  "calendar.description":
+    "Офіційний календар Primera División Fútbol Sala Femenino",
   "calendar.open": "Відкрити календар RFEF",
   "calendar.resultsTitle": "Результати",
   "calendar.resultsDescription": "Офіційні результати туру на сайті RFEF.",
