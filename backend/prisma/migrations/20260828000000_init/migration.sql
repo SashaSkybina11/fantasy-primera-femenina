@@ -21,7 +21,7 @@ CREATE TABLE "FantasyTeam" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "budget" INTEGER NOT NULL DEFAULT 50000,
+    "budget" INTEGER NOT NULL DEFAULT 40000,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "FantasyTeam_pkey" PRIMARY KEY ("id")
