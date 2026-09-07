@@ -1,7 +1,9 @@
+import publicLineupRouter from "./routes/public-lineup.js";
 import { mkdirSync } from "node:fs";
 import cors from "cors";
 import express from "express";
 import { env } from "./config/env.js";
+import { INITIAL_BUDGET } from "./config/game.js";
 import { uploadsDirectory } from "./config/paths.js";
 import authRouter from "./routes/auth.js";
 import adminRouter from "./routes/admin.js";
@@ -23,10 +25,16 @@ app.use(cors({
     : [/^http:\/\/localhost(?::\d+)?$/, /^http:\/\/127\.0\.0\.1(?::\d+)?$/],
 }));
 app.use(express.json({ limit: "1mb" }));
+app.use("/api", (_request, response, next) => {
+  response.setHeader("Cache-Control", "no-store");
+  next();
+});
+app.get("/api/game-config", (_request, response) => response.json({ initialBudget: INITIAL_BUDGET }));
 app.use("/uploads", express.static(uploadsDirectory));
 
 app.get("/api/health", (_request, response) => response.json({ ok: true }));
 app.use("/api/auth", authRouter);
+app.use("/api/users", publicLineupRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api", catalogRouter);

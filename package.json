@@ -14,7 +14,14 @@
     "db:seed": "npm run prisma:seed -w backend",
     "db:clear-users": "npm run clear-users -w backend",
     "db:reset-users": "npm run reset-users -w backend",
-    "vercel-build": "npm run prisma:migrate:deploy -w backend && npm run prisma:generate -w backend && npm run build"
+    "vercel-build": "npm run prisma:migrate:deploy -w backend && npm run prisma:generate -w backend && npm run build",
+    "db:reset-game": "npm run reset-game -w backend --",
+    "db:audit-prices": "npm run audit-prices -w backend --",
+    "db:restore-game": "npm run restore-game -w backend --",
+    "db:check-csv": "tsx backend/scripts/sync-csv-prices.ts",
+    "db:sync-csv": "tsx backend/scripts/sync-csv-prices.ts --write",
+    "test:prelaunch": "node --import tsx --test backend/tests/prelaunch.integration.ts",
+    "test:prelaunch-ui": "node --import tsx tests/prelaunch-ui.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

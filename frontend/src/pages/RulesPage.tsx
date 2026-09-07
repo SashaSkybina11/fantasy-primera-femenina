@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "../contexts/LocaleContext";
-import { api } from "../services/api";
+import { api, formatEuro } from "../services/api";
 
 export function RulesPage() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
+  const config = useQuery({ queryKey: ["game-config"], queryFn: api.gameConfig });
   const scoring = useQuery({
     queryKey: ["scoring-rules"],
     queryFn: api.scoringRules,
@@ -28,6 +29,7 @@ export function RulesPage() {
         <article>
           <h2>👤 {t("rules.howTitle")}</h2>
           <p>{t("rules.howBody")}</p>
+          {config.data && <p>{t("rules.initialBudget", { budget: formatEuro(config.data.initialBudget, locale) })}</p>}
         </article>
         <article>
           <h2>👥 {t("rules.squadTitle")}</h2>

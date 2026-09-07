@@ -1,0 +1,1 @@
+ALTER TABLE "FantasyTeam" ALTER COLUMN "budget" SET DEFAULT 40000;

@@ -38,6 +38,9 @@ export function ensureValidLineup(
 ) {
   if (team.budget < 0) throw new ApiError(400, "Бюджет не может быть отрицательным");
   if (team.players.length !== 10) throw new ApiError(400, "Нужно выбрать ровно 10 игроков");
+  if (team.players.filter((entry) => entry.player.position === PlayerPosition.GOALKEEPER).length !== 2) {
+    throw new ApiError(400, "SQUAD_POSITION_LIMIT");
+  }
 
   const starters = team.players.filter((entry) => entry.status === SquadStatus.STARTER);
   const bench = team.players.filter((entry) => entry.status === SquadStatus.BENCH);

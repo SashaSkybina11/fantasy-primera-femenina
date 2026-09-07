@@ -1,3 +1,4 @@
+import { AdminFriendLeaguesPage } from "./pages/AdminFriendLeaguesPage";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
 import { useLocale } from "./contexts/LocaleContext";
@@ -44,6 +45,7 @@ export function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin/player-prices" element={<AdminPlayerPricesPage />} />
+        <Route path="/admin/friend-leagues" element={<AdminFriendLeaguesPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/users" element={<AdminPage />} />
         <Route

@@ -15,6 +15,19 @@ const router = Router();
 
 router.use(authenticate, requireAdmin);
 
+router.get("/friend-leagues", asyncRoute(async (_request, response) => {
+  response.json(await prisma.privateLeague.findMany({ orderBy: { createdAt: "desc" }, select: {
+    id: true, name: true, inviteCode: true, createdAt: true,
+    owner: { select: { id: true, name: true } }, _count: { select: { members: true } }
+  } }));
+}));
+router.delete("/friend-leagues/:id", asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  const result = await inTransaction((tx) => tx.privateLeague.deleteMany({ where: { id } }));
+  if (!result.count) throw new ApiError(404, "FRIEND_LEAGUE_NOT_FOUND");
+  response.status(204).send();
+}));
+
 router.get("/users", asyncRoute(async (_request, response) => {
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },

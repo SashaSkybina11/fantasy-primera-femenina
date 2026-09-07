@@ -6,7 +6,7 @@ await page.addInitScript(() => {localStorage.setItem('fantasy-futsal-token','tes
 const club={id:'club',name:'Futsi Atlético Navalcarnero',logoUrl:null};
 const player={id:'player',name:'Bea Parrón',number:18,clubId:club.id,club,role:'ALA',position:'FIELD_PLAYER',price:3000};
 const user={id:'user',name:'Tester',role:'ADMIN',email:'test@example.invalid',createdAt:'2026-09-01',contactConsent:false};
-const team={id:'team',name:'Test FC',budget:50000,players:[]};
+const team={id:'team',name:'Test FC',budget:40000,players:[]};
 const leagues=[];
 let popularityReads=0;
 let buys=0, sales=0;
@@ -20,8 +20,8 @@ await page.route('**/api/**',async route=>{
   else if(path==='/my-team') data=team;
   else if(path==='/my-team/transfers') data={marketIsOpen:true,initialSquad:true,bought:0,sold:0,limit:2};
   else if(path==='/my-team/popular-player') {popularityReads++;data={player:team.players.length?player:null,ownerCount:team.players.length,totalUsers:team.players.length,percentage:team.players.length?100:0};}
-  else if(path==='/my-team/players'&&method==='POST') {buys++;team.players=[{id:'entry',playerId:player.id,player,status:'BENCH',isCaptain:false}];team.budget=47000;data=team;}
-  else if(path==='/my-team/players/player'&&method==='DELETE') {sales++;team.players=[];team.budget=50000;data=team;}
+  else if(path==='/my-team/players'&&method==='POST') {buys++;team.players=[{id:'entry',playerId:player.id,player,status:'BENCH',isCaptain:false}];team.budget=37000;data=team;}
+  else if(path==='/my-team/players/player'&&method==='DELETE') {sales++;team.players=[];team.budget=40000;data=team;}
   else if(path==='/players') data=[player];
   else if(path==='/clubs') data=[club];
   else if(path==='/gameweeks/current') data=week;

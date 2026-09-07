@@ -32,6 +32,10 @@ const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, { es: string; uk: string }> = {
+  "LINEUP_NOT_FOUND": { es: "No se pudo cargar la plantilla del usuario.", uk: "Не вдалося завантажити склад користувача." },
+  "FRIEND_LEAGUE_NOT_FOUND": { es: "No se encontró la liga.", uk: "Лігу не знайдено." },
+  "SQUAD_POSITION_LIMIT": { es: "La plantilla debe tener 2 porteras y 8 jugadoras de campo.", uk: "У складі мають бути 2 воротарки та 8 польових гравчинь." },
+  "INVALID_PLAYER_PRICE": { es: "El precio no está disponible. Actualiza la página.", uk: "Ціна недоступна. Оновіть сторінку." },
   "LINEUP_MARKET_CLOSED": { es: "Los cambios de alineación solo están disponibles mientras el mercado está abierto.", uk: "Зміни складу доступні лише під час відкритого трансферного вікна." },
   "INVALID_GOALKEEPER_STATS": { es: "Comprueba los goles recibidos y la portería a cero.", uk: "Перевірте пропущені голи та сухий матч." },
   "NEGATIVE_PLAYER_PRICE": { es: "El precio resultante es negativo. Revisa las estadísticas.", uk: "Отримана ціна від’ємна. Перевірте статистику." },
@@ -308,7 +312,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   headers.set("Accept-Language", getStoredLocale());
   if (init.body && !(init.body instanceof FormData))
     headers.set("Content-Type", "application/json");
-  const response = await fetch(`${API_URL}${path}`, { ...init, headers });
+  const response = await fetch(`${API_URL}${path}`, { cache: "no-store", ...init, headers });
   if (response.status === 204) return undefined as T;
   const data = await response.json().catch(() => ({}));
   if (response.status === 401 && token) {
@@ -319,7 +323,13 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return data as T;
 }
 
+export type PublicLineup = { user: { id: string; name: string }; players: Array<import("../types").SquadEntry & { points: number }> };
+export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
+  publicLineup: (id: string) => request<PublicLineup>("/users/" + id + "/lineup"),
+  adminFriendLeagues: () => request<AdminFriendLeague[]>("/admin/friend-leagues"),
+  deleteAdminFriendLeague: (id: string) => request<void>("/admin/friend-leagues/" + id, { method: "DELETE" }),
+  gameConfig: () => request<{ initialBudget: number }>("/game-config"),
   register: (payload: { email: string; password: string; name: string }) =>
     request<{ token: string; user: User }>("/auth/register", {
       method: "POST",

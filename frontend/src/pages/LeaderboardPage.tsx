@@ -1,8 +1,11 @@
+import { useState } from "react";
+import { PublicLineupModal } from "../components/PublicLineupModal";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
 
 export function LeaderboardPage() {
+  const [selected, setSelected] = useState<{ id: string; name: string } | null>(null);
   const { t } = useLocale();
   const leaderboard = useQuery({
     queryKey: ["overall-leaderboard"],
@@ -14,6 +17,7 @@ export function LeaderboardPage() {
   });
   return (
     <div className="page">
+      {selected && <PublicLineupModal userId={selected.id} name={selected.name} onClose={() => setSelected(null)} />}
       <header className="page-heading">
         <p className="eyebrow">{t("leaderboard.eyebrow")}</p>
         <h1>{t("leaderboard.title")}</h1>
@@ -25,13 +29,16 @@ export function LeaderboardPage() {
             <h2>{t("leaderboard.overall")}</h2>
             <span>{leaderboard.data?.length ?? 0}</span>
           </div>
+          {leaderboard.isPending && <p className="state-card">{t("admin.loading")}</p>}
+          {leaderboard.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}
+          {leaderboard.data?.length === 0 && <p className="state-card">{t("lineup.rankingEmpty")}</p>}
           {leaderboard.data?.map((row) => (
-            <div className="leaderboard-row" key={row.id}>
+            <button type="button" className="leaderboard-row leaderboard-row--interactive" key={row.id} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={t("lineup.view", { name: row.name ?? "" })}>
               <b>{row.rank}</b>
               <strong>{row.name}</strong>
               <span>{row.lastGameweekPoints} {t("common.pointsShort")}</span>
-              <em>{row.totalPoints} {t("common.pointsShort")}</em>
-            </div>
+              <em>{row.totalPoints} {t("common.pointsShort")} <i aria-hidden="true">›</i></em>
+            </button>
           ))}
         </section>
         <section className="admin-card">

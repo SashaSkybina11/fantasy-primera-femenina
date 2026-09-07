@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { env } from "../config/env.js";
+import { INITIAL_BUDGET } from "../config/game.js";
 import { prisma } from "../lib/prisma.js";
 import { inTransaction } from "../lib/transaction.js";
 import { authenticate } from "../middleware/auth.js";
@@ -43,7 +44,7 @@ router.post("/register", asyncRoute(async (request, response) => {
         email,
         passwordHash,
         name: input.name,
-        fantasyTeam: { create: { name: `${input.name} FC`, budget: 50000 } },
+        fantasyTeam: { create: { name: `${input.name} FC`, budget: INITIAL_BUDGET } },
       },
     });
     await tx.leagueMember.create({ data: { userId: created.id, leagueId: league.id } });

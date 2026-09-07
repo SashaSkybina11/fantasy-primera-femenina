@@ -20,9 +20,9 @@ router.get("/current", asyncRoute(async (_request, response) => {
 
 router.get("/leaderboard", asyncRoute(async (_request, response) => {
   const totals = await prisma.user.findMany({
-    select: { id: true, name: true, avatarUrl: true, gameweekPoints: { select: { totalPoints: true }, where: { isFinal: true } } },
+    select: { id: true, name: true, avatarUrl: true, fantasyTeam: { select: { players: { select: { player: { select: { position: true } } } } } }, gameweekPoints: { select: { totalPoints: true }, where: { isFinal: true }, orderBy: { gameweek: { number: "asc" } } } },
   });
-  const ranked = totals.map((user) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, totalPoints: user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0), lastGameweekPoints: user.gameweekPoints.at(-1)?.totalPoints ?? 0 })).sort((a, b) => b.totalPoints - a.totalPoints);
+  const ranked = totals.filter((user) => user.fantasyTeam?.players.length === 10 && user.fantasyTeam.players.filter((entry) => entry.player.position === "GOALKEEPER").length === 2).map((user) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, totalPoints: user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0), lastGameweekPoints: user.gameweekPoints.at(-1)?.totalPoints ?? 0 })).sort((a, b) => b.totalPoints - a.totalPoints);
   response.json(ranked.map((row, index) => ({ ...row, rank: index + 1 })));
 }));
 

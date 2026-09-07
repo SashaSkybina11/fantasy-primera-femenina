@@ -1,0 +1,14 @@
+{
+  "database": {
+    "database": "fantasy_prelaunch_test",
+    "address": "::1/128",
+    "port": 5432
+  },
+  "playersInDatabase": 233,
+  "playersChecked": 233,
+  "correctedPrices": 0,
+  "differences": [],
+  "missing": [],
+  "review": [],
+  "preservedPriceHistory": true
+}

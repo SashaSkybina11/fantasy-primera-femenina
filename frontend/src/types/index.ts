@@ -19,6 +19,7 @@ export type Player = {
   position: Position;
   role: PlayerRole;
   price: number;
+  goals?: number;
   age: number | null;
   nationality: string | null;
   photoUrl: string | null;

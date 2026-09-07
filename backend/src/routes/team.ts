@@ -47,7 +47,7 @@ router.post("/players", asyncRoute(async (request, response) => {
     await assertOpenMarket(tx, request.method === "PATCH");
     const current = await tx.fantasyTeam.findUnique({
       where: { userId: request.auth!.userId },
-      include: { players: { include: { player: { select: { clubId: true } } } } },
+      include: { players: { include: { player: { select: { clubId: true, position: true } } } } },
     });
     if (!current) throw new ApiError(404, "Fantasy-команда не найдена");
     if (current.players.length >= 10) throw new ApiError(400, "Состав уже заполнен");
@@ -55,6 +55,11 @@ router.post("/players", asyncRoute(async (request, response) => {
 
     const player = await tx.player.findUnique({ where: { id: playerId } });
     if (!player) throw new ApiError(404, "Игрок не найден");
+    if (!Number.isSafeInteger(player.price) || player.price <= 0) throw new ApiError(409, "INVALID_PLAYER_PRICE");
+    const positionLimit = player.position === PlayerPosition.GOALKEEPER ? 2 : 8;
+    if (current.players.filter((entry) => entry.player.position === player.position).length >= positionLimit) {
+      throw new ApiError(400, "SQUAD_POSITION_LIMIT");
+    }
     if (current.budget < player.price) throw new ApiError(400, "Недостаточно бюджета для этого игрока");
     if (current.players.filter((entry) => entry.player.clubId === player.clubId).length >= 2) {
       throw new ApiError(400, "Максимум 2 игрока из одной команды");

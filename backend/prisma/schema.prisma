@@ -95,7 +95,7 @@ model FantasyTeam {
   id                     String              @id @default(cuid())
   userId                 String              @unique
   name                   String
-  budget                 Int                 @default(50000)
+  budget                 Int                 @default(40000)
   isInitialSquadComplete Boolean             @default(false)
   user                   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   players                FantasyTeamPlayer[]

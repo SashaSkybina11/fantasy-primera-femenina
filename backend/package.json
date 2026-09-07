@@ -12,7 +12,11 @@
     "prisma:migrate:deploy": "npx prisma migrate deploy",
     "prisma:seed": "npx prisma db seed",
     "clear-users": "npx tsx prisma/clear-users.ts",
-    "reset-users": "npx tsx prisma/reset-users.ts"
+    "reset-users": "npx tsx prisma/reset-users.ts",
+    "reset-game": "tsx scripts/run-reset-game-users.ts",
+    "audit-prices": "tsx scripts/audit-player-prices.ts",
+    "restore-game": "tsx scripts/restore-game-users.ts",
+    "test": "node --test tests/*.test.mjs"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

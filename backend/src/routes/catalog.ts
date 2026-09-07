@@ -22,8 +22,8 @@ router.get("/clubs/:id/players", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const club = await prisma.club.findUnique({ where: { id } });
   if (!club) throw new ApiError(404, "Команда не найдена");
-  const players = await prisma.player.findMany({ where: { clubId: club.id }, orderBy: [{ role: "asc" }, { number: "asc" }] });
-  response.json(withDisplayNumbers(players));
+  const players = await prisma.player.findMany({ where: { clubId: club.id }, include: { gameweekStats: { select: { goals: true } } }, orderBy: [{ role: "asc" }, { number: "asc" }] });
+  response.json(withDisplayNumbers(players.map(({ gameweekStats, ...player }) => ({ ...player, goals: gameweekStats.reduce((sum, stat) => sum + stat.goals, 0) }))));
 }));
 
 router.get("/players", asyncRoute(async (request, response) => {

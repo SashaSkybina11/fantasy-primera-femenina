@@ -56,7 +56,7 @@ export function AdminPlayerPointsPage() {
     mutationFn: (id: string) => api.completeGameweek(id),
     onSuccess: () => {
       toast.success(t("adminStats.completed"));
-      void queryClient.invalidateQueries({ queryKey: ["admin-gameweeks"] });
+      void queryClient.invalidateQueries();
     },
     onError: (error) => toast.error(error.message),
   });
@@ -64,7 +64,7 @@ export function AdminPlayerPointsPage() {
     mutationFn: (id: string) => api.reopenGameweek(id),
     onSuccess: () => {
       toast.success(t("adminStats.reopened"));
-      void queryClient.invalidateQueries({ queryKey: ["admin-gameweeks"] });
+      void queryClient.invalidateQueries();
     },
     onError: (error) => toast.error(error.message),
   });

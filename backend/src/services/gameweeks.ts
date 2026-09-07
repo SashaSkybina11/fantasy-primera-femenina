@@ -48,10 +48,12 @@ export function calculatePlayerPoints(input: {
 }
 
 export async function snapshotGameweek(tx: Db, gameweekId: string) {
-  const teams = await tx.fantasyTeam.findMany({ include: { user: true, players: { include: { player: true } } } });
+  const gameweek = await tx.gameweek.findUniqueOrThrow({ where: { id: gameweekId } });
+  const teams = await tx.fantasyTeam.findMany({ where: { players: { every: { createdAt: { lte: gameweek.deadlineAt } } } }, include: { user: true, players: { include: { player: true } } } });
   for (const team of teams) {
     const starters = team.players.filter((item) => item.status === SquadStatus.STARTER);
     const valid = team.players.length === 10 && starters.length === 5
+      && team.players.filter((item) => item.player.position === PlayerPosition.GOALKEEPER).length === 2
       && starters.filter((item) => item.player.position === PlayerPosition.GOALKEEPER).length === 1
       && starters.filter((item) => item.player.position === PlayerPosition.FIELD_PLAYER).length === 4
       && starters.filter((item) => item.isCaptain).length === 1;

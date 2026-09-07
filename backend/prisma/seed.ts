@@ -4,7 +4,7 @@ import { clubs } from "./data/clubs.js";
 import { players, type SeedPlayer } from "./data/players.js";
 
 const prisma = new PrismaClient();
-const initialBudget = 50000;
+
 
 function hashValue(input: string) {
   let hash = 0;
@@ -19,33 +19,6 @@ function resolvePlayerRole(player: SeedPlayer): NonNullable<SeedPlayer["role"]> 
   if (player.position === PlayerPosition.GOALKEEPER) return "PORTERA";
   const rolePool = ["CIERRE", "ALA", "ALA", "PIVOT"] as const;
   return rolePool[hashValue(`${player.club}:${player.number}:${player.name}:role`) % rolePool.length];
-}
-
-async function syncFantasyTeamBudgets() {
-  const teams = await prisma.fantasyTeam.findMany({
-    select: {
-      id: true,
-      players: {
-        select: {
-          player: {
-            select: {
-              price: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  await Promise.all(
-    teams.map((team) => {
-      const spent = team.players.reduce((total, entry) => total + entry.player.price, 0);
-      return prisma.fantasyTeam.update({
-        where: { id: team.id },
-        data: { budget: Math.max(0, initialBudget - spent) },
-      });
-    }),
-  );
 }
 
 async function main() {
@@ -75,14 +48,13 @@ async function main() {
     const role = resolvePlayerRole(player);
     const price = player.price;
 
-    const existing = await prisma.player.findUnique({ where: { clubId_number_name: { clubId, number: player.number, name: player.name } }, select: { _count: { select: { priceChanges: true } } } });
     await prisma.player.upsert({
       where: { clubId_number_name: { clubId, number: player.number, name: player.name } },
       update: {
         name: player.name,
         position: player.position,
         role,
-        ...(existing?._count.priceChanges ? {} : { price }),
+        // Existing current prices are owned by the database, never overwritten by seed.
         age: player.age ?? null,
         nationality: player.nationality ?? null,
       },
@@ -116,7 +88,7 @@ async function main() {
     });
   }
 
-  await syncFantasyTeamBudgets();
+
 
   console.info(`Seed complete: ${clubs.length} клубов, ${players.length} игроков.`);
 }

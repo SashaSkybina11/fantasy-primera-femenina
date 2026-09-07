@@ -1,0 +1,918 @@
+{
+  "players": 233,
+  "checked": 233,
+  "corrected": 129,
+  "differences": [
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Etayo",
+      "number": 15,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Laura Cordoba",
+      "number": 7,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Ariane (Ari)",
+      "number": 5,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Luchi",
+      "number": 9,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Albita",
+      "number": 6,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Marian",
+      "number": 19,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Maria Sans",
+      "number": 11,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Anita Lujan",
+      "number": 14,
+      "seedPrice": 3000,
+      "csvPrice": 6000
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Irene Cordoba",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 6000
+    },
+    {
+      "club": "Futsi Atlético Navalcarnero",
+      "name": "Ju Delgado",
+      "number": 2,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Cristina",
+      "number": 15,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Daniela",
+      "number": 34,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Almudena",
+      "number": 1,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Andrea",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Cecilia (Ceci)",
+      "number": 24,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Eva González",
+      "number": 9,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Irene",
+      "number": 21,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Mayte Mateo",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 6000
+    },
+    {
+      "club": "STV Roldán",
+      "name": "María Valverde",
+      "number": 22,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "STV Roldán",
+      "name": "Bárbara",
+      "number": 17,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "María Arcas",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "María Valsera",
+      "number": 29,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Amandinha",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Lydia",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Dasha",
+      "number": 14,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Emilly",
+      "number": 99,
+      "seedPrice": 3000,
+      "csvPrice": 6000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Irene Samper",
+      "number": 16,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Silvina",
+      "number": 17,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Sofia",
+      "number": 22,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Ana Luiza",
+      "number": 9,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Bia Souza",
+      "number": 98,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Melilla CD Torreblanca",
+      "name": "Nega",
+      "number": 20,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Pitu",
+      "number": 12,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Irene",
+      "number": 4,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Rivera",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Montufo",
+      "number": 17,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Piti",
+      "number": 14,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Tampa",
+      "number": 5,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Claudia",
+      "number": 11,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Miriam Serrano",
+      "number": 19,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Benete",
+      "number": 9,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "MRB Móstoles FSF",
+      "name": "Clau Gómez",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Irati Marín",
+      "number": 12,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Jane",
+      "number": 75,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Yasmin",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Dani",
+      "number": 55,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Ángela",
+      "number": 2,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Laura",
+      "number": 99,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Clara",
+      "number": 6,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Sofi",
+      "number": 16,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Rodiles FS",
+      "name": "Nicole",
+      "number": 24,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Les Corts UBAE",
+      "name": "Area",
+      "number": 3,
+      "seedPrice": 3000,
+      "csvPrice": 2500
+    },
+    {
+      "club": "Les Corts UBAE",
+      "name": "Claudia",
+      "number": 21,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Les Corts UBAE",
+      "name": "Paula Guix",
+      "number": 9,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Les Corts UBAE",
+      "name": "Bet",
+      "number": 22,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Les Corts UBAE",
+      "name": "Martita",
+      "number": 7,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "AD Ceuta FC",
+      "name": "Daniela",
+      "number": 1,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "AD Ceuta FC",
+      "name": "C. Gadeia",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "AD Ceuta FC",
+      "name": "Claudia Navas",
+      "number": 24,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "AD Ceuta FC",
+      "name": "Jhennif",
+      "number": 6,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "AD Ceuta FC",
+      "name": "Mailén",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "AD Ceuta FC",
+      "name": "Mariam",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "AD Ceuta FC",
+      "name": "Gi Costa",
+      "number": 11,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Bia",
+      "number": 28,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Anita Ontiveros",
+      "number": 99,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Jeni",
+      "number": 7,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Rafinha",
+      "number": 19,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Malak",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 2500
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Pau",
+      "number": 9,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "M. León",
+      "number": 66,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Rafa Pato",
+      "number": 29,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Estrela Revoltosa Verín FSF",
+      "name": "Sara Santos",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Cajasol Guadalcacin FS",
+      "name": "Celia Nuin",
+      "number": 1,
+      "seedPrice": 3000,
+      "csvPrice": 2500
+    },
+    {
+      "club": "Cajasol Guadalcacin FS",
+      "name": "Elisa",
+      "number": 19,
+      "seedPrice": 3000,
+      "csvPrice": 2500
+    },
+    {
+      "club": "Cajasol Guadalcacin FS",
+      "name": "Guti",
+      "number": 3,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Cajasol Guadalcacin FS",
+      "name": "Elena Aragón",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Cajasol Guadalcacin FS",
+      "name": "Ame Romero",
+      "number": 9,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Cajasol Guadalcacin FS",
+      "name": "Miriam",
+      "number": 6,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Wanapix Aldelis",
+      "name": "Izarbe",
+      "number": 1,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Wanapix Aldelis",
+      "name": "María",
+      "number": 7,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Wanapix Aldelis",
+      "name": "Ale",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Ourense Ontime",
+      "name": "Ana Romero",
+      "number": 12,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Ourense Ontime",
+      "name": "Anita",
+      "number": 4,
+      "seedPrice": 3000,
+      "csvPrice": 2500
+    },
+    {
+      "club": "Ourense Ontime",
+      "name": "Chiky",
+      "number": 3,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Ourense Ontime",
+      "name": "Judith",
+      "number": 11,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "LBTL Futsal Alcantarilla",
+      "name": "Teresa Julve",
+      "number": 12,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "LBTL Futsal Alcantarilla",
+      "name": "Yolanda",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "LBTL Futsal Alcantarilla",
+      "name": "Ana",
+      "number": 18,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "LBTL Futsal Alcantarilla",
+      "name": "Ana Belén",
+      "number": 2,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "LBTL Futsal Alcantarilla",
+      "name": "Blanca",
+      "number": 3,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "LBTL Futsal Alcantarilla",
+      "name": "Paola",
+      "number": 14,
+      "seedPrice": 3000,
+      "csvPrice": 300
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Ari",
+      "number": 23,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Valeria",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "N. Montoro",
+      "number": 16,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Thais",
+      "number": 44,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Clau López",
+      "number": 7,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Lora",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Lucy",
+      "number": 14,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "María B.",
+      "number": 21,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Patri Blázquez",
+      "number": 21,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Tania Benito",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Arriva AD Alcorcón",
+      "name": "Vane Sotelo",
+      "number": 19,
+      "seedPrice": 3000,
+      "csvPrice": 6000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Elena",
+      "number": 1,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Yanira",
+      "number": 28,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Martita",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Ale De Paz",
+      "number": 7,
+      "seedPrice": 3000,
+      "csvPrice": 6000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Carolina Pedreira",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Débora",
+      "number": 6,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Èlia",
+      "number": 3,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Laura Sánchez",
+      "number": 16,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Luci",
+      "number": 19,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Miri",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Chuli",
+      "number": 14,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Laura Uña",
+      "number": 21,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Poio Pescamar",
+      "name": "Sofía Rozas",
+      "number": 18,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Falconi",
+      "number": 22,
+      "seedPrice": 3000,
+      "csvPrice": 2500
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Antía Pérez",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Jenny",
+      "number": 3,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Juliana",
+      "number": 97,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Luana Moura",
+      "number": 27,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Luisa Mayara",
+      "number": 12,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Clara",
+      "number": 16,
+      "seedPrice": 3000,
+      "csvPrice": 2000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Dani Sousa",
+      "number": 13,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Natalinha",
+      "number": 11,
+      "seedPrice": 3000,
+      "csvPrice": 5000
+    },
+    {
+      "club": "FSF Castro Bloques Cando",
+      "name": "Patricia",
+      "number": 20,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Nueces de Ronda Atlético Torcal",
+      "name": "Valeria",
+      "number": 1,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Nueces de Ronda Atlético Torcal",
+      "name": "Susana",
+      "number": 12,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    },
+    {
+      "club": "Nueces de Ronda Atlético Torcal",
+      "name": "África",
+      "number": 8,
+      "seedPrice": 3000,
+      "csvPrice": 4000
+    },
+    {
+      "club": "Nueces de Ronda Atlético Torcal",
+      "name": "Alejandra",
+      "number": 10,
+      "seedPrice": 3000,
+      "csvPrice": 3500
+    }
+  ],
+  "unusualPrices": [
+    {
+      "club": "LBTL Futsal Alcantarilla",
+      "number": 14,
+      "name": "Paola",
+      "price": 300
+    }
+  ]
+}

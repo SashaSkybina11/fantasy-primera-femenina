@@ -1,3 +1,4 @@
+import { Modal } from "../components/Modal";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -77,14 +78,10 @@ export function PurchasePlayersPage() {
             budget={team.data.budget}
             count={team.data.players.length}
           />
-          <button
-            className="button button--secondary"
-            onClick={() => setSquadOpen(true)}
-          >
-            {t("purchase.viewSquad")}
-          </button>
+
         </div>
       </header>
+      <div className="view-team-action"><button className="button button--secondary view-team-button" onClick={() => setSquadOpen(true)}>{t("purchase.viewSquad")}</button></div>
       {gameweek.isLoading && (
         <section className="purchase-deadline purchase-deadline--loading">
           <strong>{t("purchase.scheduleLoading")}</strong>
@@ -184,11 +181,12 @@ export function PurchasePlayersPage() {
                   (clubCounts.get(player.clubId) ?? 0) >= 2;
                 const squadFull = team.data.players.length >= 10;
                 const noBudget = team.data.budget < player.price;
+                const positionFull = team.data.players.filter((entry) => entry.player.position === player.position).length >= (player.position === "GOALKEEPER" ? 2 : 8);
                 const disabled =
                   !marketIsOpen ||
                   alreadySelected ||
                   clubLimitReached ||
-                  squadFull ||
+                  squadFull || positionFull ||
                   noBudget ||
                   buy.isPending;
                 const label = !marketIsOpen
@@ -197,7 +195,7 @@ export function PurchasePlayersPage() {
                     ? t("player.alreadySelected")
                     : clubLimitReached
                       ? t("purchase.clubLimit")
-                      : squadFull
+                      : positionFull ? t("purchase.positionLimit") : squadFull
                         ? t("budget.full")
                         : noBudget
                           ? t("player.noBudget")
@@ -220,23 +218,7 @@ export function PurchasePlayersPage() {
         )}
       </section>
       {squadOpen && (
-        <div
-          className="modal-backdrop squad-preview-backdrop"
-          onClick={() => setSquadOpen(false)}
-        >
-          <section
-            className="compact-modal squad-preview-modal"
-            role="dialog"
-            aria-modal="true"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              className="compact-modal__close"
-              onClick={() => setSquadOpen(false)}
-              aria-label={t("friends.close")}
-            >
-              ×
-            </button>
+        <Modal title={t("purchase.viewSquad")} onClose={() => setSquadOpen(false)} className="squad-preview-modal">
             <div className="squad-preview-head">
               <h2>
                 {t("purchase.squadCount", { count: team.data.players.length })}
@@ -260,8 +242,7 @@ export function PurchasePlayersPage() {
             ) : (
               <p className="muted">{t("purchase.emptySquad")}</p>
             )}
-          </section>
-        </div>
+        </Modal>
       )}
     </div>
   );

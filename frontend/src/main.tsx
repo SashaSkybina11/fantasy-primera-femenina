@@ -9,7 +9,7 @@ import { LocaleProvider } from "./contexts/LocaleContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import "./styles.css";
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 30_000, retry: 1 } } });
+const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 0, refetchInterval: 30000, refetchOnMount: "always", refetchOnWindowFocus: "always", retry: 1 } } });
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

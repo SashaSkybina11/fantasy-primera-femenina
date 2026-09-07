@@ -1,0 +1,118 @@
+import "dotenv/config";
+import assert from "node:assert/strict";
+import { test, mock } from "node:test";
+import { once } from "node:events";
+import { readFileSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import bcrypt from "bcrypt";
+import { PrismaClient } from "@prisma/client";
+import { resetGameUsers } from "../scripts/reset-game-users.js";
+import { digest, gameTables, snapshot, preservedFingerprint } from "../scripts/backup.js";
+import { players as seed } from "../prisma/data/players.js";
+
+const dbUrl = new URL(process.env.DATABASE_URL!);
+// Never run destructive fixtures against a developer or production database.
+if (!["localhost", "127.0.0.1", "[::1]"].includes(dbUrl.hostname)) throw new Error("Integration tests require a local PostgreSQL host");
+dbUrl.pathname = "/fantasy_prelaunch_test";
+process.env.DATABASE_URL = dbUrl.toString();
+const prisma = new PrismaClient();
+
+test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin leagues", async () => {
+  mock.timers.enable({ apis: ["Date"], now: new Date("2026-09-08T12:00:00Z") });
+  const { app } = await import("../src/app.js");
+  const { prisma: appPrisma } = await import("../src/lib/prisma.js");
+  const { snapshotGameweek, recalculateGameweek } = await import("../src/services/gameweeks.js");
+  const server = app.listen(0, "127.0.0.1");
+  await once(server, "listening");
+  const address = server.address() as { port: number };
+  const origin = "http://127.0.0.1:" + address.port + "/api";
+  const api = async (path: string, token?: string, method = "GET", body?: unknown, expected = 200) => {
+    const response = await fetch(origin + path, { method, headers: { ...(token ? { Authorization: "Bearer " + token } : {}), "Content-Type": "application/json" }, ...(body ? { body: JSON.stringify(body) } : {}) });
+    const data = response.status === 204 ? null : await response.json();
+    assert.equal(response.status, expected, JSON.stringify({ path, data }));
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    return data;
+  };
+  try {
+    const suffix = Math.random().toString(36).slice(2);
+    const credentials = { email: "old-" + suffix + "@example.invalid", password: "Prelaunch-test-123" };
+    const admin = await prisma.user.create({ data: { ...credentials, password: undefined, passwordHash: await bcrypt.hash(credentials.password, 4), name: "Existing admin", role: "ADMIN", instagram: "test", fantasyTeam: { create: { name: "Existing FC", budget: 1234, isInitialSquadComplete: true } } } as any });
+    const oldTeam = await prisma.fantasyTeam.findUniqueOrThrow({ where: { userId: admin.id } });
+    const player = await prisma.player.findFirstOrThrow({ where: { position: "FIELD_PLAYER" } });
+    const week = await prisma.gameweek.findUniqueOrThrow({ where: { number: 1 } });
+    await prisma.fantasyTeamPlayer.create({ data: { fantasyTeamId: oldTeam.id, playerId: player.id, status: "STARTER", isCaptain: true } });
+    await prisma.userGameweekSquad.create({ data: { userId: admin.id, gameweekId: week.id, fantasyTeamName: "Existing FC", players: { create: { playerId: player.id, status: "STARTER", isCaptain: true } } } });
+    await prisma.userGameweekPoints.create({ data: { userId: admin.id, gameweekId: week.id, totalPoints: 25, isFinal: true } });
+    await prisma.userPointAdjustment.create({ data: { userId: admin.id, adminId: admin.id, gameweekId: week.id, points: 3, reason: "Fixture" } });
+    await prisma.gameweekWinner.create({ data: { userId: admin.id, gameweekId: week.id, rank: 1, points: 25 } });
+    await prisma.userTransfer.create({ data: { userId: admin.id, gameweekId: week.id, playerId: player.id, type: "BUY", price: player.price } });
+    await prisma.playerGameweekStats.upsert({ where: { gameweekId_playerId: { gameweekId: week.id, playerId: player.id } }, update: { goals: 3, totalPoints: 15 }, create: { gameweekId: week.id, playerId: player.id, goals: 3, totalPoints: 15 } });
+    const before = await snapshot(prisma, gameTables);
+    const protectedBefore = await preservedFingerprint(prisma);
+    const dryRun = await resetGameUsers(prisma, { apply: false });
+    assert.equal(dryRun.dryRun, true);
+    assert.equal(digest(await snapshot(prisma, gameTables)), digest(before));
+    await assert.rejects(resetGameUsers(prisma, { apply: true, backupDirectory: "backups/test", failAfterDelete: true }), /Injected rollback/);
+    assert.equal(digest(await snapshot(prisma, gameTables)), digest(before));
+    const result = await resetGameUsers(prisma, { apply: true, backupDirectory: "backups/test" });
+    assert.equal(await preservedFingerprint(prisma), protectedBefore);
+    assert.equal(result.errors, 0);
+
+    const restore = spawnSync(process.execPath, ["node_modules/tsx/dist/cli.mjs", "backend/scripts/restore-game-users.ts", result.backup!.path, "--apply"], { env: process.env, encoding: "utf8" });
+    assert.equal(restore.status, 0, restore.stderr);
+    assert.equal(digest(await snapshot(prisma, gameTables)), digest(before));
+    await resetGameUsers(prisma, { apply: true, backupDirectory: "backups/test" });
+    const login = await api("/auth/login", undefined, "POST", credentials);
+    assert.equal(login.user.role, "ADMIN");
+    const old = await api("/my-team", login.token);
+    assert.equal(old.budget, 40000); assert.equal(old.players.length, 0);
+    assert.deepEqual(await api("/gameweeks/history/me", login.token), []);
+    assert.equal((await api("/gameweeks/leaderboard", login.token)).length, 0);
+    const fresh = await api("/auth/register", undefined, "POST", { name: "New user", email: "new-" + suffix + "@example.invalid", password: credentials.password }, 201);
+    const initial = await api("/my-team", fresh.token);
+    assert.equal(initial.budget, old.budget); assert.deepEqual(initial.players, old.players);
+    assert.deepEqual(await api("/gameweeks/history/me", fresh.token), []);
+    await api("/admin/friend-leagues", fresh.token, "GET", undefined, 403);
+    await api("/admin/friend-leagues/" + admin.id, fresh.token, "DELETE", undefined, 403);
+    const catalog = await api("/players");
+    assert.equal(catalog.length, seed.length);
+    for (const row of catalog) { const source = seed.find((s) => s.club === row.club.name && s.name === row.name && s.number === row.number)!; assert.equal(row.price, source.price); assert.ok(Number.isSafeInteger(row.price) && row.price > 0); }
+    const sorted = [...catalog].sort((a, b) => a.price - b.price);
+    const chosen: any[] = []; const clubs = new Map<string, number>();
+    for (const [position, count] of [["GOALKEEPER", 2], ["FIELD_PLAYER", 8]] as const) for (const p of sorted.filter((p) => p.position === position)) {
+      if (chosen.filter((p) => p.position === position).length >= count) break;
+      if ((clubs.get(p.clubId) ?? 0) >= 2) continue;
+      chosen.push(p); clubs.set(p.clubId, (clubs.get(p.clubId) ?? 0) + 1);
+    }
+    for (const p of chosen.slice(0, 2)) await api("/my-team/players", fresh.token, "POST", { playerId: p.id }, 201);
+    const thirdKeeper = catalog.find((p: any) => p.position === "GOALKEEPER" && !chosen.includes(p) && !chosen.slice(0,2).some((c) => c.id === p.id));
+    await api("/my-team/players", fresh.token, "POST", { playerId: thirdKeeper.id }, 400);
+    for (const p of chosen.slice(2)) await api("/my-team/players", fresh.token, "POST", { playerId: p.id }, 201);
+    const full = await api("/my-team", fresh.token);
+    assert.equal(full.players.length, 10); assert.ok(full.budget >= 0);
+    const ranking = await api("/gameweeks/leaderboard", fresh.token);
+    assert.equal(ranking.find((row: any) => row.id === fresh.user.id).totalPoints, 0);
+    const starters = [chosen[0], ...chosen.slice(2,6)];
+    for (const p of starters) await api("/my-team/players/" + p.id, fresh.token, "PATCH", { status: "STARTER" });
+    await api("/my-team/captain", fresh.token, "PATCH", { playerId: chosen[0].id });
+    await api("/my-team/lineup", fresh.token, "PATCH", { players: chosen.map((p) => ({ playerId: p.id, status: starters.includes(p) ? "STARTER" : "BENCH" })) });
+    const lineup = await api("/users/" + fresh.user.id + "/lineup", login.token);
+    assert.equal(lineup.players.length, 5); assert.ok(lineup.players.every((p: any) => p.status === "STARTER"));
+    assert.deepEqual(Object.keys(lineup.user).sort(), ["id", "name"]);
+    assert.ok(!/passwordHash|email|token|role.*ADMIN/.test(JSON.stringify(lineup)));
+    await prisma.$transaction(async (tx) => { await snapshotGameweek(tx, week.id); await recalculateGameweek(tx, week.id); });
+    assert.equal(await prisma.userGameweekPoints.count({ where: { userId: fresh.user.id, gameweekId: week.id } }), 0);
+    const clubRoster = await api("/clubs/" + player.clubId + "/players");
+    assert.equal(clubRoster.find((p: any) => p.id === player.id).goals, 3);
+    const payload = { started: true, result: "WIN", goals: 2, yellowCards: 0, redCards: 0, cleanSheet: false, goalsConceded: null };
+    await api("/admin/gameweeks/" + week.id + "/players/" + player.id + "/stats", login.token, "PUT", payload);
+    assert.equal((await api("/clubs/" + player.clubId + "/players")).find((p: any) => p.id === player.id).goals, 2);
+    const league = await api("/private-leagues", fresh.token, "POST", { name: "Fixture league" }, 201);
+    assert.ok((await api("/admin/friend-leagues", login.token)).some((l: any) => l.id === league.id));
+    const stateBeforeDelete = digest(await snapshot(prisma, gameTables));
+    await api("/admin/friend-leagues/" + league.id, login.token, "DELETE", undefined, 204);
+    assert.equal(await prisma.privateLeagueMember.count({ where: { leagueId: league.id } }), 0);
+    assert.equal(digest(await snapshot(prisma, gameTables)), stateBeforeDelete);
+    writeFileSync("artifacts/prelaunch/integration.json", JSON.stringify({ passed: true, playersChecked: catalog.length, reset: result, scenarios: ["transaction rollback", "backup restore", "accounts preserved", "old/new parity", "2 goalkeeper limit", "10-player ranking", "no retroactive scoring", "private-safe starters", "goals correction", "403 admin guard", "league cascade isolation"] }, null, 2));
+  } finally { server.close(); await appPrisma.$disconnect(); await prisma.$disconnect(); mock.timers.reset(); }
+});

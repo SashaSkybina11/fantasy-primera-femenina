@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { api, authRequiredEvent, authToken } from "../services/api";
 import type { User } from "../types";
@@ -14,6 +15,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,6 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const endSession = () => {
       authToken.clear();
+      queryClient.clear();
       setUser(null);
       setIsLoading(false);
     };
@@ -38,11 +41,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<AuthContextValue>(() => ({
     user,
     isLoading,
-    login: async (payload) => { const result = await api.login(payload); authToken.set(result.token); setUser(result.user); },
-    register: async (payload) => { const result = await api.register(payload); authToken.set(result.token); setUser(result.user); },
-    logout: async () => { try { await api.logout(); } finally { authToken.clear(); setUser(null); } },
+    login: async (payload) => { const result = await api.login(payload); authToken.set(result.token); queryClient.clear(); setUser(result.user); },
+    register: async (payload) => { const result = await api.register(payload); authToken.set(result.token); queryClient.clear(); setUser(result.user); },
+    logout: async () => { try { await api.logout(); } finally { authToken.clear(); queryClient.clear(); setUser(null); } },
     setUser,
-  }), [user, isLoading]);
+  }), [user, isLoading, queryClient]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

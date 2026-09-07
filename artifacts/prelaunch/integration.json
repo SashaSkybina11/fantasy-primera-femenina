@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "playersChecked": 233,
+  "reset": {
+    "dryRun": false,
+    "usersProcessed": 2,
+    "budgetsReset": 2,
+    "userPointsReset": 2,
+    "removed": {
+      "teamPlayers": 2,
+      "snapshotPlayers": 2,
+      "snapshots": 2,
+      "userPoints": 2,
+      "adjustments": 2,
+      "winners": 2,
+      "transfers": 2
+    },
+    "backup": {
+      "path": "C:\\Users\\sasha\\OneDrive\\Рабочий стол\\Fantasy Primera División Femenina\\backups\\test\\prelaunch-1788868800000-6f6ba210-f3e6-4f76-a269-789307f82554.json",
+      "sha256": "0a75a293c93fac4017d9610778dcb642c8a4d02024cb931e6295a0cf748ffb84"
+    },
+    "afterFingerprint": "6c982b0c89f1a572c81ed6c06bbaf4c42441c527d5914780c144d0b5c5972b1a",
+    "errors": 0
+  },
+  "scenarios": [
+    "transaction rollback",
+    "backup restore",
+    "accounts preserved",
+    "old/new parity",
+    "2 goalkeeper limit",
+    "10-player ranking",
+    "no retroactive scoring",
+    "private-safe starters",
+    "goals correction",
+    "403 admin guard",
+    "league cascade isolation"
+  ]
+}
