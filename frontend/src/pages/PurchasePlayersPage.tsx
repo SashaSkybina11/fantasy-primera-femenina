@@ -21,7 +21,10 @@ export function PurchasePlayersPage() {
   const [squadOpen, setSquadOpen] = useState(false);
   const queryClient = useQueryClient();
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
-  const popularity = useQuery({ queryKey: ["popular-player"], queryFn: api.popularPlayer });
+  const popularity = useQuery({
+    queryKey: ["popular-player"],
+    queryFn: api.popularPlayer,
+  });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
   const players = useQuery({
     queryKey: ["players", filters],
@@ -78,10 +81,16 @@ export function PurchasePlayersPage() {
             budget={team.data.budget}
             count={team.data.players.length}
           />
-
         </div>
       </header>
-      <div className="view-team-action"><button className="button button--secondary view-team-button" onClick={() => setSquadOpen(true)}>{t("purchase.viewSquad")}</button></div>
+      <div className="view-team-action">
+        <button
+          className="button button--secondary view-team-button"
+          onClick={() => setSquadOpen(true)}
+        >
+          {t("purchase.viewSquad")}
+        </button>
+      </div>
       {gameweek.isLoading && (
         <section className="purchase-deadline purchase-deadline--loading">
           <strong>{t("purchase.scheduleLoading")}</strong>
@@ -127,11 +136,31 @@ export function PurchasePlayersPage() {
       </aside>
       <section className="profile-card popular-player" aria-live="polite">
         <h2>{t("purchase.popularTitle")}</h2>
-        {popularity.isPending ? <p>{t("loading.players")}</p> : popularity.isError ? <p role="alert">{t("error.generic")} <button className="button button--secondary" onClick={() => void popularity.refetch()}>{t("friends.retry")}</button></p> : popularity.data.player ? <>
-          <h3>{popularity.data.player.name}</h3>
-          <p>{popularity.data.player.club.name} · №{popularity.data.player.number}</p>
-          <p>{t("purchase.popularOwners", { count: popularity.data.ownerCount, total: popularity.data.totalUsers, percentage: popularity.data.percentage })}</p>
-        </> : <p className="muted">{t("purchase.popularEmpty")}</p>}
+
+        {popularity.isPending ? (
+          <p>{t("loading.players")}</p>
+        ) : popularity.isError ? (
+          <p role="alert">
+            {t("error.generic")}{" "}
+            <button
+              className="button button--secondary"
+              onClick={() => void popularity.refetch()}
+            >
+              {t("friends.retry")}
+            </button>
+          </p>
+        ) : popularity.data.player ? (
+          <>
+            <h3>{popularity.data.player.name}</h3>
+            <p>
+              {popularity.data.player.club.name} · №
+              {popularity.data.player.number}
+            </p>
+            <p>{popularity.data.percentage}%</p>
+          </>
+        ) : (
+          <p className="muted">{t("purchase.popularEmpty")}</p>
+        )}
       </section>
       {transfers.data && (
         <section className="transfer-counter">
@@ -181,12 +210,16 @@ export function PurchasePlayersPage() {
                   (clubCounts.get(player.clubId) ?? 0) >= 2;
                 const squadFull = team.data.players.length >= 10;
                 const noBudget = team.data.budget < player.price;
-                const positionFull = team.data.players.filter((entry) => entry.player.position === player.position).length >= (player.position === "GOALKEEPER" ? 2 : 8);
+                const positionFull =
+                  team.data.players.filter(
+                    (entry) => entry.player.position === player.position,
+                  ).length >= (player.position === "GOALKEEPER" ? 2 : 8);
                 const disabled =
                   !marketIsOpen ||
                   alreadySelected ||
                   clubLimitReached ||
-                  squadFull || positionFull ||
+                  squadFull ||
+                  positionFull ||
                   noBudget ||
                   buy.isPending;
                 const label = !marketIsOpen
@@ -195,11 +228,13 @@ export function PurchasePlayersPage() {
                     ? t("player.alreadySelected")
                     : clubLimitReached
                       ? t("purchase.clubLimit")
-                      : positionFull ? t("purchase.positionLimit") : squadFull
-                        ? t("budget.full")
-                        : noBudget
-                          ? t("player.noBudget")
-                          : t("purchase.buy");
+                      : positionFull
+                        ? t("purchase.positionLimit")
+                        : squadFull
+                          ? t("budget.full")
+                          : noBudget
+                            ? t("player.noBudget")
+                            : t("purchase.buy");
                 return (
                   <PlayerCard
                     key={player.id}
@@ -218,30 +253,34 @@ export function PurchasePlayersPage() {
         )}
       </section>
       {squadOpen && (
-        <Modal title={t("purchase.viewSquad")} onClose={() => setSquadOpen(false)} className="squad-preview-modal">
-            <div className="squad-preview-head">
-              <h2>
-                {t("purchase.squadCount", { count: team.data.players.length })}
-              </h2>
-              <strong>
-                {t("purchase.budgetLabel")}:{" "}
-                {formatEuro(team.data.budget, locale)}
-              </strong>
+        <Modal
+          title={t("purchase.viewSquad")}
+          onClose={() => setSquadOpen(false)}
+          className="squad-preview-modal"
+        >
+          <div className="squad-preview-head">
+            <h2>
+              {t("purchase.squadCount", { count: team.data.players.length })}
+            </h2>
+            <strong>
+              {t("purchase.budgetLabel")}:{" "}
+              {formatEuro(team.data.budget, locale)}
+            </strong>
+          </div>
+          {team.data.players.length ? (
+            <div className="squad-preview-list">
+              {team.data.players.map((entry) => (
+                <div key={entry.id}>
+                  <b>#{entry.player.displayNumber ?? entry.player.number}</b>
+                  <span>{entry.player.name}</span>
+                  <small>{roleLabel(entry.player.role, locale)}</small>
+                  <small>{entry.player.club.name}</small>
+                </div>
+              ))}
             </div>
-            {team.data.players.length ? (
-              <div className="squad-preview-list">
-                {team.data.players.map((entry) => (
-                  <div key={entry.id}>
-                    <b>#{entry.player.displayNumber ?? entry.player.number}</b>
-                    <span>{entry.player.name}</span>
-                    <small>{roleLabel(entry.player.role, locale)}</small>
-                    <small>{entry.player.club.name}</small>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="muted">{t("purchase.emptySquad")}</p>
-            )}
+          ) : (
+            <p className="muted">{t("purchase.emptySquad")}</p>
+          )}
         </Modal>
       )}
     </div>
