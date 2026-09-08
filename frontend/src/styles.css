@@ -2994,7 +2994,7 @@ select:focus {
   gap: 1rem;
   padding: 1.1rem 1.3rem;
   border: 1px solid var(--border);
-  border-left: 5px solid #8aa621;
+  border-left: 5px solid #e30613;
   border-radius: 16px;
   background: var(--surface);
 }
@@ -3087,7 +3087,7 @@ select:focus {
   margin-bottom: 1rem;
   padding: 1rem 1.2rem;
   border: 1px solid var(--border);
-  border-left: 5px solid #8aa621;
+  border-left: 5px solid #e30613;
   border-radius: 16px;
   background: var(--surface);
 }
