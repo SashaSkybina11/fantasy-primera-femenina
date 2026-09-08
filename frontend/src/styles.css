@@ -159,12 +159,6 @@ h3 {
   letter-spacing: -0.025em;
 }
 
-.page-heading h1,
-.home-hero h1,
-.auth-aside h1 {
-  font-weight: 800;
-}
-
 .initial-loader {
   min-height: 100vh;
   min-height: 100dvh;
