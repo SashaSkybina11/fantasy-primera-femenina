@@ -19,54 +19,31 @@
   font-synthesis: none;
 } */
 
-@import url("https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&family=Nunito:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap");
 
-/* :root {
-  --bg: #e8eef5;
-  --surface: #f8fafc;
-  --surface-soft: #dfe8f1;
-  --text: #08203c;
-  --muted: #4c627a;
-  --border: #c7d4e1;
+:root {
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-soft: #eaf0f7;
+
+  --text: #0b1f3a;
+  --muted: #60738c;
+  --border: #d4deea;
+
   --accent: #ffc400;
-  --accent-strong: #e6af00;
+  --accent-strong: #e3a900;
   --accent-text: #0b1f3a;
+
   --primary: #e30613;
   --primary-strong: #b70510;
   --primary-text: #ffffff;
-  --danger: #e30613;
-  --shadow: 0 12px 32px rgba(11, 31, 58, .14);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-} */
 
-:root {
-  --bg: #f1f7f6;
-  --surface: #ffffff;
-  --surface-soft: #dcebea;
+  --danger: #d91522;
 
-  --text: #173b3c;
-  --muted: #607b7b;
-  --border: #c7dbd9;
+  --shadow: 0 12px 30px rgba(11, 31, 58, 0.12);
 
-  --accent: #ff9b7b;
-  --accent-strong: #e77d5d;
-  --accent-text: #3b1d15;
-
-  --primary: #16868a;
-  --primary-strong: #0f696c;
-  --primary-text: #ffffff;
-
-  --danger: #c94f5d;
-  --success: #2f9b70;
-  --success-soft: #dff2e9;
-
-  --shadow: 0 12px 30px rgba(19, 91, 94, 0.12);
-
-  --font-body: "Nunito", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Comic Relief", "Nunito", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-heading: "Barlow Condensed", sans-serif;
 
   font-family: var(--font-body);
   color: var(--text);
@@ -75,26 +52,19 @@
 }
 
 :root[data-theme="dark"] {
-  --bg: #0c1718;
-  --surface: #132426;
-  --surface-soft: #1c3436;
-
-  --text: #eef8f8;
-  --muted: #a8c0c0;
-  --border: #2d4a4d;
-
-  --accent: #ff9b7b;
-  --accent-strong: #ff9b7b;
-  --accent-text: #341711;
-
-  --primary: #22a3a6;
-  --primary-strong: #2eb9bb;
+  --bg: #07172d;
+  --surface: #0b1f3a;
+  --surface-soft: #142e51;
+  --text: #ffffff;
+  --muted: #bdcadb;
+  --border: #2c4768;
+  --accent: #ffc400;
+  --accent-strong: #ffd33a;
+  --accent-text: #0b1f3a;
+  --primary: #e30613;
+  --primary-strong: #ff3540;
   --primary-text: #ffffff;
-
-  --danger: #ed6876;
-  --success: #55c495;
-  --success-soft: #183d31;
-
+  --danger: #ff6971;
   --shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
 }
 
@@ -187,6 +157,12 @@ h2 {
 }
 h3 {
   letter-spacing: -0.025em;
+}
+
+.page-heading h1,
+.home-hero h1,
+.auth-aside h1 {
+  font-weight: 800;
 }
 
 .initial-loader {
