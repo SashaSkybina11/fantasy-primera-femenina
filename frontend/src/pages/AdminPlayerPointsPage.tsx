@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { api } from "../services/api";
+import { api, roleLabel } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
 
 const empty = {
@@ -20,7 +20,7 @@ const empty = {
 
 export function AdminPlayerPointsPage() {
   const { user } = useAuth();
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const queryClient = useQueryClient();
   const [gameweekId, setGameweekId] = useState("");
   const [search, setSearch] = useState("");
@@ -109,7 +109,7 @@ export function AdminPlayerPointsPage() {
           <option value="">{t("adminStats.selectGameweek")}</option>
           {gameweeks.data?.map((item) => (
             <option key={item.id} value={item.id}>
-              {item.name} · {t(`gameweek.${item.status}`)}
+              {t("gameweek.label", { number: item.number })} · {t(`gameweek.${item.status}`)}
             </option>
           ))}
         </select>
@@ -205,7 +205,7 @@ export function AdminPlayerPointsPage() {
               <span>
                 <strong>№{player.number} — {player.name}</strong>
                 <small>
-                  {player.club?.name} · {player.role}
+                  {player.club?.name} · {roleLabel(player.role, locale)}
                 </small>
                 {player.gameweekStats[0] && <small className="stats-summary">
                   {t("adminStats.goals")}: {Number(player.gameweekStats[0].goals)} · {t("adminStats.yellowCards")}: {Number(player.gameweekStats[0].yellowCards)} · {t("adminStats.redCards")}: {Number(player.gameweekStats[0].redCards)}

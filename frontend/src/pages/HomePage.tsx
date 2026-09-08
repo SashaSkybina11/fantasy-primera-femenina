@@ -27,7 +27,7 @@ export function HomePage() {
       <section className="home-hero">
         <div>
           <p className="eyebrow">{t("home.eyebrow")}</p>
-          <h1>Fantasy Primera División Fútbol Sala Femenino</h1>
+          <h1>{t("brand.title")}</h1>
           <p>{t("home.description")}</p>
         </div>
       </section>
@@ -36,7 +36,7 @@ export function HomePage() {
           className={`market-status market-status--${gameweek.data.status.toLowerCase()}`}
         >
           <div>
-            <p className="eyebrow">{gameweek.data.name}</p>
+            <p className="eyebrow">{t("gameweek.label", { number: gameweek.data.number })}</p>
             <h2>
               {gameweek.data.status === "OPEN"
                 ? t("home.marketOpen")

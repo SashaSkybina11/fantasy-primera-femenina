@@ -13,13 +13,7 @@ import { Avatar } from "../components/Avatar";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { useLocale } from "../contexts/LocaleContext";
 
-const projectName = (
-  <>
-    Fantasy Primera División
-    <br />
-    Fútbol Sala Femenino
-  </>
-);
+
 
 type IconName =
   | "trophy"
@@ -76,6 +70,7 @@ function NavLinks({
 }) {
   const { t } = useLocale();
   const navigation = [
+    { to: "/player-prices", label: t("prices.title"), icon: "purchase" as const },
     { to: "/", label: t("nav.home"), icon: "home" as const, end: true },
     {
       to: "/my-team",
@@ -171,7 +166,7 @@ export function AppShell() {
           <span className="brand-mark">
             <IoIosFootball aria-hidden="true" />
           </span>
-          <span>{projectName}</span>
+          <span>{t("brand.title")}</span>
         </NavLink>
         <nav className="sidebar__nav" aria-label={t("nav.primary")}>
           <NavLinks isAdmin={user?.role === "ADMIN"} />
@@ -198,7 +193,7 @@ export function AppShell() {
           <span className="brand-mark">
             <IoIosFootball aria-hidden="true" />
           </span>
-          <span>{projectName}</span>
+          <span>{t("brand.title")}</span>
         </NavLink>
         <div className="mobile-controls">
           <button

@@ -64,11 +64,11 @@ export async function previewPlayerPrices(tx: Prisma.TransactionClient, gameweek
   return { gameweekId, teamWin: settings?.teamWin ?? null, revision, rows };
 }
 
-export async function applyPlayerPrices(tx: Prisma.TransactionClient, gameweekId: string, revision: string) {
+export async function applyPlayerPrices(tx: Prisma.TransactionClient, gameweekId: string, revision: string, allowReopened = false) {
   const preview = await previewPlayerPrices(tx, gameweekId);
   if (preview.revision !== revision) throw new ApiError(409, "PRICE_PREVIEW_STALE");
   const gameweek = await tx.gameweek.findUniqueOrThrow({ where: { id: gameweekId } });
-  if (gameweek.status !== "COMPLETED") throw new ApiError(409, "PRICE_GAMEWEEK_NOT_COMPLETED");
+  if (gameweek.status !== "COMPLETED" && !(allowReopened && gameweek.status === "CALCULATING")) throw new ApiError(409, "PRICE_GAMEWEEK_NOT_COMPLETED");
   for (const row of preview.rows) {
     const data = {
       priceBefore: row.priceBefore, priceAfter: row.priceAfter, priceDelta: row.priceDelta,

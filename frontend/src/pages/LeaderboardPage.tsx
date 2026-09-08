@@ -48,7 +48,7 @@ export function LeaderboardPage() {
           {history.data?.map((row) => (
             <details className="history-row" key={row.id}>
               <summary>
-                <strong>{row.gameweek.name}</strong>
+                <strong>{t("gameweek.label", { number: row.gameweek.number })}</strong>
                 <b>{row.totalPoints} {t("common.pointsShort")}</b>
               </summary>
               {row.breakdown?.map((entry) => (

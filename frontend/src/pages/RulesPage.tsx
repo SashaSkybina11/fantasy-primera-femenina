@@ -21,7 +21,7 @@ export function RulesPage() {
   return (
     <div className="page rules-page">
       <header className="page-heading">
-        <p className="eyebrow">⚽ FANTASY FUTSAL FEMENINO 🇪🇸</p>
+        <p className="eyebrow">⚽ {t("home.eyebrow")}</p>
         <h1>{t("rules.title")}</h1>
         <p className="muted">{t("rules.intro")}</p>
       </header>

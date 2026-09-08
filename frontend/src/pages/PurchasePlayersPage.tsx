@@ -9,9 +9,11 @@ import {
   type PlayerFilterState,
 } from "../components/PlayerFilters";
 import { useLocale } from "../contexts/LocaleContext";
+import { useAuth } from "../contexts/AuthContext";
 import { api, formatEuro, roleLabel } from "../services/api";
 
 export function PurchasePlayersPage() {
+  const { user } = useAuth();
   const { locale, t } = useLocale();
   const [filters, setFilters] = useState<PlayerFilterState>({
     clubId: "",
@@ -62,7 +64,7 @@ export function PurchasePlayersPage() {
     counts.set(entry.player.clubId, (counts.get(entry.player.clubId) ?? 0) + 1);
     return counts;
   }, new Map<string, number>());
-  const marketIsOpen = gameweek.data?.marketIsOpen === true;
+  const marketIsOpen = user?.role === "ADMIN" || gameweek.data?.marketIsOpen === true;
   const dateFormatter = new Intl.DateTimeFormat(
     locale === "uk" ? "uk-UA" : "es-ES",
     { timeZone: "Europe/Madrid", dateStyle: "full", timeStyle: "short" },
@@ -114,7 +116,7 @@ export function PurchasePlayersPage() {
                 : t("purchase.marketClosed")}
             </strong>
             <span>
-              {t("purchase.gameweekLabel")}: {gameweek.data.name}
+              {t("purchase.gameweekLabel")}: {t("gameweek.label", { number: gameweek.data.number })}
             </span>
           </div>
           <div className="purchase-deadline__schedule">

@@ -32,6 +32,23 @@ const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, { es: string; uk: string }> = {
+  "Пользователь не найден": {"es":"No se encontró al usuario.","uk":"Користувача не знайдено."},
+  "Некорректный диапазон дат тура": {"es":"Las fechas de la jornada no son válidas.","uk":"Некоректні дати туру."},
+  "Тур или игрок не найден": {"es":"No se encontró la jornada o la jugadora.","uk":"Тур або гравчиню не знайдено."},
+  "Сначала повторно откройте завершённый тур": {"es":"Primero vuelve a abrir la jornada finalizada.","uk":"Спочатку повторно відкрийте завершений тур."},
+  "Укажите причину корректировки": {"es":"Indica el motivo del ajuste.","uk":"Вкажіть причину коригування."},
+  "Тур не найден": {"es":"No se encontró la jornada.","uk":"Тур не знайдено."},
+  "Тур не завершён": {"es":"La jornada todavía no ha finalizado.","uk":"Тур ще не завершено."},
+  "Тур или пользователь не найден": {"es":"No se encontró la jornada o el usuario.","uk":"Тур або користувача не знайдено."},
+  "Нельзя удалить собственный аккаунт администратора": {"es":"No puedes eliminar tu propia cuenta de administración.","uk":"Не можна видалити власний обліковий запис адміністратора."},
+  "Не удалось создать код приглашения": {"es":"No se pudo crear el código de invitación.","uk":"Не вдалося створити код запрошення."},
+  "Unsupported image format": {"es":"El formato de imagen no es compatible.","uk":"Формат зображення не підтримується."},
+  "Текущий пароль указан неверно": {"es":"La contraseña actual es incorrecta.","uk":"Поточний пароль неправильний."},
+  "Клуб не найден": {"es":"No se encontró el club.","uk":"Клуб не знайдено."},
+  "Некорректный Instagram": {"es":"Comprueba el nombre de Instagram.","uk":"Перевірте ім’я в Instagram."},
+  "Введите WhatsApp в международном формате": {"es":"Introduce WhatsApp en formato internacional.","uk":"Введіть WhatsApp у міжнародному форматі."},
+  "Недействительный токен": {"es":"Vuelve a iniciar sesión.","uk":"Увійдіть знову."},
+  "GAMEWEEK_NOT_LOCKED": { es: "Espera al cierre de la jornada.", uk: "Дочекайтеся закриття туру." },
   "Недостаточно прав администратора": { es: "No tienes permisos de administrador.", uk: "Недостатньо прав адміністратора." },
   "LINEUP_NOT_FOUND": { es: "No se pudo cargar la plantilla del usuario.", uk: "Не вдалося завантажити склад користувача." },
   "FRIEND_LEAGUE_NOT_FOUND": { es: "No se encontró la liga.", uk: "Лігу не знайдено." },
@@ -201,13 +218,13 @@ const apiMessages: Record<string, { es: string; uk: string }> = {
   },
 };
 
-function localizedApiMessage(message: string | undefined) {
+function localizedApiMessage(message: string | undefined): string {
   const locale = getStoredLocale();
   if (!message)
     return locale === "uk"
       ? "Щось пішло не так. Спробуйте ще раз."
       : "Algo salió mal. Inténtalo de nuevo.";
-  return apiMessages[message]?.[locale] ?? message;
+  return apiMessages[message]?.[locale] ?? localizedApiMessage(undefined);
 }
 
 export const authToken = {
@@ -320,13 +337,18 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     authToken.clear();
     window.dispatchEvent(new Event(authRequiredEvent));
   }
-  if (!response.ok) throw new Error(localizedApiMessage(data.message));
+  if (!response.ok) {
+    const error = new Error();
+    Object.defineProperty(error, "message", { get: () => localizedApiMessage(data.message) });
+    throw error;
+  }
   return data as T;
 }
 
 export type PublicLineup = { user: { id: string; name: string }; players: Array<import("../types").SquadEntry & { points: number }> };
 export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
+  playerPrices: () => request<Array<Player & { priceChanges: Array<{ id: string; gameweek: Gameweek; priceBefore: number; priceAfter: number; priceDelta: number }> }>>("/player-prices"),
   publicLineup: (id: string) => request<PublicLineup>("/users/" + id + "/lineup"),
   adminFriendLeagues: () => request<AdminFriendLeague[]>("/admin/friend-leagues"),
   deleteAdminFriendLeague: (id: string) => request<void>("/admin/friend-leagues/" + id, { method: "DELETE" }),

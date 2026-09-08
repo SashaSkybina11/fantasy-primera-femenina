@@ -7,12 +7,14 @@ import { SquadSection } from "../components/SquadSection";
 import { api } from "../services/api";
 import type { SquadEntry } from "../types";
 import { useLocale } from "../contexts/LocaleContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export function MyTeamPage() {
+  const { user } = useAuth();
   const { t } = useLocale();
   const teamQuery = useQuery({ queryKey: ["team"], queryFn: api.team });
   const market = useQuery({ queryKey: ["transfer-status"], queryFn: api.transferStatus, refetchInterval: 15000 });
-  const locked = market.data?.marketIsOpen !== true;
+  const locked = user?.role !== "ADMIN" && market.data?.marketIsOpen !== true;
   const queryClient = useQueryClient();
   const [removeTarget, setRemoveTarget] = useState<SquadEntry | null>(null);
   const refresh = () =>

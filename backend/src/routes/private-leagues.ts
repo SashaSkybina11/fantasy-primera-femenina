@@ -38,7 +38,7 @@ router.post("/join", asyncRoute(async (request, response) => {
 }));
 
 router.get("/my", asyncRoute(async (request, response) => {
-  const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, include: { league: { include: { members: { include: { user: { select: { id: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true } } } } } }, _count: { select: { members: true } } } } }, orderBy: { joinedAt: "desc" } });
+  const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, include: { league: { include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true } } } } } }, _count: { select: { members: { where: { user: { role: "USER" } } } } } } } }, orderBy: { joinedAt: "desc" } });
   response.json(memberships.map((membership) => {
     const ranking = membership.league.members.map((member) => ({ id: member.userId, points: member.user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0) })).sort((a, b) => b.points - a.points);
     const { members: _members, ...league } = membership.league;
@@ -48,7 +48,7 @@ router.get("/my", asyncRoute(async (request, response) => {
 
 router.get("/:id", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
-  const league = await prisma.privateLeague.findFirst({ where: { id, members: { some: { userId: request.auth!.userId } } }, include: { members: { include: { user: { select: { id: true, name: true, avatarUrl: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true } } } } } } } });
+  const league = await prisma.privateLeague.findFirst({ where: { id, members: { some: { userId: request.auth!.userId } } }, include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, name: true, avatarUrl: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true } } } } } } } });
   if (!league) throw new ApiError(404, "Лига не найдена или доступ запрещён");
   const members = league.members.map(({ user, joinedAt }) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, joinedAt, points: user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0) })).sort((a, b) => b.points - a.points || a.joinedAt.getTime() - b.joinedAt.getTime()).map((member, index) => ({ ...member, rank: index + 1 }));
   response.json({ id: league.id, name: league.name, inviteCode: league.inviteCode, ownerId: league.ownerId, members });

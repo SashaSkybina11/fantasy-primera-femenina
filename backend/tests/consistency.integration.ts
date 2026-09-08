@@ -1,0 +1,90 @@
+import 'dotenv/config';
+import { PrismaClient } from '@prisma/client';
+import { spawnSync } from 'node:child_process';
+import assert from 'node:assert/strict';
+import jwt from 'jsonwebtoken';
+import { once } from 'node:events';
+
+const url = new URL(process.env.DATABASE_URL!);
+assert.ok(['localhost', '127.0.0.1'].includes(url.hostname));
+const setup = new PrismaClient();
+// A fresh, isolated database; never reset the application database.
+const database = `fantasy_consistency_${Date.now()}`;
+await setup.$executeRawUnsafe(`CREATE DATABASE "${database}"`);
+await setup.$disconnect();
+url.pathname = '/' + database;
+process.env.DATABASE_URL = url.toString();
+const migration = spawnSync(process.execPath, ['node_modules/prisma/build/index.js', 'migrate', 'deploy', '--schema', 'backend/prisma/schema.prisma'], { env: process.env, encoding: 'utf8' });
+assert.equal(migration.status, 0, migration.stderr);
+const { prisma } = await import('../src/lib/prisma.js');
+const { inTransaction } = await import('../src/lib/transaction.js');
+const { recalculateGameweek, snapshotGameweek } = await import('../src/services/gameweeks.js');
+const { getPlayerPopularity } = await import('../src/services/player-popularity.js');
+const { app } = await import('../src/app.js');
+const server = app.listen(0, '127.0.0.1');
+await once(server, 'listening');
+const port = (server.address() as { port: number }).port;
+const request = async (path: string, userId: string, method = 'GET', body?: unknown) => {
+  const token = jwt.sign({}, process.env.JWT_SECRET!, { subject: userId });
+  const response = await fetch(`http://127.0.0.1:${port}/api${path}`, { method, headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
+  return { status: response.status, data: await response.json() };
+};
+try {
+  const clubs = await Promise.all(Array.from({ length: 5 }, (_, i) => prisma.club.create({ data: { name: `Club ${i}` } })));
+  const players = await Promise.all(Array.from({ length: 11 }, (_, i) => prisma.player.create({ data: { clubId: clubs[i % 5]!.id, name: `Player ${i}`, number: i, position: i === 0 || i === 5 ? 'GOALKEEPER' : 'FIELD_PLAYER', role: i === 0 || i === 5 ? 'PORTERA' : 'ALA', price: 4000 } })));
+  const users = await Promise.all(['USER', 'USER', 'ADMIN'].map((role, i) => prisma.user.create({ data: { email: `u${i}@example.invalid`, passwordHash: 'unused', name: `User ${i}`, role: role as 'USER' | 'ADMIN', fantasyTeam: { create: { name: `Squad ${i}`, players: { create: players.slice(0, 10).map((p, j) => ({ playerId: p.id, status: j < 5 ? 'STARTER' : 'BENCH', isCaptain: j === 0, createdAt: new Date('2026-01-01') })) } } } }, include: { fantasyTeam: true } })));
+  const week = await prisma.gameweek.create({ data: { number: 1, name: 'J1', status: 'LOCKED', startsAt: new Date('2026-09-04'), endsAt: new Date('2026-09-06'), marketOpenAt: new Date('2026-09-01'), deadlineAt: new Date('2026-09-04') } });
+  await inTransaction(tx => snapshotGameweek(tx, week.id));
+  for (const [i, points] of [8, 4, -1, 6, 3].entries()) await prisma.playerGameweekStats.create({ data: { gameweekId: week.id, playerId: players[i]!.id, adjustmentPoints: points } });
+  await prisma.userPointAdjustment.create({ data: { gameweekId: week.id, userId: users[0]!.id, adminId: users[2]!.id, points: 2, reason: 'Preserve adjustment' } });
+  await prisma.gameweek.update({ where: { id: week.id }, data: { status: 'COMPLETED' } });
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  const totals = () => prisma.userGameweekPoints.findMany({ where: { gameweekId: week.id }, orderBy: { userId: 'asc' }, select: { userId: true, totalPoints: true, adjustmentPoints: true, rank: true, breakdown: true } });
+  const first = await totals();
+  assert.equal(first.find(r => r.userId === users[0]!.id)!.totalPoints, 22);
+  assert.equal(first.find(r => r.userId === users[1]!.id)!.totalPoints, 20);
+  assert.equal(first.find(r => r.userId === users[2]!.id)!.rank, null);
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  assert.deepEqual(await totals(), first);
+  assert.equal(await prisma.playerPriceChange.count(), 11);
+  // The live squad changes; old-week totals must continue using the frozen squad.
+  await prisma.fantasyTeamPlayer.update({ where: { fantasyTeamId_playerId: { fantasyTeamId: users[0]!.fantasyTeam!.id, playerId: players[1]!.id } }, data: { playerId: players[10]!.id } });
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  assert.deepEqual(await totals(), first);
+  await prisma.playerGameweekStats.update({ where: { gameweekId_playerId: { gameweekId: week.id, playerId: players[1]!.id } }, data: { goals: 1 } });
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  assert.equal((await prisma.player.findUniqueOrThrow({ where: { id: players[1]!.id } })).price, 4100);
+  const later = await prisma.gameweek.create({ data: { number: 2, name: 'J2', status: 'COMPLETED', startsAt: new Date('2026-09-11'), endsAt: new Date('2026-09-13'), marketOpenAt: new Date('2026-09-08'), deadlineAt: new Date('2026-09-11') } });
+  await prisma.playerGameweekStats.create({ data: { gameweekId: later.id, playerId: players[1]!.id, goals: 1 } });
+  await inTransaction(tx => recalculateGameweek(tx, later.id));
+  await prisma.playerGameweekStats.update({ where: { gameweekId_playerId: { gameweekId: week.id, playerId: players[1]!.id } }, data: { goals: 2 } });
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  const history = await prisma.playerPriceChange.findMany({ where: { playerId: players[1]!.id }, orderBy: { gameweek: { number: 'asc' } } });
+  assert.deepEqual(history.map(r => [r.priceBefore, r.priceDelta, r.priceAfter]), [[4000,200,4200],[4200,100,4300]]);
+  assert.equal((await prisma.player.findUniqueOrThrow({ where: { id: players[1]!.id } })).price, 4300);
+  const corrected = await totals();
+  assert.equal(corrected.find(r => r.userId === users[0]!.id)!.totalPoints, 32);
+  assert.equal(corrected.find(r => r.userId === users[1]!.id)!.totalPoints, 30);
+  const league = await prisma.privateLeague.create({ data: { name: 'Friends', inviteCode: 'TEST123', ownerId: users[0]!.id, members: { create: users.map(u => ({ userId: u.id })) } } });
+  const general = (await request('/gameweeks/leaderboard', users[0]!.id)).data;
+  const friends = (await request('/private-leagues/' + league.id, users[0]!.id)).data.members;
+  assert.equal(general.length, 2); assert.equal(friends.length, 2);
+  for (const row of general) assert.equal(friends.find((f: any) => f.id === row.id).points, row.totalPoints);
+  assert.equal(await prisma.gameweekWinner.count({ where: { userId: users[2]!.id } }), 0);
+  assert.equal((await getPlayerPopularity(prisma)).totalUsers, 2);
+  // synchronizeGameweeks must not overwrite completed weeks or reopen the market.
+  const userSell = await request('/my-team/players/' + players[2]!.id, users[0]!.id, 'DELETE');
+  assert.equal(userSell.status, 423);
+  const adminSell = await request('/my-team/players/' + players[2]!.id, users[2]!.id, 'DELETE');
+  assert.equal(adminSell.status, 200, JSON.stringify(adminSell));
+  const adminBuy = await request('/my-team/players', users[2]!.id, 'POST', { playerId: players[2]!.id });
+  assert.equal(adminBuy.status, 201, JSON.stringify(adminBuy));
+  const beforeRollback = await totals();
+  await assert.rejects(inTransaction(async tx => { await recalculateGameweek(tx, week.id); throw new Error('rollback'); }), /rollback/);
+  assert.deepEqual(await totals(), beforeRollback);
+  console.log('PASS: migrations, signed totals, adjustments, repeat recalculation, snapshots, price correction/rebase, standings, admin market, popularity, rollback');
+  console.log('Isolated test database retained:', database);
+} finally {
+  server.close();
+  await prisma.$disconnect();
+}

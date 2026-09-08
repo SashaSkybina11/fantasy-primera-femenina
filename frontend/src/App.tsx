@@ -1,3 +1,4 @@
+import { PlayerPricesPage } from "./pages/PlayerPricesPage";
 import { AdminFriendLeaguesPage } from "./pages/AdminFriendLeaguesPage";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
@@ -52,6 +53,7 @@ export function App() {
           path="/admin/player-points"
           element={<AdminPlayerPointsPage />}
         />
+        <Route path="/player-prices" element={<PlayerPricesPage />} />
         <Route path="/my-team" element={<MyTeamPage />} />
         <Route path="/purchase-players" element={<PurchasePlayersPage />} />
         <Route path="/calendar" element={<CalendarPage />} />

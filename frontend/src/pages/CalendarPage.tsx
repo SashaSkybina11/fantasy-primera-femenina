@@ -20,5 +20,5 @@ export function CalendarPage() {
     },
   ];
 
-  return <div className="page page--narrow"><div className="calendar-grid">{cards.map((card) => <section className="calendar-card" key={card.href}><p className="eyebrow">Primera División Fútbol Sala Femenino</p><h1>{card.title}</h1><p>{card.description}</p><a className="button" href={card.href} target="_blank" rel="noreferrer">{card.action}&nbsp; ↗</a></section>)}</div></div>;
+  return <div className="page page--narrow"><div className="calendar-grid">{cards.map((card) => <section className="calendar-card" key={card.href}><p className="eyebrow">{t("competition.title")}</p><h1>{card.title}</h1><p>{card.description}</p><a className="button" href={card.href} target="_blank" rel="noreferrer">{card.action}&nbsp; ↗</a></section>)}</div></div>;
 }

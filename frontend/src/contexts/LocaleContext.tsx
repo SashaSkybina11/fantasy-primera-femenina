@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 export type Locale = "es" | "uk";
@@ -5,6 +6,13 @@ export type Locale = "es" | "uk";
 const storageKey = "fantasy-locale";
 
 const spanish = {
+  "brand.title": "Fantasy Primera División Fútbol Sala Femenino",
+  "competition.title": "Primera División Fútbol Sala Femenino",
+  "auth.emailPlaceholder": "nombre@ejemplo.es",
+  "validation.invalid": "Comprueba el valor de este campo.",
+  "gameweek.label": "Jornada {{number}}",
+  "prices.history": "Historial de precios",
+  "prices.empty": "Todavía no hay precios calculados.",
   "lineup.title": "Alineación principal",
   "lineup.error": "No se pudo cargar la plantilla del usuario.",
   "lineup.empty": "La alineación principal todavía no está formada.",
@@ -47,7 +55,7 @@ const spanish = {
   "adminStats.unchanged": "Sin cambios",
   "adminStats.goalsConceded": "Goles recibidos (vacío = sin dato)",
   "rules.marketRestrictions": "Mientras el mercado está cerrado no se puede fichar jugadoras, vender jugadoras ni cambiar jugadoras entre el quinteto inicial y el banquillo.",
-  "rules.allPlayers": "Todas las jugadoras reciben puntos por sus eventos y el resultado del club, aunque no sean titulares. El quinteto inicial recibe +2 puntos adicionales. El total de la jornada nunca es negativo.",
+  "rules.allPlayers": "Todas las jugadoras reciben puntos por sus eventos y el resultado del club, aunque no sean titulares. El quinteto inicial recibe +2 puntos adicionales. El total de la jornada puede ser negativo.",
   "team.marketLocked": "Los cambios de alineación solo están disponibles mientras el mercado está abierto.",
   "language.label": "Idioma",
   "language.es": "Español",
@@ -207,7 +215,7 @@ const spanish = {
   "rules.pointsTitle": "¿Cómo conseguimos puntos?",
   "rules.pointsBody": "Los puntos dependen de los eventos reales del partido. Después de cada jornada se recalculan los resultados y la clasificación.",
   "rules.captainTitle": "Capitana",
-  "rules.captainBody": "La capitana debe formar parte del quinteto inicial y sus puntos se multiplican por dos.",
+  "rules.captainBody": "La capitana forma parte del quinteto inicial. Sus puntos cuentan una vez, como los de las otras cuatro titulares.",
   "rules.marketTitle": "Mercado de fichajes",
   "rules.marketBody": "El mercado de fichajes abre cada martes a las 10:00 y cierra cada viernes a las 12:00, hora de Madrid. Tras completar la plantilla inicial puedes vender 2 y fichar 2 jugadoras por jornada; los fichajes no se acumulan.",
   "rules.ratingTitle": "Clasificación",
@@ -377,7 +385,7 @@ const spanish = {
   "home.conceptCalendarTitle": "Sigue la competición",
   "home.conceptCalendarDescription": "Abre el calendario y los resultados oficiales de la RFEF sin salir de la aplicación.",
   "home.conceptPointsTitle": "Suma puntos cada semana",
-  "home.conceptPointsDescription": "Las acciones reales de tus titulares se convierten en puntos fantasy en cada jornada; la capitana suma el doble.",
+  "home.conceptPointsDescription": "Las acciones reales de tus titulares se convierten en puntos fantasy en cada jornada. Se suman los puntos de las cinco titulares.",
   "home.conceptRatingTitle": "Sube en el ranking",
   "home.conceptRatingDescription": "Compara tu resultado semanal y tus puntos totales de la temporada con el resto de participantes.",
   "calendar.title": "Calendario",
@@ -392,6 +400,13 @@ const spanish = {
 type TranslationKey = keyof typeof spanish;
 
 const ukrainian: Record<TranslationKey, string> = {
+  "brand.title": "Фентезі Першого дивізіону жіночого футзалу",
+  "competition.title": "Перший дивізіон жіночого футзалу",
+  "auth.emailPlaceholder": "ім’я@приклад.ua",
+  "validation.invalid": "Перевірте значення цього поля.",
+  "gameweek.label": "Тур {{number}}",
+  "prices.history": "Історія цін",
+  "prices.empty": "Розрахованих цін поки немає.",
   "lineup.title": "Основний склад",
   "lineup.error": "Не вдалося завантажити склад користувача.",
   "lineup.empty": "Основний склад ще не сформовано.",
@@ -438,7 +453,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "rules.marketRestrictions":
     "Коли трансферне вікно закрите, не можна купувати гравчинь, продавати гравчинь або переводити гравчинь між основним складом та запасом.",
   "rules.allPlayers":
-    "Усі гравчині отримують очки за свої події та результат клубу, навіть якщо не стартували. Стартовий склад отримує додаткові +2 очки. Підсумок за тур не може бути від’ємним.",
+    "Усі гравчині отримують очки за свої події та результат клубу, навіть якщо не стартували. Стартовий склад отримує додаткові +2 очки. Підсумок за тур може бути від’ємним.",
   "team.marketLocked":
     "Зміни складу доступні лише під час відкритого трансферного вікна.",
   "language.label": "Мова",
@@ -612,7 +627,7 @@ const ukrainian: Record<TranslationKey, string> = {
     "Бали залежать від подій у реальних матчах. Після кожного туру система перераховує результати та рейтинг.",
   "rules.captainTitle": "Капітанка",
   "rules.captainBody":
-    "Капітанка повинна бути в основному складі, а її очки множаться на два.",
+    "Капітанка входить до основної п’ятірки. Її очки враховуються один раз, як і очки решти гравчинь основи.",
   "rules.marketTitle": "Трансферний ринок",
   "rules.marketBody":
     "Трансферне вікно відкривається щовівторка о 10:00 та закривається щоп'ятниці о 12:00 за часом Мадрида. Після формування першого складу можна продати 2 та придбати 2 гравчинь за тур; трансфери не накопичуються.",
@@ -799,7 +814,7 @@ const ukrainian: Record<TranslationKey, string> = {
     "Відкривайте офіційний календар і результати RFEF, не виходячи з застосунку.",
   "home.conceptPointsTitle": "Нараховуйте очки щотижня",
   "home.conceptPointsDescription":
-    "Реальні дії гравчинь основи перетворюються на fantasy-очки в кожному турі, а капітанка отримує подвійні очки.",
+    "Реальні дії гравчинь основи перетворюються на fantasy-очки в кожному турі. Враховується сума очок п’яти гравчинь основи.",
   "home.conceptRatingTitle": "Підіймайтеся в рейтингу",
   "home.conceptRatingDescription":
     "Порівнюйте свій результат за тиждень і загальну кількість очок сезону з іншими учасницями.",
@@ -831,13 +846,26 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocale] = useState<Locale>(initialLocale);
 
   useEffect(() => {
+    toast.dismiss();
+    const invalid = (event: Event) => {
+      const input = event.target;
+      if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement || input instanceof HTMLSelectElement) input.setCustomValidity(dictionaries[locale]["validation.invalid"]);
+    };
+    const clear = (event: Event) => {
+      const input = event.target;
+      if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement || input instanceof HTMLSelectElement) input.setCustomValidity("");
+    };
+    document.querySelectorAll("input, textarea, select").forEach(input => (input as HTMLInputElement).setCustomValidity(""));
+    document.addEventListener("invalid", invalid, true);
+    document.addEventListener("input", clear, true);
     document.documentElement.lang = locale;
     localStorage.setItem(storageKey, locale);
+    return () => { document.removeEventListener("invalid", invalid, true); document.removeEventListener("input", clear, true); };
   }, [locale]);
 
   const value = useMemo<LocaleContextValue>(() => ({
     locale,
-    setLocale,
+    setLocale: (next) => { localStorage.setItem(storageKey, next); setLocale(next); },
     t: (key, variables = {}) => dictionaries[locale][key].replace(/{{(\w+)}}/g, (_match, name: string) => String(variables[name] ?? "")),
   }), [locale]);
 

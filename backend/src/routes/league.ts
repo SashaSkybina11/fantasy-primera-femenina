@@ -13,7 +13,7 @@ router.use(authenticate);
 router.get("/", asyncRoute(async (_request, response) => {
   const league = await prisma.league.findUnique({
     where: { name: mainLeagueName },
-    include: { _count: { select: { members: true } } },
+    include: { _count: { select: { members: { where: { user: { role: "USER" } } } } } },
   });
   if (!league) throw new ApiError(404, "Лига не найдена");
   response.json(league);
@@ -23,7 +23,7 @@ router.get("/members", asyncRoute(async (_request, response) => {
   const league = await prisma.league.findUnique({ where: { name: mainLeagueName } });
   if (!league) throw new ApiError(404, "Лига не найдена");
   const members = await prisma.leagueMember.findMany({
-    where: { leagueId: league.id },
+    where: { leagueId: league.id, user: { role: "USER" } },
     include: {
       user: { select: { id: true, name: true, avatarUrl: true, fantasyTeam: { select: { id: true, name: true, _count: { select: { players: true } } } } } },
     },
@@ -34,7 +34,7 @@ router.get("/members", asyncRoute(async (_request, response) => {
 
 router.get("/supporters", asyncRoute(async (_request, response) => {
   const clubs = await prisma.club.findMany({
-    select: { id: true, name: true, logoUrl: true, _count: { select: { supporters: true } } },
+    select: { id: true, name: true, logoUrl: true, _count: { select: { supporters: { where: { role: "USER" } } } } },
     orderBy: { name: "asc" },
   });
   response.json(clubs.map((club) => ({ id: club.id, name: club.name, logoUrl: club.logoUrl, count: club._count.supporters })).filter((club) => club.count > 0));

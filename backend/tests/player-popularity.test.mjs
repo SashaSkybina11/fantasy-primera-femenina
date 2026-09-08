@@ -5,10 +5,11 @@ import { getPlayerPopularity } from '../dist/services/player-popularity.js';
 function fixture(total, owners) {
   return {
     fantasyTeam: { count: async query => {
-      assert.deepEqual(query, { where: { players: { some: {} } } });
+      assert.deepEqual(query, { where: { user: { role: 'USER' }, players: { some: {} } } });
       return total;
     } },
     fantasyTeamPlayer: { groupBy: async query => {
+      assert.deepEqual(query.where, { fantasyTeam: { user: { role: 'USER' } } });
       assert.deepEqual(query.orderBy, [{ _count: { playerId: 'desc' } }, { playerId: 'asc' }]);
       assert.equal(query.take, 1);
       return owners;

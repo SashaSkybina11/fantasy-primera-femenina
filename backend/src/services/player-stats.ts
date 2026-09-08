@@ -19,7 +19,7 @@ export async function applyTeamResults(tx: Prisma.TransactionClient, gameweekId:
       for (const player of club.players) {
         const old = player.gameweekStats[0];
         const calculatedPoints = calculatePlayerPoints({ ...(old ?? { started: false, goals: 0, yellowCards: 0, redCards: 0, cleanSheet: false }), result, position: player.position });
-        const data = { result, calculatedPoints, totalPoints: Math.max(0, calculatedPoints + (old?.adjustmentPoints ?? 0)) };
+        const data = { result, calculatedPoints, totalPoints: calculatedPoints + (old?.adjustmentPoints ?? 0) };
         const saved = await tx.playerGameweekStats.upsert({ where: { gameweekId_playerId: { gameweekId, playerId: player.id } }, update: data, create: { gameweekId, playerId: player.id, ...data } });
         await audit(tx, adminUserId, AdminActionType.PLAYER_STATS_UPDATED, "PlayerGameweekStats", saved.id, old ?? null, saved);
       }

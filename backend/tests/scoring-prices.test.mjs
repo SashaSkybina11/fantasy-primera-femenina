@@ -13,9 +13,12 @@ test("non-starter scores goals/result; starting bonus is independent", () => {
   assert.equal(calculatePlayerPoints({ ...stats, result: "WIN" }), 2);
 });
 test("price examples and unknown team bonus", () => {
+  for (const [input, expected] of [[{ goals: 2 },200],[{ started: true, goals: 1 },130],[{ yellowCards: 2, redCards: 1 },-60],[{ started: true, goals: 2, yellowCards: 1 },215],[{ position: "GOALKEEPER", started: true, goalsConceded: 0, yellowCards: 1 },65]]) {
+    assert.equal(calculatePlayerPriceDelta({ ...stats, ...input }, null).priceDelta, expected);
+  }
   assert.equal(calculatePlayerPriceDelta({ ...stats, goals: 2, started: true }, null).priceDelta, 230);
   assert.equal(calculatePlayerPriceDelta({ ...stats, yellowCards: 1, redCards: 1 }, null).priceDelta, -45);
-  for (const [goalsConceded, expected] of [[0,50],[1,0],[2,-10],[4,-30],[6,-50],[null,0]]) {
+  for (const [goalsConceded, expected] of [[0,50],[1,0],[2,-10],[3,-20],[4,-30],[5,-40],[6,-50],[null,0]]) {
     assert.equal(calculatePlayerPriceDelta({ ...stats, position: "GOALKEEPER", goalsConceded }, null).priceDelta, expected);
   }
   assert.equal(calculatePlayerPriceDelta({ ...stats, goalsConceded: 0 }, null).priceDelta, 0);
@@ -45,29 +48,30 @@ test("market guard rejects lineup at deadline with 409", async () => {
   await assert.rejects(assertOpenMarket(tx, true, dates.deadlineAt), error => error.status === 409 && error.message === "LINEUP_MARKET_CLOSED");
 });
 
-test("bulk club result preserves events and adjustments, clamps total and updates rank", async () => {
+test("bulk club result preserves negative totals and adjustments and updates rank", async () => {
   const old = { ...stats, id: "stat", playerId: "p1", gameweekId: "w", goals: 3, adjustmentPoints: -100, adjustmentReason: "correction" };
   const stored = new Map([["p1", old]]); const ranks = [];
   const tx = {
-    gameweek: { findUnique: async () => ({ status: "LOCKED" }) },
+    gameweek: { findUnique: async () => ({ status: "LOCKED" }), findUniqueOrThrow: async () => ({ status: "LOCKED" }) },
     club: { findUnique: async () => ({ players: [{ id: "p1", position: "FIELD_PLAYER", gameweekStats: [old] }, { id: "p2", position: "FIELD_PLAYER", gameweekStats: [] }] }) },
     playerGameweekStats: {
-      upsert: async ({ create, update }) => { const data = stored.has(create.playerId) ? { ...stored.get(create.playerId), ...update } : { ...stats, ...create }; stored.set(create.playerId, data); return data; },
-      findMany: async () => [...stored.values()],
+      upsert: async ({ create, update }) => { const data = stored.has(create.playerId) ? { ...stored.get(create.playerId), ...update } : { ...stats, adjustmentPoints: 0, ...create }; stored.set(create.playerId, data); return data; },
+      findMany: async () => [...stored.values()].map(s => ({ ...s, player: { position: "FIELD_PLAYER" } })),
+      update: async ({ where, data }) => Object.assign([...stored.values()].find(s => s.id === where.id), data),
     },
     adminAuditLog: { create: async () => ({}) },
     userGameweekSquad: { findMany: async () => [{ userId: "user", players: [{ status: "STARTER", playerId: "p2", player: { name: "Player" }, isCaptain: true }] }] },
     userPointAdjustment: { groupBy: async () => [] },
-    userGameweekPoints: { upsert: async ({ create }) => { ranks.push({ id: "u", ...create }); }, findMany: async () => ranks, update: async ({ data }) => Object.assign(ranks[0], data) },
+    userGameweekPoints: { updateMany: async () => ({}), upsert: async ({ create }) => { ranks.push({ id: "u", ...create }); }, findMany: async () => ranks, update: async ({ data }) => Object.assign(ranks[0], data) },
   };
   await applyTeamResults(tx, "w", [{ clubId: "club", result: "WIN" }], "admin");
   assert.equal(stored.get("p1").goals, 3);
   assert.equal(stored.get("p1").adjustmentReason, "correction");
   assert.equal(stored.get("p1").started, false);
   assert.equal(stored.get("p1").calculatedPoints, 20);
-  assert.equal(stored.get("p1").totalPoints, 0);
+  assert.equal(stored.get("p1").totalPoints, -80);
   assert.equal(stored.get("p2").totalPoints, 2);
-  assert.equal(ranks[0].totalPoints, 4);
+  assert.equal(ranks[0].totalPoints, 2);
   assert.equal(ranks[0].rank, 1);
 });
 

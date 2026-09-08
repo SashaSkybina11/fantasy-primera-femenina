@@ -7,6 +7,10 @@ import { withDisplayNumbers } from "../utils/players.js";
 
 const router = Router();
 
+router.get("/player-prices", asyncRoute(async (_request, response) => {
+  response.json(await prisma.player.findMany({ include: { club: true, priceChanges: { include: { gameweek: true }, orderBy: { gameweek: { number: "desc" } } } }, orderBy: { name: "asc" } }));
+}));
+
 router.get("/clubs", asyncRoute(async (_request, response) => {
   response.json(await prisma.club.findMany({ orderBy: { name: "asc" } }));
 }));

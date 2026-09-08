@@ -1,6 +1,7 @@
 import { AdminActionType, GameweekStatus, MatchResult, PlayerPosition, Prisma, SquadStatus } from "@prisma/client";
 import { marketDatesForWeek } from "./market-schedule.js";
 import { prisma } from "../lib/prisma.js";
+import { applyPlayerPrices, previewPlayerPrices } from "./player-prices.js";
 import { ApiError } from "../utils/http.js";
 
 type Db = Prisma.TransactionClient;
@@ -84,12 +85,16 @@ export async function synchronizeGameweeks(now = new Date()) {
   });
 }
 
-export async function requireOpenMarket(lineup = false) {
+export async function requireOpenMarket(lineup = false, userId?: string) {
   await synchronizeGameweeks();
-  return assertOpenMarket(prisma, lineup);
+  return assertOpenMarket(prisma, lineup, new Date(), userId);
 }
 
-export async function assertOpenMarket(tx: Db, lineup = false, now = new Date()) {
+export async function assertOpenMarket(tx: Db, lineup = false, now = new Date(), userId?: string) {
+  if (userId && (await tx.user.findUnique({ where: { id: userId }, select: { role: true } }))?.role === "ADMIN") {
+    return await tx.gameweek.findFirst({ orderBy: { number: "desc" }, where: { marketOpenAt: { lte: now } } })
+      ?? tx.gameweek.findFirstOrThrow({ orderBy: { number: "asc" } });
+  }
   const gameweek = await tx.gameweek.findFirst({
     where: { status: GameweekStatus.OPEN, marketOpenAt: { lte: now }, deadlineAt: { gt: now } },
     orderBy: { number: "asc" },
@@ -99,6 +104,16 @@ export async function assertOpenMarket(tx: Db, lineup = false, now = new Date())
 }
 
 export async function recalculateGameweek(tx: Db, gameweekId: string) {
+  const gameweek = await tx.gameweek.findUniqueOrThrow({ where: { id: gameweekId } });
+  const sourceStats = await tx.playerGameweekStats.findMany({ where: { gameweekId }, include: { player: true } });
+  for (const stat of sourceStats) {
+    const calculatedPoints = calculatePlayerPoints({ ...stat, position: stat.player.position });
+    await tx.playerGameweekStats.update({ where: { id: stat.id }, data: { calculatedPoints, totalPoints: calculatedPoints + stat.adjustmentPoints } });
+  }
+  if (gameweek.status === "COMPLETED" || (gameweek.status === "CALCULATING" && await tx.playerPriceChange.count({ where: { gameweekId } }) > 0)) {
+    const preview = await previewPlayerPrices(tx, gameweekId);
+    await applyPlayerPrices(tx, gameweekId, preview.revision, true);
+  }
   const squads = await tx.userGameweekSquad.findMany({
     where: { gameweekId },
     include: { players: { include: { player: true } } },
@@ -113,9 +128,8 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
     const breakdown = squad.players.filter((item) => item.status === SquadStatus.STARTER).map((item) => {
       const stat = statsByPlayer.get(item.playerId);
       const basePoints = stat?.totalPoints ?? 0;
-      const points = basePoints * (item.isCaptain ? 2 : 1);
+      const points = basePoints;
       playerPoints += basePoints;
-      if (item.isCaptain) captainBonus += basePoints;
       starterGoals += stat?.goals ?? 0;
       return { playerId: item.playerId, name: item.player.name, isCaptain: item.isCaptain, basePoints, points };
     });
@@ -127,12 +141,19 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
     });
   }
 
-  const rows = await tx.userGameweekPoints.findMany({ where: { gameweekId }, orderBy: [{ totalPoints: "desc" }, { playerPoints: "desc" }, { starterGoals: "desc" }] });
+  await tx.userGameweekPoints.updateMany({ where: { gameweekId, user: { role: "ADMIN" } }, data: { rank: null } });
+  const rows = await tx.userGameweekPoints.findMany({ where: { gameweekId, user: { role: "USER" } }, orderBy: [{ totalPoints: "desc" }, { playerPoints: "desc" }, { starterGoals: "desc" }] });
   let rank = 0;
   for (let index = 0; index < rows.length; index += 1) {
     const previous = rows[index - 1]; const row = rows[index]!;
     if (!previous || previous.totalPoints !== row.totalPoints || previous.playerPoints !== row.playerPoints || previous.starterGoals !== row.starterGoals) rank = index + 1;
     await tx.userGameweekPoints.update({ where: { id: row.id }, data: { rank } });
+  }
+  if (gameweek.status === "COMPLETED") {
+    await tx.userGameweekPoints.updateMany({ where: { gameweekId }, data: { isFinal: true } });
+    await tx.gameweekWinner.deleteMany({ where: { gameweekId } });
+    const leaders = await tx.userGameweekPoints.findMany({ where: { gameweekId, rank: 1, user: { role: "USER" } } });
+    if (leaders.length) await tx.gameweekWinner.createMany({ data: leaders.map(row => ({ gameweekId, userId: row.userId, rank: 1, points: row.totalPoints })) });
   }
   return rows;
 }

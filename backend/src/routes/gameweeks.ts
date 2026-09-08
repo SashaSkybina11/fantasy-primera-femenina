@@ -10,19 +10,20 @@ router.use(authenticate);
 
 router.get("/scoring-rules", (_request, response) => response.json(scoringRules));
 
-router.get("/current", asyncRoute(async (_request, response) => {
+router.get("/current", asyncRoute(async (request, response) => {
   await synchronizeGameweeks();
   const now = new Date();
   const gameweek = await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
     ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { marketOpenAt: "asc" } });
-  response.json(gameweek ? { ...gameweek, marketIsOpen: gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt } : null);
+  response.json(gameweek ? { ...gameweek, marketIsOpen: (await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { role: true } }))?.role === "ADMIN" || (gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt) } : null);
 }));
 
 router.get("/leaderboard", asyncRoute(async (_request, response) => {
   const totals = await prisma.user.findMany({
+    where: { role: "USER" },
     select: { id: true, name: true, avatarUrl: true, fantasyTeam: { select: { players: { select: { player: { select: { position: true } } } } } }, gameweekPoints: { select: { totalPoints: true }, where: { isFinal: true }, orderBy: { gameweek: { number: "asc" } } } },
   });
-  const ranked = totals.filter((user) => user.fantasyTeam?.players.length === 10 && user.fantasyTeam.players.filter((entry) => entry.player.position === "GOALKEEPER").length === 2).map((user) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, totalPoints: user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0), lastGameweekPoints: user.gameweekPoints.at(-1)?.totalPoints ?? 0 })).sort((a, b) => b.totalPoints - a.totalPoints);
+  const ranked = totals.filter((user) => user.gameweekPoints.length > 0 || (user.fantasyTeam?.players.length === 10 && user.fantasyTeam.players.filter((entry) => entry.player.position === "GOALKEEPER").length === 2)).map((user) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, totalPoints: user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0), lastGameweekPoints: user.gameweekPoints.at(-1)?.totalPoints ?? 0 })).sort((a, b) => b.totalPoints - a.totalPoints);
   response.json(ranked.map((row, index) => ({ ...row, rank: index + 1 })));
 }));
 
@@ -30,7 +31,7 @@ router.get("/:id/leaderboard", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const gameweek = await prisma.gameweek.findUnique({ where: { id }, select: { id: true } });
   if (!gameweek) throw new ApiError(404, "Тур не найден");
-  response.json(await prisma.userGameweekPoints.findMany({ where: { gameweekId: id }, orderBy: [{ rank: "asc" }, { totalPoints: "desc" }], select: { userId: true, totalPoints: true, playerPoints: true, captainBonus: true, rank: true, isFinal: true, user: { select: { name: true, avatarUrl: true } } } }));
+  response.json(await prisma.userGameweekPoints.findMany({ where: { gameweekId: id, user: { role: "USER" } }, orderBy: [{ rank: "asc" }, { totalPoints: "desc" }], select: { userId: true, totalPoints: true, playerPoints: true, captainBonus: true, rank: true, isFinal: true, user: { select: { name: true, avatarUrl: true } } } }));
 }));
 
 router.get("/history/me", asyncRoute(async (request, response) => {

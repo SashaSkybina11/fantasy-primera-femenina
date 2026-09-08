@@ -49,7 +49,7 @@ export function AdminPlayerPricesPage() {
       <button className="button button--secondary" disabled={busy || bonus === null} onClick={() => saveSettings.mutate()}>{t("prices.saveSettings")}</button>
     </section>
     <section className="admin-toolbar">
-      <select aria-label={t("adminStats.selectGameweek")} value={gameweekId} disabled={busy} onChange={e => { setGameweekId(e.target.value); setPreview(null); }}><option value="">{t("adminStats.selectGameweek")}</option>{weeks.data?.map(row => <option key={row.id} value={row.id}>{row.name} · {t(`gameweek.${row.status}`)}</option>)}</select>
+      <select aria-label={t("adminStats.selectGameweek")} value={gameweekId} disabled={busy} onChange={e => { setGameweekId(e.target.value); setPreview(null); }}><option value="">{t("adminStats.selectGameweek")}</option>{weeks.data?.map(row => <option key={row.id} value={row.id}>{t("gameweek.label", { number: row.number })} · {t(`gameweek.${row.status}`)}</option>)}</select>
       <input aria-label={t("adminStats.searchPlaceholder")} placeholder={t("adminStats.searchPlaceholder")} value={search} onChange={e => setSearch(e.target.value)} />
       <select aria-label={t("adminStats.allClubs")} value={club} onChange={e => setClub(e.target.value)}><option value="">{t("adminStats.allClubs")}</option>{Array.from(new Map(players.data?.map(row => [row.clubId, row.club?.name]) ?? [])).map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select>
       <button className="button" disabled={!gameweekId || busy || bonus !== null} onClick={() => { setPreview(null); calculate.mutate(gameweekId); }}>{t("prices.calculate")}</button>
