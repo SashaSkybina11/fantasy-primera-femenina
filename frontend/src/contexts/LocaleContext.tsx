@@ -17,7 +17,8 @@ const spanish = {
   "lineup.error": "No se pudo cargar la plantilla del usuario.",
   "lineup.empty": "La alineación principal todavía no está formada.",
   "lineup.view": "Ver la alineación de {{name}}",
-  "lineup.rankingEmpty": "La clasificación aparecerá cuando haya plantillas completas: 2 porteras y 8 jugadoras de campo.",
+  "lineup.rankingEmpty":
+    "La clasificación aparecerá cuando haya plantillas completas: 2 porteras y 8 jugadoras de campo.",
   "club.goals": "Goles: {{count}}",
   "purchase.positionLimit": "2 porteras y 8 jugadoras de campo",
   "rules.initialBudget": "Presupuesto inicial: {{budget}}.",
@@ -32,7 +33,8 @@ const spanish = {
   "rules.pointsUnit": "puntos",
   "prices.title": "Precios de las jugadoras",
   "prices.teamWin": "Bonus por victoria del equipo (€)",
-  "prices.settingsHint": "Sin valor: no se aplica bonus. Los cambios se usan en jornadas aún no aplicadas; las anteriores conservan su configuración.",
+  "prices.settingsHint":
+    "Sin valor: no se aplica bonus. Los cambios se usan en jornadas aún no aplicadas; las anteriores conservan su configuración.",
   "prices.saveSettings": "Guardar configuración",
   "prices.calculate": "Calcular cambios",
   "prices.apply": "Aplicar nuevos precios",
@@ -54,9 +56,12 @@ const spanish = {
   "adminStats.applyResults": "Aplicar resultados",
   "adminStats.unchanged": "Sin cambios",
   "adminStats.goalsConceded": "Goles recibidos (vacío = sin dato)",
-  "rules.marketRestrictions": "Mientras el mercado está cerrado no se puede fichar jugadoras, vender jugadoras ni cambiar jugadoras entre el quinteto inicial y el banquillo.",
-  "rules.allPlayers": "Todas las jugadoras reciben puntos por sus eventos y el resultado del club, aunque no sean titulares. El quinteto inicial recibe +2 puntos adicionales. El total de la jornada puede ser negativo.",
-  "team.marketLocked": "Los cambios de alineación solo están disponibles mientras el mercado está abierto.",
+  "rules.marketRestrictions":
+    "Mientras el mercado está cerrado no se puede fichar jugadoras, vender jugadoras ni cambiar jugadoras entre el quinteto inicial y el banquillo.",
+  "rules.allPlayers":
+    "Todas las jugadoras reciben puntos por sus eventos y el resultado del club, aunque no sean titulares. El quinteto inicial recibe +2 puntos adicionales. El total de la jornada puede ser negativo.",
+  "team.marketLocked":
+    "Los cambios de alineación solo están disponibles mientras el mercado está abierto.",
   "language.label": "Idioma",
   "language.es": "Español",
   "language.uk": "Ucraniano",
@@ -73,11 +78,13 @@ const spanish = {
   "nav.teams": "Clubes",
   "nav.league": "Liga",
   "nav.friends": "Liga de amigos",
-  "friends.empty": "Crea tu propia liga o únete a la liga de tus amigos con un código.",
+  "friends.empty":
+    "Crea tu propia liga o únete a la liga de tus amigos con un código.",
   "friends.retry": "Reintentar",
   "purchase.popularTitle": "La jugadora más popular",
   "purchase.popularEmpty": "Todavía no hay suficientes datos",
-  "purchase.popularOwners": "En las plantillas de {{count}} de {{total}} usuarios — {{percentage}}%",
+  "purchase.popularOwners":
+    "En las plantillas de {{count}} de {{total}} usuarios — {{percentage}}%",
   "nav.leaderboard": "Clasificación",
   "nav.rules": "Reglas del juego",
   "nav.logout": "Cerrar sesión",
@@ -100,12 +107,14 @@ const spanish = {
   "loading.players": "Cargando jugadoras…",
   "error.generic": "Algo salió mal. Inténtalo de nuevo.",
   "error.clubNotFound": "No se encontró el club. Inténtalo de nuevo.",
-  "error.memberNotFound": "No se encontró a la participante. Inténtalo de nuevo.",
+  "error.memberNotFound":
+    "No se encontró a la participante. Inténtalo de nuevo.",
   "auth.privateLeague": "Fantasy de fútbol sala femenino",
   "auth.futsal": "Fútbol sala.",
   "auth.your": "Tu",
   "auth.team": "equipo.",
-  "auth.description": "Elige 10 jugadoras de Primera División Fútbol Sala Femenino, crea tu plantilla y compite por subir en la clasificación.",
+  "auth.description":
+    "Elige 10 jugadoras de Primera División Fútbol Sala Femenino, crea tu plantilla y compite por subir en la clasificación.",
   "auth.newMember": "Nueva participante",
   "auth.leagueMember": "Participante de la liga",
   "auth.createProfile": "Crea tu perfil",
@@ -139,14 +148,16 @@ const spanish = {
   "profile.avatarRemoved": "Avatar eliminado",
   "profile.security": "Seguridad",
   "profile.passwordTitle": "Cambiar contraseña",
-  "profile.passwordDescription": "Confirma tu contraseña actual para proteger tu cuenta.",
+  "profile.passwordDescription":
+    "Confirma tu contraseña actual para proteger tu cuenta.",
   "profile.currentPassword": "Contraseña actual",
   "profile.newPassword": "Nueva contraseña",
   "profile.confirmPassword": "Confirmar nueva contraseña",
   "profile.changePassword": "Actualizar contraseña",
   "profile.passwordSaved": "Contraseña actualizada",
   "profile.passwordMismatch": "Las contraseñas nuevas no coinciden",
-  "profile.contactConsent": "Permitir que la administración utilice mis datos de contacto para cuestiones del juego y de los premios.",
+  "profile.contactConsent":
+    "Permitir que la administración utilice mis datos de contacto para cuestiones del juego y de los premios.",
   "profile.registeredAt": "Fecha de registro",
   "admin.eyebrow": "Espacio privado",
   "admin.title": "Administración",
@@ -157,7 +168,8 @@ const spanish = {
   "admin.roleAdmin": "Administradora",
   "admin.roleUser": "Usuario",
   "admin.delete": "Eliminar",
-  "admin.deleteConfirm": "¿Eliminar la cuenta de {{name}}? Esta acción no se puede deshacer.",
+  "admin.deleteConfirm":
+    "¿Eliminar la cuenta de {{name}}? Esta acción no se puede deshacer.",
   "admin.userDeleted": "Usuario eliminado",
   "admin.playerPointsLink": "Puntos de jugadoras",
   "admin.searchPlaceholder": "Buscar por nombre, email, Instagram o WhatsApp",
@@ -165,7 +177,8 @@ const spanish = {
   "admin.statusSuspended": "Suspendida",
   "adminStats.eyebrow": "Administración",
   "adminStats.title": "Puntos de jugadoras",
-  "adminStats.description": "Los eventos del partido recalculan automáticamente los puntos fantasy y la clasificación.",
+  "adminStats.description":
+    "Los eventos del partido recalculan automáticamente los puntos fantasy y la clasificación.",
   "adminStats.usersLink": "Usuarios",
   "adminStats.selectGameweek": "Selecciona una jornada (1–30)",
   "adminStats.searchPlaceholder": "Buscar por nombre, número o club",
@@ -173,7 +186,8 @@ const spanish = {
   "adminStats.reopenConfirm": "¿Quieres reabrir la jornada?",
   "adminStats.reopen": "Reabrir jornada",
   "adminStats.reopened": "Jornada abierta para correcciones",
-  "adminStats.completeConfirm": "¿Finalizar la jornada y guardar las ganadoras?",
+  "adminStats.completeConfirm":
+    "¿Finalizar la jornada y guardar las ganadoras?",
   "adminStats.complete": "Finalizar jornada",
   "adminStats.completed": "Jornada finalizada",
   "adminStats.players": "Jugadoras",
@@ -201,27 +215,36 @@ const spanish = {
   "gameweek.COMPLETED": "Finalizada",
   "leaderboard.eyebrow": "Fantasy",
   "leaderboard.title": "Clasificación de la temporada",
-  "leaderboard.description": "Resultado general e historial de tus jornadas semanales.",
+  "leaderboard.description":
+    "Resultado general e historial de tus jornadas semanales.",
   "leaderboard.overall": "Clasificación general",
   "leaderboard.myGameweeks": "Mis jornadas",
   "common.pointsShort": "pts",
   "rules.badge": "Guía",
   "rules.title": "Reglas del juego",
-  "rules.intro": "Fantasy Futsal Femenino se basa en la Primera División de fútbol sala femenino de España.",
+  "rules.intro":
+    "Fantasy Futsal Femenino se basa en la Primera División de fútbol sala femenino de España.",
   "rules.howTitle": "¿Cómo jugar?",
-  "rules.howBody": "Regístrate, ficha jugadoras reales, prepara tu quinteto inicial y elige una capitana antes de cada jornada.",
+  "rules.howBody":
+    "Regístrate, ficha jugadoras reales, prepara tu quinteto inicial y elige una capitana antes de cada jornada.",
   "rules.squadTitle": "Plantilla",
-  "rules.squadBody": "Tu equipo tiene 10 jugadoras (2 porteras y 8 jugadoras de campo): 5 titulares (1 portera y 4 jugadoras de campo) y 5 suplentes. Sólo las titulares puntúan.",
+  "rules.squadBody":
+    "Tu equipo tiene 10 jugadoras (2 porteras y 8 jugadoras de campo): 5 titulares (1 portera y 4 jugadoras de campo) y 5 suplentes. Sólo las titulares puntúan.",
   "rules.pointsTitle": "¿Cómo conseguimos puntos?",
-  "rules.pointsBody": "Los puntos dependen de los eventos reales del partido. Después de cada jornada se recalculan los resultados y la clasificación.",
+  "rules.pointsBody":
+    "Los puntos dependen de los eventos reales del partido. Después de cada jornada se recalculan los resultados y la clasificación.",
   "rules.captainTitle": "Capitana",
-  "rules.captainBody": "La capitana forma parte del quinteto inicial. Sus puntos cuentan una vez, como los de las otras cuatro titulares.",
+  "rules.captainBody":
+    "La capitana forma parte del quinteto inicial. Sus puntos cuentan una vez, como los de las otras cuatro titulares.",
   "rules.marketTitle": "Mercado de fichajes",
-  "rules.marketBody": "El mercado de fichajes abre cada martes a las 10:00 y cierra cada viernes a las 12:00, hora de Madrid. Tras completar la plantilla inicial puedes vender 2 y fichar 2 jugadoras por jornada; los fichajes no se acumulan.",
+  "rules.marketBody":
+    "El mercado de fichajes abre cada martes a las 10:00 y cierra cada viernes a las 12:00, hora de Madrid. Tras completar la plantilla inicial puedes vender 2 y fichar 2 jugadoras por jornada; los fichajes no se acumulan.",
   "rules.ratingTitle": "Clasificación",
-  "rules.ratingBody": "Todas las participantes compiten en la clasificación general con los puntos obtenidos por su único equipo fantasy.",
+  "rules.ratingBody":
+    "Todas las participantes compiten en la clasificación general con los puntos obtenidos por su único equipo fantasy.",
   "rules.leaguesTitle": "Ligas de amigos",
-  "rules.leaguesBody": "Crea ligas privadas o únete con un código. Tu mismo equipo y tus puntos generales se utilizan en todas ellas.",
+  "rules.leaguesBody":
+    "Crea ligas privadas o únete con un código. Tu mismo equipo y tus puntos generales se utilizan en todas ellas.",
   "rules.started": "Quinteto inicial",
   "rules.win": "Victoria",
   "rules.draw": "Empate",
@@ -266,7 +289,8 @@ const spanish = {
   "team.bench": "Suplentes",
   "team.benchSubtitle": "5 jugadoras",
   "team.checkLineup": "Revisa la plantilla antes de guardarla",
-  "team.lineupRequirements": "10 jugadoras · 5 titulares · 1 portera · capitana titular",
+  "team.lineupRequirements":
+    "10 jugadoras · 5 titulares · 1 portera · capitana titular",
   "team.checking": "Comprobando…",
   "team.saveLineup": "Guardar plantilla",
   "team.updated": "Plantilla actualizada",
@@ -274,7 +298,8 @@ const spanish = {
   "team.playerRemoved": "Jugadora eliminada; presupuesto actualizado",
   "team.lineupSaved": "Plantilla guardada correctamente",
   "team.emptyTitle": "Tu equipo aún no está formado",
-  "team.empty": "Aún no has comprado jugadoras. Ve a «Comprar jugadoras» para formar tu equipo.",
+  "team.empty":
+    "Aún no has comprado jugadoras. Ve a «Comprar jugadoras» para formar tu equipo.",
   "team.goToPurchase": "Ir a comprar jugadoras",
   "player.club": "Club",
   "player.allClubs": "Todos los clubes",
@@ -296,18 +321,22 @@ const spanish = {
   "player.close": "Cerrar",
   "purchase.eyebrow": "Mercado fantasy",
   "purchase.title": "Comprar jugadoras",
-  "purchase.description": "Elige jugadoras para tu equipo sin superar tu presupuesto ni el límite de dos por club.",
+  "purchase.description":
+    "Elige jugadoras para tu equipo sin superar tu presupuesto ni el límite de dos por club.",
   "purchase.buy": "Comprar",
   "purchase.success": "Jugadora comprada y añadida a tu equipo",
   "purchase.marketOpen": "Mercado abierto",
   "purchase.marketClosed": "Mercado cerrado",
-  "purchase.deadlineRange": "Puedes comprar jugadoras desde {{from}} hasta {{to}}.",
+  "purchase.deadlineRange":
+    "Puedes comprar jugadoras desde {{from}} hasta {{to}}.",
   "purchase.gameweekLabel": "Jornada",
   "purchase.timezoneLabel": "Zona horaria",
   "purchase.scheduleLoading": "Cargando el horario del mercado…",
   "purchase.scheduleUnavailable": "No se pudo cargar el horario del mercado.",
-  "purchase.weeklySchedule": "El mercado abre cada lunes a las 08:00 y cierra cada viernes a las 19:00.",
-  "purchase.dynamicPriceNotice": "Los precios de las jugadoras pueden aumentar durante la temporada según su rendimiento y sus acciones en los partidos.",
+  "purchase.weeklySchedule":
+    "El mercado abre cada lunes a las 08:00 y cierra cada viernes a las 19:00.",
+  "purchase.dynamicPriceNotice":
+    "Los precios de las jugadoras pueden aumentar durante la temporada según su rendimiento y sus acciones en los partidos.",
   "purchase.viewSquad": "Ver plantilla",
   "purchase.squadCount": "Plantilla: {{count}} / 10",
   "purchase.budgetLabel": "Presupuesto",
@@ -323,13 +352,15 @@ const spanish = {
   "squad.removeCaptain": "Quitar capitanía",
   "squad.remove": "Eliminar",
   "squad.removeTitle": "¿Eliminar jugadora?",
-  "squad.removeQuestion": "¿Seguro que quieres eliminar a {{name}} de tu plantilla?",
+  "squad.removeQuestion":
+    "¿Seguro que quieres eliminar a {{name}} de tu plantilla?",
   "squad.keep": "No eliminar",
   "squad.closeRemove": "Cerrar confirmación",
   "squad.freeSlot": "Plaza libre",
   "squad.captainBadge": "★ Capitana",
   "clubs.title": "Clubes de la Primera División Fútbol Sala Femenino",
-  "clubs.description": "Los 16 clubes de la liga española de fútbol sala femenino.",
+  "clubs.description":
+    "Los 16 clubes de la liga española de fútbol sala femenino.",
   "clubs.back": "Todos los clubes",
   "clubs.roster": "Plantilla del club",
   "clubs.emptyRoster": "La plantilla de este club todavía no está disponible.",
@@ -356,7 +387,8 @@ const spanish = {
   "avatar.alt": "Avatar de {{name}}",
   "clubLogo.alt": "Escudo de {{name}}",
   "home.eyebrow": "Fantasy de futsal femenino",
-  "home.description": "Forma tu equipo, gestiona el presupuesto y sigue la competición oficial.",
+  "home.description":
+    "Forma tu equipo, gestiona el presupuesto y sigue la competición oficial.",
   "home.marketOpen": "Mercado abierto",
   "home.gameweekCompleted": "Jornada finalizada",
   "home.squadLocked": "Plantilla bloqueada",
@@ -369,30 +401,41 @@ const spanish = {
   "home.yourTeam": "Tu equipo fantasy",
   "home.favoriteEyebrow": "Tu club de la temporada",
   "home.favoriteTitle": "Elige a quién animas",
-  "home.favoriteDescription": "Tu voto cuenta en el ranking de aficiones de la liga. Puedes cambiarlo cuando quieras.",
+  "home.favoriteDescription":
+    "Tu voto cuenta en el ranking de aficiones de la liga. Puedes cambiarlo cuando quieras.",
   "home.favoriteLabel": "Mi club favorito",
   "home.favoritePlaceholder": "Elegir un club",
   "home.conceptEyebrow": "Guía de juego",
   "home.conceptTitle": "Todo el fútbol sala femenino, en un solo lugar",
-  "home.conceptDescription": "Esta fantasy privada une el seguimiento de la Primera División con tu propio equipo y la comunidad de la liga.",
-  "home.conceptSource": "La información de la competición procede de la web oficial de la RFEF.",
+  "home.conceptDescription":
+    "Esta fantasy privada une el seguimiento de la Primera División con tu propio equipo y la comunidad de la liga.",
+  "home.conceptSource":
+    "La información de la competición procede de la web oficial de la RFEF.",
   "home.conceptFantasyTitle": "Crea tu fantasy",
-  "home.conceptFantasyDescription": "Compra hasta diez jugadoras, cuida el presupuesto y prepara titulares, suplentes y capitana.",
+  "home.conceptFantasyDescription":
+    "Compra hasta diez jugadoras, cuida el presupuesto y prepara titulares, suplentes y capitana.",
   "home.conceptClubTitle": "Conoce los clubes",
-  "home.conceptClubDescription": "Consulta plantillas, posiciones, edades, nacionalidades, entrenadores y presidentes de los 16 clubes.",
+  "home.conceptClubDescription":
+    "Consulta plantillas, posiciones, edades, nacionalidades, entrenadores y presidentes de los 16 clubes.",
   "home.conceptLeagueTitle": "Participa en la liga",
-  "home.conceptLeagueDescription": "Compara equipos con tus amistades y descubre qué club reúne más apoyo durante la temporada.",
+  "home.conceptLeagueDescription":
+    "Compara equipos con tus amistades y descubre qué club reúne más apoyo durante la temporada.",
   "home.conceptCalendarTitle": "Sigue la competición",
-  "home.conceptCalendarDescription": "Abre el calendario y los resultados oficiales de la RFEF sin salir de la aplicación.",
+  "home.conceptCalendarDescription":
+    "Abre el calendario y los resultados oficiales de la RFEF sin salir de la aplicación.",
   "home.conceptPointsTitle": "Suma puntos cada semana",
-  "home.conceptPointsDescription": "Las acciones reales de tus titulares se convierten en puntos fantasy en cada jornada. Se suman los puntos de las cinco titulares.",
+  "home.conceptPointsDescription":
+    "Las acciones reales de tus titulares se convierten en puntos fantasy en cada jornada. Se suman los puntos de las cinco titulares.",
   "home.conceptRatingTitle": "Sube en el ranking",
-  "home.conceptRatingDescription": "Compara tu resultado semanal y tus puntos totales de la temporada con el resto de participantes.",
+  "home.conceptRatingDescription":
+    "Compara tu resultado semanal y tus puntos totales de la temporada con el resto de participantes.",
   "calendar.title": "Calendario",
-  "calendar.description": "Calendario oficial de Primera División Fútbol Sala Femenino",
+  "calendar.description":
+    "Calendario oficial de Primera División Fútbol Sala Femenino",
   "calendar.open": "Abrir calendario RFEF",
   "calendar.resultsTitle": "Resultados",
-  "calendar.resultsDescription": "Resultados oficiales de la jornada en la web de la RFEF.",
+  "calendar.resultsDescription":
+    "Resultados oficiales de la jornada en la web de la RFEF.",
   "calendar.openResults": "Abrir resultados RFEF",
   "footer.creator": "Creadora del juego",
 } as const;
@@ -400,7 +443,7 @@ const spanish = {
 type TranslationKey = keyof typeof spanish;
 
 const ukrainian: Record<TranslationKey, string> = {
-  "brand.title": "Фентезі Першого дивізіону жіночого футзалу",
+  "brand.title": "Fantasy Primera División Fútbol Sala Femenino",
   "competition.title": "Перший дивізіон жіночого футзалу",
   "auth.emailPlaceholder": "ім’я@приклад.ua",
   "validation.invalid": "Перевірте значення цього поля.",
@@ -828,12 +871,18 @@ const ukrainian: Record<TranslationKey, string> = {
   "footer.creator": "Творчиня гри",
 };
 
-const dictionaries: Record<Locale, Record<TranslationKey, string>> = { es: spanish, uk: ukrainian };
+const dictionaries: Record<Locale, Record<TranslationKey, string>> = {
+  es: spanish,
+  uk: ukrainian,
+};
 
 type LocaleContextValue = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: TranslationKey, variables?: Record<string, string | number>) => string;
+  t: (
+    key: TranslationKey,
+    variables?: Record<string, string | number>,
+  ) => string;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -849,27 +898,54 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     toast.dismiss();
     const invalid = (event: Event) => {
       const input = event.target;
-      if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement || input instanceof HTMLSelectElement) input.setCustomValidity(dictionaries[locale]["validation.invalid"]);
+      if (
+        input instanceof HTMLInputElement ||
+        input instanceof HTMLTextAreaElement ||
+        input instanceof HTMLSelectElement
+      )
+        input.setCustomValidity(dictionaries[locale]["validation.invalid"]);
     };
     const clear = (event: Event) => {
       const input = event.target;
-      if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement || input instanceof HTMLSelectElement) input.setCustomValidity("");
+      if (
+        input instanceof HTMLInputElement ||
+        input instanceof HTMLTextAreaElement ||
+        input instanceof HTMLSelectElement
+      )
+        input.setCustomValidity("");
     };
-    document.querySelectorAll("input, textarea, select").forEach(input => (input as HTMLInputElement).setCustomValidity(""));
+    document
+      .querySelectorAll("input, textarea, select")
+      .forEach((input) => (input as HTMLInputElement).setCustomValidity(""));
     document.addEventListener("invalid", invalid, true);
     document.addEventListener("input", clear, true);
     document.documentElement.lang = locale;
     localStorage.setItem(storageKey, locale);
-    return () => { document.removeEventListener("invalid", invalid, true); document.removeEventListener("input", clear, true); };
+    return () => {
+      document.removeEventListener("invalid", invalid, true);
+      document.removeEventListener("input", clear, true);
+    };
   }, [locale]);
 
-  const value = useMemo<LocaleContextValue>(() => ({
-    locale,
-    setLocale: (next) => { localStorage.setItem(storageKey, next); setLocale(next); },
-    t: (key, variables = {}) => dictionaries[locale][key].replace(/{{(\w+)}}/g, (_match, name: string) => String(variables[name] ?? "")),
-  }), [locale]);
+  const value = useMemo<LocaleContextValue>(
+    () => ({
+      locale,
+      setLocale: (next) => {
+        localStorage.setItem(storageKey, next);
+        setLocale(next);
+      },
+      t: (key, variables = {}) =>
+        dictionaries[locale][key].replace(
+          /{{(\w+)}}/g,
+          (_match, name: string) => String(variables[name] ?? ""),
+        ),
+    }),
+    [locale],
+  );
 
-  return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
+  return (
+    <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
+  );
 }
 
 export function useLocale() {

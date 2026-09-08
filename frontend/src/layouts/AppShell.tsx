@@ -13,8 +13,6 @@ import { Avatar } from "../components/Avatar";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { useLocale } from "../contexts/LocaleContext";
 
-
-
 type IconName =
   | "trophy"
   | "ranking"
@@ -70,7 +68,6 @@ function NavLinks({
 }) {
   const { t } = useLocale();
   const navigation = [
-    { to: "/player-prices", label: t("prices.title"), icon: "purchase" as const },
     { to: "/", label: t("nav.home"), icon: "home" as const, end: true },
     {
       to: "/my-team",
@@ -81,6 +78,11 @@ function NavLinks({
     {
       to: "/purchase-players",
       label: t("nav.purchase"),
+      icon: "purchase" as const,
+    },
+    {
+      to: "/player-prices",
+      label: t("prices.title"),
       icon: "purchase" as const,
     },
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
@@ -100,7 +102,24 @@ function NavLinks({
       special: true,
     },
     ...(isAdmin
-      ? [{ to: "/admin", label: t("nav.admin"), icon: "admin" as const, end: true }, { to: "/admin/player-points", label: t("adminStats.title"), icon: "admin" as const }, { to: "/admin/player-prices", label: t("prices.title"), icon: "admin" as const }]
+      ? [
+          {
+            to: "/admin",
+            label: t("nav.admin"),
+            icon: "admin" as const,
+            end: true,
+          },
+          {
+            to: "/admin/player-points",
+            label: t("adminStats.title"),
+            icon: "admin" as const,
+          },
+          {
+            to: "/admin/player-prices",
+            label: t("prices.title"),
+            icon: "admin" as const,
+          },
+        ]
       : []),
   ];
   return (
