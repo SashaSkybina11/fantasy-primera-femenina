@@ -203,7 +203,7 @@ export function AppShell() {
             </div>
           )}
           <button className="logout-button" onClick={requestSignOut}>
-            {t("nav.logout")} <span>↗</span>
+            {t("nav.logout")}
           </button>
         </div>
       </aside>
@@ -270,7 +270,7 @@ export function AppShell() {
                 </div>
               )}
               <button className="logout-button" onClick={requestSignOut}>
-                {t("nav.logout")} <span>↗</span>
+                {t("nav.logout")}
               </button>
             </div>
           </aside>
