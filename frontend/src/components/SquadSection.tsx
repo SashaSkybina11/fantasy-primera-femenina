@@ -5,7 +5,6 @@ import { useLocale } from "../contexts/LocaleContext";
 export function SquadSection({
   title,
   subtitle,
-  status,
   players,
   showEmptySlots = true,
   readOnly,

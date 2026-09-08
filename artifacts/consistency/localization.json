@@ -1,0 +1,216 @@
+{
+  "keys": 392,
+  "checks": [
+    {
+      "path": "/",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/profile",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/my-team",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/purchase-players",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/player-prices",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/teams",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/teams/club",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/calendar",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/league",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/friend-leagues",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/league/friend",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/league/member/user",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/leaderboard",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/rules",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/users",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/player-points",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/player-prices",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/friend-leagues",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/login",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/register",
+      "width": 390,
+      "roundTrip": true
+    },
+    {
+      "path": "/",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/profile",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/my-team",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/purchase-players",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/player-prices",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/teams",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/teams/club",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/calendar",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/league",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/friend-leagues",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/league/friend",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/league/member/user",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/leaderboard",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/rules",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/users",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/player-points",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/player-prices",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/admin/friend-leagues",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/login",
+      "width": 1280,
+      "roundTrip": true
+    },
+    {
+      "path": "/register",
+      "width": 1280,
+      "roundTrip": true
+    }
+  ],
+  "errors": []
+}

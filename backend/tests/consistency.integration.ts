@@ -61,6 +61,13 @@ try {
   await inTransaction(tx => recalculateGameweek(tx, week.id));
   const history = await prisma.playerPriceChange.findMany({ where: { playerId: players[1]!.id }, orderBy: { gameweek: { number: 'asc' } } });
   assert.deepEqual(history.map(r => [r.priceBefore, r.priceDelta, r.priceAfter]), [[4000,200,4200],[4200,100,4300]]);
+  assert.equal(history[0]!.goalsPriceDelta, 200);
+  assert.equal(history[0]!.starterPriceDelta, 0);
+  assert.equal(history[0]!.teamResultPriceDelta, 0);
+  assert.equal(history[0]!.yellowCardsPriceDelta, 0);
+  assert.equal(history[0]!.redCardsPriceDelta, 0);
+  assert.equal(history[0]!.goalkeeperPriceDelta, 0);
+  await assert.rejects(prisma.playerPriceChange.create({ data: { ...history[0]!, id: undefined } }));
   assert.equal((await prisma.player.findUniqueOrThrow({ where: { id: players[1]!.id } })).price, 4300);
   const corrected = await totals();
   assert.equal(corrected.find(r => r.userId === users[0]!.id)!.totalPoints, 32);
@@ -69,9 +76,22 @@ try {
   const general = (await request('/gameweeks/leaderboard', users[0]!.id)).data;
   const friends = (await request('/private-leagues/' + league.id, users[0]!.id)).data.members;
   assert.equal(general.length, 2); assert.equal(friends.length, 2);
+  assert.ok(general.every((r: any) => r.id !== users[2]!.id));
+  assert.ok(friends.every((r: any) => r.id !== users[2]!.id));
+  const weekly = await request('/gameweeks/' + week.id + '/leaderboard', users[0]!.id);
+  assert.equal(weekly.status, 200); assert.equal(weekly.data.length, 2);
+  assert.ok(weekly.data.every((r: any) => r.userId !== users[2]!.id));
+  const mainLeague = await prisma.league.create({ data: { name: 'Fantasy Primera División Fútbol Sala Femenino', members: { create: users.map(u => ({ userId: u.id })) } } });
+  const members = await request('/league/members', users[0]!.id);
+  assert.equal(members.status, 200); assert.equal(members.data.length, 2);
+  assert.ok(members.data.every((r: any) => r.id !== users[2]!.id));
+  assert.equal((await request('/league', users[0]!.id)).data._count.members, 2);
   for (const row of general) assert.equal(friends.find((f: any) => f.id === row.id).points, row.totalPoints);
   assert.equal(await prisma.gameweekWinner.count({ where: { userId: users[2]!.id } }), 0);
-  assert.equal((await getPlayerPopularity(prisma)).totalUsers, 2);
+  const popularity = await getPlayerPopularity(prisma);
+  assert.equal(popularity.totalUsers, 2);
+  assert.equal(popularity.ownerCount, 2);
+  assert.equal(popularity.percentage, 100);
   // synchronizeGameweeks must not overwrite completed weeks or reopen the market.
   const userSell = await request('/my-team/players/' + players[2]!.id, users[0]!.id, 'DELETE');
   assert.equal(userSell.status, 423);
@@ -79,6 +99,33 @@ try {
   assert.equal(adminSell.status, 200, JSON.stringify(adminSell));
   const adminBuy = await request('/my-team/players', users[2]!.id, 'POST', { playerId: players[2]!.id });
   assert.equal(adminBuy.status, 201, JSON.stringify(adminBuy));
+  // All guarded routes: sale/removal share DELETE, individual and full lineup,
+  // captain and purchase. ADMIN bypasses only the window/transfer quota.
+  const adminId = users[2]!.id;
+  const userId = users[0]!.id;
+  const lineup = { players: players.slice(0, 10).map((p, i) => ({ playerId: p.id, status: i < 5 ? 'STARTER' : 'BENCH' })) };
+  for (const [path, method, body, expected] of [
+    ['/my-team/players', 'POST', { playerId: players[2]!.id }, 423],
+    ['/my-team/players/' + players[2]!.id, 'PATCH', { status: 'BENCH' }, 409],
+    ['/my-team/lineup', 'PATCH', lineup, 409],
+    ['/my-team/captain', 'PATCH', { playerId: players[0]!.id }, 409],
+  ] as const) assert.equal((await request(path, userId, method, body)).status, expected, path);
+  for (const status of ['STARTER', 'BENCH', 'STARTER']) {
+    const result = await request('/my-team/players/' + players[2]!.id, adminId, 'PATCH', { status });
+    assert.equal(result.status, 200, JSON.stringify(result));
+    assert.equal(result.data.players.find((p: any) => p.playerId === players[2]!.id).status, status);
+  }
+  const saved = await request('/my-team/lineup', adminId, 'PATCH', lineup);
+  assert.equal(saved.status, 200, JSON.stringify(saved));
+  assert.equal((await request('/my-team/captain', adminId, 'PATCH', { playerId: players[1]!.id })).status, 200);
+  for (let i = 0; i < 3; i++) {
+    assert.equal((await request('/my-team/players/' + players[2]!.id, adminId, 'DELETE')).status, 200);
+    assert.equal((await request('/my-team/players', adminId, 'POST', { playerId: players[2]!.id })).status, 201);
+  }
+  assert.equal((await request('/my-team/transfers', userId)).data.marketIsOpen, false);
+  assert.equal((await request('/my-team/transfers', adminId)).data.marketIsOpen, true);
+  assert.equal((await request('/gameweeks/current', userId)).data.marketIsOpen, false);
+  assert.equal((await request('/gameweeks/current', adminId)).data.marketIsOpen, true);
   const beforeRollback = await totals();
   await assert.rejects(inTransaction(async tx => { await recalculateGameweek(tx, week.id); throw new Error('rollback'); }), /rollback/);
   assert.deepEqual(await totals(), beforeRollback);

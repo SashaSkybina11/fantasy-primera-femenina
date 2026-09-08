@@ -13,6 +13,8 @@ assert.deepEqual(Object.keys(dict.spanish).sort(),Object.keys(dict.ukrainian).so
 for(const key of Object.keys(dict.spanish)) assert.deepEqual(dict.spanish[key].match(/{{\w+}}/g),dict.ukrainian[key].match(/{{\w+}}/g),key);
 const browser=await chromium.launch();
 const page=await browser.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+page.setDefaultTimeout(15000);
+let anonymous=false;
 const user={id:'user',name:'Test',email:'test@example.invalid',role:'ADMIN',status:'ACTIVE',createdAt:'2026-01-01',avatarUrl:null};
 const week={id:'week',number:1,name:'Jornada 1',status:'COMPLETED',marketIsOpen:true,deadlineAt:'2026-09-04',endsAt:'2026-09-06',marketOpenAt:'2026-09-01',winners:[]};
 const club={id:'club',name:'Club',logoUrl:null,coach:null,president:null};
@@ -22,30 +24,49 @@ await page.addInitScript(()=>{localStorage.setItem('fantasy-futsal-token','test'
 await page.route('**/api/**',route=>{
  const path=new URL(route.request().url()).pathname.replace('/api','');
  const data={ '/auth/me':{user},'/profile':{...user,fantasyTeam:team},'/my-team':team,'/my-team/transfers':{marketIsOpen:true,gameweek:week,bought:0,sold:0,limit:2},'/my-team/popular-player':{player:null,totalUsers:0,ownerCount:0,percentage:0},'/clubs':[club],'/clubs/club':club,'/clubs/club/players':[player],'/players':[player],'/player-prices':[player],'/gameweeks/current':week,'/gameweeks/leaderboard':[], '/gameweeks/history/me':[], '/gameweeks/scoring-rules':{},'/game-config':{initialBudget:40000},'/league':{id:'l',name:'League',_count:{members:0}},'/league/members':[], '/league/supporters':[], '/private-leagues/my':[], '/private-leagues/friend':{id:'friend',name:'Friends',members:[],ownerId:'user',inviteCode:'TEST'},'/admin/users':[user],'/admin/gameweeks':[week],'/admin/player-points':[player],'/admin/price-settings':{teamWin:null},'/admin/friend-leagues':[] }[path];
+ if(path==='/auth/me' && anonymous) return route.fulfill({status:401,json:{message:'Требуется авторизация'}});
+ if(path==='/league/members/user') return route.fulfill({json:{...user,fantasyTeam:team}});
  return route.fulfill({json:data??[]});
 });
-const routes=['/','/profile','/my-team','/purchase-players','/player-prices','/teams','/teams/club','/calendar','/league','/friend-leagues','/league/friend','/leaderboard','/rules','/admin','/admin/player-points','/admin/player-prices','/admin/friend-leagues'];
+const routes=['/','/profile','/my-team','/purchase-players','/player-prices','/teams','/teams/club','/calendar','/league','/friend-leagues','/league/friend','/league/member/user','/leaderboard','/rules','/admin','/admin/users','/admin/player-points','/admin/player-prices','/admin/friend-leagues','/login','/register'];
+const checks=[];
+try {
 for(const width of [390,1280]) {
  await page.setViewportSize({width,height:900});
  for(const path of routes) {
+  anonymous=['/login','/register'].includes(path);
   await page.goto('http://127.0.0.1:5186'+path);
   await page.locator('h1').first().waitFor();
+  await page.waitForLoadState('networkidle');
+  if(path==='/player-prices') await page.locator('details').click();
+  if(path==='/admin/player-points') {
+   await page.locator('.admin-toolbar select').first().selectOption('week');
+   await page.locator('.stats-player').first().click();
+  }
+  if(path==='/league/member/user') await page.locator('.member-heading button').click();
   const bodies=[];
   for(const locale of ['uk','es','uk']) {
    if(await page.locator('.language-switcher:visible').count()===0) await page.locator('.menu-toggle').click();
    await page.locator('.language-switcher:visible').first().selectOption(locale);
    await page.waitForFunction(l=>document.documentElement.lang===l,locale);
-   const body=await page.locator('body').innerText(); bodies.push(body);
+   await page.locator('h1').first().waitFor();
+   const body=await page.locator('body').innerText();
+   const attributes=await page.locator('[aria-label],[placeholder],[title],[alt]').evaluateAll(nodes=>nodes.flatMap(n=>['aria-label','placeholder','title','alt'].map(a=>n.getAttribute(a)??'')).join('\n'));
+   bodies.push(body+'\n'+attributes);
+   assert.ok(!/(Скрыть|Показать|@username)/.test(attributes),path+' untranslated attribute');
    assert.ok(!/(undefined|\bGOALKEEPER\b|\bFIELD_PLAYER\b|Тур не найден|Loading\.\.\.)/.test(body),path);
-   if(locale==='es') assert.ok(!/[А-Яа-яІіЇїЄє]/.test(body),path+' Spanish mixed');
+   if(locale==='es') assert.ok(!/[А-Яа-яІіЇїЄє]/.test(body+attributes),path+' Spanish mixed');
   }
   assert.equal(bodies[0],bodies[2],path+' round trip');
+  checks.push({path,width,roundTrip:true});
  }
 }
 fs.mkdirSync('artifacts/consistency',{recursive:true});
+anonymous=false;
 await page.goto('http://127.0.0.1:5186/player-prices');
 await page.locator('details').click();
 await page.screenshot({path:'artifacts/consistency/player-prices.png',fullPage:true});
 assert.deepEqual(errors,[]);
-await browser.close();
+fs.writeFileSync('artifacts/consistency/localization.json',JSON.stringify({keys:Object.keys(dict.spanish).length,checks,errors},null,2));
 console.log(`PASS: ${Object.keys(dict.spanish).length} matching translation keys; ${routes.length} pages × 2 widths × UA→ES→UA; no page errors`);
+} finally { await browser.close(); }

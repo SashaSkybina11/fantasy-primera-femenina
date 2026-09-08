@@ -376,12 +376,12 @@ model PlayerPriceChange {
   priceBefore Int
   priceDelta Int
   priceAfter Int
-  teamResultDelta Int
-  goalsDelta Int
-  startedDelta Int
-  yellowCardsDelta Int
-  redCardsDelta Int
-  goalkeeperDelta Int
+  teamResultPriceDelta Int @map("teamResultDelta")
+  goalsPriceDelta Int @map("goalsDelta")
+  starterPriceDelta Int @map("startedDelta")
+  yellowCardsPriceDelta Int @map("yellowCardsDelta")
+  redCardsPriceDelta Int @map("redCardsDelta")
+  goalkeeperPriceDelta Int @map("goalkeeperDelta")
   teamWinBonus Int?
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   gameweek Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)

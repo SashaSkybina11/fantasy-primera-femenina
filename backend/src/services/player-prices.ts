@@ -72,8 +72,8 @@ export async function applyPlayerPrices(tx: Prisma.TransactionClient, gameweekId
   for (const row of preview.rows) {
     const data = {
       priceBefore: row.priceBefore, priceAfter: row.priceAfter, priceDelta: row.priceDelta,
-      teamResultDelta: row.teamResultDelta, goalsDelta: row.goalsDelta, startedDelta: row.startedDelta,
-      yellowCardsDelta: row.yellowCardsDelta, redCardsDelta: row.redCardsDelta, goalkeeperDelta: row.goalkeeperDelta,
+      teamResultPriceDelta: row.teamResultDelta, goalsPriceDelta: row.goalsDelta, starterPriceDelta: row.startedDelta,
+      yellowCardsPriceDelta: row.yellowCardsDelta, redCardsPriceDelta: row.redCardsDelta, goalkeeperPriceDelta: row.goalkeeperDelta,
       teamWinBonus: row.teamWinBonus,
     };
     await tx.playerPriceChange.upsert({ where: { playerId_gameweekId: { playerId: row.playerId, gameweekId } },

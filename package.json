@@ -7,6 +7,11 @@
     "backend"
   ],
   "scripts": {
+    "typecheck": "tsc -p backend/tsconfig.scripts.json && tsc -b frontend",
+    "lint": "eslint backend/src frontend/src api && node tests/localization-source.mjs",
+    "test:consistency": "node --import tsx backend/tests/consistency.integration.ts",
+    "test:localization": "node tests/localization-source.mjs && node tests/localization.mjs",
+    "test:refresh": "node tests/recalculation-refresh.mjs",
     "dev": "concurrently --kill-others-on-fail -n backend,frontend -c green,cyan \"npm run dev -w backend\" \"npm run dev -w frontend\"",
     "build": "npm run build -w backend && npm run build -w frontend",
     "db:generate": "npm run prisma:generate -w backend",
@@ -24,8 +29,11 @@
     "test:prelaunch-ui": "node --import tsx tests/prelaunch-ui.mjs"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "concurrently": "^9.1.2",
-    "playwright": "^1.51.1"
+    "eslint": "^9.39.5",
+    "playwright": "^1.51.1",
+    "typescript-eslint": "^8.70.0"
   },
   "dependencies": {
     "react-icons": "^5.7.0"

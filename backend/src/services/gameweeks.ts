@@ -124,7 +124,7 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
   const adjustmentsByUser = new Map(adjustments.map((item) => [item.userId, item._sum.points ?? 0]));
 
   for (const squad of squads) {
-    let playerPoints = 0; let captainBonus = 0; let starterGoals = 0;
+    let playerPoints = 0; const captainBonus = 0; let starterGoals = 0;
     const breakdown = squad.players.filter((item) => item.status === SquadStatus.STARTER).map((item) => {
       const stat = statsByPlayer.get(item.playerId);
       const basePoints = stat?.totalPoints ?? 0;

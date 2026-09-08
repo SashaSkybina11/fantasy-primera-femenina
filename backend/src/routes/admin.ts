@@ -1,4 +1,4 @@
-import { AdminActionType, GameweekStatus, MatchResult, PlayerPosition } from "@prisma/client";
+import { AdminActionType, GameweekStatus, MatchResult } from "@prisma/client";
 import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";

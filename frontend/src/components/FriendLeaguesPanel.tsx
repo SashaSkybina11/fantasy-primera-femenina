@@ -110,7 +110,7 @@ export function FriendLeaguesPanel() {
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  mode === "create" ? create.mutate() : join.mutate();
+                  if (mode === "create") create.mutate(); else join.mutate();
                 }}
               >
                 <label>

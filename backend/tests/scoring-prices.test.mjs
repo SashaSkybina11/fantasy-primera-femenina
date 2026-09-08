@@ -25,6 +25,7 @@ test("price examples and unknown team bonus", () => {
   assert.equal(calculatePlayerPriceDelta({ ...stats, position: "GOALKEEPER", goals: 2 }, null).priceDelta, 200);
   assert.equal(calculatePlayerPriceDelta({ ...stats, result: "WIN" }, null).priceDelta, 0);
   assert.equal(calculatePlayerPriceDelta({ ...stats, result: "WIN" }, 70).priceDelta, 70);
+  for (const result of ["DRAW", "LOSS"]) assert.equal(calculatePlayerPriceDelta({ ...stats, result }, 70).priceDelta, 0);
 });
 test("goalkeeper validation rejects impossible states", () => {
   assert.equal(normalizeGoalkeeperStats("GOALKEEPER", { cleanSheet: false, goalsConceded: 0 }).cleanSheet, true);

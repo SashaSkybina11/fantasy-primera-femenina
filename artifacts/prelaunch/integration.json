@@ -3,11 +3,11 @@
   "playersChecked": 233,
   "reset": {
     "dryRun": false,
-    "usersProcessed": 4,
-    "budgetsReset": 4,
-    "userPointsReset": 4,
+    "usersProcessed": 1,
+    "budgetsReset": 1,
+    "userPointsReset": 1,
     "removed": {
-      "teamPlayers": 11,
+      "teamPlayers": 1,
       "snapshotPlayers": 1,
       "snapshots": 1,
       "userPoints": 1,
@@ -16,10 +16,10 @@
       "transfers": 1
     },
     "backup": {
-      "path": "C:\\Users\\sasha\\OneDrive\\Рабочий стол\\Fantasy Primera División Femenina\\backups\\test\\prelaunch-1788868800000-d01526e0-43da-4350-a255-b5d33423e8b5.json",
-      "sha256": "3322c2ea9e68efdff0d1d8f74467aedefeca9897ae78b53eb56038544d62c444"
+      "path": "C:\\Users\\sasha\\OneDrive\\Рабочий стол\\Fantasy Primera División Femenina\\backups\\test\\prelaunch-1788868800000-bc1facb4-9354-47de-b543-fec7de6677d2.json",
+      "sha256": "48e607c155ca983bf537a3ee1bb573ea7a123f95af5402dfee32e95d77940cce"
     },
-    "afterFingerprint": "f1b5a5bc55aefd61119bae7ee645eda5ff5bcc4f45490ad0ba02eccab5e0fad7",
+    "afterFingerprint": "f9d41a66892f081f180fed4cc5e60dc6571814e2adc76726e815e9e3614b8a33",
     "errors": 0
   },
   "scenarios": [

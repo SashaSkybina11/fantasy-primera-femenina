@@ -1,0 +1,68 @@
+{
+  "database": "fantasy_futsal",
+  "backup": "backups/before-consistency-1788891993131.dump",
+  "backupVerified": true,
+  "sourceDataPreserved": true,
+  "fingerprint": "55b39d46635c4a60f375f9d58b5343f1dbfc78b06fe6c3a88bd9fe1d6ac96cf0",
+  "counts": {
+    "AdminAuditLog": 0,
+    "Club": 16,
+    "FantasyTeam": 1,
+    "FantasyTeamPlayer": 10,
+    "Gameweek": 30,
+    "League": 1,
+    "LeagueMember": 1,
+    "Player": 234,
+    "PlayerGameweekStats": 0,
+    "PrivateLeague": 0,
+    "PrivateLeagueMember": 0,
+    "User": 1,
+    "UserGameweekPlayer": 0,
+    "UserGameweekPoints": 0,
+    "UserGameweekSquad": 0,
+    "UserPointAdjustment": 0,
+    "UserTransfer": 0
+  },
+  "negativePointsConstraintRemoved": true,
+  "migrations": [
+    {
+      "migration_name": "20260828000000_init"
+    },
+    {
+      "migration_name": "20260828010000_enforce_captain_unique"
+    },
+    {
+      "migration_name": "20260902000000_rename_main_league"
+    },
+    {
+      "migration_name": "20260903121109_add_player_age_nationality"
+    },
+    {
+      "migration_name": "20260903152000_add_club_staff_and_player_roles"
+    },
+    {
+      "migration_name": "20260903165000_allow_duplicate_player_numbers"
+    },
+    {
+      "migration_name": "20260903172000_add_favorite_club"
+    },
+    {
+      "migration_name": "20260904091516_gameweeks_points_contacts"
+    },
+    {
+      "migration_name": "20260904120000_add_user_roles"
+    },
+    {
+      "migration_name": "20260904152539_transfers_private_leagues"
+    },
+    {
+      "migration_name": "20260905120000_scoring_market_player_prices"
+    },
+    {
+      "migration_name": "20260907120000_launch_budget"
+    },
+    {
+      "migration_name": "20260908120000_scoring_admin_consistency"
+    }
+  ]
+}

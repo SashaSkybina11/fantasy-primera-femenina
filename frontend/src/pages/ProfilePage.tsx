@@ -154,7 +154,7 @@ export function ProfilePage() {
               <input
                 value={instagram}
                 onChange={(event) => setInstagram(event.target.value)}
-                placeholder="@username"
+                placeholder={t("profile.instagramPlaceholder")}
               />
             </label>
             <label>

@@ -13,8 +13,20 @@ import { players as seed } from "../prisma/data/players.js";
 const dbUrl = new URL(process.env.DATABASE_URL!);
 // Never run destructive fixtures against a developer or production database.
 if (!["localhost", "127.0.0.1", "[::1]"].includes(dbUrl.hostname)) throw new Error("Integration tests require a local PostgreSQL host");
-dbUrl.pathname = "/fantasy_prelaunch_test";
+const setup = new PrismaClient();
+const testDatabase = `fantasy_prelaunch_test_${Date.now()}`;
+await setup.$executeRawUnsafe(`CREATE DATABASE "${testDatabase}"`);
+await setup.$disconnect();
+dbUrl.pathname = "/" + testDatabase;
 process.env.DATABASE_URL = dbUrl.toString();
+for (const args of [
+  ['node_modules/prisma/build/index.js', 'migrate', 'deploy', '--schema', 'backend/prisma/schema.prisma'],
+  ['--import', 'tsx', 'backend/prisma/seed.ts'],
+]) {
+  const result = spawnSync(process.execPath, args, { env: process.env, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
+}
+console.log('Isolated test database retained:', testDatabase);
 const prisma = new PrismaClient();
 
 test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin leagues", async () => {
