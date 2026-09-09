@@ -51,7 +51,7 @@ export function HomePage() {
               : t("home.nextControlDate")}
             :{" "}
             <strong>
-              {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : "es-ES", {
+              {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", {
                 timeZone: "Europe/Madrid",
                 dateStyle: "full",
                 timeStyle: "short",

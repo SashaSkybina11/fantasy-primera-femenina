@@ -31,200 +31,383 @@ const SERVER_URL = API_URL.startsWith("/")
 const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
-const apiMessages: Record<string, { es: string; uk: string }> = {
-  "Пользователь не найден": {"es":"No se encontró al usuario.","uk":"Користувача не знайдено."},
-  "Некорректный диапазон дат тура": {"es":"Las fechas de la jornada no son válidas.","uk":"Некоректні дати туру."},
-  "Тур или игрок не найден": {"es":"No se encontró la jornada o la jugadora.","uk":"Тур або гравчиню не знайдено."},
-  "Сначала повторно откройте завершённый тур": {"es":"Primero vuelve a abrir la jornada finalizada.","uk":"Спочатку повторно відкрийте завершений тур."},
-  "Укажите причину корректировки": {"es":"Indica el motivo del ajuste.","uk":"Вкажіть причину коригування."},
-  "Тур не найден": {"es":"No se encontró la jornada.","uk":"Тур не знайдено."},
-  "Тур не завершён": {"es":"La jornada todavía no ha finalizado.","uk":"Тур ще не завершено."},
-  "Тур или пользователь не найден": {"es":"No se encontró la jornada o el usuario.","uk":"Тур або користувача не знайдено."},
-  "Нельзя удалить собственный аккаунт администратора": {"es":"No puedes eliminar tu propia cuenta de administración.","uk":"Не можна видалити власний обліковий запис адміністратора."},
-  "Не удалось создать код приглашения": {"es":"No se pudo crear el código de invitación.","uk":"Не вдалося створити код запрошення."},
-  "Unsupported image format": {"es":"El formato de imagen no es compatible.","uk":"Формат зображення не підтримується."},
-  "Текущий пароль указан неверно": {"es":"La contraseña actual es incorrecta.","uk":"Поточний пароль неправильний."},
-  "Клуб не найден": {"es":"No se encontró el club.","uk":"Клуб не знайдено."},
-  "Некорректный Instagram": {"es":"Comprueba el nombre de Instagram.","uk":"Перевірте ім’я в Instagram."},
-  "Введите WhatsApp в международном формате": {"es":"Introduce WhatsApp en formato internacional.","uk":"Введіть WhatsApp у міжнародному форматі."},
-  "Недействительный токен": {"es":"Vuelve a iniciar sesión.","uk":"Увійдіть знову."},
-  "GAMEWEEK_NOT_LOCKED": { es: "Espera al cierre de la jornada.", uk: "Дочекайтеся закриття туру." },
-  "Недостаточно прав администратора": { es: "No tienes permisos de administrador.", uk: "Недостатньо прав адміністратора." },
-  "LINEUP_NOT_FOUND": { es: "No se pudo cargar la plantilla del usuario.", uk: "Не вдалося завантажити склад користувача." },
-  "FRIEND_LEAGUE_NOT_FOUND": { es: "No se encontró la liga.", uk: "Лігу не знайдено." },
-  "SQUAD_POSITION_LIMIT": { es: "La plantilla debe tener 2 porteras y 8 jugadoras de campo.", uk: "У складі мають бути 2 воротарки та 8 польових гравчинь." },
-  "INVALID_PLAYER_PRICE": { es: "El precio no está disponible. Actualiza la página.", uk: "Ціна недоступна. Оновіть сторінку." },
-  "LINEUP_MARKET_CLOSED": { es: "Los cambios de alineación solo están disponibles mientras el mercado está abierto.", uk: "Зміни складу доступні лише під час відкритого трансферного вікна." },
-  "INVALID_GOALKEEPER_STATS": { es: "Comprueba los goles recibidos y la portería a cero.", uk: "Перевірте пропущені голи та сухий матч." },
-  "NEGATIVE_PLAYER_PRICE": { es: "El precio resultante es negativo. Revisa las estadísticas.", uk: "Отримана ціна від’ємна. Перевірте статистику." },
-  "PRICE_PREVIEW_STALE": { es: "Los datos han cambiado. Vuelve a calcular los precios.", uk: "Дані змінилися. Розрахуйте ціни ще раз." },
-  "PRICE_GAMEWEEK_NOT_COMPLETED": { es: "Finaliza la jornada antes de aplicar los precios.", uk: "Завершіть тур перед застосуванням цін." },
-
+const apiMessages: Record<string, Record<Locale, string>> = {
+  "Пользователь не найден": {
+    "es": "No se encontró al usuario.",
+    "uk": "Користувача не знайдено.",
+    "en": "User not found."
+  },
+  "Некорректный диапазон дат тура": {
+    "es": "Las fechas de la jornada no son válidas.",
+    "uk": "Некоректні дати туру.",
+    "en": "The gameweek dates are invalid."
+  },
+  "Тур или игрок не найден": {
+    "es": "No se encontró la jornada o la jugadora.",
+    "uk": "Тур або гравчиню не знайдено.",
+    "en": "Gameweek or player not found."
+  },
+  "Сначала повторно откройте завершённый тур": {
+    "es": "Primero vuelve a abrir la jornada finalizada.",
+    "uk": "Спочатку повторно відкрийте завершений тур.",
+    "en": "Reopen the completed gameweek first."
+  },
+  "Укажите причину корректировки": {
+    "es": "Indica el motivo del ajuste.",
+    "uk": "Вкажіть причину коригування.",
+    "en": "Enter the reason for the adjustment."
+  },
+  "Тур не найден": {
+    "es": "No se encontró la jornada.",
+    "uk": "Тур не знайдено.",
+    "en": "Gameweek not found."
+  },
+  "Тур не завершён": {
+    "es": "La jornada todavía no ha finalizado.",
+    "uk": "Тур ще не завершено.",
+    "en": "The gameweek has not finished yet."
+  },
+  "Тур или пользователь не найден": {
+    "es": "No se encontró la jornada o el usuario.",
+    "uk": "Тур або користувача не знайдено.",
+    "en": "Gameweek or user not found."
+  },
+  "Нельзя удалить собственный аккаунт администратора": {
+    "es": "No puedes eliminar tu propia cuenta de administración.",
+    "uk": "Не можна видалити власний обліковий запис адміністратора.",
+    "en": "You cannot delete your own administrator account."
+  },
+  "Не удалось создать код приглашения": {
+    "es": "No se pudo crear el código de invitación.",
+    "uk": "Не вдалося створити код запрошення.",
+    "en": "Could not create an invitation code."
+  },
+  "Unsupported image format": {
+    "es": "El formato de imagen no es compatible.",
+    "uk": "Формат зображення не підтримується.",
+    "en": "Unsupported image format."
+  },
+  "Текущий пароль указан неверно": {
+    "es": "La contraseña actual es incorrecta.",
+    "uk": "Поточний пароль неправильний.",
+    "en": "The current password is incorrect."
+  },
+  "Клуб не найден": {
+    "es": "No se encontró el club.",
+    "uk": "Клуб не знайдено.",
+    "en": "Club not found."
+  },
+  "Некорректный Instagram": {
+    "es": "Comprueba el nombre de Instagram.",
+    "uk": "Перевірте ім’я в Instagram.",
+    "en": "Check your Instagram username."
+  },
+  "Введите WhatsApp в международном формате": {
+    "es": "Introduce WhatsApp en formato internacional.",
+    "uk": "Введіть WhatsApp у міжнародному форматі.",
+    "en": "Enter your WhatsApp number in international format."
+  },
+  "Недействительный токен": {
+    "es": "Vuelve a iniciar sesión.",
+    "uk": "Увійдіть знову.",
+    "en": "Please sign in again."
+  },
+  "GAMEWEEK_NOT_LOCKED": {
+    "es": "Espera al cierre de la jornada.",
+    "uk": "Дочекайтеся закриття туру.",
+    "en": "Wait for the gameweek to lock."
+  },
+  "Недостаточно прав администратора": {
+    "es": "No tienes permisos de administrador.",
+    "uk": "Недостатньо прав адміністратора.",
+    "en": "You do not have administrator permissions."
+  },
+  "LINEUP_NOT_FOUND": {
+    "es": "No se pudo cargar la plantilla del usuario.",
+    "uk": "Не вдалося завантажити склад користувача.",
+    "en": "Could not load this user's squad."
+  },
+  "FRIEND_LEAGUE_NOT_FOUND": {
+    "es": "No se encontró la liga.",
+    "uk": "Лігу не знайдено.",
+    "en": "League not found."
+  },
+  "SQUAD_POSITION_LIMIT": {
+    "es": "La plantilla debe tener 2 porteras y 8 jugadoras de campo.",
+    "uk": "У складі мають бути 2 воротарки та 8 польових гравчинь.",
+    "en": "The squad must have 2 goalkeepers and 8 outfield players."
+  },
+  "INVALID_PLAYER_PRICE": {
+    "es": "El precio no está disponible. Actualiza la página.",
+    "uk": "Ціна недоступна. Оновіть сторінку.",
+    "en": "The price is unavailable. Refresh the page."
+  },
+  "LINEUP_MARKET_CLOSED": {
+    "es": "Los cambios de alineación solo están disponibles mientras el mercado está abierto.",
+    "uk": "Зміни складу доступні лише під час відкритого трансферного вікна.",
+    "en": "Lineup changes are only available while the transfer market is open."
+  },
+  "INVALID_GOALKEEPER_STATS": {
+    "es": "Comprueba los goles recibidos y la portería a cero.",
+    "uk": "Перевірте пропущені голи та сухий матч.",
+    "en": "Check the goals conceded and clean sheet statistics."
+  },
+  "NEGATIVE_PLAYER_PRICE": {
+    "es": "El precio resultante es negativo. Revisa las estadísticas.",
+    "uk": "Отримана ціна від’ємна. Перевірте статистику.",
+    "en": "The resulting price is negative. Check the statistics."
+  },
+  "PRICE_PREVIEW_STALE": {
+    "es": "Los datos han cambiado. Vuelve a calcular los precios.",
+    "uk": "Дані змінилися. Розрахуйте ціни ще раз.",
+    "en": "The data has changed. Recalculate the prices."
+  },
+  "PRICE_GAMEWEEK_NOT_COMPLETED": {
+    "es": "Finaliza la jornada antes de aplicar los precios.",
+    "uk": "Завершіть тур перед застосуванням цін.",
+    "en": "Complete the gameweek before applying prices."
+  },
   "Fantasy-команда не найдена": {
-    es: "No se encontró el equipo fantasy",
-    uk: "Fantasy-команду не знайдено",
+    "es": "No se encontró el equipo fantasy",
+    "uk": "Fantasy-команду не знайдено",
+    "en": "Fantasy team not found"
   },
   "Состав уже заполнен": {
-    es: "La plantilla ya está completa",
-    uk: "Склад уже заповнено",
+    "es": "La plantilla ya está completa",
+    "uk": "Склад уже заповнено",
+    "en": "The squad is already full"
   },
   "Игрок уже выбран": {
-    es: "La jugadora ya está elegida",
-    uk: "Гравчиню вже обрано",
+    "es": "La jugadora ya está elegida",
+    "uk": "Гравчиню вже обрано",
+    "en": "The player is already selected"
   },
   "Игрок не найден": {
-    es: "No se encontró a la jugadora",
-    uk: "Гравчиню не знайдено",
+    "es": "No se encontró a la jugadora",
+    "uk": "Гравчиню не знайдено",
+    "en": "Player not found"
   },
   "Недостаточно бюджета для этого игрока": {
-    es: "No hay presupuesto suficiente para esta jugadora",
-    uk: "Недостатньо бюджету для цієї гравчині",
+    "es": "No hay presupuesto suficiente para esta jugadora",
+    "uk": "Недостатньо бюджету для цієї гравчині",
+    "en": "Insufficient budget for this player"
   },
   "Максимум 2 игрока из одной команды": {
-    es: "Máximo 2 jugadoras del mismo club",
-    uk: "Максимум 2 гравчині з одного клубу",
+    "es": "Máximo 2 jugadoras del mismo club",
+    "uk": "Максимум 2 гравчині з одного клубу",
+    "en": "Maximum 2 players from the same club"
   },
   "Этот игрок не состоит в вашей команде": {
-    es: "Esta jugadora no está en tu equipo",
-    uk: "Ця гравчиня не у вашій команді",
+    "es": "Esta jugadora no está en tu equipo",
+    "uk": "Ця гравчиня не у вашій команді",
+    "en": "This player is not in your team"
   },
   "В основном составе уже 5 игроков": {
-    es: "Ya hay 5 jugadoras en el quinteto titular",
-    uk: "В основному складі вже 5 гравчинь",
+    "es": "Ya hay 5 jugadoras en el quinteto titular",
+    "uk": "В основному складі вже 5 гравчинь",
+    "en": "There are already 5 players in the starting lineup"
   },
   "В составе есть повторяющиеся игроки": {
-    es: "La plantilla contiene jugadoras repetidas",
-    uk: "У складі є повторювані гравчині",
+    "es": "La plantilla contiene jugadoras repetidas",
+    "uk": "У складі є повторювані гравчині",
+    "en": "The squad contains duplicate players"
   },
   "Можно сохранять только игроков из своей команды": {
-    es: "Solo puedes guardar jugadoras de tu equipo",
-    uk: "Можна зберігати лише гравчинь зі своєї команди",
+    "es": "Solo puedes guardar jugadoras de tu equipo",
+    "uk": "Можна зберігати лише гравчинь зі своєї команди",
+    "en": "You can only save players from your own team"
   },
   "Капитан должен быть в основном составе": {
-    es: "La capitana debe estar en el quinteto titular",
-    uk: "Капітанка має бути в основному складі",
+    "es": "La capitana debe estar en el quinteto titular",
+    "uk": "Капітанка має бути в основному складі",
+    "en": "The captain must be in the starting lineup"
   },
   "Бюджет не может быть отрицательным": {
-    es: "El presupuesto no puede ser negativo",
-    uk: "Бюджет не може бути від’ємним",
+    "es": "El presupuesto no puede ser negativo",
+    "uk": "Бюджет не може бути від’ємним",
+    "en": "The budget cannot be negative"
   },
   "Нужно выбрать ровно 10 игроков": {
-    es: "Debes elegir exactamente 10 jugadoras",
-    uk: "Потрібно обрати рівно 10 гравчинь",
+    "es": "Debes elegir exactamente 10 jugadoras",
+    "uk": "Потрібно обрати рівно 10 гравчинь",
+    "en": "Choose exactly 10 players"
   },
   "В основном составе должно быть ровно 5 игроков": {
-    es: "El quinteto titular debe tener exactamente 5 jugadoras",
-    uk: "В основному складі має бути рівно 5 гравчинь",
+    "es": "El quinteto titular debe tener exactamente 5 jugadoras",
+    "uk": "В основному складі має бути рівно 5 гравчинь",
+    "en": "The starting lineup must have exactly 5 players"
   },
   "На скамейке должно быть ровно 5 игроков": {
-    es: "Las suplentes deben ser exactamente 5",
-    uk: "У запасі має бути рівно 5 гравчинь",
+    "es": "Las suplentes deben ser exactamente 5",
+    "uk": "У запасі має бути рівно 5 гравчинь",
+    "en": "The bench must have exactly 5 players"
   },
   "В основном составе должен быть ровно один вратарь": {
-    es: "El quinteto titular debe tener exactamente una portera",
-    uk: "В основному складі має бути рівно одна воротарка",
+    "es": "El quinteto titular debe tener exactamente una portera",
+    "uk": "В основному складі має бути рівно одна воротарка",
+    "en": "The starting lineup must have exactly one goalkeeper"
   },
   "В основном составе должны быть четыре полевых игрока": {
-    es: "El quinteto titular debe tener cuatro jugadoras de campo",
-    uk: "В основному складі мають бути чотири польові гравчині",
+    "es": "El quinteto titular debe tener cuatro jugadoras de campo",
+    "uk": "В основному складі мають бути чотири польові гравчині",
+    "en": "The starting lineup must have four outfield players"
   },
   "Выберите одного капитана из основного состава": {
-    es: "Elige una capitana del quinteto titular",
-    uk: "Оберіть одну капітанку з основного складу",
+    "es": "Elige una capitana del quinteto titular",
+    "uk": "Оберіть одну капітанку з основного складу",
+    "en": "Choose one captain from the starting lineup"
   },
   "Не удалось завершить операцию с составом": {
-    es: "No se pudo completar la operación de plantilla",
-    uk: "Не вдалося завершити операцію зі складом",
+    "es": "No se pudo completar la operación de plantilla",
+    "uk": "Не вдалося завершити операцію зі складом",
+    "en": "Could not complete the squad operation"
   },
-  "Лига не найдена": { es: "No se encontró la liga", uk: "Лігу не знайдено" },
+  "Лига не найдена": {
+    "es": "No se encontró la liga",
+    "uk": "Лігу не знайдено",
+    "en": "League not found"
+  },
   "Участник не найден в этой лиге": {
-    es: "No se encontró a la participante en esta liga",
-    uk: "Учасницю не знайдено в цій лізі",
+    "es": "No se encontró a la participante en esta liga",
+    "uk": "Учасницю не знайдено в цій лізі",
+    "en": "Member not found in this league"
   },
   "Команда не найдена": {
-    es: "No se encontró el club",
-    uk: "Клуб не знайдено",
+    "es": "No se encontró el club",
+    "uk": "Клуб не знайдено",
+    "en": "Club not found"
   },
   "Профиль не найден": {
-    es: "No se encontró el perfil",
-    uk: "Профіль не знайдено",
+    "es": "No se encontró el perfil",
+    "uk": "Профіль не знайдено",
+    "en": "Profile not found"
   },
   "Нет изменений для сохранения": {
-    es: "No hay cambios para guardar",
-    uk: "Немає змін для збереження",
+    "es": "No hay cambios para guardar",
+    "uk": "Немає змін для збереження",
+    "en": "No changes to save"
   },
   "Требуется авторизация": {
-    es: "Debes iniciar sesión",
-    uk: "Потрібно увійти в акаунт",
+    "es": "Debes iniciar sesión",
+    "uk": "Потрібно увійти в акаунт",
+    "en": "Please sign in"
   },
   "Сессия истекла. Войдите снова.": {
-    es: "La sesión ha caducado. Inicia sesión de nuevo.",
-    uk: "Сесія завершилася. Увійдіть знову.",
+    "es": "La sesión ha caducado. Inicia sesión de nuevo.",
+    "uk": "Сесія завершилася. Увійдіть знову.",
+    "en": "Your session has expired. Please sign in again."
   },
   "Неверный email или пароль": {
-    es: "El correo o la contraseña no son correctos",
-    uk: "Неправильна електронна пошта або пароль",
+    "es": "El correo o la contraseña no son correctos",
+    "uk": "Неправильна електронна пошта або пароль",
+    "en": "Incorrect email or password"
   },
   "Пользователь с таким email уже зарегистрирован": {
-    es: "Ya existe una cuenta con este correo",
-    uk: "Акаунт із цією електронною поштою вже існує",
+    "es": "Ya existe una cuenta con este correo",
+    "uk": "Акаунт із цією електронною поштою вже існує",
+    "en": "An account with this email already exists"
   },
   "Такая запись уже существует": {
-    es: "Este registro ya existe",
-    uk: "Такий запис уже існує",
+    "es": "Este registro ya existe",
+    "uk": "Такий запис уже існує",
+    "en": "This record already exists"
   },
   "Внутренняя ошибка сервера": {
-    es: "Error interno del servidor",
-    uk: "Внутрішня помилка сервера",
+    "es": "Error interno del servidor",
+    "uk": "Внутрішня помилка сервера",
+    "en": "Internal server error"
   },
-  "Некорректные данные": { es: "Datos no válidos", uk: "Некоректні дані" },
-  "Введите имя": { es: "Introduce un nombre", uk: "Введіть ім’я" },
+  "Некорректные данные": {
+    "es": "Datos no válidos",
+    "uk": "Некоректні дані",
+    "en": "Invalid data"
+  },
+  "Введите имя": {
+    "es": "Introduce un nombre",
+    "uk": "Введіть ім’я",
+    "en": "Enter a name"
+  },
   "Введите название команды": {
-    es: "Introduce un nombre para el equipo",
-    uk: "Введіть назву команди",
+    "es": "Introduce un nombre para el equipo",
+    "uk": "Введіть назву команди",
+    "en": "Enter a team name"
   },
-  "Invalid cuid": { es: "Datos no válidos", uk: "Некоректні дані" },
+  "Invalid cuid": {
+    "es": "Datos no válidos",
+    "uk": "Некоректні дані",
+    "en": "Invalid data"
+  },
   "Для загрузки аватаров в production настройте BLOB_READ_WRITE_TOKEN": {
-    es: "Configura BLOB_READ_WRITE_TOKEN para subir avatares",
-    uk: "Налаштуйте BLOB_READ_WRITE_TOKEN для завантаження аватарів",
+    "es": "Configura BLOB_READ_WRITE_TOKEN para subir avatares",
+    "uk": "Налаштуйте BLOB_READ_WRITE_TOKEN для завантаження аватарів",
+    "en": "Configure BLOB_READ_WRITE_TOKEN to upload avatars"
   },
   "Лимит покупок этого тура исчерпан": {
-    es: "Has agotado las 2 compras de esta jornada",
-    uk: "Ліміт із 2 покупок цього туру вичерпано",
+    "es": "Has agotado las 2 compras de esta jornada",
+    "uk": "Ліміт із 2 покупок цього туру вичерпано",
+    "en": "You have used all 2 purchases for this gameweek"
   },
   "Лимит продаж этого тура исчерпан": {
-    es: "Has agotado las 2 ventas de esta jornada",
-    uk: "Ліміт із 2 продажів цього туру вичерпано",
+    "es": "Has agotado las 2 ventas de esta jornada",
+    "uk": "Ліміт із 2 продажів цього туру вичерпано",
+    "en": "You have used all 2 sales for this gameweek"
   },
   "Лига с таким кодом не найдена": {
-    es: "No se ha encontrado ninguna liga con este código",
-    uk: "Лігу з таким кодом не знайдено",
+    "es": "No se ha encontrado ninguna liga con este código",
+    "uk": "Лігу з таким кодом не знайдено",
+    "en": "No league found with this code"
   },
   "Вы уже состоите в этой лиге": {
-    es: "Ya formas parte de esta liga",
-    uk: "Ви вже є учасником цієї ліги",
+    "es": "Ya formas parte de esta liga",
+    "uk": "Ви вже є учасником цієї ліги",
+    "en": "You are already a member of this league"
   },
   "Лига не найдена или доступ запрещён": {
-    es: "No se encontró la liga o no tienes acceso",
-    uk: "Лігу не знайдено або у вас немає доступу",
+    "es": "No se encontró la liga o no tienes acceso",
+    "uk": "Лігу не знайдено або у вас немає доступу",
+    "en": "League not found or access denied"
   },
   "Владелец не может покинуть лигу": {
-    es: "La propietaria no puede abandonar la liga sin transferir la propiedad o eliminarla",
-    uk: "Власниця не може залишити лігу без передачі прав або видалення ліги",
+    "es": "La propietaria no puede abandonar la liga sin transferir la propiedad o eliminarla",
+    "uk": "Власниця не може залишити лігу без передачі прав або видалення ліги",
+    "en": "The owner cannot leave the league without transferring ownership or deleting it"
   },
   "Удалить лигу может только владелец": {
-    es: "Sólo la propietaria puede eliminar la liga",
-    uk: "Видалити лігу може лише власниця",
+    "es": "Sólo la propietaria puede eliminar la liga",
+    "uk": "Видалити лігу може лише власниця",
+    "en": "Only the owner can delete the league"
   },
+  "El tamaño de la imagen no debe superar los 10 MB": {
+    "es": "El tamaño de la imagen no debe superar los 10 MB",
+    "uk": "Розмір зображення не повинен перевищувати 10 МБ",
+    "en": "The image must not exceed 10 MB"
+  },
+  "No se pudo procesar el archivo": {
+    "es": "No se pudo procesar el archivo",
+    "uk": "Не вдалося обробити файл",
+    "en": "Could not process the file"
+  },
+  "Formato no compatible. Usa JPEG, PNG, WebP, AVIF, GIF, HEIC o HEIF": {
+    "es": "Formato no compatible. Usa JPEG, PNG, WebP, AVIF, GIF, HEIC o HEIF",
+    "uk": "Непідтримуваний формат. Використовуйте JPEG, PNG, WebP, AVIF, GIF, HEIC або HEIF",
+    "en": "Unsupported format. Use JPEG, PNG, WebP, AVIF, GIF, HEIC or HEIF"
+  }
 };
+
+// The API can return either a stable message key or an already localized message.
+const apiMessageLookup = new Map<string, Record<Locale, string>>();
+for (const [key, translations] of Object.entries(apiMessages)) {
+  apiMessageLookup.set(key, translations);
+  for (const value of Object.values(translations)) apiMessageLookup.set(value, translations);
+}
 
 function localizedApiMessage(message: string | undefined): string {
   const locale = getStoredLocale();
   if (!message)
     return locale === "uk"
       ? "Щось пішло не так. Спробуйте ще раз."
-      : "Algo salió mal. Inténtalo de nuevo.";
-  return apiMessages[message]?.[locale] ?? localizedApiMessage(undefined);
+      : locale === "en" ? "Something went wrong. Please try again." : "Algo salió mal. Inténtalo de nuevo.";
+  return apiMessageLookup.get(message)?.[locale] ?? localizedApiMessage(undefined);
 }
 
 export const authToken = {
@@ -241,7 +424,7 @@ export function imageUrl(path: string | null | undefined) {
 }
 
 export function formatEuro(value: number, locale: Locale = getStoredLocale()) {
-  return new Intl.NumberFormat(locale === "uk" ? "uk-UA" : "es-ES", {
+  return new Intl.NumberFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", {
     style: "currency",
     currency: "EUR",
     maximumFractionDigits: 0,
@@ -252,6 +435,7 @@ export function roleLabel(
   role: PlayerRole,
   locale: Locale = getStoredLocale(),
 ) {
+  if (locale === "en") return { PORTERA: "Goalkeeper", CIERRE: "Defender", ALA: "Winger", PIVOT: "Pivot" }[role];
   if (locale === "uk") {
     return {
       PORTERA: "Воротарка",
@@ -273,29 +457,11 @@ export function nationalityLabel(
   locale: Locale = getStoredLocale(),
 ) {
   if (!code) return undefined;
-  const labels =
-    locale === "uk"
-      ? {
-          ES: "Іспанія",
-          BR: "Бразилія",
-          UY: "Уругвай",
-          PT: "Португалія",
-          AR: "Аргентина",
-          IT: "Італія",
-          FI: "Фінляндія",
-          UA: "Україна",
-        }
-      : {
-          ES: "España",
-          BR: "Brasil",
-          UY: "Uruguay",
-          PT: "Portugal",
-          AR: "Argentina",
-          IT: "Italia",
-          FI: "Finlandia",
-          UA: "Ucrania",
-        };
-  return labels[code as keyof typeof labels] ?? code;
+  try {
+    return new Intl.DisplayNames([locale], { type: "region" }).of(code.toUpperCase()) ?? code;
+  } catch {
+    return code;
+  }
 }
 
 export function playerFactsLabel(
@@ -306,7 +472,7 @@ export function playerFactsLabel(
     player.age
       ? locale === "uk"
         ? `${player.age} років`
-        : `${player.age} años`
+        : locale === "en" ? `${player.age} years old` : `${player.age} años`
       : null,
     nationalityLabel(player.nationality, locale),
   ]

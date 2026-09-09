@@ -66,7 +66,7 @@ export function PurchasePlayersPage() {
   }, new Map<string, number>());
   const marketIsOpen = user?.role === "ADMIN" || gameweek.data?.marketIsOpen === true;
   const dateFormatter = new Intl.DateTimeFormat(
-    locale === "uk" ? "uk-UA" : "es-ES",
+    locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES",
     { timeZone: "Europe/Madrid", dateStyle: "full", timeStyle: "short" },
   );
 

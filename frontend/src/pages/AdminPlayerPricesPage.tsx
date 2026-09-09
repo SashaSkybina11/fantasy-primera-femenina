@@ -31,7 +31,7 @@ export function AdminPlayerPricesPage() {
     onError: error => { setPreview(null); toast.error(error.message); },
   });
   if (!enabled) return <Navigate to="/" replace />;
-  const money = (value: number) => new Intl.NumberFormat(locale === "uk" ? "uk-UA" : "es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+  const money = (value: number) => new Intl.NumberFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
   const delta = (value: number) => `${value > 0 ? "+" : ""}${money(value)}`;
   const matches = (row: { name: string; number: number; clubId: string }) => (!club || row.clubId === club) && `${row.name} ${row.number}`.toLocaleLowerCase().includes(search.toLocaleLowerCase());
   const current = weeks.data?.find(row => row.id === gameweekId);

@@ -84,7 +84,7 @@ export function AdminPage() {
               <small>
                 {member.totalPoints} {t("common.pointsShort")} ·{" "}
                 {t("admin.players", { count: member.playerCount })} ·{" "}
-                {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : "es-ES", {
+                {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", {
                   dateStyle: "medium",
                 }).format(new Date(member.createdAt))}
               </small>
