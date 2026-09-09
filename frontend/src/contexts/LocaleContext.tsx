@@ -13,17 +13,23 @@ const spanish = {
   "rules.valueStarted": "Sale en el quinteto inicial",
   "rules.valueConceded": "🧤 Portera: {{count}} goles encajados",
   "rules.valueConcededOne": "🧤 Portera: 1 gol encajado",
-  "rules.valueBody": "Después de cada jornada, el valor de mercado de una jugadora puede subir o bajar según su actuación en el partido real.",
-  "rules.valueGlobal": "El cambio del valor de mercado se aplica independientemente de si la jugadora está en el quinteto titular de tu equipo Fantasy o en el banquillo.",
-  "rules.valueBench": "Una jugadora que está en el banquillo no suma puntos Fantasy para tu jornada, pero su precio de mercado continúa cambiando según su rendimiento en el partido real.",
+  "rules.valueBody":
+    "Después de cada jornada, el valor de mercado de una jugadora puede subir o bajar según su actuación en el partido real.",
+  "rules.valueGlobal":
+    "El cambio del valor de mercado se aplica independientemente de si la jugadora está en el quinteto titular de tu equipo Fantasy o en el banquillo.",
+  "rules.valueBench":
+    "Una jugadora que está en el banquillo no suma puntos Fantasy para tu jornada, pero su precio de mercado continúa cambiando según su rendimiento en el partido real.",
   "rules.valueExample": "Ejemplo:",
   "rules.valueBuy": "compras una jugadora por 2.000 €;",
   "rules.valueLeave": "la dejas en el banquillo;",
-  "rules.valueNoPoints": "no suma puntos Fantasy para tu equipo durante esa jornada;",
+  "rules.valueNoPoints":
+    "no suma puntos Fantasy para tu equipo durante esa jornada;",
   "rules.valueScore": "en el partido real marca un gol;",
   "rules.valueIncrease": "su valor de mercado cambia de 2.000 € a 2.100 €;",
-  "rules.valueSell": "si la vendes durante la siguiente ventana de fichajes abierta, recuperas 2.100 € en tu presupuesto.",
-  "rules.valueConclusion": "De esta forma, el usuario también puede aumentar su presupuesto aprovechando el crecimiento del valor de mercado de las jugadoras que ha comprado.",
+  "rules.valueSell":
+    "si la vendes durante la siguiente ventana de fichajes abierta, recuperas 2.100 € en tu presupuesto.",
+  "rules.valueConclusion":
+    "De esta forma, el usuario también puede aumentar su presupuesto aprovechando el crecimiento del valor de mercado de las jugadoras que ha comprado.",
   "brand.title": "Fantasy Primera División Fútbol Sala Femenino",
   "competition.title": "Primera División Fútbol Sala Femenino",
   "auth.emailPlaceholder": "nombre@ejemplo.es",
@@ -91,7 +97,7 @@ const spanish = {
   "nav.purchase": "Comprar jugadoras",
   "nav.calendar": "Calendario",
   "nav.teams": "Clubes",
-  "nav.league": "Liga",
+  "nav.league": "Participantes",
   "nav.friends": "Liga de amigos",
   "friends.empty":
     "Crea tu propia liga o únete a la liga de tus amigos con un código.",
@@ -100,7 +106,7 @@ const spanish = {
   "purchase.popularEmpty": "Todavía no hay suficientes datos",
   "purchase.popularOwners":
     "En las plantillas de {{count}} de {{total}} usuarios — {{percentage}}%",
-  "nav.leaderboard": "Clasificación",
+  "nav.leaderboard": "Liga",
   "nav.rules": "Reglas del juego",
   "nav.logout": "Cerrar sesión",
   "nav.primary": "Navegación principal",
@@ -233,7 +239,7 @@ const spanish = {
   "gameweek.CALCULATING": "Calculando",
   "gameweek.COMPLETED": "Finalizada",
   "leaderboard.eyebrow": "Fantasy",
-  "leaderboard.title": "Clasificación de la temporada",
+  "leaderboard.title": "Liga de todos los participantes",
   "leaderboard.description":
     "Resultado general e historial de tus jornadas semanales.",
   "leaderboard.overall": "Clasificación general",
@@ -470,17 +476,22 @@ const ukrainian: Record<TranslationKey, string> = {
   "rules.valueStarted": "Вийшла у стартовій п'ятірці",
   "rules.valueConceded": "🧤 Воротарка: {{count}} пропущених",
   "rules.valueConcededOne": "🧤 Воротарка: 1 пропущений",
-  "rules.valueBody": "Після кожного туру ринкова вартість гравчині може збільшуватися або зменшуватися залежно від її виступу в реальному матчі.",
-  "rules.valueGlobal": "Зміна ринкової вартості відбувається незалежно від того, чи перебуває ця гравчиня у вашому основному Fantasy-складі або на лаві запасних.",
-  "rules.valueBench": "Гравчиня на лаві запасних не приносить вам Fantasy-очки за тур, але її ринкова ціна все одно змінюється відповідно до результатів реального матчу.",
+  "rules.valueBody":
+    "Після кожного туру ринкова вартість гравчині може збільшуватися або зменшуватися залежно від її виступу в реальному матчі.",
+  "rules.valueGlobal":
+    "Зміна ринкової вартості відбувається незалежно від того, чи перебуває ця гравчиня у вашому основному Fantasy-складі або на лаві запасних.",
+  "rules.valueBench":
+    "Гравчиня на лаві запасних не приносить вам Fantasy-очки за тур, але її ринкова ціна все одно змінюється відповідно до результатів реального матчу.",
   "rules.valueExample": "Приклад:",
   "rules.valueBuy": "ви купили гравчиню за 2 000 €;",
   "rules.valueLeave": "залишили її на лаві запасних;",
   "rules.valueNoPoints": "у вашому Fantasy-турі вона не приносить очки;",
   "rules.valueScore": "у реальному матчі гравчиня забиває гол;",
   "rules.valueIncrease": "її ринкова ціна змінюється з 2 000 € до 2 100 €;",
-  "rules.valueSell": "якщо під час наступного відкритого трансферного вікна ви продаєте цю гравчиню, до вашого бюджету повертається вже 2 100 €.",
-  "rules.valueConclusion": "Таким чином користувач може збільшувати свій бюджет за рахунок зростання вартості придбаних гравчинь.",
+  "rules.valueSell":
+    "якщо під час наступного відкритого трансферного вікна ви продаєте цю гравчиню, до вашого бюджету повертається вже 2 100 €.",
+  "rules.valueConclusion":
+    "Таким чином користувач може збільшувати свій бюджет за рахунок зростання вартості придбаних гравчинь.",
   "brand.title": "Fantasy Primera División Fútbol Sala Femenino",
   "competition.title": "Перший дивізіон жіночого футзалу",
   "auth.emailPlaceholder": "ім’я@приклад.ua",
@@ -548,7 +559,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "nav.purchase": "Купівля гравчинь",
   "nav.calendar": "Календар",
   "nav.teams": "Клуби",
-  "nav.league": "Ліга",
+  "nav.league": "Учасники",
   "nav.friends": "Ліга друзів",
   "friends.empty":
     "Створіть власну лігу або приєднайтеся до ліги друзів за кодом.",
@@ -557,7 +568,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "purchase.popularEmpty": "Поки недостатньо даних",
   "purchase.popularOwners":
     "У складах {{count}} із {{total}} користувачів — {{percentage}}%",
-  "nav.leaderboard": "Рейтинг",
+  "nav.leaderboard": "Ліга",
   "nav.rules": "Правила гри",
   "nav.logout": "Вийти",
   "nav.primary": "Основна навігація",
@@ -688,7 +699,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "gameweek.CALCULATING": "Розрахунок",
   "gameweek.COMPLETED": "Завершений",
   "leaderboard.eyebrow": "Fantasy",
-  "leaderboard.title": "Рейтинг сезону",
+  "leaderboard.title": "Ліга всіх учасників",
   "leaderboard.description":
     "Загальний результат та історія ваших щотижневих турів.",
   "leaderboard.overall": "Загальний рейтинг",
@@ -919,17 +930,23 @@ const english: Record<TranslationKey, string> = {
   "rules.valueStarted": "Starts in the starting five",
   "rules.valueConceded": "🧤 Goalkeeper: {{count}} goals conceded",
   "rules.valueConcededOne": "🧤 Goalkeeper: 1 goal conceded",
-  "rules.valueBody": "After each gameweek, a player's market value may increase or decrease depending on her performance in the real match.",
-  "rules.valueGlobal": "Market value changes apply regardless of whether the player is in your starting Fantasy lineup or on the bench.",
-  "rules.valueBench": "A player on the bench does not earn Fantasy points for your team during that gameweek, but her market value still changes based on her performance in the real match.",
+  "rules.valueBody":
+    "After each gameweek, a player's market value may increase or decrease depending on her performance in the real match.",
+  "rules.valueGlobal":
+    "Market value changes apply regardless of whether the player is in your starting Fantasy lineup or on the bench.",
+  "rules.valueBench":
+    "A player on the bench does not earn Fantasy points for your team during that gameweek, but her market value still changes based on her performance in the real match.",
   "rules.valueExample": "Example:",
   "rules.valueBuy": "you buy a player for €2,000;",
   "rules.valueLeave": "you leave her on the bench;",
-  "rules.valueNoPoints": "she does not earn Fantasy points for your team during that gameweek;",
+  "rules.valueNoPoints":
+    "she does not earn Fantasy points for your team during that gameweek;",
   "rules.valueScore": "she scores a goal in the real match;",
   "rules.valueIncrease": "her market value increases from €2,000 to €2,100;",
-  "rules.valueSell": "if you sell her during the next open transfer window, €2,100 is added back to your budget.",
-  "rules.valueConclusion": "This allows users to increase their budget by selling players whose market value has increased.",
+  "rules.valueSell":
+    "if you sell her during the next open transfer window, €2,100 is added back to your budget.",
+  "rules.valueConclusion":
+    "This allows users to increase their budget by selling players whose market value has increased.",
   "brand.title": "Fantasy Primera División Fútbol Sala Femenino",
   "competition.title": "Women's Futsal First Division",
   "auth.emailPlaceholder": "name@example.com",
@@ -941,7 +958,8 @@ const english: Record<TranslationKey, string> = {
   "lineup.error": "Could not load this user's squad.",
   "lineup.empty": "The starting lineup has not been selected yet.",
   "lineup.view": "View {{name}}'s lineup",
-  "lineup.rankingEmpty": "The standings will appear once squads are complete: 2 goalkeepers and 8 outfield players.",
+  "lineup.rankingEmpty":
+    "The standings will appear once squads are complete: 2 goalkeepers and 8 outfield players.",
   "club.goals": "Goals: {{count}}",
   "purchase.positionLimit": "2 goalkeepers and 8 outfield players",
   "rules.initialBudget": "Starting budget: {{budget}}.",
@@ -951,7 +969,8 @@ const english: Record<TranslationKey, string> = {
   "adminLeagues.members": "Members",
   "adminLeagues.created": "Created on",
   "adminLeagues.code": "Code",
-  "adminLeagues.confirm": "Are you sure you want to delete this friends' league?",
+  "adminLeagues.confirm":
+    "Are you sure you want to delete this friends' league?",
   "adminLeagues.cancel": "Cancel",
   "rules.pointsUnit": "points",
   "prices.title": "Player prices",
@@ -975,9 +994,12 @@ const english: Record<TranslationKey, string> = {
   "adminStats.applyResults": "Apply results",
   "adminStats.unchanged": "No changes",
   "adminStats.goalsConceded": "Goals conceded (blank = no data)",
-  "rules.marketRestrictions": "While the transfer market is closed, you cannot buy or sell players or move players between the starting five and the bench.",
-  "rules.allPlayers": "All players earn points for their match events and club result, even if they did not start. Starters receive 2 additional points. The gameweek total can be negative.",
-  "team.marketLocked": "Lineup changes are only available while the transfer market is open.",
+  "rules.marketRestrictions":
+    "While the transfer market is closed, you cannot buy or sell players or move players between the starting five and the bench.",
+  "rules.allPlayers":
+    "All players earn points for their match events and club result, even if they did not start. Starters receive 2 additional points. The gameweek total can be negative.",
+  "team.marketLocked":
+    "Lineup changes are only available while the transfer market is open.",
   "language.label": "Language",
   "language.es": "Spanish",
   "language.uk": "Ukrainian",
@@ -993,14 +1015,16 @@ const english: Record<TranslationKey, string> = {
   "nav.purchase": "Buy players",
   "nav.calendar": "Calendar",
   "nav.teams": "Clubs",
-  "nav.league": "League",
+  "nav.league": "Participants",
   "nav.friends": "Friends' league",
-  "friends.empty": "Create your own league or join your friends' league with a code.",
+  "friends.empty":
+    "Create your own league or join your friends' league with a code.",
   "friends.retry": "Try again",
   "purchase.popularTitle": "Most popular player",
   "purchase.popularEmpty": "Not enough data yet",
-  "purchase.popularOwners": "In the squads of {{count}} out of {{total}} users — {{percentage}}%",
-  "nav.leaderboard": "Standings",
+  "purchase.popularOwners":
+    "In the squads of {{count}} out of {{total}} users — {{percentage}}%",
+  "nav.leaderboard": "League",
   "nav.rules": "Game rules",
   "nav.logout": "Sign out",
   "nav.primary": "Main navigation",
@@ -1027,12 +1051,14 @@ const english: Record<TranslationKey, string> = {
   "auth.futsal": "Futsal.",
   "auth.your": "Your",
   "auth.team": "team.",
-  "auth.description": "Choose 10 players from the Women's Futsal First Division, build your squad and compete to climb the standings.",
+  "auth.description":
+    "Choose 10 players from the Women's Futsal First Division, build your squad and compete to climb the standings.",
   "auth.newMember": "New member",
   "auth.leagueMember": "League member",
   "auth.createProfile": "Create your profile",
   "auth.welcomeBack": "Welcome back",
-  "auth.registerDescription": "Your fantasy team will be created automatically.",
+  "auth.registerDescription":
+    "Your fantasy team will be created automatically.",
   "auth.loginDescription": "Enter your details to continue.",
   "auth.name": "Name",
   "auth.namePlaceholder": "For example, Maria",
@@ -1064,14 +1090,16 @@ const english: Record<TranslationKey, string> = {
   "profile.avatarRemoved": "Avatar removed",
   "profile.security": "Security",
   "profile.passwordTitle": "Change password",
-  "profile.passwordDescription": "Confirm your current password to protect your account.",
+  "profile.passwordDescription":
+    "Confirm your current password to protect your account.",
   "profile.currentPassword": "Current password",
   "profile.newPassword": "New password",
   "profile.confirmPassword": "Confirm new password",
   "profile.changePassword": "Update password",
   "profile.passwordSaved": "Password updated",
   "profile.passwordMismatch": "The new passwords do not match",
-  "profile.contactConsent": "Allow the administrators to use my contact details for questions about the game and prizes.",
+  "profile.contactConsent":
+    "Allow the administrators to use my contact details for questions about the game and prizes.",
   "profile.registeredAt": "Registration date",
   "admin.eyebrow": "Private area",
   "admin.title": "Administration",
@@ -1083,7 +1111,8 @@ const english: Record<TranslationKey, string> = {
   "admin.roleAdmin": "Administrator",
   "admin.roleUser": "User",
   "admin.delete": "Delete",
-  "admin.deleteConfirm": "Delete {{name}}'s account? This action cannot be undone.",
+  "admin.deleteConfirm":
+    "Delete {{name}}'s account? This action cannot be undone.",
   "admin.userDeleted": "User deleted",
   "admin.playerPointsLink": "Player points",
   "admin.searchPlaceholder": "Search by name, email, Instagram or WhatsApp",
@@ -1091,7 +1120,8 @@ const english: Record<TranslationKey, string> = {
   "admin.statusSuspended": "Suspended",
   "adminStats.eyebrow": "Administration",
   "adminStats.title": "Player points",
-  "adminStats.description": "Match events automatically recalculate fantasy points and standings.",
+  "adminStats.description":
+    "Match events automatically recalculate fantasy points and standings.",
   "adminStats.usersLink": "Users",
   "adminStats.selectGameweek": "Select a gameweek (1–30)",
   "adminStats.searchPlaceholder": "Search by name, number or club",
@@ -1126,28 +1156,36 @@ const english: Record<TranslationKey, string> = {
   "gameweek.CALCULATING": "Calculating",
   "gameweek.COMPLETED": "Completed",
   "leaderboard.eyebrow": "Fantasy",
-  "leaderboard.title": "Season standings",
+  "leaderboard.title": "All Participants League",
   "leaderboard.description": "Overall results and your gameweek history.",
   "leaderboard.overall": "Overall standings",
   "leaderboard.myGameweeks": "My gameweeks",
   "common.pointsShort": "pts",
   "rules.badge": "Guide",
   "rules.title": "Game rules",
-  "rules.intro": "Fantasy Futsal Femenino is based on Spain's Women's Futsal First Division.",
+  "rules.intro":
+    "Fantasy Futsal Femenino is based on Spain's Women's Futsal First Division.",
   "rules.howTitle": "How to play",
-  "rules.howBody": "Sign up, buy real players, prepare your starting five and choose a captain before each gameweek.",
+  "rules.howBody":
+    "Sign up, buy real players, prepare your starting five and choose a captain before each gameweek.",
   "rules.squadTitle": "Squad",
-  "rules.squadBody": "Your team has 10 players (2 goalkeepers and 8 outfield players): 5 starters (1 goalkeeper and 4 outfield players) and 5 substitutes. Only starters contribute to your score.",
+  "rules.squadBody":
+    "Your team has 10 players (2 goalkeepers and 8 outfield players): 5 starters (1 goalkeeper and 4 outfield players) and 5 substitutes. Only starters contribute to your score.",
   "rules.pointsTitle": "How do we earn points?",
-  "rules.pointsBody": "Points depend on real match events. Results and standings are recalculated after each gameweek.",
+  "rules.pointsBody":
+    "Points depend on real match events. Results and standings are recalculated after each gameweek.",
   "rules.captainTitle": "Captain",
-  "rules.captainBody": "The captain is part of the starting five. Her points count once, just like those of the other four starters.",
+  "rules.captainBody":
+    "The captain is part of the starting five. Her points count once, just like those of the other four starters.",
   "rules.marketTitle": "Transfer market",
-  "rules.marketBody": "The transfer market opens every Tuesday at 10:00 and closes every Friday at 12:00, Madrid time. After completing your initial squad, you can sell 2 and buy 2 players per gameweek; unused transfers do not carry over.",
+  "rules.marketBody":
+    "The transfer market opens every Tuesday at 10:00 and closes every Friday at 12:00, Madrid time. After completing your initial squad, you can sell 2 and buy 2 players per gameweek; unused transfers do not carry over.",
   "rules.ratingTitle": "Standings",
-  "rules.ratingBody": "All members compete in the overall standings using the points earned by their single fantasy team.",
+  "rules.ratingBody":
+    "All members compete in the overall standings using the points earned by their single fantasy team.",
   "rules.leaguesTitle": "Friends' leagues",
-  "rules.leaguesBody": "Create private leagues or join with a code. Your same squad and overall points are used in all of them.",
+  "rules.leaguesBody":
+    "Create private leagues or join with a code. Your same squad and overall points are used in all of them.",
   "rules.started": "Starting five",
   "rules.win": "Win",
   "rules.draw": "Draw",
@@ -1192,7 +1230,8 @@ const english: Record<TranslationKey, string> = {
   "team.bench": "Substitutes",
   "team.benchSubtitle": "5 players",
   "team.checkLineup": "Check your lineup before saving",
-  "team.lineupRequirements": "10 players · 5 starters · 1 goalkeeper · captain in the starting five",
+  "team.lineupRequirements":
+    "10 players · 5 starters · 1 goalkeeper · captain in the starting five",
   "team.checking": "Checking…",
   "team.saveLineup": "Save lineup",
   "team.updated": "Lineup updated",
@@ -1200,7 +1239,8 @@ const english: Record<TranslationKey, string> = {
   "team.playerRemoved": "Player removed; budget updated",
   "team.lineupSaved": "Lineup saved successfully",
   "team.emptyTitle": "Your team has not been formed yet",
-  "team.empty": "You have not bought any players yet. Go to Buy players to build your team.",
+  "team.empty":
+    "You have not bought any players yet. Go to Buy players to build your team.",
   "team.goToPurchase": "Go to Buy players",
   "player.club": "Club",
   "player.allClubs": "All clubs",
@@ -1222,7 +1262,8 @@ const english: Record<TranslationKey, string> = {
   "player.close": "Close",
   "purchase.eyebrow": "Fantasy market",
   "purchase.title": "Buy players",
-  "purchase.description": "Choose players for your team within your budget and the limit of two players per club.",
+  "purchase.description":
+    "Choose players for your team within your budget and the limit of two players per club.",
   "purchase.buy": "Buy",
   "purchase.success": "Player purchased and added to your team",
   "purchase.marketOpen": "Market open",
@@ -1232,8 +1273,10 @@ const english: Record<TranslationKey, string> = {
   "purchase.timezoneLabel": "Time zone",
   "purchase.scheduleLoading": "Loading market schedule…",
   "purchase.scheduleUnavailable": "Could not load the market schedule.",
-  "purchase.weeklySchedule": "The market opens every Monday at 08:00 and closes every Friday at 19:00.",
-  "purchase.dynamicPriceNotice": "Player prices may increase during the season based on their performances and match events.",
+  "purchase.weeklySchedule":
+    "The market opens every Monday at 08:00 and closes every Friday at 19:00.",
+  "purchase.dynamicPriceNotice":
+    "Player prices may increase during the season based on their performances and match events.",
   "purchase.viewSquad": "View squad",
   "purchase.squadCount": "Squad: {{count}} / 10",
   "purchase.budgetLabel": "Budget",
@@ -1241,7 +1284,8 @@ const english: Record<TranslationKey, string> = {
   "purchase.transfersTitle": "This gameweek's transfers",
   "purchase.sold": "Sold",
   "purchase.bought": "Bought",
-  "purchase.initialSquad": "There is no transfer limit when building your initial squad.",
+  "purchase.initialSquad":
+    "There is no transfer limit when building your initial squad.",
   "purchase.clubLimit": "Maximum 2 players from the same club",
   "squad.moveBench": "Move to bench",
   "squad.moveStarter": "Start player",
@@ -1249,7 +1293,8 @@ const english: Record<TranslationKey, string> = {
   "squad.removeCaptain": "Remove captaincy",
   "squad.remove": "Remove",
   "squad.removeTitle": "Remove player?",
-  "squad.removeQuestion": "Are you sure you want to remove {{name}} from your squad?",
+  "squad.removeQuestion":
+    "Are you sure you want to remove {{name}} from your squad?",
   "squad.keep": "Keep player",
   "squad.closeRemove": "Close confirmation",
   "squad.freeSlot": "Free slot",
@@ -1282,7 +1327,8 @@ const english: Record<TranslationKey, string> = {
   "avatar.alt": "{{name}}'s avatar",
   "clubLogo.alt": "{{name}} crest",
   "home.eyebrow": "Women's fantasy futsal",
-  "home.description": "Build your team, manage your budget and follow the official competition.",
+  "home.description":
+    "Build your team, manage your budget and follow the official competition.",
   "home.marketOpen": "Market open",
   "home.gameweekCompleted": "Gameweek completed",
   "home.squadLocked": "Squad locked",
@@ -1295,30 +1341,40 @@ const english: Record<TranslationKey, string> = {
   "home.yourTeam": "Your fantasy team",
   "home.favoriteEyebrow": "Your club this season",
   "home.favoriteTitle": "Choose who you support",
-  "home.favoriteDescription": "Your vote counts towards the league's supporter rankings. You can change it at any time.",
+  "home.favoriteDescription":
+    "Your vote counts towards the league's supporter rankings. You can change it at any time.",
   "home.favoriteLabel": "My favourite club",
   "home.favoritePlaceholder": "Choose a club",
   "home.conceptEyebrow": "How the game works",
   "home.conceptTitle": "All of women's futsal in one place",
-  "home.conceptDescription": "This private fantasy game brings together the First Division, your own team and the league community.",
-  "home.conceptSource": "Competition information comes from the official RFEF website.",
+  "home.conceptDescription":
+    "This private fantasy game brings together the First Division, your own team and the league community.",
+  "home.conceptSource":
+    "Competition information comes from the official RFEF website.",
   "home.conceptFantasyTitle": "Create your fantasy team",
-  "home.conceptFantasyDescription": "Buy up to ten players, manage your budget and choose your starters, substitutes and captain.",
+  "home.conceptFantasyDescription":
+    "Buy up to ten players, manage your budget and choose your starters, substitutes and captain.",
   "home.conceptClubTitle": "Discover the clubs",
-  "home.conceptClubDescription": "View squads, positions, ages, nationalities, coaches and presidents for all 16 clubs.",
+  "home.conceptClubDescription":
+    "View squads, positions, ages, nationalities, coaches and presidents for all 16 clubs.",
   "home.conceptLeagueTitle": "Take part in the league",
-  "home.conceptLeagueDescription": "Compare teams with friends and discover which club has the most support this season.",
+  "home.conceptLeagueDescription":
+    "Compare teams with friends and discover which club has the most support this season.",
   "home.conceptCalendarTitle": "Follow the competition",
-  "home.conceptCalendarDescription": "Open the official RFEF calendar and results from the app.",
+  "home.conceptCalendarDescription":
+    "Open the official RFEF calendar and results from the app.",
   "home.conceptPointsTitle": "Earn points every week",
-  "home.conceptPointsDescription": "Your starters' real match actions become fantasy points each gameweek. The points of all five starters are added together.",
+  "home.conceptPointsDescription":
+    "Your starters' real match actions become fantasy points each gameweek. The points of all five starters are added together.",
   "home.conceptRatingTitle": "Climb the standings",
-  "home.conceptRatingDescription": "Compare your weekly result and total season points with other members.",
+  "home.conceptRatingDescription":
+    "Compare your weekly result and total season points with other members.",
   "calendar.title": "Calendar",
   "calendar.description": "Official Women's Futsal First Division calendar",
   "calendar.open": "Open RFEF calendar",
   "calendar.resultsTitle": "Results",
-  "calendar.resultsDescription": "Official gameweek results on the RFEF website.",
+  "calendar.resultsDescription":
+    "Official gameweek results on the RFEF website.",
   "calendar.openResults": "Open RFEF results",
   "footer.contactAdmin": "Contact the administrator",
   "footer.email": "fantasyfutsalspain@gmail.com",
@@ -1375,10 +1431,19 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     document.addEventListener("input", clear, true);
     document.documentElement.lang = locale;
     document.title = dictionaries[locale]["brand.title"];
-    document.querySelectorAll('meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]').forEach((meta) => {
-      meta.setAttribute("content", dictionaries[locale]["home.description"]);
-    });
-    document.querySelector('meta[property="og:locale"]')?.setAttribute("content", { es: "es_ES", uk: "uk_UA", en: "en_GB" }[locale]);
+    document
+      .querySelectorAll(
+        'meta[name="description"], meta[property="og:description"], meta[name="twitter:description"]',
+      )
+      .forEach((meta) => {
+        meta.setAttribute("content", dictionaries[locale]["home.description"]);
+      });
+    document
+      .querySelector('meta[property="og:locale"]')
+      ?.setAttribute(
+        "content",
+        { es: "es_ES", uk: "uk_UA", en: "en_GB" }[locale],
+      );
     localStorage.setItem(storageKey, locale);
     return () => {
       document.removeEventListener("invalid", invalid, true);
