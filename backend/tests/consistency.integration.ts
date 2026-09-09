@@ -47,6 +47,11 @@ try {
   await inTransaction(tx => recalculateGameweek(tx, week.id));
   assert.deepEqual(await totals(), first);
   assert.equal(await prisma.playerPriceChange.count(), 11);
+  // A goal by a Fantasy bench player changes the global price, never user points.
+  await prisma.playerGameweekStats.create({ data: { gameweekId: week.id, playerId: players[6]!.id, goals: 1 } });
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  assert.deepEqual(await totals(), first);
+  assert.equal((await prisma.player.findUniqueOrThrow({ where: { id: players[6]!.id } })).price, 4100);
   // The live squad changes; old-week totals must continue using the frozen squad.
   await prisma.fantasyTeamPlayer.update({ where: { fantasyTeamId_playerId: { fantasyTeamId: users[0]!.fantasyTeam!.id, playerId: players[1]!.id } }, data: { playerId: players[10]!.id } });
   await inTransaction(tx => recalculateGameweek(tx, week.id));
@@ -129,6 +134,33 @@ try {
   const beforeRollback = await totals();
   await assert.rejects(inTransaction(async tx => { await recalculateGameweek(tx, week.id); throw new Error('rollback'); }), /rollback/);
   assert.deepEqual(await totals(), beforeRollback);
+  // Purchase at 2000, real goal while on the bench, then sell at the current 2100.
+  const tradePlayer = players[6]!;
+  await prisma.fantasyTeamPlayer.delete({ where: { fantasyTeamId_playerId: { fantasyTeamId: users[2]!.fantasyTeam!.id, playerId: tradePlayer.id } } });
+  await prisma.playerPriceChange.deleteMany({ where: { playerId: tradePlayer.id } });
+  await prisma.player.update({ where: { id: tradePlayer.id }, data: { price: 2000 } });
+  await prisma.fantasyTeam.update({ where: { id: users[2]!.fantasyTeam!.id }, data: { budget: 50000, isInitialSquadComplete: true } });
+  const purchase = await request('/my-team/players', adminId, 'POST', { playerId: tradePlayer.id });
+  assert.equal(purchase.status, 201);
+  assert.equal(purchase.data.budget, 48000);
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  assert.equal((await prisma.player.findUniqueOrThrow({ where: { id: tradePlayer.id } })).price, 2100);
+  const sale = await request('/my-team/players/' + tradePlayer.id, adminId, 'DELETE');
+  assert.equal(sale.status, 200);
+  assert.equal(sale.data.budget, 50100);
+  const transfers = await prisma.userTransfer.findMany({ where: { userId: adminId, playerId: tradePlayer.id }, orderBy: { createdAt: 'asc' } });
+  assert.deepEqual(transfers.map(row => [row.type, row.price]), [['BUY', 2000], ['SELL', 2100]]);
+  // Legacy settings and recorded bonuses must not survive a price recalculation.
+  await prisma.priceSettings.create({ data: { id: 'default', teamWin: 999 } });
+  await prisma.playerPriceChange.update({ where: { id: history[0]!.id }, data: { priceDelta: 270, priceAfter: 4270, teamResultPriceDelta: 70, teamWinBonus: 70 } });
+  await prisma.playerPriceChange.update({ where: { id: history[1]!.id }, data: { priceBefore: 4270, priceDelta: 190, priceAfter: 4460, teamResultPriceDelta: 90, teamWinBonus: 90 } });
+  await prisma.player.update({ where: { id: players[1]!.id }, data: { price: 4460 } });
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  await inTransaction(tx => recalculateGameweek(tx, week.id));
+  const cleanHistory = await prisma.playerPriceChange.findMany({ where: { playerId: players[1]!.id }, orderBy: { gameweek: { number: 'asc' } } });
+  assert.deepEqual(cleanHistory.map(row => [row.priceBefore, row.priceDelta, row.priceAfter, row.teamResultPriceDelta, row.teamWinBonus]), [[4000, 200, 4200, 0, null], [4200, 100, 4300, 0, null]]);
+  assert.equal((await prisma.player.findUniqueOrThrow({ where: { id: players[1]!.id } })).price, 4300);
   console.log('PASS: migrations, signed totals, adjustments, repeat recalculation, snapshots, price correction/rebase, standings, admin market, popularity, rollback');
   console.log('Isolated test database retained:', database);
 } finally {

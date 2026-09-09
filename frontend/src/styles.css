@@ -3219,6 +3219,16 @@ select:focus {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
+.rules-market-value { grid-column: 1 / -1; min-width: 0; }
+.rules-market-value table { width: 100%; border-collapse: collapse; }
+.rules-market-value th, .rules-market-value td { padding: 0.65rem 0.5rem; text-align: left; border-bottom: 1px solid var(--border); }
+.rules-market-value td:last-child { white-space: nowrap; }
+.rules-market-value ul { padding-left: 1.4rem; line-height: 1.7; }
+@media (max-width: 760px) {
+  .mobile-menu .nav-link { font-size: 1.05rem; min-height: 44px; }
+  .mobile-menu .nav-link span { min-width: 0; overflow-wrap: anywhere; }
+  .mobile-menu .nav-link i { flex-shrink: 0; }
+}
 .rules-grid article {
   min-width: 0;
   padding: 1.25rem;
@@ -3570,8 +3580,7 @@ select:focus {
   gap: 1rem;
   margin-block: 1rem;
 }
-.team-results-grid label,
-.price-settings {
+.team-results-grid label {
   display: grid;
   gap: 0.5rem;
 }
@@ -3631,8 +3640,7 @@ select:focus {
 .admin-toolbar > *,
 .stats-player > span,
 .stats-form > *,
-.team-results-grid > *,
-.price-settings > * {
+.team-results-grid > * {
   min-width: 0;
   max-width: 100%;
 }
@@ -3661,12 +3669,10 @@ select:focus {
   flex: none;
 }
 .team-results,
-.price-settings,
 .price-preview-grid article {
   padding: 1.25rem;
 }
-.team-results select,
-.price-settings input {
+.team-results select {
   width: 100%;
   min-height: 44px;
   padding: 0.65rem;
@@ -3726,7 +3732,6 @@ select:focus {
 }
 @media (max-width: 760px) {
   .team-results,
-  .price-settings,
   .price-preview-grid article {
     padding: 0.85rem;
   }

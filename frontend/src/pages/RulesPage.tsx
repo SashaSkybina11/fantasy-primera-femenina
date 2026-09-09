@@ -13,8 +13,7 @@ export function RulesPage() {
     <li>
       <span>{t(label)}:</span>
       <strong>
-        {(scoring.data?.[key] ?? 0) > 0 ? "+" : ""}
-        {scoring.data?.[key] ?? 0} {t("rules.pointsUnit")}
+        {scoring.data?.[key] !== undefined ? `${scoring.data[key] > 0 ? "+" : ""}${scoring.data[key]} ${t("rules.pointsUnit")}` : "—"}
       </strong>
     </li>
   );
@@ -39,6 +38,7 @@ export function RulesPage() {
           <h2>🏆 {t("rules.pointsTitle")}</h2>
           <p>{t("rules.pointsBody")}</p>
           <p>{t("rules.allPlayers")}</p>
+          {scoring.isError && <p role="alert">{t("error.generic")}</p>}
           <ul>
             {rule("started", "rules.started")}
             {rule("win", "rules.win")}
@@ -63,6 +63,25 @@ export function RulesPage() {
         <article>
           <h2>📊 {t("rules.ratingTitle")}</h2>
           <p>{t("rules.ratingBody")}</p>
+        </article>
+        <article className="rules-market-value">
+          <h2>{t("rules.valueTitle")}</h2>
+          <table>
+            <thead><tr><th scope="col">{t("rules.valueEvent")}</th><th scope="col">{t("rules.valueChange")}</th></tr></thead>
+            <tbody>
+              {([
+                ["rules.valueGoal", 100], ["rules.valueStarted", 30],
+                ["rules.yellowCard", -15], ["rules.redCard", -30],
+              ] as const).map(([key, value]) => <tr key={key}><td>{key === "rules.yellowCard" ? "🟨 " : key === "rules.redCard" ? "🟥 " : ""}{t(key)}</td><td>{value > 0 ? "+" : "−"}{formatEuro(Math.abs(value), locale)}</td></tr>)}
+              {[50, 0, -10, -20, -30].map((value, conceded) => <tr key={conceded}><td>{t(conceded === 1 ? "rules.valueConcededOne" : "rules.valueConceded", { count: conceded })}</td><td>{value > 0 ? "+" : value < 0 ? "−" : ""}{formatEuro(Math.abs(value), locale)}</td></tr>)}
+            </tbody>
+          </table>
+          <p>{t("rules.valueBody")}</p>
+          <p>{t("rules.valueGlobal")}</p>
+          <p>{t("rules.valueBench")}</p>
+          <h3>{t("rules.valueExample")}</h3>
+          <ul>{(["rules.valueBuy", "rules.valueLeave", "rules.valueNoPoints", "rules.valueScore", "rules.valueIncrease", "rules.valueSell"] as const).map(key => <li key={key}>{t(key)}</li>)}</ul>
+          <p>{t("rules.valueConclusion")}</p>
         </article>
         <article>
           <h2>🤝 {t("rules.leaguesTitle")}</h2>

@@ -12,19 +12,19 @@ test("non-starter scores goals/result; starting bonus is independent", () => {
   assert.equal(calculatePlayerPoints({ ...stats, started: true }), 2);
   assert.equal(calculatePlayerPoints({ ...stats, result: "WIN" }), 2);
 });
-test("price examples and unknown team bonus", () => {
-  for (const [input, expected] of [[{ goals: 2 },200],[{ started: true, goals: 1 },130],[{ yellowCards: 2, redCards: 1 },-60],[{ started: true, goals: 2, yellowCards: 1 },215],[{ position: "GOALKEEPER", started: true, goalsConceded: 0, yellowCards: 1 },65]]) {
-    assert.equal(calculatePlayerPriceDelta({ ...stats, ...input }, null).priceDelta, expected);
+test("price examples are independent of WIN, DRAW and LOSS", () => {
+  for (const result of ["WIN", "DRAW", "LOSS"]) for (const [input, expected] of [[{ goals: 2 },200],[{ started: true, goals: 1 },130],[{ yellowCards: 2, redCards: 1 },-60],[{ started: true, goals: 2, yellowCards: 1 },215],[{ position: "GOALKEEPER", started: true, goalsConceded: 0, yellowCards: 1 },65]]) {
+    assert.equal(calculatePlayerPriceDelta({ ...stats, ...input, result }).priceDelta, expected);
   }
-  assert.equal(calculatePlayerPriceDelta({ ...stats, goals: 2, started: true }, null).priceDelta, 230);
-  assert.equal(calculatePlayerPriceDelta({ ...stats, yellowCards: 1, redCards: 1 }, null).priceDelta, -45);
+  assert.equal(calculatePlayerPriceDelta({ ...stats, goals: 2, started: true }).priceDelta, 230);
+  assert.equal(calculatePlayerPriceDelta({ ...stats, yellowCards: 1, redCards: 1 }).priceDelta, -45);
   for (const [goalsConceded, expected] of [[0,50],[1,0],[2,-10],[3,-20],[4,-30],[5,-40],[6,-50],[null,0]]) {
-    assert.equal(calculatePlayerPriceDelta({ ...stats, position: "GOALKEEPER", goalsConceded }, null).priceDelta, expected);
+    assert.equal(calculatePlayerPriceDelta({ ...stats, position: "GOALKEEPER", goalsConceded }).priceDelta, expected);
   }
-  assert.equal(calculatePlayerPriceDelta({ ...stats, goalsConceded: 0 }, null).priceDelta, 0);
-  assert.equal(calculatePlayerPriceDelta({ ...stats, position: "GOALKEEPER", goals: 2 }, null).priceDelta, 200);
-  assert.equal(calculatePlayerPriceDelta({ ...stats, result: "WIN" }, null).priceDelta, 0);
-  assert.equal(calculatePlayerPriceDelta({ ...stats, result: "WIN" }, 70).priceDelta, 70);
+  assert.equal(calculatePlayerPriceDelta({ ...stats, goalsConceded: 0 }).priceDelta, 0);
+  assert.equal(calculatePlayerPriceDelta({ ...stats, position: "GOALKEEPER", goals: 2 }).priceDelta, 200);
+  assert.equal(calculatePlayerPriceDelta({ ...stats, result: "WIN" }).priceDelta, 0);
+  assert.equal(calculatePlayerPriceDelta({ ...stats, result: "WIN" }, 70).priceDelta, 0);
   for (const result of ["DRAW", "LOSS"]) assert.equal(calculatePlayerPriceDelta({ ...stats, result }, 70).priceDelta, 0);
 });
 test("goalkeeper validation rejects impossible states", () => {
@@ -82,7 +82,7 @@ test("price application replaces a week, rebases later weeks, rejects stale prev
   const events = { w1: { ...stats, goals: 2 }, w2: { ...stats, goals: 1 } };
   const tx = {
     gameweek: { findUnique: async ({ where }) => weeks.find(w => w.id === where.id), findUniqueOrThrow: async ({ where }) => weeks.find(w => w.id === where.id) },
-    priceSettings: { findUnique: async () => ({ teamWin: null }) },
+    priceSettings: { findUnique: async () => { throw new Error("Legacy settings must not be read"); } },
     player: { findMany: async ({ include }) => [{ ...player, gameweekStats: [events[include.gameweekStats.where.gameweekId]], priceChanges: [...player.priceChanges].sort((a,b) => a.gameweek.number - b.gameweek.number) }], update: async ({ data }) => Object.assign(player, data) },
     playerPriceChange: {
       upsert: async ({ create, update }) => { const existing = player.priceChanges.find(r => r.gameweekId === create.gameweekId); if (existing) Object.assign(existing, update); else player.priceChanges.push({ ...create, id: create.gameweekId, gameweek: weeks.find(w => w.id === create.gameweekId) }); },
@@ -97,6 +97,22 @@ test("price application replaces a week, rebases later weeks, rejects stale prev
   await apply("w2"); assert.equal(player.price, 3300);
   events.w1.goals = 3;
   await apply("w1"); assert.equal(player.price, 3400);
+  // Simulate existing rows created by the old price formula, with win bonuses.
+  Object.assign(player.priceChanges[0], { priceDelta: 370, priceAfter: 3370, teamResultPriceDelta: 70, teamWinBonus: 70 });
+  Object.assign(player.priceChanges[1], { priceBefore: 3370, priceDelta: 190, priceAfter: 3560, teamResultPriceDelta: 90, teamWinBonus: 90 });
+  player.price = 3560;
+  events.w1.result = "WIN";
+  events.w2.result = "WIN";
+  const legacyPreview = await previewPlayerPrices(tx, "w1");
+  assert.equal(legacyPreview.rows[0].newCurrentPrice, 3400);
+  assert.equal("teamWin" in legacyPreview, false);
+  assert.equal("teamResultDelta" in legacyPreview.rows[0], false);
+  await applyPlayerPrices(tx, "w1", legacyPreview.revision);
+  assert.equal(player.price, 3400);
+  assert.deepEqual(player.priceChanges.map(row => [row.priceDelta, row.teamResultPriceDelta, row.teamWinBonus]), [[300, 0, null], [100, 0, null]]);
+  await apply("w1");
+  await apply("w2");
+  assert.equal(player.price, 3400);
   assert.equal(player.priceChanges.length, 2);
   assert.equal(player.priceChanges.find(r => r.gameweekId === "w2").priceBefore, 3300);
   await apply("w1"); assert.equal(player.price, 3400);

@@ -150,13 +150,6 @@ router.put("/gameweeks/:gameweekId/team-results", asyncRoute(async (request, res
   response.json({ ok: true });
 }));
 
-router.get("/price-settings", asyncRoute(async (_request, response) => {
-  response.json({ teamWin: (await prisma.priceSettings.findUnique({ where: { id: "default" } }))?.teamWin ?? null });
-}));
-router.put("/price-settings", asyncRoute(async (request, response) => {
-  const data = z.object({ teamWin: z.number().int().min(0).max(100000).nullable() }).parse(request.body);
-  response.json(await inTransaction(tx => tx.priceSettings.upsert({ where: { id: "default" }, create: { id: "default", ...data }, update: data })));
-}));
 router.get("/gameweeks/:gameweekId/player-prices", asyncRoute(async (request, response) => {
   const gameweekId = z.string().cuid().parse(request.params.gameweekId);
   response.json(await inTransaction(tx => previewPlayerPrices(tx, gameweekId)));

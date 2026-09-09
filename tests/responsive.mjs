@@ -11,7 +11,7 @@ const stat = { started: false, goals: 2, yellowCards: 0, redCards: 0, goalsConce
 const players = Array.from({ length: 32 }, (_, i) => ({ id: `player${i}`, clubId: clubs[i % 16].id, club: clubs[i % 16], number: i % 30 + 1, name: i === 0 ? "Amandinha NombreMuyLargoSinEspaciosParaComprobarElDiseño" : `Jugadora de prueba ${i}`, position: i % 12 === 0 ? "GOALKEEPER" : "FIELD_PLAYER", role: i % 12 === 0 ? "PORTERA" : "ALA", price: 3000, lastPriceDelta: 230, lastGameweekPoints: 12, totalFantasyPoints: 12, gameweekStats: [stat] }));
 const week = { id: "week1", number: 1, name: "Jornada 1", status: "COMPLETED", marketIsOpen: false, marketOpenAt: "2026-09-01T08:00:00Z", deadlineAt: "2026-09-04T10:00:00Z", endsAt: "2026-09-06T21:59:59Z", winners: [] };
 const team = { id: "team", name: "Fantasy Test", budget: 20000, players: players.slice(0, 10).map((player, i) => ({ id: `entry${i}`, playerId: player.id, player, status: i < 5 ? "STARTER" : "BENCH", isCaptain: i === 0 })) };
-const preview = { gameweekId: week.id, revision: "a".repeat(64), teamWin: null, rows: players.map(player => ({ playerId: player.id, number: player.number, name: player.name, clubId: player.clubId, club: player.club.name, position: player.position, currentPrice: 3000, lastDelta: 230, priceBefore: 3000, priceDelta: 230, priceAfter: 3230, newCurrentPrice: 3230, teamResultDelta: 0, goalsDelta: 200, startedDelta: 30, yellowCardsDelta: 0, redCardsDelta: 0, goalkeeperDelta: 0, applied: false, missingStats: false })) };
+const preview = { gameweekId: week.id, revision: "a".repeat(64), rows: players.map(player => ({ playerId: player.id, number: player.number, name: player.name, clubId: player.clubId, club: player.club.name, position: player.position, currentPrice: 3000, lastDelta: 230, priceBefore: 3000, priceDelta: 230, priceAfter: 3230, newCurrentPrice: 3230, goalsDelta: 200, startedDelta: 30, yellowCardsDelta: 0, redCardsDelta: 0, goalkeeperDelta: 0, applied: false, missingStats: false })) };
 const browser = await chromium.launch();
 const results = [];
 const failures = [];
@@ -23,7 +23,6 @@ for (const locale of ["es", "uk"]) for (const theme of ["light", "dark"]) {
     const data = path === "/auth/me" ? { user: { id: "admin", name: "Admin", email: "test@example.invalid", role: "ADMIN", avatarUrl: null } }
       : path === "/admin/gameweeks" ? [week]
       : path === "/admin/player-points" ? players
-      : path === "/admin/price-settings" ? { teamWin: null }
       : path.endsWith("/player-prices") ? preview
       : path === "/my-team/popular-player" ? { player: players[0], ownerCount: 8, totalUsers: 23, percentage: 35 }
       : path === "/players" ? players.slice(0, 12)

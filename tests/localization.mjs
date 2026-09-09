@@ -31,7 +31,7 @@ await page.route('**/api/**',route=>{
  const path=new URL(route.request().url()).pathname.replace('/api','');
  if(path==='/auth/login') return route.fulfill({status:400,json:{message:apiErrorMessage}});
  if(path==='/admin/users') return route.fulfill({json:[user,{...user,id:'zero',name:'Zero',budget:0},{...user,id:'no-team',name:'No team',budget:null,playerCount:0}]});
- const data={ '/auth/me':{user},'/profile':{...user,fantasyTeam:team},'/my-team':team,'/my-team/transfers':{marketIsOpen:true,gameweek:week,bought:0,sold:0,limit:2},'/my-team/popular-player':{player:null,totalUsers:0,ownerCount:0,percentage:0},'/clubs':[club],'/clubs/club':club,'/clubs/club/players':[player],'/players':[player],'/player-prices':[player],'/gameweeks/current':week,'/gameweeks/leaderboard':[], '/gameweeks/history/me':[], '/gameweeks/scoring-rules':{},'/game-config':{initialBudget:40000},'/league':{id:'l',name:'League',_count:{members:0}},'/league/members':[], '/league/supporters':[], '/private-leagues/my':[], '/private-leagues/friend':{id:'friend',name:'Friends',members:[],ownerId:'user',inviteCode:'TEST'},'/admin/users':[user],'/admin/gameweeks':[week],'/admin/player-points':[player],'/admin/price-settings':{teamWin:null},'/admin/friend-leagues':[] }[path];
+ const data={ '/auth/me':{user},'/profile':{...user,fantasyTeam:team},'/my-team':team,'/my-team/transfers':{marketIsOpen:true,gameweek:week,bought:0,sold:0,limit:2},'/my-team/popular-player':{player:null,totalUsers:0,ownerCount:0,percentage:0},'/clubs':[club],'/clubs/club':club,'/clubs/club/players':[player],'/players':[player],'/player-prices':[player],'/gameweeks/current':week,'/gameweeks/leaderboard':[], '/gameweeks/history/me':[], '/gameweeks/scoring-rules':{},'/game-config':{initialBudget:40000},'/league':{id:'l',name:'League',_count:{members:0}},'/league/members':[], '/league/supporters':[], '/private-leagues/my':[], '/private-leagues/friend':{id:'friend',name:'Friends',members:[],ownerId:'user',inviteCode:'TEST'},'/admin/users':[user],'/admin/gameweeks':[week],'/admin/player-points':[player],'/admin/friend-leagues':[] }[path];
  if(path==='/auth/me' && anonymous) return route.fulfill({status:401,json:{message:'Требуется авторизация'}});
  if(path==='/league/members/user') return route.fulfill({json:{...user,fantasyTeam:team}});
  return route.fulfill({json:data??[]});
@@ -80,6 +80,10 @@ for(const width of [390,1280]) {
   await page.locator('h1').first().waitFor();
   await page.waitForLoadState('networkidle');
   if(path==='/player-prices') await page.locator('details').click();
+  if(path==='/admin/player-prices') {
+   assert.equal(await page.locator('.price-settings').count(), 0);
+   assert.equal(await page.locator('input[type="number"]').count(), 0);
+  }
   if(path==='/admin/player-points') {
    await page.locator('.admin-toolbar select').first().selectOption('week');
    await page.locator('.stats-player').first().click();

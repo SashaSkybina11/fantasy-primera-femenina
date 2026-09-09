@@ -1,4 +1,4 @@
-import { MatchResult, PlayerPosition, Prisma } from "@prisma/client";
+import { PlayerPosition, Prisma } from "@prisma/client";
 import { createHash } from "node:crypto";
 import { ApiError } from "../utils/http.js";
 
@@ -6,10 +6,9 @@ export const PRICE_RULES = { goal: 100, started: 30, yellowCard: -15, redCard: -
 
 export function calculatePlayerPriceDelta(input: {
   position: PlayerPosition; goals: number; started: boolean; yellowCards: number;
-  redCards: number; goalsConceded: number | null; result: MatchResult;
-}, teamWin: number | null) {
+  redCards: number; goalsConceded: number | null;
+}) {
   const components = {
-    teamResultDelta: input.result === "WIN" ? teamWin ?? 0 : 0,
     goalsDelta: input.goals * PRICE_RULES.goal,
     startedDelta: input.started ? PRICE_RULES.started : 0,
     yellowCardsDelta: input.yellowCards * PRICE_RULES.yellowCard,
@@ -35,7 +34,6 @@ export function rebasePriceHistory(priceBefore: number, deltas: number[]) {
 export async function previewPlayerPrices(tx: Prisma.TransactionClient, gameweekId: string) {
   const gameweek = await tx.gameweek.findUnique({ where: { id: gameweekId } });
   if (!gameweek) throw new ApiError(404, "Тур не найден");
-  const settings = await tx.priceSettings.findUnique({ where: { id: "default" } });
   const players = await tx.player.findMany({
     orderBy: { id: "asc" },
     include: { club: true, gameweekStats: { where: { gameweekId } }, priceChanges: { include: { gameweek: true }, orderBy: { gameweek: { number: "asc" } } } },
@@ -44,24 +42,24 @@ export async function previewPlayerPrices(tx: Prisma.TransactionClient, gameweek
     const stat = player.gameweekStats[0];
     const existing = player.priceChanges.find(row => row.gameweekId === gameweekId);
     const later = player.priceChanges.filter(row => row.gameweek.number > gameweek.number);
-    const teamWinBonus = existing ? existing.teamWinBonus : settings?.teamWin ?? null;
     const delta = calculatePlayerPriceDelta(stat ? { ...stat, position: player.position } : {
-      position: player.position, goals: 0, started: false, yellowCards: 0, redCards: 0, goalsConceded: null, result: "LOSS",
-    }, teamWinBonus);
+      position: player.position, goals: 0, started: false, yellowCards: 0, redCards: 0, goalsConceded: null,
+    });
     const priceBefore = existing?.priceBefore ?? later[0]?.priceBefore ?? player.price;
-    const rebased = rebasePriceHistory(priceBefore, [delta.priceDelta, ...later.map(row => row.priceDelta)]);
+    // Remove legacy win bonuses from later weeks when rebasing their history.
+    const rebased = rebasePriceHistory(priceBefore, [delta.priceDelta, ...later.map(row => row.priceDelta - row.teamResultPriceDelta)]);
     return {
       playerId: player.id, number: player.number, name: player.name, clubId: player.clubId,
       club: player.club.name, position: player.position, currentPrice: player.price,
       lastDelta: player.priceChanges.at(-1)?.priceDelta ?? 0,
       priceBefore, ...delta, priceAfter: rebased[0]!.priceAfter,
-      newCurrentPrice: rebased.at(-1)!.priceAfter, teamWinBonus,
+      newCurrentPrice: rebased.at(-1)!.priceAfter,
       applied: Boolean(existing), missingStats: !stat,
       later: later.map((row, index) => ({ id: row.id, ...rebased[index + 1]! })),
     };
   });
-  const revision = createHash("sha256").update(JSON.stringify({ gameweek, settings, players })).digest("hex");
-  return { gameweekId, teamWin: settings?.teamWin ?? null, revision, rows };
+  const revision = createHash("sha256").update(JSON.stringify({ priceRulesVersion: 2, gameweek, players })).digest("hex");
+  return { gameweekId, revision, rows };
 }
 
 export async function applyPlayerPrices(tx: Prisma.TransactionClient, gameweekId: string, revision: string, allowReopened = false) {
@@ -72,13 +70,13 @@ export async function applyPlayerPrices(tx: Prisma.TransactionClient, gameweekId
   for (const row of preview.rows) {
     const data = {
       priceBefore: row.priceBefore, priceAfter: row.priceAfter, priceDelta: row.priceDelta,
-      teamResultPriceDelta: row.teamResultDelta, goalsPriceDelta: row.goalsDelta, starterPriceDelta: row.startedDelta,
+      teamResultPriceDelta: 0, goalsPriceDelta: row.goalsDelta, starterPriceDelta: row.startedDelta,
       yellowCardsPriceDelta: row.yellowCardsDelta, redCardsPriceDelta: row.redCardsDelta, goalkeeperPriceDelta: row.goalkeeperDelta,
-      teamWinBonus: row.teamWinBonus,
+      teamWinBonus: null,
     };
     await tx.playerPriceChange.upsert({ where: { playerId_gameweekId: { playerId: row.playerId, gameweekId } },
       create: { playerId: row.playerId, gameweekId, ...data }, update: data });
-    for (const later of row.later) await tx.playerPriceChange.update({ where: { id: later.id }, data: { priceBefore: later.priceBefore, priceAfter: later.priceAfter } });
+    for (const later of row.later) await tx.playerPriceChange.update({ where: { id: later.id }, data: { priceBefore: later.priceBefore, priceAfter: later.priceAfter, priceDelta: later.priceDelta, teamResultPriceDelta: 0, teamWinBonus: null } });
     await tx.player.update({ where: { id: row.playerId }, data: { price: row.newCurrentPrice } });
   }
   return preview;

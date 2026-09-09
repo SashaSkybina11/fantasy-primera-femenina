@@ -364,6 +364,7 @@ model LeagueMember {
 }
 
 model PriceSettings {
+  // Legacy storage only: no longer read or exposed by the application.
   id String @id @default("default")
   teamWin Int?
   updatedAt DateTime @updatedAt
@@ -376,12 +377,14 @@ model PlayerPriceChange {
   priceBefore Int
   priceDelta Int
   priceAfter Int
+  // Retained to remove historical win bonuses during recalculation; new value is 0.
   teamResultPriceDelta Int @map("teamResultDelta")
   goalsPriceDelta Int @map("goalsDelta")
   starterPriceDelta Int @map("startedDelta")
   yellowCardsPriceDelta Int @map("yellowCardsDelta")
   redCardsPriceDelta Int @map("redCardsDelta")
   goalkeeperPriceDelta Int @map("goalkeeperDelta")
+  // Legacy storage only; cleared to null on recalculation.
   teamWinBonus Int?
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
   gameweek Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)

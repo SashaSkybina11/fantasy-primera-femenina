@@ -586,8 +586,6 @@ export const api = {
   supporters: () => request<ClubSupport[]>("/league/supporters"),
   member: (id: string) => request<MemberDetail>(`/league/members/${id}`),
   applyTeamResults: (gameweekId: string, results: Array<{ clubId: string; result: string }>) => request<{ ok: boolean }>(`/admin/gameweeks/${gameweekId}/team-results`, { method: "PUT", body: JSON.stringify({ results }) }),
-  priceSettings: () => request<{ teamWin: number | null }>("/admin/price-settings"),
-  savePriceSettings: (teamWin: number | null) => request<{ teamWin: number | null }>("/admin/price-settings", { method: "PUT", body: JSON.stringify({ teamWin }) }),
   previewPrices: (gameweekId: string) => request<PricePreview>(`/admin/gameweeks/${gameweekId}/player-prices`),
   applyPrices: (gameweekId: string, revision: string) => request<PricePreview>(`/admin/gameweeks/${gameweekId}/player-prices`, { method: "POST", body: JSON.stringify({ revision }) }),
   adminUsers: () => request<AdminUser[]>("/admin/users"),
@@ -666,12 +664,12 @@ export const api = {
 };
 
 export type PricePreview = {
-  gameweekId: string; teamWin: number | null; revision: string;
+  gameweekId: string; revision: string;
   rows: Array<{
     playerId: string; number: number; name: string; clubId: string; club: string;
     position: "GOALKEEPER" | "FIELD_PLAYER"; currentPrice: number; lastDelta: number;
     priceBefore: number; priceDelta: number; priceAfter: number; newCurrentPrice: number;
-    teamResultDelta: number; goalsDelta: number; startedDelta: number; yellowCardsDelta: number;
+    goalsDelta: number; startedDelta: number; yellowCardsDelta: number;
     redCardsDelta: number; goalkeeperDelta: number; applied: boolean; missingStats: boolean;
   }>;
 };
