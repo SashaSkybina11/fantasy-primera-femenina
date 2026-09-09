@@ -712,11 +712,32 @@ select:focus {
   font-size: 0.78rem;
   text-align: center;
 }
-.site-footer a {
+.site-footer .admin-contact {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-width: 100%;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
   color: var(--text);
   font-weight: 800;
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.site-footer .admin-contact:hover {
+  border-color: var(--accent);
+}
+.site-footer .admin-contact:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.admin-contact small {
+  font-weight: 400;
+}
+.admin-user__budget {
+  font-weight: 700;
 }
 .home-action,
 .home-team-summary,

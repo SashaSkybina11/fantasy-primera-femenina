@@ -167,6 +167,7 @@ const spanish = {
   "admin.title": "Administración",
   "admin.description": "Gestiona las cuentas registradas en la liga.",
   "admin.users": "Usuarios",
+  "admin.budget": "Presupuesto disponible",
   "admin.loading": "Cargando usuarios…",
   "admin.players": "{{count}} jugadoras en el equipo",
   "admin.roleAdmin": "Administradora",
@@ -441,7 +442,8 @@ const spanish = {
   "calendar.resultsDescription":
     "Resultados oficiales de la jornada en la web de la RFEF.",
   "calendar.openResults": "Abrir resultados RFEF",
-  "footer.creator": "Creadora del juego",
+  "footer.contactAdmin": "Contactar con la administración",
+  "footer.email": "fantasyfutsalspain@gmail.com",
 } as const;
 
 type TranslationKey = keyof typeof spanish;
@@ -607,6 +609,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "admin.title": "Адміністрування",
   "admin.description": "Керуйте зареєстрованими акаунтами ліги.",
   "admin.users": "Користувачі",
+  "admin.budget": "Залишок бюджету",
   "admin.loading": "Завантажуємо користувачів…",
   "admin.players": "Гравчинь у команді: {{count}}",
   "admin.roleAdmin": "Адміністраторка",
@@ -876,7 +879,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "calendar.resultsTitle": "Результати",
   "calendar.resultsDescription": "Офіційні результати туру на сайті RFEF.",
   "calendar.openResults": "Відкрити результати RFEF",
-  "footer.creator": "Творчиня гри",
+  "footer.contactAdmin": "Зв’язатися з адміністратором",
+  "footer.email": "fantasyfutsalspain@gmail.com",
 };
 
 const english: Record<TranslationKey, string> = {
@@ -1030,6 +1034,7 @@ const english: Record<TranslationKey, string> = {
   "admin.title": "Administration",
   "admin.description": "Manage registered league accounts.",
   "admin.users": "Users",
+  "admin.budget": "Remaining budget",
   "admin.loading": "Loading users…",
   "admin.players": "{{count}} players in the team",
   "admin.roleAdmin": "Administrator",
@@ -1272,7 +1277,8 @@ const english: Record<TranslationKey, string> = {
   "calendar.resultsTitle": "Results",
   "calendar.resultsDescription": "Official gameweek results on the RFEF website.",
   "calendar.openResults": "Open RFEF results",
-  "footer.creator": "Game creator",
+  "footer.contactAdmin": "Contact the administrator",
+  "footer.email": "fantasyfutsalspain@gmail.com",
 };
 
 const dictionaries: Record<Locale, Record<TranslationKey, string>> = {

@@ -21,7 +21,7 @@ const page=await browser.newPage(); const errors=[]; page.on('pageerror',e=>erro
 page.setDefaultTimeout(15000);
 let anonymous=false;
 let apiErrorMessage='Неверный email или пароль';
-const user={id:'user',name:'Test',email:'test@example.invalid',role:'ADMIN',status:'ACTIVE',createdAt:'2026-01-01',avatarUrl:null};
+const user={id:'user',name:'Test',email:'test@example.invalid',role:'ADMIN',status:'ACTIVE',createdAt:'2026-01-01',avatarUrl:null,budget:12345,playerCount:10,totalPoints:0};
 const week={id:'week',number:1,name:'Jornada 1',status:'COMPLETED',marketIsOpen:true,deadlineAt:'2026-09-04',endsAt:'2026-09-06',marketOpenAt:'2026-09-01',winners:[]};
 const club={id:'club',name:'Club',logoUrl:null,coach:null,president:null};
 const player={id:'p',name:'Player',number:1,clubId:'club',club,position:'FIELD_PLAYER',role:'ALA',price:4215,age:25,nationality:'ES',gameweekStats:[],priceChanges:[{id:'history',gameweek:week,priceBefore:4000,priceDelta:215,priceAfter:4215}]};
@@ -30,6 +30,7 @@ await page.addInitScript(()=>{localStorage.setItem('fantasy-futsal-token','test'
 await page.route('**/api/**',route=>{
  const path=new URL(route.request().url()).pathname.replace('/api','');
  if(path==='/auth/login') return route.fulfill({status:400,json:{message:apiErrorMessage}});
+ if(path==='/admin/users') return route.fulfill({json:[user,{...user,id:'zero',name:'Zero',budget:0},{...user,id:'no-team',name:'No team',budget:null,playerCount:0}]});
  const data={ '/auth/me':{user},'/profile':{...user,fantasyTeam:team},'/my-team':team,'/my-team/transfers':{marketIsOpen:true,gameweek:week,bought:0,sold:0,limit:2},'/my-team/popular-player':{player:null,totalUsers:0,ownerCount:0,percentage:0},'/clubs':[club],'/clubs/club':club,'/clubs/club/players':[player],'/players':[player],'/player-prices':[player],'/gameweeks/current':week,'/gameweeks/leaderboard':[], '/gameweeks/history/me':[], '/gameweeks/scoring-rules':{},'/game-config':{initialBudget:40000},'/league':{id:'l',name:'League',_count:{members:0}},'/league/members':[], '/league/supporters':[], '/private-leagues/my':[], '/private-leagues/friend':{id:'friend',name:'Friends',members:[],ownerId:'user',inviteCode:'TEST'},'/admin/users':[user],'/admin/gameweeks':[week],'/admin/player-points':[player],'/admin/price-settings':{teamWin:null},'/admin/friend-leagues':[] }[path];
  if(path==='/auth/me' && anonymous) return route.fulfill({status:401,json:{message:'Требуется авторизация'}});
  if(path==='/league/members/user') return route.fulfill({json:{...user,fantasyTeam:team}});
@@ -91,6 +92,19 @@ for(const width of [390,1280]) {
    await page.waitForFunction(l=>document.documentElement.lang===l,locale);
    await page.locator('h1').first().waitFor();
    const body=await page.locator('body').innerText();
+   const dictionary=dict[{es:'spanish',uk:'ukrainian',en:'english'}[locale]];
+   assert.ok(!/Oleksandra Skybina|Creadora del juego|Творчиня гри|Game creator/.test(body));
+   if(!anonymous) {
+    const contact=page.locator('.site-footer .admin-contact');
+    assert.equal(await contact.getAttribute('href'),'mailto:fantasyfutsalspain@gmail.com');
+    assert.equal(await contact.locator('span').innerText(),dictionary['footer.contactAdmin']);
+    assert.equal(await contact.locator('small').innerText(),'fantasyfutsalspain@gmail.com');
+   }
+   if(path==='/admin' || path==='/admin/users') {
+    const money=new Intl.NumberFormat({es:'es-ES',uk:'uk-UA',en:'en-GB'}[locale],{style:'currency',currency:'EUR',maximumFractionDigits:0});
+    const budgets=await page.locator('.admin-user__budget').allTextContents();
+    assert.deepEqual(budgets.map(s=>s.trim()),[12345,0,null].map(value=>dictionary['admin.budget']+': '+(value===null?dictionary['league.teamNotCreated']:money.format(value))));
+   }
    const attributes=await page.locator('[aria-label],[placeholder],[title],[alt]').evaluateAll(nodes=>nodes.flatMap(n=>['aria-label','placeholder','title','alt'].map(a=>n.getAttribute(a)??'')).join('\n'));
    bodies.push(body+'\n'+attributes);
    assert.ok(!/(Скрыть|Показать|@username)/.test(attributes),path+' untranslated attribute');
@@ -111,6 +125,9 @@ anonymous=false;
 await page.goto('http://127.0.0.1:5186/player-prices');
 await page.locator('details').click();
 await page.screenshot({path:'artifacts/consistency/player-prices.png',fullPage:true});
+await page.goto('http://127.0.0.1:5186/admin');
+await page.locator('.admin-user__budget').first().waitFor();
+await page.screenshot({path:'artifacts/consistency/admin-budgets-contact.png',fullPage:true});
 assert.deepEqual(errors,[]);
 fs.writeFileSync('artifacts/consistency/localization.json',JSON.stringify({keys:Object.keys(dict.spanish).length,checks,errors},null,2));
 console.log(`PASS: ${Object.keys(dict.spanish).length} matching translation keys in 3 languages; ${routes.length} pages × 2 widths × EN→ES→UK→EN; Spanish default and English persistence; no page errors`);

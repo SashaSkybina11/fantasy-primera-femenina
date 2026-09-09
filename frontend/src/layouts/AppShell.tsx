@@ -317,13 +317,12 @@ export function AppShell() {
       <main className="page-content">
         <Outlet />
         <footer className="site-footer">
-          {t("footer.creator")}:{" "}
           <a
-            href="https://www.instagram.com/s.skybina_19/"
-            target="_blank"
-            rel="noreferrer"
+            className="admin-contact"
+            href="mailto:fantasyfutsalspain@gmail.com"
           >
-            Oleksandra Skybina
+            <span>{t("footer.contactAdmin")}</span>
+            <small>{t("footer.email")}</small>
           </a>
         </footer>
       </main>

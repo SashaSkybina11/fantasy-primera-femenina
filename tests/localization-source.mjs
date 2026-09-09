@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 
 const failures = [];
 // Proper names, external brands, the IANA timezone and a phone-number mask.
-const invariantText = new Set(['Oleksandra Skybina', ': Europe/Madrid', 'RFEF', 'Instagram @', 'Instagram', 'WhatsApp', '+346XXXXXXXX']);
+const invariantText = new Set([': Europe/Madrid', 'RFEF', 'Instagram @', 'Instagram', 'WhatsApp', '+346XXXXXXXX']);
 let files = 0;
 function inspect(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {

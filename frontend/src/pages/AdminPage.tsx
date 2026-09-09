@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale } from "../contexts/LocaleContext";
-import { api } from "../services/api";
+import { api, formatEuro } from "../services/api";
 
 export function AdminPage() {
   const { user } = useAuth();
@@ -63,6 +63,11 @@ export function AdminPage() {
             <div>
               <strong>{member.name}</strong>
               <small>{member.email}</small>
+              <small className="admin-user__budget">
+                {t("admin.budget")}: {member.budget == null
+                  ? t("league.teamNotCreated")
+                  : formatEuro(member.budget, locale)}
+              </small>
               {member.instagram && (
                 <a
                   href={`https://instagram.com/${member.instagram}`}

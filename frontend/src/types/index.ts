@@ -112,6 +112,7 @@ export type MemberDetail = Pick<User, "id" | "name" | "avatarUrl"> & {
 };
 
 export type AdminUser = {
+  budget: number | null;
   id: string;
   name: string;
   email: string;

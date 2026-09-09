@@ -41,11 +41,11 @@ router.get("/users", asyncRoute(async (_request, response) => {
       whatsapp: true,
       contactConsent: true,
       createdAt: true,
-      fantasyTeam: { select: { _count: { select: { players: true } } } },
+      fantasyTeam: { select: { budget: true, _count: { select: { players: true } } } },
       gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true } },
     },
   });
-  response.json(users.map(({ fantasyTeam, gameweekPoints, ...user }) => ({ ...user, playerCount: fantasyTeam?._count.players ?? 0, totalPoints: gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0) })));
+  response.json(users.map(({ fantasyTeam, gameweekPoints, ...user }) => ({ ...user, budget: fantasyTeam?.budget ?? null, playerCount: fantasyTeam?._count.players ?? 0, totalPoints: gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0) })));
 }));
 
 router.get("/users/:id", asyncRoute(async (request, response) => {
