@@ -4214,3 +4214,548 @@ select:focus {
   height: 1rem;
   flex: none;
 }
+
+/* =========================================================
+   MY TEAM — FUTSAL PITCH
+   Clean final version
+   Formation: GK -> 1 -> 2 -> 1
+   Wide players sit on the halfway line.
+   Two penalty-area semicircles + halfway line + centre circle.
+   Goalkeeper CARD moves independently with negative top values.
+   ========================================================= */
+
+.squad-section--starters {
+  overflow: hidden;
+}
+
+.squad-field {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 680px;
+  border: 2px solid rgba(255, 255, 255, 0.78);
+  border-radius: 18px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 0,
+      rgba(255, 255, 255, 0.035) 56px,
+      rgba(0, 0, 0, 0.025) 56px,
+      rgba(0, 0, 0, 0.025) 112px
+    ),
+    linear-gradient(180deg, #b28a4e 0%, #b28a4e 100%);
+  isolation: isolate;
+}
+
+/* Halfway line */
+.squad-field::before {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.84);
+  content: "";
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Centre circle */
+.squad-field::after {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 116px;
+  height: 116px;
+  border: 2px solid rgba(255, 255, 255, 0.84);
+  border-radius: 50%;
+  background: transparent;
+  content: "";
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Goalkeeper anchor.
+   Keep this fixed: it positions the upper penalty semicircle.
+   Do NOT use this selector to move only the GK card. */
+.squad-field__goalkeeper {
+  position: absolute;
+  z-index: 4;
+  top: 10%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 200px;
+  transform: translateX(-50%);
+}
+
+/* Upper penalty-area semicircle */
+.squad-field__goalkeeper::before {
+  position: absolute;
+  z-index: -1;
+  top: -72px;
+  left: 50%;
+  width: min(250px, 72vw);
+  height: 120px;
+  border-right: 2px solid rgba(255, 255, 255, 0.78);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.78);
+  border-left: 2px solid rgba(255, 255, 255, 0.78);
+  border-radius: 0 0 150px 150px;
+  content: "";
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Move ONLY goalkeeper card upward.
+   Negative top = higher. Semicircle stays where it is. */
+.squad-field__goalkeeper .squad-player-card,
+.squad-field__goalkeeper .squad-slot--field {
+  position: relative;
+  top: -40px;
+}
+
+/* Field-player positioning layer */
+.squad-field__players {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+}
+
+.squad-field__players > * {
+  position: absolute;
+  pointer-events: auto;
+}
+
+/* First field player */
+.squad-field__players > :nth-child(1) {
+  top: 36%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Left flank — halfway line */
+.squad-field__players > :nth-child(2) {
+  top: 50%;
+  left: 18%;
+  transform: translate(-50%, -50%);
+}
+
+/* Right flank — halfway line */
+.squad-field__players > :nth-child(3) {
+  top: 50%;
+  right: 18%;
+  transform: translate(50%, -50%);
+}
+
+/* Last field player */
+.squad-field__players > :nth-child(4) {
+  top: 74%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Lower penalty-area semicircle */
+.squad-field__players::after {
+  position: absolute;
+  z-index: -1;
+  bottom: -2px;
+  left: 50%;
+  width: min(250px, 72vw);
+  height: 120px;
+  border-top: 2px solid rgba(255, 255, 255, 0.78);
+  border-right: 2px solid rgba(255, 255, 255, 0.78);
+  border-left: 2px solid rgba(255, 255, 255, 0.78);
+  border-radius: 150px 150px 0 0;
+  content: "";
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Cards on pitch only */
+.squad-field .squad-player-card {
+  width: 200px;
+  max-width: 200px;
+  min-height: 0;
+  padding: 0.7rem 0.58rem;
+  gap: 0.3rem;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+}
+
+.squad-field .jersey-number {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.squad-field .squad-player-card__main {
+  width: 100%;
+  min-width: 0;
+  flex: none;
+}
+
+.squad-field .squad-player-card h3 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.22rem;
+  width: 100%;
+  font-size: 0.8rem;
+  line-height: 1.15;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.squad-field .squad-player-card p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 0.12rem;
+  color: var(--muted);
+  font-size: 0.6rem;
+  line-height: 1.25;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.squad-field .captain-badge {
+  padding: 0.11rem 0.3rem;
+  font-size: 0.45rem;
+}
+
+.squad-field .squad-actions {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.22rem 0.42rem;
+  margin-top: 0.08rem;
+}
+
+.squad-field .squad-actions .text-button {
+  min-height: auto;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 0.49rem;
+  line-height: 1.2;
+}
+
+.squad-field .squad-actions .text-button--danger {
+  grid-column: auto;
+}
+
+.squad-field .squad-slot--field {
+  width: 200px;
+  max-width: 200px;
+  min-height: 72px;
+  height: auto;
+  border: 1px dashed rgba(255, 255, 255, 0.74);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 0.58rem;
+  text-align: center;
+}
+
+:root[data-theme="dark"] .squad-field .squad-player-card {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(11, 31, 58, 0.95);
+}
+
+/* Large desktop */
+@media (min-width: 1181px) {
+  .team-grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  }
+}
+
+/* Tablet / small laptop */
+@media (min-width: 761px) and (max-width: 1020px) {
+  .team-grid {
+    max-width: 760px;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 0 auto;
+  }
+
+  .squad-field {
+    min-height: 620px;
+  }
+
+  .squad-field__goalkeeper {
+    top: 9.5%;
+    width: 160px;
+  }
+
+  .squad-field__goalkeeper .squad-player-card,
+  .squad-field__goalkeeper .squad-slot--field {
+    top: -35px;
+  }
+
+  .squad-field .squad-player-card,
+  .squad-field .squad-slot--field {
+    width: 160px;
+    max-width: 160px;
+  }
+
+  .squad-field .squad-player-card {
+    padding: 0.62rem 0.5rem;
+  }
+
+  .squad-field .jersey-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.68rem;
+  }
+
+  .squad-field .squad-player-card h3 {
+    font-size: 0.74rem;
+  }
+
+  .squad-field .squad-player-card p {
+    font-size: 0.56rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .squad-section--starters {
+    padding: 0.7rem;
+  }
+
+  .squad-field {
+    min-height: 540px;
+    border-radius: 14px;
+  }
+
+  .squad-field::after {
+    width: 88px;
+    height: 88px;
+  }
+
+  .squad-field__goalkeeper {
+    top: 9%;
+    width: 136px;
+  }
+
+  .squad-field__goalkeeper::before {
+    top: -60px;
+    width: min(220px, 76vw);
+    height: 104px;
+    border-radius: 0 0 125px 125px;
+  }
+
+  .squad-field__goalkeeper .squad-player-card,
+  .squad-field__goalkeeper .squad-slot--field {
+    top: -28px;
+  }
+
+  .squad-field__players::after {
+    width: min(220px, 76vw);
+    height: 104px;
+    border-radius: 125px 125px 0 0;
+  }
+
+  .squad-field__players > :nth-child(1) {
+    top: 35.5%;
+  }
+
+  .squad-field__players > :nth-child(2) {
+    left: 18%;
+  }
+
+  .squad-field__players > :nth-child(3) {
+    right: 18%;
+  }
+
+  .squad-field__players > :nth-child(4) {
+    top: 74%;
+  }
+
+  .squad-field .squad-player-card,
+  .squad-field .squad-slot--field {
+    width: 136px;
+    max-width: 136px;
+  }
+
+  .squad-field .squad-player-card {
+    padding: 0.54rem 0.42rem;
+  }
+
+  .squad-field .jersey-number {
+    width: 29px;
+    height: 29px;
+    font-size: 0.64rem;
+  }
+
+  .squad-field .squad-player-card h3 {
+    font-size: 0.68rem;
+  }
+
+  .squad-field .squad-player-card p {
+    font-size: 0.52rem;
+    -webkit-line-clamp: 1;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 520px) {
+  .squad-field {
+    min-height: 500px;
+  }
+
+  .squad-field::after {
+    width: 78px;
+    height: 78px;
+  }
+
+  .squad-field__goalkeeper {
+    top: 8.75%;
+    width: 124px;
+  }
+
+  .squad-field__goalkeeper::before,
+  .squad-field__players::after {
+    width: min(200px, 78vw);
+    height: 94px;
+  }
+
+  .squad-field__goalkeeper .squad-player-card,
+  .squad-field__goalkeeper .squad-slot--field {
+    top: -30px;
+  }
+
+  .squad-field__players > :nth-child(1) {
+    top: 35%;
+  }
+
+  .squad-field__players > :nth-child(2) {
+    left: 17%;
+  }
+
+  .squad-field__players > :nth-child(3) {
+    right: 17%;
+  }
+
+  .squad-field .squad-player-card,
+  .squad-field .squad-slot--field {
+    width: 124px;
+    max-width: 124px;
+  }
+
+  .squad-field .squad-player-card {
+    padding: 0.48rem 0.36rem;
+  }
+
+  .squad-field .jersey-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.61rem;
+  }
+
+  .squad-field .squad-player-card h3 {
+    font-size: 0.65rem;
+  }
+
+  .squad-field .squad-player-card p {
+    font-size: 0.5rem;
+  }
+}
+
+/* Very small mobile */
+@media (max-width: 420px) {
+  .squad-field {
+    min-height: 470px;
+  }
+
+  .squad-field::after {
+    width: 70px;
+    height: 70px;
+  }
+
+  .squad-field__goalkeeper {
+    top: 8.5%;
+    width: 120px;
+  }
+
+  .squad-field__goalkeeper::before {
+    top: -53px;
+  }
+
+  .squad-field__goalkeeper::before,
+  .squad-field__players::after {
+    width: min(180px, 80vw);
+    height: 84px;
+  }
+
+  .squad-field__goalkeeper .squad-player-card,
+  .squad-field__goalkeeper .squad-slot--field {
+    top: -30px;
+  }
+
+  .squad-field__players > :nth-child(1) {
+    top: 34.5%;
+  }
+
+  .squad-field__players > :nth-child(2) {
+    left: 16%;
+  }
+
+  .squad-field__players > :nth-child(3) {
+    right: 16%;
+  }
+
+  .squad-field .squad-player-card,
+  .squad-field .squad-slot--field {
+    width: 120px;
+    max-width: 120px;
+  }
+
+  .squad-field .squad-player-card {
+    padding: 0.45rem 0.32rem;
+  }
+
+  .squad-field .jersey-number {
+    width: 27px;
+    height: 27px;
+    font-size: 0.6rem;
+  }
+
+  .squad-field .squad-player-card h3 {
+    font-size: 0.63rem;
+  }
+
+  .squad-field .squad-player-card p {
+    font-size: 0.49rem;
+  }
+
+  .squad-field .squad-actions {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
