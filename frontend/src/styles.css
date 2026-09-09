@@ -4593,12 +4593,12 @@ select:focus {
 
   .squad-field .squad-player-card,
   .squad-field .squad-slot--field {
-    width: 136px;
-    max-width: 136px;
+    width: 114px;
+    max-width: 114px;
   }
 
   .squad-field .squad-player-card {
-    padding: 0.54rem 0.42rem;
+    padding: 0.44rem 0.32rem;
   }
 
   .squad-field .jersey-number {
@@ -4726,12 +4726,12 @@ select:focus {
 
   .squad-field .squad-player-card,
   .squad-field .squad-slot--field {
-    width: 120px;
-    max-width: 120px;
+    width: 108px;
+    max-width: 108px;
   }
 
   .squad-field .squad-player-card {
-    padding: 0.45rem 0.32rem;
+    padding: 0.4rem 0.28rem;
   }
 
   .squad-field .jersey-number {
