@@ -106,7 +106,7 @@ export function MyTeamPage() {
       {locked && <p className="state-card">{t("team.marketLocked")}</p>}
       <div className="team-toolbar">
         <div>
-          <span className="status-dot" />
+          <span className="captain-status-star" aria-hidden="true">★</span>
           {team.players.some((entry) => entry.isCaptain)
             ? t("team.captainSelected")
             : t("team.selectCaptain")}

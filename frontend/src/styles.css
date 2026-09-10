@@ -1168,13 +1168,12 @@ select:focus {
   font-size: 0.78rem;
   font-weight: 700;
 }
-.status-dot {
+.captain-status-star {
   display: inline-block;
-  width: 8px;
-  height: 8px;
   margin-right: 0.45rem;
-  border-radius: 50%;
-  background: var(--accent-strong);
+  font-size: 1.5rem;
+  line-height: 1;
+  vertical-align: middle;
 }
 .team-grid {
   display: grid;
@@ -3121,8 +3120,9 @@ select:focus {
   margin-bottom: 1rem;
   padding: 0.8rem 1rem;
   border-radius: 12px;
-  background: var(--surface-soft);
-  color: var(--muted);
+  text-align: center;
+  background: var(--accent);
+  color: var(--text);
   font-size: 0.78rem;
   line-height: 1.5;
 }
@@ -4858,6 +4858,7 @@ select:focus {
   left: 0;
   color: #858b96;
 }
+.captain-status-star,
 .squad-icon--captain.is-captain {
   color: #f4b400;
 }
@@ -4991,15 +4992,19 @@ select:focus {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 300ms ease, visibility 0s linear 300ms;
+    transition:
+      opacity 300ms ease,
+      visibility 0s linear 300ms;
   }
   .mobile-menu {
     transform: translateX(100%);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 300ms ease, visibility 0s linear 300ms;
+    transition:
+      transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 300ms ease,
+      visibility 0s linear 300ms;
   }
   .mobile-menu-backdrop--open,
   .mobile-menu--open {
@@ -5026,13 +5031,26 @@ select:focus {
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-.popular-player__summary h3 { margin: 0; }
-.popular-player__percentage { font-size: 1.4rem; color: var(--primary); }
-.purchase-panel .filters--purchase { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.filters--purchase .filters__search { grid-column: 1 / -1; }
+.popular-player__summary h3 {
+  margin: 0;
+}
+.popular-player__percentage {
+  font-size: 1.4rem;
+  color: var(--primary);
+}
+.purchase-panel .filters--purchase {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.filters--purchase .filters__search {
+  grid-column: 1 / -1;
+}
 @media (min-width: 1181px) {
-  .purchase-panel .filters--purchase { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .purchase-panel .filters--purchase {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 @media (max-width: 420px) {
-  .purchase-panel .filters--purchase { grid-template-columns: minmax(0, 1fr); }
+  .purchase-panel .filters--purchase {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

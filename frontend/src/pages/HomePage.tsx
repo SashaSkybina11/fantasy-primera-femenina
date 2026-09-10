@@ -99,55 +99,6 @@ export function HomePage() {
           />
         </section>
       )}
-      <section className="home-concept">
-        <div className="home-concept__intro">
-          <p className="eyebrow">{t("home.conceptEyebrow")}</p>
-          <h2>{t("home.conceptTitle")}</h2>
-          <p>{t("home.conceptDescription")}</p>
-          <p className="home-concept__source">
-            {t("home.conceptSource")}{" "}
-            <a
-              href="https://rfef.es/es/competiciones/primera-futbol-sala-iberdrola"
-              target="_blank"
-              rel="noreferrer"
-            >
-              RFEF
-            </a>
-          </p>
-        </div>
-        <div className="concept-grid">
-          <article>
-            <span>01</span>
-            <h3>{t("home.conceptFantasyTitle")}</h3>
-            <p>{t("home.conceptFantasyDescription")}</p>
-          </article>
-          <article>
-            <span>02</span>
-            <h3>{t("home.conceptClubTitle")}</h3>
-            <p>{t("home.conceptClubDescription")}</p>
-          </article>
-          <article>
-            <span>03</span>
-            <h3>{t("home.conceptLeagueTitle")}</h3>
-            <p>{t("home.conceptLeagueDescription")}</p>
-          </article>
-          <article>
-            <span>04</span>
-            <h3>{t("home.conceptCalendarTitle")}</h3>
-            <p>{t("home.conceptCalendarDescription")}</p>
-          </article>
-          <article>
-            <span>05</span>
-            <h3>{t("home.conceptPointsTitle")}</h3>
-            <p>{t("home.conceptPointsDescription")}</p>
-          </article>
-          <article>
-            <span>06</span>
-            <h3>{t("home.conceptRatingTitle")}</h3>
-            <p>{t("home.conceptRatingDescription")}</p>
-          </article>
-        </div>
-      </section>
     </div>
   );
 }

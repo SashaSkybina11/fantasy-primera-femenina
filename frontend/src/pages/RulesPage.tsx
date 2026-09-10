@@ -64,6 +64,10 @@ export function RulesPage() {
           <h2>📊 {t("rules.ratingTitle")}</h2>
           <p>{t("rules.ratingBody")}</p>
         </article>
+        <article>
+          <h2>🤝 {t("rules.leaguesTitle")}</h2>
+          <p>{t("rules.leaguesBody")}</p>
+        </article>
         <article className="rules-market-value">
           <h2>{t("rules.valueTitle")}</h2>
           <table>
@@ -82,10 +86,6 @@ export function RulesPage() {
           <h3>{t("rules.valueExample")}</h3>
           <ul>{(["rules.valueBuy", "rules.valueLeave", "rules.valueNoPoints", "rules.valueScore", "rules.valueIncrease", "rules.valueSell"] as const).map(key => <li key={key}>{t(key)}</li>)}</ul>
           <p>{t("rules.valueConclusion")}</p>
-        </article>
-        <article>
-          <h2>🤝 {t("rules.leaguesTitle")}</h2>
-          <p>{t("rules.leaguesBody")}</p>
         </article>
       </div>
     </div>
