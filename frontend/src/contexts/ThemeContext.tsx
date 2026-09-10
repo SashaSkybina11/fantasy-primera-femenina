@@ -4,7 +4,7 @@ type ThemeContextValue = { theme: "light" | "dark"; toggleTheme: () => void };
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<"light" | "dark">(() => localStorage.getItem("fantasy-theme") === "dark" ? "dark" : "light");
+  const [theme, setTheme] = useState<"light" | "dark">(() => localStorage.getItem("fantasy-theme") === "light" ? "light" : "dark");
   useEffect(() => { document.documentElement.dataset.theme = theme; localStorage.setItem("fantasy-theme", theme); }, [theme]);
   const value = useMemo(() => ({ theme, toggleTheme: () => setTheme((current) => current === "light" ? "dark" : "light") }), [theme]);
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
