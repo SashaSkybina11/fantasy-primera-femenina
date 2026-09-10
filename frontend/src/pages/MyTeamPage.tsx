@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { Modal } from "../components/Modal";
+import { ClubLogo } from "../components/ClubLogo";
 import { BudgetDisplay } from "../components/BudgetDisplay";
 import { SquadSection } from "../components/SquadSection";
 import { api } from "../services/api";
@@ -16,6 +18,7 @@ export function MyTeamPage() {
   const market = useQuery({ queryKey: ["transfer-status"], queryFn: api.transferStatus, refetchInterval: 15000 });
   const locked = user?.role !== "ADMIN" && market.data?.marketIsOpen !== true;
   const queryClient = useQueryClient();
+  const [addPosition, setAddPosition] = useState<"GOALKEEPER" | "FIELD_PLAYER" | null>(null);
   const [removeTarget, setRemoveTarget] = useState<SquadEntry | null>(null);
   const refresh = () =>
     void Promise.all([
@@ -32,6 +35,7 @@ export function MyTeamPage() {
     }) => api.setStatus(playerId, status),
     onSuccess: () => {
       refresh();
+      setAddPosition(null);
       toast.success(t("team.updated"));
     },
     onError: (error) => toast.error(error.message),
@@ -77,11 +81,16 @@ export function MyTeamPage() {
   const team = teamQuery.data;
   const starters = team.players.filter((entry) => entry.status === "STARTER");
   const bench = team.players.filter((entry) => entry.status === "BENCH");
-  const onMove = (entry: SquadEntry) =>
+  const onMove = (entry: SquadEntry) => {
+    if (entry.status === "BENCH" && starters.filter(item => item.player.position === entry.player.position).length >= (entry.player.position === "GOALKEEPER" ? 1 : 4)) {
+      toast.error(t("squad.positionFull"));
+      return;
+    }
     move.mutate({
       playerId: entry.playerId,
       status: entry.status === "STARTER" ? "BENCH" : "STARTER",
     });
+  };
   const isComplete = team.players.length === 10;
 
   return (
@@ -114,7 +123,7 @@ export function MyTeamPage() {
             {t("team.goToPurchase")}
           </Link>
         </section>
-      ) : (
+      ) : null}
         <>
           <div className="team-grid">
             <SquadSection
@@ -122,7 +131,8 @@ export function MyTeamPage() {
               subtitle={t("team.startersSubtitle")}
               status="STARTER"
               players={starters}
-              showEmptySlots={false}
+              showEmptySlots
+              onAdd={setAddPosition}
               disabled={locked || move.isPending || captain.isPending || remove.isPending}
               onMove={onMove}
               onCaptain={(entry) =>
@@ -155,7 +165,15 @@ export function MyTeamPage() {
             </button>
           </div>
         </>
-      )}
+      {addPosition && <Modal title={t(addPosition === "GOALKEEPER" ? "squad.addGoalkeeper" : "squad.addFieldPlayer")} onClose={() => setAddPosition(null)} className="squad-detail-modal">
+        <div className="squad-picker">
+          {bench.filter(entry => entry.player.position === addPosition).map(entry => <button key={entry.id} className="squad-picker__player" disabled={locked || move.isPending || captain.isPending || remove.isPending} onClick={() => onMove(entry)}>
+            <span className="jersey-number">#{entry.player.displayNumber ?? entry.player.number}</span>
+            <span><strong>{entry.player.name}</strong><span className="squad-detail-club"><ClubLogo club={entry.player.club} />{entry.player.club.name}</span></span>
+          </button>)}
+          {!bench.some(entry => entry.player.position === addPosition) && <p>{t("squad.noBenchPlayers")}</p>}
+        </div>
+      </Modal>}
       {removeTarget && (
         <div
           className="modal-backdrop"

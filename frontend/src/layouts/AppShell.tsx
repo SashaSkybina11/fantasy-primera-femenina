@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoIosFootball } from "react-icons/io";
 import { GiBuyCard, GiRaceCar, GiRuleBook } from "react-icons/gi";
 import { RiTeamLine } from "react-icons/ri";
-import { MdOutlinePersonOutline } from "react-icons/md";
+import { MdOutlinePersonOutline, MdOutlineEuroSymbol } from "react-icons/md";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { TbPlayFootball } from "react-icons/tb";
 import { IoCalendarOutline } from "react-icons/io5";
@@ -20,6 +20,7 @@ type IconName =
   | "home"
   | "my-team"
   | "purchase"
+  | "prices"
   | "calendar"
   | "teams"
   | "profile"
@@ -37,6 +38,7 @@ function FootballIcon({ name }: { name: IconName }) {
   if (name === "home") return <IoIosFootball aria-hidden="true" />;
   if (name === "my-team") return <TbPlayFootball aria-hidden="true" />;
   if (name === "purchase") return <GiBuyCard aria-hidden="true" />;
+  if (name === "prices") return <MdOutlineEuroSymbol aria-hidden="true" />;
   if (name === "ranking") return <GiRaceCar aria-hidden="true" />;
   if (name === "rules") return <GiRuleBook aria-hidden="true" />;
   if (name === "calendar") return <IoCalendarOutline aria-hidden="true" />;
@@ -83,7 +85,7 @@ function NavLinks({
     {
       to: "/player-prices",
       label: t("prices.title"),
-      icon: "purchase" as const,
+      icon: "prices" as const,
     },
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },

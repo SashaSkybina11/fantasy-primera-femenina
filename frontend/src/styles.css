@@ -4759,3 +4759,133 @@ select:focus {
     flex-wrap: wrap;
   }
 }
+
+/* Editable lineup: four separate rows keep names and controls readable. */
+.squad-field--editable {
+  display: grid;
+  gap: 18px;
+  min-height: 0;
+  padding: 18px 10px;
+}
+.squad-field--editable .squad-field__goalkeeper,
+.squad-field--editable .squad-field__players {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  transform: none;
+}
+.squad-field--editable .squad-field__goalkeeper::before { top: -18px; }
+.squad-field--editable .squad-field__players {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 10px;
+  justify-items: center;
+}
+.squad-field--editable .squad-field__players > :nth-child(n),
+.squad-field--editable .squad-field__goalkeeper > :first-child {
+  position: relative;
+  inset: auto;
+  transform: none;
+}
+.squad-field--editable .squad-field__players > :first-child,
+.squad-field--editable .squad-field__players > :nth-child(4) { grid-column: 1 / -1; }
+.squad-field--editable .squad-player-card,
+.squad-field--editable .squad-slot--field {
+  width: 100%;
+  max-width: 180px;
+  min-height: 158px;
+  height: auto;
+  padding: 42px 6px 4px;
+  border-radius: 12px;
+}
+.squad-field--editable .squad-field__goalkeeper > :first-child,
+.squad-field--editable .squad-field__players > :first-child,
+.squad-field--editable .squad-field__players > :nth-child(4) { width: calc((100% - 10px) / 2); }
+.squad-field--editable .squad-slot--field {
+  padding: 0;
+  font-size: 2.5rem;
+  background: rgb(0 0 0 / 18%);
+  cursor: pointer;
+}
+.squad-player-card--compact { position: relative; }
+.squad-player-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  padding: 0 2px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+.squad-field--editable .squad-player-card h3 {
+  display: block;
+  margin: 0;
+  font-size: .875rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.squad-field--editable .jersey-number { width: auto; min-width: 36px; height: 30px; padding: 0 5px; font-size: .9rem; }
+.squad-icon {
+  position: absolute;
+  top: 0;
+  width: 44px;
+  height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.squad-icon--captain { left: 0; color: #858b96; }
+.squad-icon--captain.is-captain { color: #f4b400; }
+.squad-icon--remove { right: 0; color: var(--danger); }
+.squad-bench-button { margin-top: auto; min-height: 44px; width: 100%; border: 0; border-radius: 6px; background: var(--surface-soft); color: var(--text); font: inherit; font-size: .8rem; cursor: pointer; }
+.squad-detail-modal { width: min(420px, calc(100vw - 24px)); }
+.squad-detail-club { display: flex; align-items: center; gap: 10px; margin: 12px 0; overflow-wrap: anywhere; }
+.squad-detail-club .club-logo, .squad-detail-club .club-mark { flex-shrink: 0; width: 36px; height: 36px; }
+.squad-picker { display: grid; gap: 10px; }
+.squad-picker__player { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: transparent; color: inherit; text-align: left; font: inherit; cursor: pointer; }
+.squad-picker__player > span { min-width: 0; overflow-wrap: anywhere; }
+.squad-player-details:focus-visible, .squad-icon:focus-visible, .squad-bench-button:focus-visible, .squad-slot--field:focus-visible, .squad-picker__player:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (min-width: 600px) {
+  .squad-field--editable { padding: 20px; }
+  .squad-field--editable .squad-player-card h3 { font-size: 1rem; }
+}
+.squad-field--editable .squad-player-card,
+.squad-field--editable .squad-slot--field { z-index: 2; }
+.squad-bench-button { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.squad-field--editable .squad-player-card,
+:root[data-theme="dark"] .squad-field--editable .squad-player-card { background: var(--surface); }
+
+.squad-player-card--bench {
+  flex-direction: row;
+  padding: 44px 12px 12px;
+  gap: 12px;
+}
+.squad-player-card--bench .squad-icon--remove { left: 0; right: auto; }
+.squad-player-card--bench .squad-player-details {
+  flex: 1;
+  min-width: 0;
+  flex-direction: row;
+  text-align: left;
+  min-height: 44px;
+}
+.squad-player-card--bench h3 { margin: 0; font-size: 1rem; line-height: 1.4; overflow-wrap: anywhere; }
+.squad-exchange-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.squad-exchange-button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }

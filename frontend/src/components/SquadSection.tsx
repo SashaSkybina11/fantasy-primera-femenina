@@ -13,6 +13,7 @@ export function SquadSection({
   onMove,
   onCaptain,
   onRemove,
+  onAdd,
 }: {
   title: string;
   subtitle: string;
@@ -23,6 +24,7 @@ export function SquadSection({
   disabled?: boolean;
   onMove?: (entry: SquadEntry) => void;
   onCaptain?: (entry: SquadEntry) => void;
+  onAdd?: (position: "GOALKEEPER" | "FIELD_PLAYER") => void;
   onRemove?: (entry: SquadEntry) => void;
 }) {
   const { t } = useLocale();
@@ -39,6 +41,7 @@ export function SquadSection({
     <SquadPlayerCard
       key={entry.id}
       entry={entry}
+      compact={!readOnly}
       readOnly={readOnly}
       disabled={disabled}
       onMove={() => onMove?.(entry)}
@@ -63,14 +66,12 @@ export function SquadSection({
       </header>
 
       {status === "STARTER" ? (
-        <div className="squad-field">
+        <div className={`squad-field ${onAdd ? "squad-field--editable" : ""}`}>
           <div className="squad-field__goalkeeper">
             {goalkeeper ? (
               renderPlayer(goalkeeper)
             ) : showEmptySlots ? (
-              <div className="squad-slot squad-slot--field">
-                {t("squad.freeSlot")}
-              </div>
+              <button className="squad-slot squad-slot--field" disabled={disabled || !onAdd} aria-label={t("squad.addGoalkeeper")} onClick={() => onAdd?.("GOALKEEPER")}>+</button>
             ) : null}
           </div>
 
@@ -81,12 +82,15 @@ export function SquadSection({
               Array.from({
                 length: Math.max(0, 4 - fieldPlayers.length),
               }).map((_, index) => (
-                <div
+                <button
+                  disabled={disabled || !onAdd}
+                  aria-label={t("squad.addFieldPlayer")}
+                  onClick={() => onAdd?.("FIELD_PLAYER")}
                   className="squad-slot squad-slot--field"
                   key={`field-slot-${index}`}
                 >
-                  {t("squad.freeSlot")}
-                </div>
+                  +
+                </button>
               ))}
           </div>
         </div>
