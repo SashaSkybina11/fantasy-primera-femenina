@@ -229,19 +229,27 @@ export function AppShell() {
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={t("nav.openMenu")}
             aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
             ☰
           </button>
         </div>
       </header>
-      {menuOpen && (
-        <>
+      <>
           <button
-            className="mobile-menu-backdrop"
+            className={`mobile-menu-backdrop${menuOpen ? " mobile-menu-backdrop--open" : ""}`}
+            tabIndex={-1}
+            aria-hidden={!menuOpen}
             onClick={closeMenu}
             aria-label={t("nav.closeMenu")}
           />
-          <aside className="mobile-menu" aria-label={t("nav.primary")}>
+          <aside
+            id="mobile-menu"
+            className={`mobile-menu${menuOpen ? " mobile-menu--open" : ""}`}
+            aria-label={t("nav.primary")}
+            aria-hidden={!menuOpen}
+            ref={(element) => { if (element) element.inert = !menuOpen; }}
+          >
             <div className="mobile-menu__head">
               <span>{t("nav.menu")}</span>
               <button
@@ -276,8 +284,7 @@ export function AppShell() {
               </button>
             </div>
           </aside>
-        </>
-      )}
+      </>
       {logoutDialogOpen && (
         <div
           className="logout-modal-backdrop"

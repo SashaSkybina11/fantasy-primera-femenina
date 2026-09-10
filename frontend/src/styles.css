@@ -2086,7 +2086,7 @@ select:focus {
   }
   .mobile-menu nav {
     display: grid;
-    height: min(400px, calc(100dvh - 150px));
+    height: min(550px, calc(100dvh - 150px));
     min-height: 0;
     flex: none;
     align-content: start;
@@ -4774,7 +4774,9 @@ select:focus {
   width: 100%;
   transform: none;
 }
-.squad-field--editable .squad-field__goalkeeper::before { top: -18px; }
+.squad-field--editable .squad-field__goalkeeper::before {
+  top: -18px;
+}
 .squad-field--editable .squad-field__players {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4788,7 +4790,9 @@ select:focus {
   transform: none;
 }
 .squad-field--editable .squad-field__players > :first-child,
-.squad-field--editable .squad-field__players > :nth-child(4) { grid-column: 1 / -1; }
+.squad-field--editable .squad-field__players > :nth-child(4) {
+  grid-column: 1 / -1;
+}
 .squad-field--editable .squad-player-card,
 .squad-field--editable .squad-slot--field {
   width: 100%;
@@ -4800,14 +4804,18 @@ select:focus {
 }
 .squad-field--editable .squad-field__goalkeeper > :first-child,
 .squad-field--editable .squad-field__players > :first-child,
-.squad-field--editable .squad-field__players > :nth-child(4) { width: calc((100% - 10px) / 2); }
+.squad-field--editable .squad-field__players > :nth-child(4) {
+  width: calc((100% - 10px) / 2);
+}
 .squad-field--editable .squad-slot--field {
   padding: 0;
   font-size: 2.5rem;
   background: rgb(0 0 0 / 18%);
   cursor: pointer;
 }
-.squad-player-card--compact { position: relative; }
+.squad-player-card--compact {
+  position: relative;
+}
 .squad-player-details {
   display: flex;
   flex-direction: column;
@@ -4824,11 +4832,17 @@ select:focus {
 .squad-field--editable .squad-player-card h3 {
   display: block;
   margin: 0;
-  font-size: .875rem;
+  font-size: 0.875rem;
   line-height: 1.35;
   overflow-wrap: anywhere;
 }
-.squad-field--editable .jersey-number { width: auto; min-width: 36px; height: 30px; padding: 0 5px; font-size: .9rem; }
+.squad-field--editable .jersey-number {
+  width: auto;
+  min-width: 36px;
+  height: 30px;
+  padding: 0 5px;
+  font-size: 0.9rem;
+}
 .squad-icon {
   position: absolute;
   top: 0;
@@ -4840,33 +4854,106 @@ select:focus {
   font-size: 1.5rem;
   cursor: pointer;
 }
-.squad-icon--captain { left: 0; color: #858b96; }
-.squad-icon--captain.is-captain { color: #f4b400; }
-.squad-icon--remove { right: 0; color: var(--danger); }
-.squad-bench-button { margin-top: auto; min-height: 44px; width: 100%; border: 0; border-radius: 6px; background: var(--surface-soft); color: var(--text); font: inherit; font-size: .8rem; cursor: pointer; }
-.squad-detail-modal { width: min(420px, calc(100vw - 24px)); }
-.squad-detail-club { display: flex; align-items: center; gap: 10px; margin: 12px 0; overflow-wrap: anywhere; }
-.squad-detail-club .club-logo, .squad-detail-club .club-mark { flex-shrink: 0; width: 36px; height: 36px; }
-.squad-picker { display: grid; gap: 10px; }
-.squad-picker__player { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: transparent; color: inherit; text-align: left; font: inherit; cursor: pointer; }
-.squad-picker__player > span { min-width: 0; overflow-wrap: anywhere; }
-.squad-player-details:focus-visible, .squad-icon:focus-visible, .squad-bench-button:focus-visible, .squad-slot--field:focus-visible, .squad-picker__player:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.squad-icon--captain {
+  left: 0;
+  color: #858b96;
+}
+.squad-icon--captain.is-captain {
+  color: #f4b400;
+}
+.squad-icon--remove {
+  right: 0;
+  color: var(--danger);
+}
+.squad-bench-button {
+  margin-top: auto;
+  min-height: 44px;
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.squad-detail-modal {
+  width: min(420px, calc(100vw - 24px));
+}
+.squad-detail-club {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+}
+.squad-detail-club .club-logo,
+.squad-detail-club .club-mark {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+}
+.squad-picker {
+  display: grid;
+  gap: 10px;
+}
+.squad-picker__player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.squad-picker__player > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.squad-player-details:focus-visible,
+.squad-icon:focus-visible,
+.squad-bench-button:focus-visible,
+.squad-slot--field:focus-visible,
+.squad-picker__player:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
 @media (min-width: 600px) {
-  .squad-field--editable { padding: 20px; }
-  .squad-field--editable .squad-player-card h3 { font-size: 1rem; }
+  .squad-field--editable {
+    padding: 20px;
+  }
+  .squad-field--editable .squad-player-card h3 {
+    font-size: 1rem;
+  }
 }
 .squad-field--editable .squad-player-card,
-.squad-field--editable .squad-slot--field { z-index: 2; }
-.squad-bench-button { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+.squad-field--editable .squad-slot--field {
+  z-index: 2;
+}
+.squad-bench-button {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .squad-field--editable .squad-player-card,
-:root[data-theme="dark"] .squad-field--editable .squad-player-card { background: var(--surface); }
+:root[data-theme="dark"] .squad-field--editable .squad-player-card {
+  background: var(--surface);
+}
 
 .squad-player-card--bench {
   flex-direction: row;
   padding: 44px 12px 12px;
   gap: 12px;
 }
-.squad-player-card--bench .squad-icon--remove { left: 0; right: auto; }
+.squad-player-card--bench .squad-icon--remove {
+  left: 0;
+  right: auto;
+}
 .squad-player-card--bench .squad-player-details {
   flex: 1;
   min-width: 0;
@@ -4874,7 +4961,12 @@ select:focus {
   text-align: left;
   min-height: 44px;
 }
-.squad-player-card--bench h3 { margin: 0; font-size: 1rem; line-height: 1.4; overflow-wrap: anywhere; }
+.squad-player-card--bench h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
 .squad-exchange-button {
   display: grid;
   place-items: center;
@@ -4888,4 +4980,59 @@ select:focus {
   font-size: 1.25rem;
   cursor: pointer;
 }
-.squad-exchange-button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.squad-exchange-button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Keep the drawer mounted for smooth transitions in both directions. */
+@media (max-width: 1020px) {
+  .mobile-menu-backdrop {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 300ms ease, visibility 0s linear 300ms;
+  }
+  .mobile-menu {
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 300ms ease, visibility 0s linear 300ms;
+  }
+  .mobile-menu-backdrop--open,
+  .mobile-menu--open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+  .mobile-menu--open {
+    transform: translateX(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu,
+  .mobile-menu-backdrop {
+    transition: none;
+  }
+}
+
+.popular-player__summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.popular-player__summary h3 { margin: 0; }
+.popular-player__percentage { font-size: 1.4rem; color: var(--primary); }
+.purchase-panel .filters--purchase { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.filters--purchase .filters__search { grid-column: 1 / -1; }
+@media (min-width: 1181px) {
+  .purchase-panel .filters--purchase { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .purchase-panel .filters--purchase { grid-template-columns: minmax(0, 1fr); }
+}

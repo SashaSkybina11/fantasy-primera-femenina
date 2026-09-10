@@ -1,3 +1,4 @@
+import { ClubLogo } from "../components/ClubLogo";
 import { Modal } from "../components/Modal";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,7 +11,7 @@ import {
 } from "../components/PlayerFilters";
 import { useLocale } from "../contexts/LocaleContext";
 import { useAuth } from "../contexts/AuthContext";
-import { api, formatEuro, roleLabel } from "../services/api";
+import { api, formatEuro, nationalityLabel, roleLabel } from "../services/api";
 
 export function PurchasePlayersPage() {
   const { user } = useAuth();
@@ -19,6 +20,8 @@ export function PurchasePlayersPage() {
     clubId: "",
     role: "",
     search: "",
+    nationality: "",
+    priceSort: "",
   });
   const [squadOpen, setSquadOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -29,8 +32,8 @@ export function PurchasePlayersPage() {
   });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
   const players = useQuery({
-    queryKey: ["players", filters],
-    queryFn: () => api.players(filters),
+    queryKey: ["players", {}],
+    queryFn: () => api.players({}),
   });
   const gameweek = useQuery({
     queryKey: ["current-gameweek"],
@@ -52,6 +55,19 @@ export function PurchasePlayersPage() {
     },
     onError: (error) => toast.error(error.message),
   });
+
+  const nationalities = [...new Set((players.data ?? []).flatMap((player) => player.nationality ? [player.nationality.toUpperCase()] : []))]
+    .sort((a, b) => (nationalityLabel(a, locale) ?? a).localeCompare(nationalityLabel(b, locale) ?? b, locale));
+  const filteredPlayers = players.data?.filter((player) =>
+    (!filters.clubId || player.clubId === filters.clubId) &&
+    (!filters.role || player.role === filters.role) &&
+    (!filters.nationality || player.nationality?.toUpperCase() === filters.nationality) &&
+    (!filters.search || player.name.toLocaleLowerCase(locale).includes(filters.search.trim().toLocaleLowerCase(locale)))
+  );
+  if (filters.priceSort) {
+    filteredPlayers?.sort((a, b) => filters.priceSort === "asc" ? a.price - b.price : b.price - a.price);
+  }
+  const popularClub = clubs.data?.find((club) => club.id === popularity.data?.player?.club.id);
 
   if (team.isLoading)
     return <div className="state-card">{t("loading.team")}</div>;
@@ -152,14 +168,12 @@ export function PurchasePlayersPage() {
             </button>
           </p>
         ) : popularity.data.player ? (
-          <>
+          <div className="popular-player__summary">
+            <ClubLogo club={popularClub ?? { ...popularity.data.player.club, logoUrl: null, coach: null, president: null }} />
+            <span className="jersey-number">#{popularity.data.player.number}</span>
             <h3>{popularity.data.player.name}</h3>
-            <p>
-              {popularity.data.player.club.name} · №
-              {popularity.data.player.number}
-            </p>
-            <p>{popularity.data.percentage}%</p>
-          </>
+            <strong className="popular-player__percentage">{popularity.data.percentage}%</strong>
+          </div>
         ) : (
           <p className="muted">{t("purchase.popularEmpty")}</p>
         )}
@@ -190,6 +204,7 @@ export function PurchasePlayersPage() {
       <section className="purchase-panel">
         <PlayerFilters
           clubs={clubs.data ?? []}
+          nationalities={nationalities}
           value={filters}
           onChange={setFilters}
         />
@@ -201,12 +216,12 @@ export function PurchasePlayersPage() {
             {t("error.generic")}
           </div>
         )}
-        {players.data && (
+        {filteredPlayers && (
           <div className="purchase-grid">
-            {players.data.length === 0 ? (
+            {filteredPlayers.length === 0 ? (
               <div className="state-card">{t("player.notFound")}</div>
             ) : (
-              players.data.map((player) => {
+              filteredPlayers.map((player) => {
                 const alreadySelected = selected.has(player.id);
                 const clubLimitReached =
                   (clubCounts.get(player.clubId) ?? 0) >= 2;
