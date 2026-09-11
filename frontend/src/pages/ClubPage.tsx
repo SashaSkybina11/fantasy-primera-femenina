@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { IoIosFootball } from "react-icons/io";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
@@ -14,7 +15,7 @@ export function ClubPage() {
   const { clubId = "" } = useParams();
   const club = useQuery({ queryKey: ["club", clubId], queryFn: () => api.club(clubId) });
   const players = useQuery({ queryKey: ["clubPlayers", clubId], queryFn: () => api.clubPlayers(clubId), enabled: Boolean(clubId), refetchInterval: 15000 });
-  if (club.isLoading || players.isLoading) return <div className="state-card">{t("loading.club")}</div>;
+  if (club.isLoading || players.isLoading) return <div className="state-card"><Loader label={t("loading.club")} /></div>;
   if (club.isError || players.isError || !club.data) return <div className="state-card state-card--error">{t("error.clubNotFound")}</div>;
   const roster = players.data ?? [];
   const groupedRoster = roleOrder

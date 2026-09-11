@@ -149,7 +149,7 @@ h3 {
   display: grid;
   place-items: center;
 }
-.loader {
+.startup-loader {
   --color-1: #e30613;
   --color-2: #ffc400;
   --size: 1.95px;
@@ -158,8 +158,8 @@ h3 {
   width: calc(48 * var(--size));
   height: calc(48 * var(--size));
 }
-.loader::after,
-.loader::before {
+.startup-loader::after,
+.startup-loader::before {
   position: absolute;
   top: 0;
   left: 0;
@@ -168,13 +168,13 @@ h3 {
   height: calc(48 * var(--size));
   border: calc(4 * var(--size)) solid var(--color-1);
   content: "";
-  animation: animloader 2s ease-in-out infinite;
+  animation: startup-loader-animation 2s ease-in-out infinite;
 }
-.loader::after {
+.startup-loader::after {
   border-color: var(--color-2);
   animation-delay: 1s;
 }
-@keyframes animloader {
+@keyframes startup-loader-animation {
   0% {
     opacity: 1;
     transform: scale(0);
@@ -2085,7 +2085,7 @@ select:focus {
   }
   .mobile-menu nav {
     display: grid;
-    height: min(550px, calc(100dvh - 150px));
+    height: min(530px, calc(100dvh - 150px));
     min-height: 0;
     flex: none;
     align-content: start;
@@ -3218,8 +3218,8 @@ select:focus {
 }
 @media (max-width: 760px) {
   .mobile-menu .nav-link {
-    font-size: 1.05rem;
-    min-height: 44px;
+    font-size: 0.9rem;
+    min-height: 38px;
   }
   .mobile-menu .nav-link span {
     min-width: 0;
@@ -4762,10 +4762,11 @@ select:focus {
 
 /* Editable lineup: four separate rows keep names and controls readable. */
 .squad-field--editable {
+  --field-block-padding: 18px;
   display: grid;
   gap: 18px;
   min-height: 0;
-  padding: 18px 10px;
+  padding: var(--field-block-padding) 10px;
 }
 .squad-field--editable .squad-field__goalkeeper,
 .squad-field--editable .squad-field__players {
@@ -4775,7 +4776,10 @@ select:focus {
   transform: none;
 }
 .squad-field--editable .squad-field__goalkeeper::before {
-  top: -18px;
+  top: calc(-1 * var(--field-block-padding));
+}
+.squad-field--editable .squad-field__players::after {
+  bottom: calc(-1 * var(--field-block-padding));
 }
 .squad-field--editable .squad-field__players {
   display: grid;
@@ -4879,7 +4883,7 @@ select:focus {
   cursor: pointer;
 }
 .squad-detail-modal {
-  width: min(420px, calc(100vw - 24px));
+  width: min(320px, calc(100vw - 24px));
 }
 .squad-detail-club {
   display: flex;
@@ -4924,9 +4928,21 @@ select:focus {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
+@media (max-width: 599px) {
+  .squad-field--editable .squad-bench-button {
+    min-height: 32px;
+    padding: 4px 6px;
+    font-size: 0.75rem;
+  }
+  .squad-field--editable .squad-player-card,
+  .squad-field--editable .squad-slot--field {
+    min-height: 146px;
+  }
+}
 @media (min-width: 600px) {
   .squad-field--editable {
-    padding: 20px;
+    --field-block-padding: 20px;
+    padding: var(--field-block-padding) 20px;
   }
   .squad-field--editable .squad-player-card h3 {
     font-size: 1rem;
@@ -5053,5 +5069,45 @@ select:focus {
 @media (max-width: 420px) {
   .purchase-panel .filters--purchase {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Animated text for in-app loading states. */
+.loader {
+  --color-1: #ff0000;
+  --color-2: #ffbc00;
+  --size: 1px;
+  font-size: calc(48 * var(--size));
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  display: inline-block;
+  letter-spacing: calc(2 * var(--size));
+  background: linear-gradient(
+    90deg,
+    var(--color-1) 0%,
+    var(--color-2) 25%,
+    var(--color-1) 50%,
+    var(--color-2) 75%,
+    var(--color-1) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  box-sizing: border-box;
+  animation: animloader 2s linear infinite;
+}
+@keyframes animloader {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loader {
+    animation: none;
   }
 }

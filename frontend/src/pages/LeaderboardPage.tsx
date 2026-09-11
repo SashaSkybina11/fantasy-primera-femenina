@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useState } from "react";
 import { PublicLineupModal } from "../components/PublicLineupModal";
 import { useQuery } from "@tanstack/react-query";
@@ -29,7 +30,7 @@ export function LeaderboardPage() {
             <h2>{t("leaderboard.overall")}</h2>
             <span>{leaderboard.data?.length ?? 0}</span>
           </div>
-          {leaderboard.isPending && <p className="state-card">{t("admin.loading")}</p>}
+          {leaderboard.isPending && <p className="state-card"><Loader label={t("admin.loading")} /></p>}
           {leaderboard.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}
           {leaderboard.data?.length === 0 && <p className="state-card">{t("lineup.rankingEmpty")}</p>}
           {leaderboard.data?.map((row) => (

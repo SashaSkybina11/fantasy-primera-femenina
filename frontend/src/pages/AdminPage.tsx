@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -54,7 +55,7 @@ export function AdminPage() {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-        {users.isLoading && <p className="muted">{t("admin.loading")}</p>}
+        {users.isLoading && <p className="muted"><Loader label={t("admin.loading")} /></p>}
         {users.isError && (
           <p className="state-card state-card--error">{t("error.generic")}</p>
         )}

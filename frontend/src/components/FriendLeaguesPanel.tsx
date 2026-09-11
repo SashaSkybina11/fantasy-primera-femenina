@@ -1,3 +1,4 @@
+import { Loader } from "./Loader";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -39,7 +40,7 @@ export function FriendLeaguesPanel() {
   });
   return (
     <section className="profile-card friend-leagues">
-      {leagues.isPending && <p role="status">{t("loading.app")}</p>}
+      {leagues.isPending && <p role="status"><Loader label={t("loading.app")} /></p>}
       {leagues.isError && <p role="alert">{t("error.generic")} <button className="button button--secondary" onClick={() => void leagues.refetch()}>{t("friends.retry")}</button></p>}
       {leagues.isSuccess && leagues.data.length === 0 && <p className="muted">{t("friends.empty")}</p>}
       <div className="friend-league-list">

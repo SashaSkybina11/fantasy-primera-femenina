@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
@@ -15,7 +16,7 @@ export function AdminFriendLeaguesPage() {
   const remove = useMutation({ mutationFn: api.deleteAdminFriendLeague, onSuccess: async () => { setSelected(null); await client.invalidateQueries(); } });
   if (user?.role !== "ADMIN") return <Navigate to="/" replace />;
   return <div className="page admin-leagues-page"><header className="page-heading"><p className="eyebrow">{t("admin.eyebrow")}</p><h1>{t("adminLeagues.title")}</h1></header>
-    {leagues.isPending ? <p className="state-card">{t("admin.loading")}</p> : leagues.isError ? <p className="state-card state-card--error">{t("error.generic")} <button className="button" onClick={() => void leagues.refetch()}>{t("friends.retry")}</button></p> : !leagues.data.length ? <p className="state-card">{t("adminLeagues.empty")}</p> : <div className="admin-league-grid">{leagues.data.map((league) => <article className="admin-card admin-league-card" key={league.id}>
+    {leagues.isPending ? <p className="state-card"><Loader label={t("admin.loading")} /></p> : leagues.isError ? <p className="state-card state-card--error">{t("error.generic")} <button className="button" onClick={() => void leagues.refetch()}>{t("friends.retry")}</button></p> : !leagues.data.length ? <p className="state-card">{t("adminLeagues.empty")}</p> : <div className="admin-league-grid">{leagues.data.map((league) => <article className="admin-card admin-league-card" key={league.id}>
       <h2>{league.name}</h2><dl><div><dt>{t("adminLeagues.owner")}</dt><dd>{league.owner.name}</dd></div><div><dt>{t("adminLeagues.members")}</dt><dd>{league._count.members}</dd></div><div><dt>{t("adminLeagues.created")}</dt><dd>{new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES").format(new Date(league.createdAt))}</dd></div><div><dt>{t("adminLeagues.code")}</dt><dd>{league.inviteCode}</dd></div></dl>
       <button className="button" onClick={() => { remove.reset(); setSelected(league); }}>{t("admin.delete")}</button>
     </article>)}</div>}

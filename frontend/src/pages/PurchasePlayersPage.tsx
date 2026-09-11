@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { ClubLogo } from "../components/ClubLogo";
 import { Modal } from "../components/Modal";
 import { useState } from "react";
@@ -70,7 +71,7 @@ export function PurchasePlayersPage() {
   const popularClub = clubs.data?.find((club) => club.id === popularity.data?.player?.club.id);
 
   if (team.isLoading)
-    return <div className="state-card">{t("loading.team")}</div>;
+    return <div className="state-card"><Loader label={t("loading.team")} /></div>;
   if (team.isError || !team.data)
     return (
       <div className="state-card state-card--error">{t("error.generic")}</div>
@@ -111,7 +112,7 @@ export function PurchasePlayersPage() {
       </div>
       {gameweek.isLoading && (
         <section className="purchase-deadline purchase-deadline--loading">
-          <strong>{t("purchase.scheduleLoading")}</strong>
+          <strong><Loader label={t("purchase.scheduleLoading")} /></strong>
         </section>
       )}
       {gameweek.isError && (
@@ -156,7 +157,7 @@ export function PurchasePlayersPage() {
         <h2>{t("purchase.popularTitle")}</h2>
 
         {popularity.isPending ? (
-          <p>{t("loading.players")}</p>
+          <p><Loader label={t("loading.players")} /></p>
         ) : popularity.isError ? (
           <p role="alert">
             {t("error.generic")}{" "}
@@ -209,7 +210,7 @@ export function PurchasePlayersPage() {
           onChange={setFilters}
         />
         {players.isLoading && (
-          <div className="state-card">{t("loading.players")}</div>
+          <div className="state-card"><Loader label={t("loading.players")} /></div>
         )}
         {players.isError && (
           <div className="state-card state-card--error">

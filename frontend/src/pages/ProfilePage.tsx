@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -78,7 +79,7 @@ export function ProfilePage() {
     onError: (error) => toast.error(error.message),
   });
   if (profile.isLoading)
-    return <div className="state-card">{t("loading.profile")}</div>;
+    return <div className="state-card"><Loader label={t("loading.profile")} /></div>;
   if (profile.isError || !profile.data)
     return (
       <div className="state-card state-card--error">{t("error.generic")}</div>

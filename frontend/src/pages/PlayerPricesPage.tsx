@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "../contexts/LocaleContext";
@@ -12,7 +13,7 @@ export function PlayerPricesPage() {
   return <div className="page">
     <header className="page-heading"><h1>{t("prices.title")}</h1></header>
     <input value={search} onChange={event => setSearch(event.target.value)} placeholder={t("adminStats.searchPlaceholder")} aria-label={t("adminStats.searchPlaceholder")} />
-    {prices.isPending && <p>{t("loading.players")}</p>}
+    {prices.isPending && <p><Loader label={t("loading.players")} /></p>}
     {prices.isError && <p role="alert">{t("error.generic")}</p>}
     <div className="price-preview-grid">{prices.data?.filter(player => `${player.name} ${player.club?.name}`.toLowerCase().includes(search.toLowerCase())).map(player => <article className="admin-card" key={player.id}>
       <h2>{player.name}</h2><p>{player.club?.name}</p>

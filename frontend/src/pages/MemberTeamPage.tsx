@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
@@ -12,7 +13,7 @@ export function MemberTeamPage() {
   const [compare, setCompare] = useState(false);
   const member = useQuery({ queryKey: ["member", userId], queryFn: () => api.member(userId) });
   const ownTeam = useQuery({ queryKey: ["team"], queryFn: api.team });
-  if (member.isLoading || ownTeam.isLoading) return <div className="state-card">{t("loading.team")}</div>;
+  if (member.isLoading || ownTeam.isLoading) return <div className="state-card"><Loader label={t("loading.team")} /></div>;
   if (member.isError || ownTeam.isError || !member.data || !ownTeam.data) return <div className="state-card state-card--error">{t("error.memberNotFound")}</div>;
   const players = member.data.fantasyTeam.players;
   const starterPlayers = players.filter((entry) => entry.status === "STARTER");

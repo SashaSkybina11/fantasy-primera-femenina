@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -32,7 +33,7 @@ export function PrivateLeaguePage() {
     },
     onError: (error) => toast.error(error.message),
   });
-  if (league.isLoading) return <div className="state-card">…</div>;
+  if (league.isLoading) return <div className="state-card"><Loader label={t("loading.league")} /></div>;
   if (!league.data)
     return (
       <div className="state-card state-card--error">{t("error.generic")}</div>

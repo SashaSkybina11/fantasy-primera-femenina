@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useQuery } from "@tanstack/react-query";
 import { LeagueMemberCard } from "../components/LeagueMemberCard";
 import { useAuth } from "../contexts/AuthContext";
@@ -11,7 +12,7 @@ export function LeaguePage() {
   const league = useQuery({ queryKey: ["league"], queryFn: api.league });
   const members = useQuery({ queryKey: ["members"], queryFn: api.members });
   const supporters = useQuery({ queryKey: ["supporters"], queryFn: api.supporters });
-  if (league.isLoading || members.isLoading) return <div className="state-card">{t("loading.league")}</div>;
+  if (league.isLoading || members.isLoading) return <div className="state-card"><Loader label={t("loading.league")} /></div>;
   if (league.isError || members.isError || !league.data || !members.data) return <div className="state-card state-card--error">{t("error.generic")}</div>;
   const memberCount = league.data._count.members;
   const maxSupport = Math.max(...(supporters.data?.map((club) => club.count) ?? []), 1);

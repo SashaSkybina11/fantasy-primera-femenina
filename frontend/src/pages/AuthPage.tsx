@@ -16,7 +16,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const isRegister = mode === "register";
   const [isPending, setIsPending] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-  if (isLoading) return <main className="initial-loader"><Loader label={t("loading.app")} /></main>;
+  if (isLoading) return <main className="initial-loader"><Loader initial label={t("loading.app")} /></main>;
   if (user) return <Navigate to="/" replace />;
 
   const submit = async (event: React.FormEvent) => {

@@ -1,3 +1,4 @@
+import { Loader } from "../components/Loader";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -73,7 +74,7 @@ export function MyTeamPage() {
     onError: (error) => toast.error(error.message),
   });
   if (teamQuery.isLoading)
-    return <div className="state-card">{t("loading.team")}</div>;
+    return <div className="state-card"><Loader label={t("loading.team")} /></div>;
   if (teamQuery.isError || !teamQuery.data)
     return (
       <div className="state-card state-card--error">{t("error.generic")}</div>

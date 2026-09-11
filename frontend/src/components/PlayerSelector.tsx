@@ -1,3 +1,4 @@
+import { Loader } from "./Loader";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -41,7 +42,7 @@ export function PlayerSelector({ team, onClose }: { team: FantasyTeam; onClose: 
       <section className="selector-modal" role="dialog" aria-modal="true" aria-labelledby="selector-title" onMouseDown={(event) => event.stopPropagation()}>
         <header className="modal-header"><div><p className="eyebrow">{t("player.market")}</p><h2 id="selector-title">{t("team.addPlayer")}</h2></div><button className="icon-button" onClick={onClose} aria-label={t("player.close")}>×</button></header>
         <PlayerFilters clubs={clubs.data ?? []} value={filters} onChange={setFilters} />
-        {players.isLoading && <div className="state-card">{t("loading.players")}</div>}
+        {players.isLoading && <div className="state-card"><Loader label={t("loading.players")} /></div>}
         {players.isError && <div className="state-card state-card--error">{t("error.generic")}</div>}
         {players.data && <div className="selector-grid">
           {players.data.length === 0 ? <div className="state-card">{t("player.notFound")}</div> : players.data.map((player) => {
