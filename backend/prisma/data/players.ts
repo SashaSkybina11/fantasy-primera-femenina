@@ -1209,6 +1209,15 @@ export const players: SeedPlayer[] = [
   // Cajasol Guadalcacin FS
   {
     club: "Cajasol Guadalcacin FS",
+    number: 13,
+    name: "Serpa Da Silva, Gleice",
+    position: fieldPlayer,
+    role: pivot,
+    price: 3500,
+    nationality: "BR",
+  },
+  {
+    club: "Cajasol Guadalcacin FS",
     number: 1,
     name: "Nuin Martinez, Celia",
     position: goalkeeper,

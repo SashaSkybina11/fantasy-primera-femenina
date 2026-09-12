@@ -473,6 +473,9 @@ const spanish = {
   "calendar.resultsDescription":
     "Resultados oficiales de la jornada en la web de la RFEF.",
   "calendar.openResults": "Abrir resultados RFEF",
+  "calendar.standingsTitle": "Clasificación",
+  "calendar.standingsDescription": "Clasificación oficial de Primera División Fútbol Sala Femenino en la web de la RFEF.",
+  "calendar.openStandings": "Abrir clasificación RFEF",
   "footer.contactAdmin": "Contactar con la administración",
   "footer.email": "fantasyfutsalspain@gmail.com",
 } as const;
@@ -940,6 +943,9 @@ const ukrainian: Record<TranslationKey, string> = {
   "calendar.resultsTitle": "Результати",
   "calendar.resultsDescription": "Офіційні результати туру на сайті RFEF.",
   "calendar.openResults": "Відкрити результати RFEF",
+  "calendar.standingsTitle": "Турнірна таблиця",
+  "calendar.standingsDescription": "Офіційна турнірна таблиця Primera División Fútbol Sala Femenino на сайті RFEF.",
+  "calendar.openStandings": "Відкрити турнірну таблицю RFEF",
   "footer.contactAdmin": "Зв’язатися з адміністратором",
   "footer.email": "fantasyfutsalspain@gmail.com",
 };
@@ -1409,6 +1415,9 @@ const english: Record<TranslationKey, string> = {
   "calendar.resultsDescription":
     "Official gameweek results on the RFEF website.",
   "calendar.openResults": "Open RFEF results",
+  "calendar.standingsTitle": "Standings",
+  "calendar.standingsDescription": "Official Women's Futsal First Division standings on the RFEF website.",
+  "calendar.openStandings": "Open RFEF standings",
   "footer.contactAdmin": "Contact the administrator",
   "footer.email": "fantasyfutsalspain@gmail.com",
 };
