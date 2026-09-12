@@ -2124,7 +2124,7 @@ export const players: SeedPlayer[] = [
   },
   {
     club: "FSF Castro Bloques Cando",
-    number: 6,
+    number: 3,
     name: "Santos Rodrigues, Jennifer",
     position: fieldPlayer,
     role: ala,
