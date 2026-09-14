@@ -14,6 +14,7 @@ export async function applyTeamResults(tx: Prisma.TransactionClient, gameweekId:
     if (!gameweek) throw new ApiError(404, "Тур не найден");
     if (gameweek.status === "COMPLETED") throw new ApiError(409, "Сначала повторно откройте завершённый тур");
     for (const { clubId, result } of results) {
+      if (await tx.matchTeam.findFirst({ where: { gameweekId, clubId, match: { publishedAt: { not: null } } } })) throw new ApiError(409, "MATCH_USE_EDITOR");
       const club = await tx.club.findUnique({ where: { id: clubId }, include: { players: { include: { gameweekStats: { where: { gameweekId } } } } } });
       if (!club) throw new ApiError(404, "Команда не найдена");
       for (const player of club.players) {

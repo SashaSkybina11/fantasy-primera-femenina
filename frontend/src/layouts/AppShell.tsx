@@ -87,6 +87,7 @@ function NavLinks({
       label: t("prices.title"),
       icon: "prices" as const,
     },
+    { to: "/results", label: t("matches.title"), icon: "trophy" as const },
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/league", label: t("nav.league"), icon: "trophy" as const },
@@ -112,8 +113,8 @@ function NavLinks({
             end: true,
           },
           {
-            to: "/admin/player-points",
-            label: t("adminStats.title"),
+            to: "/admin/matches",
+            label: t("matches.admin"),
             icon: "admin" as const,
           },
           {

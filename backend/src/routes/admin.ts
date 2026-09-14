@@ -81,6 +81,7 @@ router.put("/gameweeks/:gameweekId/players/:playerId/stats", asyncRoute(async (r
     const [gameweek, player, old] = await Promise.all([tx.gameweek.findUnique({ where: { id: gameweekId } }), tx.player.findUnique({ where: { id: playerId } }), tx.playerGameweekStats.findUnique({ where: { gameweekId_playerId: { gameweekId, playerId } } })]);
     if (!gameweek || !player) throw new ApiError(404, "Тур или игрок не найден");
     if (gameweek.status === GameweekStatus.COMPLETED) throw new ApiError(409, "Сначала повторно откройте завершённый тур");
+    if (await tx.matchTeam.findFirst({ where: { gameweekId, clubId: player.clubId, match: { publishedAt: { not: null } } } })) throw new ApiError(409, "MATCH_USE_EDITOR");
     const input = { ...parsed, adjustmentPoints: parsed.adjustmentPoints ?? old?.adjustmentPoints ?? 0, adjustmentReason: parsed.adjustmentReason ?? old?.adjustmentReason ?? undefined };
     Object.assign(input, normalizeGoalkeeperStats(player.position, input));
     if (input.adjustmentPoints !== 0 && !input.adjustmentReason) throw new ApiError(400, "Укажите причину корректировки");
@@ -98,6 +99,7 @@ router.post("/gameweeks/:id/complete", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const result = await inTransaction(async (tx) => {
     const gameweek = await tx.gameweek.findUnique({ where: { id } }); if (!gameweek) throw new ApiError(404, "Тур не найден");
+    if (await tx.match.count({ where: { gameweekId: id, publishedAt: null } })) throw new ApiError(409, "MATCH_UNPUBLISHED");
     if (gameweek.deadlineAt > new Date()) throw new ApiError(409, "GAMEWEEK_NOT_LOCKED");
     const oldWinners = await tx.gameweekWinner.findMany({ where: { gameweekId: id } });
     await tx.gameweek.update({ where: { id }, data: { status: GameweekStatus.COMPLETED } });

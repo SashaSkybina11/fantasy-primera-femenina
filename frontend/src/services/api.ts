@@ -1,3 +1,4 @@
+import type { MatchRecord, MatchEditorData, MatchProtocol } from "../types/matches";
 import type {
   AdminUser,
   Club,
@@ -32,6 +33,16 @@ const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, Record<Locale, string>> = {
+ MATCH_UNPUBLISHED: { es: "Publica las actas de todos los partidos antes de finalizar la jornada.", uk: "Опублікуйте протоколи всіх матчів перед завершенням туру.", en: "Publish all match reports before completing the gameweek." },
+  MATCH_NOT_FOUND: {"es":"Partido o jornada no encontrado.","uk":"Матч або тур не знайдено.","en":"Match or gameweek not found."},
+  MATCH_TEAMS: {"es":"Selecciona dos equipos diferentes.","uk":"Оберіть дві різні команди.","en":"Select two different teams."},
+  MATCH_DUPLICATE: {"es":"Uno de estos equipos ya tiene un partido en esta jornada.","uk":"Одна з команд уже має матч у цьому турі.","en":"One of these teams already has a match in this gameweek."},
+  MATCH_LOCKED: {"es":"Reabre la jornada antes de editar el partido.","uk":"Відкрийте тур знову перед редагуванням матчу.","en":"Reopen the gameweek before editing this match."},
+  MATCH_STALE: {"es":"El acta ha cambiado. Recarga la página antes de guardar.","uk":"Протокол змінився. Оновіть сторінку перед збереженням.","en":"The report has changed. Reload before saving."},
+  MATCH_ROSTER: {"es":"La plantilla ha cambiado. Recarga el editor.","uk":"Склад команди змінився. Оновіть редактор.","en":"The roster has changed. Reload the editor."},
+  MATCH_STARTERS: {"es":"Selecciona 5 titulares y una portera por equipo.","uk":"Оберіть 5 стартових гравчинь і одну воротарку в кожній команді.","en":"Select 5 starters and one goalkeeper for each team."},
+  MATCH_SCORE: {"es":"Los goles y autogoles deben coincidir con el marcador.","uk":"Голи й автоголи мають відповідати рахунку.","en":"Goals and own goals must match the score."},
+  MATCH_USE_EDITOR: {"es":"Edita estas estadísticas desde el acta del partido.","uk":"Редагуйте цю статистику через протокол матчу.","en":"Edit these statistics in the match report."},
   "Пользователь не найден": {
     "es": "No se encontró al usuario.",
     "uk": "Користувача не знайдено.",
@@ -514,6 +525,13 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 export type PublicLineup = { user: { id: string; name: string }; players: Array<import("../types").SquadEntry & { points: number }> };
 export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
+  deleteMatch: (id: string) => request<{ ok: boolean }>(`/matches/${id}`, { method: "DELETE" }),
+  matchWeeks: () => request<Gameweek[]>("/matches/weeks"),
+  matches: (week: string) => request<MatchRecord[]>(`/matches?gameweekId=${week}`),
+  match: (id: string) => request<MatchRecord>(`/matches/${id}`),
+  matchEditor: (id: string) => request<MatchEditorData>(`/matches/${id}/editor`),
+  createMatch: (data: { gameweekId: string; homeId: string; awayId: string; kickoffAt: string | null }) => request<MatchRecord>("/matches", { method: "POST", body: JSON.stringify(data) }),
+  saveMatch: (id: string, data: { protocol: MatchProtocol; version: number; publish: boolean; kickoffAt: string | null }) => request<MatchRecord>(`/matches/${id}/editor`, { method: "PUT", body: JSON.stringify(data) }),
   playerPrices: () => request<Array<Player & { priceChanges: Array<{ id: string; gameweek: Gameweek; priceBefore: number; priceAfter: number; priceDelta: number }> }>>("/player-prices"),
   publicLineup: (id: string) => request<PublicLineup>("/users/" + id + "/lineup"),
   adminFriendLeagues: () => request<AdminFriendLeague[]>("/admin/friend-leagues"),

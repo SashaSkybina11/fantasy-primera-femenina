@@ -92,6 +92,7 @@ export function AdminPlayerPointsPage() {
       <header className="page-heading">
         <p className="eyebrow">{t("adminStats.eyebrow")}</p>
         <h1>{t("adminStats.title")}</h1>
+        <Link className="button" to="/admin/matches">{t("matches.admin")} →</Link>
         <p className="muted">{t("adminStats.description")}</p>
         <Link to="/admin/player-prices">{t("prices.title")} →</Link>
         <Link to="/admin/users">{t("adminStats.usersLink")} →</Link>

@@ -1,3 +1,5 @@
+import { ResultsPage, MatchReportPage } from "./pages/ResultsPage";
+import { AdminMatchesPage, AdminMatchEditorPage } from "./pages/AdminMatchesPage";
 import { PlayerPricesPage } from "./pages/PlayerPricesPage";
 import { AdminFriendLeaguesPage } from "./pages/AdminFriendLeaguesPage";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
@@ -56,6 +58,10 @@ export function App() {
         <Route path="/player-prices" element={<PlayerPricesPage />} />
         <Route path="/my-team" element={<MyTeamPage />} />
         <Route path="/purchase-players" element={<PurchasePlayersPage />} />
+        <Route path="/results" element={<ResultsPage />} />
+        <Route path="/results/:id" element={<MatchReportPage />} />
+        <Route path="/admin/matches" element={<AdminMatchesPage />} />
+        <Route path="/admin/matches/:id" element={<AdminMatchEditorPage />} />
         <Route path="/calendar" element={<CalendarPage />} />
         <Route path="/teams" element={<TeamsPage />} />
         <Route path="/teams/:clubId" element={<ClubPage />} />

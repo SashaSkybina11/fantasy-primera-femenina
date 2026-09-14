@@ -26,7 +26,9 @@
     "db:check-csv": "tsx backend/scripts/sync-csv-prices.ts",
     "db:sync-csv": "tsx backend/scripts/sync-csv-prices.ts --write",
     "test:prelaunch": "node --import tsx --test backend/tests/prelaunch.integration.ts",
-    "test:prelaunch-ui": "node --import tsx tests/prelaunch-ui.mjs"
+    "test:prelaunch-ui": "node --import tsx tests/prelaunch-ui.mjs",
+    "test:matches": "node --import tsx backend/tests/matches.integration.ts",
+    "test:matches-ui": "node tests/matches-ui.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

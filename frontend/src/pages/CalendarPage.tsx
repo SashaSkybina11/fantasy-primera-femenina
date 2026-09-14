@@ -1,7 +1,6 @@
 import { useLocale } from "../contexts/LocaleContext";
 
 const rfefCalendarUrl = "https://resultados.rfef.es/pnfg/NPcd/NFG_VisCalendario_Vis?cod_primaria=1000120&codtemporada=22&codcompeticion=33836179&codgrupo=33836180&CodJornada=1";
-const rfefResultsUrl = "https://resultados.rfef.es/pnfg/NPcd/NFG_CmpJornada?cod_primaria=1000120&CodTemporada=22&CodGrupo=33836180&CodCompeticion=33836179&CodJornada=1";
 
 const rfefStandingsUrl = "https://resultados.rfef.es/pnfg/NPcd/NFG_VisClasificacion?cod_primaria=1000120&codjornada=1&codcompeticion=33836179&codgrupo=33836180&codjornada=1";
 
@@ -13,12 +12,6 @@ export function CalendarPage() {
       description: t("calendar.description"),
       action: t("calendar.open"),
       href: rfefCalendarUrl,
-    },
-    {
-      title: t("calendar.resultsTitle"),
-      description: t("calendar.resultsDescription"),
-      action: t("calendar.openResults"),
-      href: rfefResultsUrl,
     },
     {
       title: t("calendar.standingsTitle"),

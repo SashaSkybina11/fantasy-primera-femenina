@@ -1,4 +1,5 @@
 import publicLineupRouter from "./routes/public-lineup.js";
+import matchesRouter from "./routes/matches.js";
 import { mkdirSync } from "node:fs";
 import cors from "cors";
 import express from "express";
@@ -36,6 +37,7 @@ app.get("/api/health", (_request, response) => response.json({ ok: true }));
 app.use("/api/auth", authRouter);
 app.use("/api/users", publicLineupRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/matches", matchesRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api", catalogRouter);
 app.use("/api/my-team", teamRouter);

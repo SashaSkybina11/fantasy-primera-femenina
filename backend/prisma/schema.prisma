@@ -104,6 +104,7 @@ model FantasyTeam {
 }
 
 model Club {
+  matchTeams MatchTeam[]
   id         String   @id @default(cuid())
   name       String   @unique
   logoUrl    String?
@@ -144,6 +145,7 @@ model Player {
 }
 
 model Gameweek {
+  matches Match[]
   id             String                @id @default(cuid())
   number         Int                   @unique
   name           String
@@ -167,6 +169,33 @@ model Gameweek {
   updatedAt      DateTime              @updatedAt
 
   @@index([status, deadlineAt])
+}
+
+model Match {
+  id String @id @default(cuid())
+  gameweekId String
+  gameweek Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  teams MatchTeam[]
+  kickoffAt DateTime?
+  draft Json?
+  published Json?
+  publishedAt DateTime?
+  version Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([gameweekId])
+}
+
+model MatchTeam {
+  id String @id @default(cuid())
+  matchId String
+  gameweekId String
+  clubId String
+  side String
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  club Club @relation(fields: [clubId], references: [id], onDelete: Restrict)
+  @@unique([gameweekId, clubId])
+  @@unique([matchId, side])
 }
 
 model UserTransfer {
