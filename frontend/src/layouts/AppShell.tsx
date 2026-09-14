@@ -1,12 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { IoIosFootball } from "react-icons/io";
-import { GiBuyCard, GiRaceCar, GiRuleBook } from "react-icons/gi";
-import { RiTeamLine } from "react-icons/ri";
-import { MdOutlinePersonOutline, MdOutlineEuroSymbol } from "react-icons/md";
-import { MdAdminPanelSettings } from "react-icons/md";
-import { TbPlayFootball } from "react-icons/tb";
-import { IoCalendarOutline } from "react-icons/io5";
+import { IoHomeOutline, IoFootballOutline, IoSwapHorizontalOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
+import { LuBookOpenText } from "react-icons/lu";
+import { MdOutlineEuroSymbol, MdAdminPanelSettings } from "react-icons/md";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { Avatar } from "../components/Avatar";
@@ -14,6 +10,8 @@ import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { useLocale } from "../contexts/LocaleContext";
 
 type IconName =
+  | "participants"
+  | "friends"
   | "trophy"
   | "ranking"
   | "rules"
@@ -27,36 +25,9 @@ type IconName =
   | "admin";
 
 function FootballIcon({ name }: { name: IconName }) {
-  const common = {
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
-
-  if (name === "home") return <IoIosFootball aria-hidden="true" />;
-  if (name === "my-team") return <TbPlayFootball aria-hidden="true" />;
-  if (name === "purchase") return <GiBuyCard aria-hidden="true" />;
-  if (name === "prices") return <MdOutlineEuroSymbol aria-hidden="true" />;
-  if (name === "ranking") return <GiRaceCar aria-hidden="true" />;
-  if (name === "rules") return <GiRuleBook aria-hidden="true" />;
-  if (name === "calendar") return <IoCalendarOutline aria-hidden="true" />;
-  if (name === "teams") return <RiTeamLine aria-hidden="true" />;
-  if (name === "profile") return <MdOutlinePersonOutline aria-hidden="true" />;
-  if (name === "admin") return <MdAdminPanelSettings aria-hidden="true" />;
-  if (name === "trophy")
-    return (
-      <svg viewBox="0 0 24 24" aria-hidden="true" {...common}>
-        <path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" />
-        <path d="M8 6H4v1a4 4 0 0 0 4 4m8-5h4v1a4 4 0 0 1-4 4m-4-2v5m-3 6h6m-7 0h8" />
-      </svg>
-    );
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" {...common}>
-      <path d="m8 4 4 2 4-2 4 3-2.4 4.1-2.1-1.2V20H8.5V9.9l-2.1 1.2L4 7l4-3Z" />
-    </svg>
-  );
+  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: IoSwapHorizontalOutline, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, admin: MdAdminPanelSettings };
+  const Icon = icons[name];
+  return <Icon aria-hidden="true" />;
 }
 
 function NavLinks({
@@ -90,8 +61,8 @@ function NavLinks({
     { to: "/results", label: t("matches.title"), icon: "trophy" as const },
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
-    { to: "/league", label: t("nav.league"), icon: "trophy" as const },
-    { to: "/friend-leagues", label: t("nav.friends"), icon: "trophy" as const },
+    { to: "/league", label: t("nav.league"), icon: "participants" as const },
+    { to: "/friend-leagues", label: t("nav.friends"), icon: "friends" as const },
     {
       to: "/leaderboard",
       label: t("nav.leaderboard"),
@@ -186,7 +157,7 @@ export function AppShell() {
       <aside className="sidebar">
         <NavLink to="/" end className="brand">
           <span className="brand-mark">
-            <IoIosFootball aria-hidden="true" />
+            <IoFootballOutline aria-hidden="true" />
           </span>
           <span>{t("brand.title")}</span>
         </NavLink>
@@ -213,7 +184,7 @@ export function AppShell() {
       <header className="mobile-header">
         <NavLink to="/" end className="mobile-brand">
           <span className="brand-mark">
-            <IoIosFootball aria-hidden="true" />
+            <IoFootballOutline aria-hidden="true" />
           </span>
           <span>{t("brand.title")}</span>
         </NavLink>

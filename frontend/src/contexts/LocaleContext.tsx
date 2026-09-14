@@ -54,8 +54,7 @@ const spanish = {
   "rules.valueChange": "Cambio de precio",
   "rules.valueGoal": "⚽ Cada gol",
   "rules.valueStarted": "Sale en el quinteto inicial",
-  "rules.valueConceded": "🧤 Portera: {{count}} goles encajados",
-  "rules.valueConcededOne": "🧤 Portera: 1 gol encajado",
+  "rules.valueCleanSheet": "🧤 Portera: 0 goles encajados",
   "rules.valueBody":
     "Después de cada jornada, el valor de mercado de una jugadora puede subir o bajar según su actuación en el partido real.",
   "rules.valueGlobal":
@@ -574,8 +573,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "rules.valueChange": "Зміна ціни",
   "rules.valueGoal": "⚽ Кожен гол",
   "rules.valueStarted": "Вийшла у стартовій п'ятірці",
-  "rules.valueConceded": "🧤 Воротарка: {{count}} пропущених",
-  "rules.valueConcededOne": "🧤 Воротарка: 1 пропущений",
+  "rules.valueCleanSheet": "🧤 Воротарка: 0 пропущених",
   "rules.valueBody":
     "Після кожного туру ринкова вартість гравчині може збільшуватися або зменшуватися залежно від її виступу в реальному матчі.",
   "rules.valueGlobal":
@@ -1085,8 +1083,7 @@ const english: Record<TranslationKey, string> = {
   "rules.valueChange": "Price Change",
   "rules.valueGoal": "⚽ Each goal",
   "rules.valueStarted": "Starts in the starting five",
-  "rules.valueConceded": "🧤 Goalkeeper: {{count}} goals conceded",
-  "rules.valueConcededOne": "🧤 Goalkeeper: 1 goal conceded",
+  "rules.valueCleanSheet": "🧤 Goalkeeper: 0 goals conceded",
   "rules.valueBody":
     "After each gameweek, a player's market value may increase or decrease depending on her performance in the real match.",
   "rules.valueGlobal":

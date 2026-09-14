@@ -18,7 +18,7 @@ test("price examples are independent of WIN, DRAW and LOSS", () => {
   }
   assert.equal(calculatePlayerPriceDelta({ ...stats, goals: 2, started: true }).priceDelta, 230);
   assert.equal(calculatePlayerPriceDelta({ ...stats, yellowCards: 1, redCards: 1 }).priceDelta, -45);
-  for (const [goalsConceded, expected] of [[0,50],[1,0],[2,-10],[3,-20],[4,-30],[5,-40],[6,-50],[null,0]]) {
+  for (const [goalsConceded, expected] of [[0,50],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[99,0],[null,0]]) {
     assert.equal(calculatePlayerPriceDelta({ ...stats, position: "GOALKEEPER", goalsConceded }).priceDelta, expected);
   }
   assert.equal(calculatePlayerPriceDelta({ ...stats, goalsConceded: 0 }).priceDelta, 0);
@@ -54,6 +54,7 @@ test("bulk club result preserves negative totals and adjustments and updates ran
   const stored = new Map([["p1", old]]); const ranks = [];
   const tx = {
     gameweek: { findUnique: async () => ({ status: "LOCKED" }), findUniqueOrThrow: async () => ({ status: "LOCKED" }) },
+    matchTeam: { findFirst: async () => null },
     club: { findUnique: async () => ({ players: [{ id: "p1", position: "FIELD_PLAYER", gameweekStats: [old] }, { id: "p2", position: "FIELD_PLAYER", gameweekStats: [] }] }) },
     playerGameweekStats: {
       upsert: async ({ create, update }) => { const data = stored.has(create.playerId) ? { ...stored.get(create.playerId), ...update } : { ...stats, adjustmentPoints: 0, ...create }; stored.set(create.playerId, data); return data; },
@@ -97,6 +98,12 @@ test("price application replaces a week, rebases later weeks, rejects stale prev
   await apply("w2"); assert.equal(player.price, 3300);
   events.w1.goals = 3;
   await apply("w1"); assert.equal(player.price, 3400);
+  // A legacy goalkeeper penalty must be refunded when a later week is rebased.
+  Object.assign(player.priceChanges[1], { priceDelta: 80, priceAfter: 3380, goalkeeperPriceDelta: -20 });
+  player.price = 3380;
+  await apply("w1");
+  assert.equal(player.price, 3400);
+  assert.equal(player.priceChanges[1].goalkeeperPriceDelta, 0);
   // Simulate existing rows created by the old price formula, with win bonuses.
   Object.assign(player.priceChanges[0], { priceDelta: 370, priceAfter: 3370, teamResultPriceDelta: 70, teamWinBonus: 70 });
   Object.assign(player.priceChanges[1], { priceBefore: 3370, priceDelta: 190, priceAfter: 3560, teamResultPriceDelta: 90, teamWinBonus: 90 });

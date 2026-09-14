@@ -77,7 +77,7 @@ export function RulesPage() {
                 ["rules.valueGoal", 100], ["rules.valueStarted", 30],
                 ["rules.yellowCard", -15], ["rules.redCard", -30],
               ] as const).map(([key, value]) => <tr key={key}><td>{key === "rules.yellowCard" ? "🟨 " : key === "rules.redCard" ? "🟥 " : ""}{t(key)}</td><td>{value > 0 ? "+" : "−"}{formatEuro(Math.abs(value), locale)}</td></tr>)}
-              {[50, 0, -10, -20, -30].map((value, conceded) => <tr key={conceded}><td>{t(conceded === 1 ? "rules.valueConcededOne" : "rules.valueConceded", { count: conceded })}</td><td>{value > 0 ? "+" : value < 0 ? "−" : ""}{formatEuro(Math.abs(value), locale)}</td></tr>)}
+              <tr><td>{t("rules.valueCleanSheet")}</td><td>+{formatEuro(50, locale)}</td></tr>
             </tbody>
           </table>
           <p>{t("rules.valueBody")}</p>

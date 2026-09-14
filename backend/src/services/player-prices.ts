@@ -2,7 +2,7 @@ import { PlayerPosition, Prisma } from "@prisma/client";
 import { createHash } from "node:crypto";
 import { ApiError } from "../utils/http.js";
 
-export const PRICE_RULES = { goal: 100, started: 30, yellowCard: -15, redCard: -30, goalkeeperCleanSheet: 50, conceded: -10 } as const;
+export const PRICE_RULES = { goal: 100, started: 30, yellowCard: -15, redCard: -30, goalkeeperCleanSheet: 50 } as const;
 
 export function calculatePlayerPriceDelta(input: {
   position: PlayerPosition; goals: number; started: boolean; yellowCards: number;
@@ -13,9 +13,7 @@ export function calculatePlayerPriceDelta(input: {
     startedDelta: input.started ? PRICE_RULES.started : 0,
     yellowCardsDelta: input.yellowCards * PRICE_RULES.yellowCard,
     redCardsDelta: input.redCards * PRICE_RULES.redCard,
-    goalkeeperDelta: input.position !== "GOALKEEPER" || input.goalsConceded === null ? 0
-      : input.goalsConceded === 0 ? PRICE_RULES.goalkeeperCleanSheet
-      : Math.max(0, input.goalsConceded - 1) * PRICE_RULES.conceded,
+    goalkeeperDelta: input.position === "GOALKEEPER" && input.goalsConceded === 0 ? PRICE_RULES.goalkeeperCleanSheet : 0,
   };
   return { ...components, priceDelta: Object.values(components).reduce((sum, value) => sum + value, 0) };
 }
@@ -47,7 +45,7 @@ export async function previewPlayerPrices(tx: Prisma.TransactionClient, gameweek
     });
     const priceBefore = existing?.priceBefore ?? later[0]?.priceBefore ?? player.price;
     // Remove legacy win bonuses from later weeks when rebasing their history.
-    const rebased = rebasePriceHistory(priceBefore, [delta.priceDelta, ...later.map(row => row.priceDelta - row.teamResultPriceDelta)]);
+    const rebased = rebasePriceHistory(priceBefore, [delta.priceDelta, ...later.map(row => row.priceDelta - row.teamResultPriceDelta - Math.min(0, row.goalkeeperPriceDelta))]);
     return {
       playerId: player.id, number: player.number, name: player.name, clubId: player.clubId,
       club: player.club.name, position: player.position, currentPrice: player.price,
@@ -55,10 +53,10 @@ export async function previewPlayerPrices(tx: Prisma.TransactionClient, gameweek
       priceBefore, ...delta, priceAfter: rebased[0]!.priceAfter,
       newCurrentPrice: rebased.at(-1)!.priceAfter,
       applied: Boolean(existing), missingStats: !stat,
-      later: later.map((row, index) => ({ id: row.id, ...rebased[index + 1]! })),
+      later: later.map((row, index) => ({ id: row.id, goalkeeperPriceDelta: Math.max(0, row.goalkeeperPriceDelta), ...rebased[index + 1]! })),
     };
   });
-  const revision = createHash("sha256").update(JSON.stringify({ priceRulesVersion: 2, gameweek, players })).digest("hex");
+  const revision = createHash("sha256").update(JSON.stringify({ priceRulesVersion: 3, gameweek, players })).digest("hex");
   return { gameweekId, revision, rows };
 }
 
@@ -76,7 +74,7 @@ export async function applyPlayerPrices(tx: Prisma.TransactionClient, gameweekId
     };
     await tx.playerPriceChange.upsert({ where: { playerId_gameweekId: { playerId: row.playerId, gameweekId } },
       create: { playerId: row.playerId, gameweekId, ...data }, update: data });
-    for (const later of row.later) await tx.playerPriceChange.update({ where: { id: later.id }, data: { priceBefore: later.priceBefore, priceAfter: later.priceAfter, priceDelta: later.priceDelta, teamResultPriceDelta: 0, teamWinBonus: null } });
+    for (const later of row.later) await tx.playerPriceChange.update({ where: { id: later.id }, data: { priceBefore: later.priceBefore, priceAfter: later.priceAfter, priceDelta: later.priceDelta, goalkeeperPriceDelta: later.goalkeeperPriceDelta, teamResultPriceDelta: 0, teamWinBonus: null } });
     await tx.player.update({ where: { id: row.playerId }, data: { price: row.newCurrentPrice } });
   }
   return preview;

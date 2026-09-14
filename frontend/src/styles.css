@@ -5161,3 +5161,28 @@ a.match-card:hover { border-color:var(--accent); }
 @media(max-width:520px) { .match-card { padding:16px 12px; } .match-score { gap:8px; } .match-score > div, .match-score > div:last-child { flex-direction:column; text-align:center; font-size:12px; } .match-create-fields, .match-score-inputs { grid-template-columns:1fr; } .match-save-bar { position:static; } .match-save-bar button { width:100%; } .match-teams .admin-card { padding:14px; } .match-counters { gap:5px; } .protocol-player { flex-wrap:wrap; } }
 .match-valid { color:var(--text); }
 .match-score-inputs input[type=number] { font-size:24px; font-weight:800; }
+
+/* Compact player prices and touch-friendly match editing. */
+.player-price-heading { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.player-price-heading h2 { flex:1; min-width:0; margin:0; font-size:clamp(15px,1.5vw,18px); line-height:1.35; overflow-wrap:anywhere; }
+.player-price-heading .club-logo, .player-price-heading .club-mark { flex:none; width:32px; height:32px; }
+.price-delta { font-weight:700; white-space:nowrap; }
+.price-delta--up { color:#15803d; }
+.price-delta--down { color:#b91c1c; }
+[data-theme="dark"] .price-delta--up { color:#4ade80; }
+[data-theme="dark"] .price-delta--down { color:#f87171; }
+.match-team-title { overflow-wrap:anywhere; }
+.match-team-title .club-logo, .match-team-title .club-mark { flex:none; }
+.match-player-top label > span { min-width:0; overflow-wrap:anywhere; }
+.match-player-top strong { font-size:14px; line-height:1.4; }
+.match-counters { grid-template-columns:repeat(auto-fit,minmax(124px,1fr)); }
+.match-stepper button { min-width:36px; min-height:44px; }
+.match-stepper input { height:44px; flex:1; }
+.match-create-fields input[type="datetime-local"], .match-score-inputs input[type="datetime-local"] { max-width:100%; }
+.match-editor .button { white-space:normal; overflow-wrap:anywhere; }
+@media(max-width:380px) {
+ .match-counters { grid-template-columns:1fr; }
+ .match-counters label { grid-template-columns:minmax(0,1fr) 124px; align-items:center; }
+ .match-counters label > span:first-child { min-height:0; }
+ .match-player-top { flex-wrap:wrap; }
+}
