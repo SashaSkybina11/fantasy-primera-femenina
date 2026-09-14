@@ -33,7 +33,13 @@ try {
  const created=await request('/matches',admin.id,'POST',createBody);assert.equal(created.status,201);const id=created.data.id;
  assert.equal((await request('/matches',admin.id,'POST',createBody)).status,409);
  assert.equal((await request(`/matches/${id}/editor`,user.id)).status,403);
- const editor=await request(`/matches/${id}/editor`,admin.id);assert.equal(editor.status,200);
+ await prisma.match.update({where:{id},data:{reportedResult:{homeScore:2,awayScore:0,date:'2026-01-01'}}});
+ const reported=(await request('/matches/'+id,user.id)).data;
+ assert.equal(reported.reportedResult.homeScore,2);
+ assert.equal(reported.published,null);
+ assert.equal(await prisma.playerGameweekStats.count(),0,'Reported result must not award points');
+ assert.equal((await request('/matches/'+id,admin.id,'DELETE')).status,409,'Preserve confirmed results');
+ const editor=await request(`/matches/${id}/editor`,admin.id);assert.equal(editor.status,200);assert.equal(editor.data.protocol.homeScore,2);assert.equal(editor.data.protocol.players.length,12);
  const protocol={homeScore:2,awayScore:0,homeOwnGoals:0,awayOwnGoals:0,players:players.map((p,i)=>({playerId:p.id,started:i%6<5,goals:i===1?2:0,yellowCards:i===2?1:0,redCards:0,goalsConceded:i===0?0:i===6?2:null}))};
  const save=(version:number,publish:boolean,p=protocol)=>request(`/matches/${id}/editor`,admin.id,'PUT',{protocol:p,version,publish,kickoffAt:null});
  assert.equal((await save(0,false)).status,200);

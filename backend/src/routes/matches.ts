@@ -48,7 +48,8 @@ router.get("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
     const parsed = protocolSchema.safeParse(old?.published);
     return [id, parsed.success ? parsed.data.players.filter(p => p.started && roster.some(r => r.id === p.playerId && r.clubId === id)).map(p => p.playerId) : []];
   }));
-  const initial = { homeScore: null, awayScore: null, homeOwnGoals: 0, awayOwnGoals: 0, players: roster.map(p => ({ playerId: p.id, started: p.gameweekStats[0]?.started ?? false, goals: p.gameweekStats[0]?.goals ?? 0, yellowCards: p.gameweekStats[0]?.yellowCards ?? 0, redCards: p.gameweekStats[0]?.redCards ?? 0, goalsConceded: p.gameweekStats[0]?.goalsConceded ?? null })) };
+  const reported = z.object({ homeScore: z.number(), awayScore: z.number() }).safeParse(match.reportedResult);
+  const initial = { homeScore: reported.success ? reported.data.homeScore : null, awayScore: reported.success ? reported.data.awayScore : null, homeOwnGoals: 0, awayOwnGoals: 0, players: roster.map(p => ({ playerId: p.id, started: p.gameweekStats[0]?.started ?? false, goals: p.gameweekStats[0]?.goals ?? 0, yellowCards: p.gameweekStats[0]?.yellowCards ?? 0, redCards: p.gameweekStats[0]?.redCards ?? 0, goalsConceded: p.gameweekStats[0]?.goalsConceded ?? null })) };
   res.json({ match, roster, previousStarters, protocol: match.draft ?? match.published ?? initial });
 }));
 router.put("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
@@ -98,7 +99,7 @@ router.delete("/:id", requireAdmin, asyncRoute(async (req, res) => {
  await inTransaction(async tx => {
   const match = await tx.match.findUnique({ where: { id }, include: { gameweek: true } });
   if (!match) throw new ApiError(404, "MATCH_NOT_FOUND");
-  if (match.publishedAt || match.gameweek.status === "COMPLETED") throw new ApiError(409, "MATCH_LOCKED");
+  if (match.publishedAt || match.reportedResult || match.gameweek.status === "COMPLETED") throw new ApiError(409, "MATCH_LOCKED");
   await audit(tx, req.auth!.userId, "PLAYER_STATS_UPDATED", "Match", id, match, { deleted: true });
   await tx.match.delete({ where: { id } });
  });

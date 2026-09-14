@@ -1,0 +1,130 @@
+[
+  {
+    "week": 1,
+    "home": "Estrela Revoltosa Verín FSF",
+    "away": "FSF Castro Bloques Cando",
+    "homeScore": 1,
+    "awayScore": 2,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 1,
+    "home": "MRB Móstoles FSF",
+    "away": "STV Roldán",
+    "homeScore": 6,
+    "awayScore": 5,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 1,
+    "home": "LBTL Futsal Alcantarilla",
+    "away": "AD Ceuta FC",
+    "homeScore": 5,
+    "awayScore": 0,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 1,
+    "home": "Melilla CD Torreblanca",
+    "away": "Nueces de Ronda Atlético Torcal",
+    "homeScore": 6,
+    "awayScore": 3,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 1,
+    "home": "Arriva AD Alcorcón",
+    "away": "Cajasol Guadalcacin FS",
+    "homeScore": 3,
+    "awayScore": 1,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 1,
+    "home": "Ourense Ontime",
+    "away": "Les Corts UBAE",
+    "homeScore": 4,
+    "awayScore": 3,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 1,
+    "home": "Wanapix Aldelis",
+    "away": "Poio Pescamar",
+    "homeScore": 0,
+    "awayScore": 3,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 1,
+    "home": "Rodiles FS",
+    "away": "Futsi Atlético Navalcarnero",
+    "homeScore": 1,
+    "awayScore": 4,
+    "date": "2026-09-05"
+  },
+  {
+    "week": 2,
+    "home": "Futsi Atlético Navalcarnero",
+    "away": "Arriva AD Alcorcón",
+    "homeScore": 2,
+    "awayScore": 1,
+    "date": "2026-09-12"
+  },
+  {
+    "week": 2,
+    "home": "Les Corts UBAE",
+    "away": "Melilla CD Torreblanca",
+    "homeScore": 0,
+    "awayScore": 1,
+    "date": "2026-09-12"
+  },
+  {
+    "week": 2,
+    "home": "AD Ceuta FC",
+    "away": "FSF Castro Bloques Cando",
+    "homeScore": 2,
+    "awayScore": 2,
+    "date": "2026-09-12"
+  },
+  {
+    "week": 2,
+    "home": "Cajasol Guadalcacin FS",
+    "away": "Ourense Ontime",
+    "homeScore": 1,
+    "awayScore": 2,
+    "date": "2026-09-12"
+  },
+  {
+    "week": 2,
+    "home": "STV Roldán",
+    "away": "Wanapix Aldelis",
+    "homeScore": 6,
+    "awayScore": 3,
+    "date": "2026-09-12"
+  },
+  {
+    "week": 2,
+    "home": "Nueces de Ronda Atlético Torcal",
+    "away": "Estrela Revoltosa Verín FSF",
+    "homeScore": 0,
+    "awayScore": 0,
+    "date": "2026-09-12"
+  },
+  {
+    "week": 2,
+    "home": "MRB Móstoles FSF",
+    "away": "LBTL Futsal Alcantarilla",
+    "homeScore": 4,
+    "awayScore": 2,
+    "date": "2026-09-12"
+  },
+  {
+    "week": 2,
+    "home": "Poio Pescamar",
+    "away": "Rodiles FS",
+    "homeScore": 11,
+    "awayScore": 2,
+    "date": "2026-09-12"
+  }
+]

@@ -177,6 +177,7 @@ model Match {
   gameweek Gameweek @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
   teams MatchTeam[]
   kickoffAt DateTime?
+  reportedResult Json?
   draft Json?
   published Json?
   publishedAt DateTime?
