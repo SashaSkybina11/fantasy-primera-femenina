@@ -28,7 +28,9 @@
     "test:prelaunch": "node --import tsx --test backend/tests/prelaunch.integration.ts",
     "test:prelaunch-ui": "node --import tsx tests/prelaunch-ui.mjs",
     "test:matches": "node --import tsx backend/tests/matches.integration.ts",
-    "test:matches-ui": "node tests/matches-ui.mjs"
+    "test:matches-ui": "node tests/matches-ui.mjs",
+    "test:friend-leagues": "node --import tsx backend/tests/friend-leagues.integration.ts",
+    "test:friend-leagues-ui": "node --import tsx tests/friend-leagues-ui.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

@@ -1,5 +1,8 @@
+import { Avatar } from "./Avatar";
+import { useAuth } from "../contexts/AuthContext";
+import { optimizeAvatar } from "../utils/avatar";
 import { Loader } from "./Loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
@@ -8,6 +11,14 @@ import { api } from "../services/api";
 
 export function FriendLeaguesPanel() {
   const { t } = useLocale();
+  const { user } = useAuth();
+  const [logo, setLogo] = useState<File | null>(null);
+  const [preview, setPreview] = useState("");
+  useEffect(() => {
+    const url = logo ? URL.createObjectURL(logo) : "";
+    setPreview(url);
+    return () => { if (url) URL.revokeObjectURL(url); };
+  }, [logo]);
   const queryClient = useQueryClient();
   const [mode, setMode] = useState<"create" | "join" | null>(null);
   const [value, setValue] = useState("");
@@ -16,13 +27,16 @@ export function FriendLeaguesPanel() {
     queryKey: ["private-leagues"],
     queryFn: api.privateLeagues,
   });
+  const owned = leagues.data?.some(league => league.ownerId === user?.id);
+  const joined = leagues.data?.filter(league => league.ownerId !== user?.id).length ?? 0;
   const close = () => {
+    setLogo(null);
     setMode(null);
     setValue("");
     setCreatedCode("");
   };
   const create = useMutation({
-    mutationFn: () => api.createPrivateLeague(value),
+    mutationFn: async () => api.createPrivateLeague(value, logo ? await optimizeAvatar(logo) : null),
     onSuccess: (league) => {
       setCreatedCode(league.inviteCode);
       void queryClient.invalidateQueries({ queryKey: ["private-leagues"] });
@@ -43,11 +57,14 @@ export function FriendLeaguesPanel() {
       {leagues.isPending && <p role="status"><Loader label={t("loading.app")} /></p>}
       {leagues.isError && <p role="alert">{t("error.generic")} <button className="button button--secondary" onClick={() => void leagues.refetch()}>{t("friends.retry")}</button></p>}
       {leagues.isSuccess && leagues.data.length === 0 && <p className="muted">{t("friends.empty")}</p>}
+      <p className="muted">{t("friends.limits")}</p>
       <div className="friend-league-list">
         {leagues.data?.map((league) => (
           <article key={league.id}>
+            <Avatar name={league.name} src={league.logoUrl} />
             <div>
               <strong>{league.name}</strong>
+              <small>{t("friends.start", { number: league.startGameweek })}</small>
               <small>
                 {league._count?.members ?? 1} · {t("friends.members")}
               </small>
@@ -63,11 +80,12 @@ export function FriendLeaguesPanel() {
         ))}
       </div>
       <div className="friend-league-actions">
-        <button className="button" onClick={() => setMode("create")}>
+        <button className="button" disabled={!leagues.isSuccess || owned} onClick={() => setMode("create")}>
           {t("friends.create")}
         </button>
         <button
           className="button button--secondary"
+          disabled={!leagues.isSuccess || joined >= 5}
           onClick={() => setMode("join")}
         >
           {t("friends.join")}
@@ -124,6 +142,10 @@ export function FriendLeaguesPanel() {
                     onChange={(event) => setValue(event.target.value)}
                   />
                 </label>
+                {mode === "create" && <label>{t("friends.logo")}
+                  {preview && <img className="league-logo-preview" src={preview} alt={t("friends.logo")} />}
+                  <input type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif,image/heic,image/heif" onChange={event => setLogo(event.target.files?.[0] ?? null)} />
+                </label>}
                 <button
                   className="button"
                   disabled={create.isPending || join.isPending}

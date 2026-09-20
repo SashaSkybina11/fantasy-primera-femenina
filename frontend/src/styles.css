@@ -5197,3 +5197,33 @@ form.admin-card.match-create { display:flex; flex-direction:column; align-items:
 .match-create select { overflow:hidden; text-overflow:ellipsis; padding-right:32px; }
 .match-create > .button { align-self:flex-start; min-height:46px; margin:0; }
 @media(max-width:600px) { .match-create > .button { align-self:stretch; width:100%; } }
+
+/* Friend league identity, market badges, and responsive administration. */
+.league-logo-preview { width:80px; height:80px; object-fit:cover; border-radius:20px; }
+.friend-league-list article > .avatar { flex:none; }
+.friend-league-list article > div { flex:1; min-width:0; overflow-wrap:anywhere; }
+.friend-leagues input[type=file] { max-width:100%; min-width:0; }
+.player-card__top { gap:8px; align-items:center; }
+.player-card__top .position-tag { margin-left:auto; }
+.player-card__top .club-logo, .player-card__top .club-mark { width:40px; height:40px; flex:none; object-fit:contain; }
+.admin-page .page-heading > a { display:inline-flex; align-items:center; padding-right:10px; min-height:44px; max-width:100%; overflow-wrap:anywhere; }
+.admin-page .admin-card, .match-editor, .match-editor .admin-card { min-width:0; }
+.admin-page .admin-card__head { flex-wrap:wrap; gap:12px; }
+.admin-page .admin-user > div { min-width:0; overflow-wrap:anywhere; }
+.match-editor .match-team-title { flex-wrap:wrap; gap:10px; }
+.match-editor .match-team-title > .button { margin-left:auto; }
+@media (max-width:600px) {
+  .admin-page .page-heading > a { display:flex; }
+  .admin-page .admin-user { flex-wrap:wrap; gap:12px; }
+  .admin-page .admin-user > div { max-width:100%; }
+  .match-editor .match-team-title > .button { width:100%; margin-left:0; }
+  .friend-league-list article { flex-wrap:wrap; gap:12px; }
+  .friend-league-list article > div { flex-basis:calc(100% - 72px); }
+  .friend-league-list article > .button { width:100%; }
+}
+.friend-league-actions > .button, .friend-league-list .button { min-width:0; white-space:normal; overflow-wrap:anywhere; }
+@media(max-width:760px) {
+  .friend-league-list article { flex-direction:row; flex-wrap:wrap; }
+  .friend-league-list article > div { flex:1 1 calc(100% - 72px); }
+  .friend-league-list .button { flex:1 1 100%; }
+}

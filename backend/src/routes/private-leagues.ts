@@ -5,6 +5,9 @@ import { prisma } from "../lib/prisma.js";
 import { authenticate } from "../middleware/auth.js";
 import { ApiError, asyncRoute } from "../utils/http.js";
 
+import { inTransaction } from "../lib/transaction.js";
+import { upload, storeAvatar, removeAvatar } from "../services/image-upload.js";
+
 const router = Router();
 router.use(authenticate);
 
@@ -20,27 +23,47 @@ async function uniqueInviteCode() {
   throw new ApiError(503, "Не удалось создать код приглашения");
 }
 
-router.post("/", asyncRoute(async (request, response) => {
-  const { name } = z.object({ name: z.string().trim().min(3).max(50) }).parse(request.body);
-  const inviteCode = await uniqueInviteCode();
-  const league = await prisma.privateLeague.create({ data: { name, inviteCode, ownerId: request.auth!.userId, members: { create: { userId: request.auth!.userId } } } });
-  response.status(201).json(league);
+router.post("/", upload.single("logo"), asyncRoute(async (request, response) => {
+  let logoUrl: string | null = null;
+  try {
+    const { name } = z.object({ name: z.string().trim().min(3).max(50) }).parse(request.body);
+    const inviteCode = await uniqueInviteCode();
+    logoUrl = request.file ? await storeAvatar(request.file) : null;
+    const league = await inTransaction(async (tx) => {
+      const ownerId = request.auth!.userId;
+      if (await tx.privateLeague.count({ where: { ownerId } })) throw new ApiError(409, "FRIEND_OWNER_LIMIT");
+      const upcoming = await tx.gameweek.findFirst({ where: { deadlineAt: { gt: new Date() }, status: { not: "COMPLETED" } }, orderBy: { number: "asc" } });
+      const last = upcoming ? null : await tx.gameweek.findFirst({ orderBy: { number: "desc" } });
+      const startGameweek = upcoming?.number ?? ((last?.number ?? 0) + 1);
+      return tx.privateLeague.create({ data: { name, inviteCode, ownerId, startGameweek, logoUrl, members: { create: { userId: ownerId } } } });
+    });
+    response.status(201).json(league);
+  } catch (error) {
+    if (logoUrl) await removeAvatar(logoUrl);
+    else if (request.file?.filename) await removeAvatar(`/uploads/${request.file.filename}`);
+    throw error;
+  }
 }));
 
 router.post("/join", asyncRoute(async (request, response) => {
   const { code } = z.object({ code: z.string().trim().min(6).max(10).transform((value) => value.toUpperCase()) }).parse(request.body);
-  const league = await prisma.privateLeague.findUnique({ where: { inviteCode: code } });
-  if (!league) throw new ApiError(404, "Лига с таким кодом не найдена");
-  const existing = await prisma.privateLeagueMember.findUnique({ where: { leagueId_userId: { leagueId: league.id, userId: request.auth!.userId } } });
-  if (existing) throw new ApiError(409, "Вы уже состоите в этой лиге");
-  await prisma.privateLeagueMember.create({ data: { leagueId: league.id, userId: request.auth!.userId } });
+  const league = await inTransaction(async (tx) => {
+    const userId = request.auth!.userId;
+    const league = await tx.privateLeague.findUnique({ where: { inviteCode: code } });
+    if (!league) throw new ApiError(404, "Лига с таким кодом не найдена");
+    const existing = await tx.privateLeagueMember.findUnique({ where: { leagueId_userId: { leagueId: league.id, userId } } });
+    if (existing) throw new ApiError(409, "Вы уже состоите в этой лиге");
+    if (await tx.privateLeagueMember.count({ where: { userId, league: { ownerId: { not: userId } } } }) >= 5) throw new ApiError(409, "FRIEND_JOIN_LIMIT");
+    await tx.privateLeagueMember.create({ data: { leagueId: league.id, userId } });
+    return league;
+  });
   response.json(league);
 }));
 
 router.get("/my", asyncRoute(async (request, response) => {
-  const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, include: { league: { include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true } } } } } }, _count: { select: { members: { where: { user: { role: "USER" } } } } } } } }, orderBy: { joinedAt: "desc" } });
+  const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, include: { league: { include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true, gameweek: { select: { number: true } } } } } } } }, _count: { select: { members: { where: { user: { role: "USER" } } } } } } } }, orderBy: { joinedAt: "desc" } });
   response.json(memberships.map((membership) => {
-    const ranking = membership.league.members.map((member) => ({ id: member.userId, points: member.user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0) })).sort((a, b) => b.points - a.points);
+    const ranking = membership.league.members.map((member) => ({ id: member.userId, points: member.user.gameweekPoints.filter(row => row.gameweek.number >= membership.league.startGameweek).reduce((sum, row) => sum + row.totalPoints, 0) })).sort((a, b) => b.points - a.points);
     const { members: _members, ...league } = membership.league;
     return { ...league, rank: ranking.findIndex((member) => member.id === request.auth!.userId) + 1 };
   }));
@@ -48,10 +71,10 @@ router.get("/my", asyncRoute(async (request, response) => {
 
 router.get("/:id", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
-  const league = await prisma.privateLeague.findFirst({ where: { id, members: { some: { userId: request.auth!.userId } } }, include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, name: true, avatarUrl: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true } } } } } } } });
+  const league = await prisma.privateLeague.findFirst({ where: { id, members: { some: { userId: request.auth!.userId } } }, include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, name: true, avatarUrl: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true, gameweek: { select: { number: true } } } } } } } } } });
   if (!league) throw new ApiError(404, "Лига не найдена или доступ запрещён");
-  const members = league.members.map(({ user, joinedAt }) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, joinedAt, points: user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0) })).sort((a, b) => b.points - a.points || a.joinedAt.getTime() - b.joinedAt.getTime()).map((member, index) => ({ ...member, rank: index + 1 }));
-  response.json({ id: league.id, name: league.name, inviteCode: league.inviteCode, ownerId: league.ownerId, members });
+  const members = league.members.map(({ user, joinedAt }) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, joinedAt, points: user.gameweekPoints.filter(row => row.gameweek.number >= league.startGameweek).reduce((sum, row) => sum + row.totalPoints, 0) })).sort((a, b) => b.points - a.points || a.joinedAt.getTime() - b.joinedAt.getTime()).map((member, index) => ({ ...member, rank: index + 1 }));
+  response.json({ id: league.id, name: league.name, inviteCode: league.inviteCode, ownerId: league.ownerId, startGameweek: league.startGameweek, logoUrl: league.logoUrl, members });
 }));
 
 router.post("/:id/leave", asyncRoute(async (request, response) => {

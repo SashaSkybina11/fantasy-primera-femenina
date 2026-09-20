@@ -88,7 +88,7 @@ export function AdminPlayerPointsPage() {
   if (user?.role !== "ADMIN") return <Navigate to="/" replace />;
   const current = gameweeks.data?.find((item) => item.id === gameweekId);
   return (
-    <div className="page admin-stats">
+    <div className="page admin-stats admin-page">
       <header className="page-heading">
         <p className="eyebrow">{t("adminStats.eyebrow")}</p>
         <h1>{t("adminStats.title")}</h1>

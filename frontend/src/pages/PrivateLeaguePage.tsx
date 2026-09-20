@@ -1,3 +1,4 @@
+import { Avatar } from "../components/Avatar";
 import { Loader } from "../components/Loader";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -47,7 +48,10 @@ export function PrivateLeaguePage() {
       </Link>
       <header className="page-heading">
         <p className="eyebrow">{t("friends.title")}</p>
+        <Avatar name={league.data.name} src={league.data.logoUrl} size="lg" />
         <h1>{league.data.name}</h1>
+        <p>{t("friends.start", { number: league.data.startGameweek })}</p>
+        <p className="muted">{t("friends.limits")}</p>
         <p>
           {t("friends.inviteCode")}: <strong>{league.data.inviteCode}</strong>
         </p>

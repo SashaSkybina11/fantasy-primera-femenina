@@ -135,6 +135,8 @@ export type TransferStatus = {
   initialSquad: boolean;
 };
 export type PrivateLeagueSummary = {
+  startGameweek: number;
+  logoUrl: string | null;
   id: string;
   name: string;
   inviteCode: string;

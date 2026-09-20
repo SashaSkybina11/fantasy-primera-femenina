@@ -34,7 +34,7 @@ export function AdminPlayerPricesPage() {
     ["yellowCardsDelta", "adminStats.yellowCards"],
     ["redCardsDelta", "adminStats.redCards"], ["goalkeeperDelta", "prices.goalkeeperDelta"],
   ] as const;
-  return <div className="page admin-prices">
+  return <div className="page admin-prices admin-page">
     <header className="page-heading"><p className="eyebrow">{t("nav.admin")}</p><h1>{t("prices.title")}</h1><Link to="/admin/player-points">{t("adminStats.title")} →</Link></header>
     <section className="admin-toolbar">
       <select aria-label={t("adminStats.selectGameweek")} value={gameweekId} disabled={busy} onChange={e => { setGameweekId(e.target.value); setPreview(null); }}><option value="">{t("adminStats.selectGameweek")}</option>{weeks.data?.map(row => <option key={row.id} value={row.id}>{t("gameweek.label", { number: row.number })} · {t(`gameweek.${row.status}`)}</option>)}</select>

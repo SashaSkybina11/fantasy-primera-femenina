@@ -33,6 +33,8 @@ const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, Record<Locale, string>> = {
+  FRIEND_OWNER_LIMIT: { uk: "Можна створити лише одну власну лігу.", en: "You can own one league.", es: "Solo puedes crear una liga propia." },
+  FRIEND_JOIN_LIMIT: { uk: "Можна приєднатися максимум до 5 чужих ліг.", en: "You can join up to 5 other leagues.", es: "Puedes unirte a un máximo de 5 ligas de otras personas." },
  MATCH_UNPUBLISHED: { es: "Publica las actas de todos los partidos antes de finalizar la jornada.", uk: "Опублікуйте протоколи всіх матчів перед завершенням туру.", en: "Publish all match reports before completing the gameweek." },
   MATCH_NOT_FOUND: {"es":"Partido o jornada no encontrado.","uk":"Матч або тур не знайдено.","en":"Match or gameweek not found."},
   MATCH_TEAMS: {"es":"Selecciona dos equipos diferentes.","uk":"Оберіть дві різні команди.","en":"Select two different teams."},
@@ -663,11 +665,12 @@ export const api = {
   privateLeagues: () => request<PrivateLeagueSummary[]>("/private-leagues/my"),
   privateLeague: (id: string) =>
     request<PrivateLeagueDetail>(`/private-leagues/${id}`),
-  createPrivateLeague: (name: string) =>
-    request<PrivateLeagueSummary>("/private-leagues", {
-      method: "POST",
-      body: JSON.stringify({ name }),
-    }),
+  createPrivateLeague: (name: string, logo?: File | null) => {
+    const body = new FormData();
+    body.append("name", name);
+    if (logo) body.append("logo", logo);
+    return request<PrivateLeagueSummary>("/private-leagues", { method: "POST", body });
+  },
   joinPrivateLeague: (code: string) =>
     request<PrivateLeagueSummary>("/private-leagues/join", {
       method: "POST",

@@ -6,6 +6,9 @@ export type Locale = "es" | "uk" | "en";
 const storageKey = "fantasy-locale";
 
 const spanish = {
+  "friends.start": "Puntos desde la jornada {{number}}",
+  "friends.limits": "Una liga propia y hasta 5 ligas de otras personas. Los puntos cuentan desde la misma jornada para todos, aunque se unan después.",
+  "friends.logo": "Logo de la liga",
   "matches.remove": "Eliminar partido sin publicar",
   "matches.removeConfirm": "¿Eliminar este partido y su borrador?",
   "matches.title": "Resultados",
@@ -526,6 +529,9 @@ const spanish = {
 type TranslationKey = keyof typeof spanish;
 
 const ukrainian: Record<TranslationKey, string> = {
+  "friends.start": "Очки з {{number}}-го туру",
+  "friends.limits": "Одна власна ліга та до 5 чужих. Очки рахуються зі спільного туру старту, навіть якщо приєднатися пізніше.",
+  "friends.logo": "Логотип ліги",
   "matches.remove": "Видалити неопублікований матч",
   "matches.removeConfirm": "Видалити цей матч і його чернетку?",
   "matches.title": "Результати",
@@ -1037,6 +1043,9 @@ const ukrainian: Record<TranslationKey, string> = {
 };
 
 const english: Record<TranslationKey, string> = {
+  "friends.start": "Points from gameweek {{number}}",
+  "friends.limits": "One league of your own and up to 5 other leagues. Points count from the same starting gameweek for everyone, including late joiners.",
+  "friends.logo": "League logo",
   "matches.remove": "Delete unpublished match",
   "matches.removeConfirm": "Delete this match and its draft?",
   "matches.title": "Results",

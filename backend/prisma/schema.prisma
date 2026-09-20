@@ -216,6 +216,8 @@ model UserTransfer {
 }
 
 model PrivateLeague {
+  startGameweek Int @default(1)
+  logoUrl String?
   id         String                @id @default(cuid())
   name       String
   inviteCode String                @unique
