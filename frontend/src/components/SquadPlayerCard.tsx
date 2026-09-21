@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaExchangeAlt } from "react-icons/fa";
 import { Modal } from "./Modal";
 import { ClubLogo } from "./ClubLogo";
-import { playerSummaryLabel } from "../services/api";
+import { formatEuro, playerSummaryLabel } from "../services/api";
 import type { SquadEntry } from "../types";
 import { useLocale } from "../contexts/LocaleContext";
 
@@ -26,6 +26,8 @@ export function SquadPlayerCard({
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const { locale, t } = useLocale();
+  const priceDelta = entry.purchasePrice == null ? null : entry.player.price - entry.purchasePrice;
+  const priceClass = priceDelta === null || priceDelta === 0 ? "" : priceDelta > 0 ? "price-delta--up" : "price-delta--down";
   const moveLabel =
     entry.status === "STARTER" ? t("squad.moveBench") : t("squad.moveStarter");
   if (compact) return <>
@@ -44,6 +46,11 @@ export function SquadPlayerCard({
       <span className="jersey-number">#{entry.player.displayNumber ?? entry.player.number}</span>
       <div className="squad-detail-club"><ClubLogo club={entry.player.club} /><strong>{entry.player.club.name}</strong></div>
       <p>{playerSummaryLabel(entry.player, locale)}</p>
+      <dl className="squad-price-comparison">
+        <div><dt>{t("squad.purchasePrice")}</dt><dd>{entry.purchasePrice == null ? t("squad.priceUnknown") : formatEuro(entry.purchasePrice, locale)}</dd></div>
+        <div><dt>{t("prices.current")}</dt><dd className={priceClass}>{formatEuro(entry.player.price, locale)}</dd></div>
+        {priceDelta !== null && <div className="squad-price-comparison__change"><dt>{t("squad.valueChange")}</dt><dd className={priceClass}>{priceDelta > 0 ? "+" : ""}{formatEuro(priceDelta, locale)}</dd></div>}
+      </dl>
     </Modal>, document.body)}
   </>;
   return (

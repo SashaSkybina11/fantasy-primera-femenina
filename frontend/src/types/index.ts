@@ -28,6 +28,7 @@ export type Player = {
 
 export type SquadEntry = {
   id: string;
+  purchasePrice?: number | null;
   playerId: string;
   status: SquadStatus;
   isCaptain: boolean;
@@ -87,6 +88,7 @@ export type LeaderboardRow = {
   rank: number | null;
   totalPoints: number;
   lastGameweekPoints?: number;
+  rankChange?: number | null;
   playerPoints?: number;
   captainBonus?: number;
   isFinal?: boolean;

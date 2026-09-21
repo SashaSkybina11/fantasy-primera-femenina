@@ -1063,6 +1063,8 @@ select:focus {
   border-radius: 20px;
   background: var(--surface);
   box-shadow: var(--shadow);
+
+  padding: 12px;
 }
 .admin-card__head,
 .admin-user {
@@ -5112,6 +5114,41 @@ select:focus {
   }
 }
 /* Match results and the shared match protocol editor. */
+.squad-price-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+.squad-price-comparison dt { color: var(--muted); font-size: 13px; }
+.squad-price-comparison dd { margin: 6px 0 0; font-size: 18px; font-weight: 700; overflow-wrap: anywhere; }
+.squad-price-comparison__change { grid-column: 1 / -1; border-top: 1px solid var(--border); padding-top: 12px; }
+.leaderboard-row.leaderboard-row--overall { grid-template-columns: minmax(64px, auto) minmax(0, 1fr) auto; }
+.leaderboard-position { display: flex; align-items: center; gap: 8px; }
+.rank-change { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.match-report > .match-card { margin-bottom: 30px; }
+.match-teams .match-group-title { margin: 10px 0; text-align: center; font-size: 16px; }
+.match-teams > .admin-card { min-width: 0; }
+.protocol-player strong { overflow-wrap: anywhere; }
+.protocol-player details { flex: 0 1 45%; }
+.protocol-player summary { text-align: right; white-space: nowrap; min-height: 32px; }
+.protocol-player dl { padding: 10px; border-radius: 8px; background: var(--surface-soft); }
+.protocol-player dt { overflow-wrap: anywhere; }
+.protocol-player dd { flex: none; }
+@media (max-width: 1000px) {
+  .match-report > .match-card { margin-bottom: 24px; }
+}
+@media (max-width: 520px) {
+  .match-report > .match-card { margin-bottom: 20px; }
+  .match-score .club-logo, .match-score .club-mark { flex: none; }
+  .protocol-player > div { flex: 1 1 120px; }
+  .protocol-player details { flex: 1 1 100%; }
+  .protocol-player summary { text-align: left; }
+  .leaderboard-position { flex-wrap: wrap; gap: 4px; }
+}
 .match-week-picker {
   display: flex;
   gap: 12px;
@@ -5135,6 +5172,7 @@ select:focus {
   background: var(--surface);
   color: var(--text);
   text-decoration: none;
+  margin-bottom: 20px;
 }
 a.match-card:hover {
   border-color: var(--accent);
@@ -5180,6 +5218,8 @@ a.match-card:hover {
   align-items: center;
   gap: 12px;
   font-size: 20px;
+
+  margin-bottom: 12px;
 }
 .protocol-player {
   display: flex;
@@ -5360,6 +5400,7 @@ a.match-card:hover {
 @media (max-width: 520px) {
   .match-card {
     padding: 16px 12px;
+    margin-bottom: 16px;
   }
   .match-score {
     gap: 8px;

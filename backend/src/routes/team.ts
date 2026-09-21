@@ -73,7 +73,7 @@ router.post("/players", asyncRoute(async (request, response) => {
       if (purchases >= 2 && (await tx.user.findUnique({ where: { id: request.auth!.userId } }))?.role !== "ADMIN") throw new ApiError(409, "Лимит покупок этого тура исчерпан");
     }
 
-    await tx.fantasyTeamPlayer.create({ data: { fantasyTeamId: current.id, playerId, status: SquadStatus.BENCH } });
+    await tx.fantasyTeamPlayer.create({ data: { fantasyTeamId: current.id, playerId, status: SquadStatus.BENCH, purchasePrice: player.price } });
     if (current.isInitialSquadComplete) await tx.userTransfer.create({ data: { userId: request.auth!.userId, gameweekId: gameweek.id, playerId, type: "BUY", price: player.price } });
     return tx.fantasyTeam.update({
       where: { id: current.id },

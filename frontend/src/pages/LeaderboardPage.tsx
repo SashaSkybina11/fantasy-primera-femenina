@@ -34,10 +34,9 @@ export function LeaderboardPage() {
           {leaderboard.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}
           {leaderboard.data?.length === 0 && <p className="state-card">{t("lineup.rankingEmpty")}</p>}
           {leaderboard.data?.map((row) => (
-            <button type="button" className="leaderboard-row leaderboard-row--interactive" key={row.id} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={t("lineup.view", { name: row.name ?? "" })}>
-              <b>{row.rank}</b>
+            <button type="button" className="leaderboard-row leaderboard-row--interactive leaderboard-row--overall" key={row.id} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={t("lineup.view", { name: row.name ?? "" })}>
+              <b className="leaderboard-position">{row.rank}{row.rankChange != null && <span className={`rank-change ${row.rankChange > 0 ? "price-delta--up" : row.rankChange < 0 ? "price-delta--down" : ""}`} aria-label={t(row.rankChange > 0 ? "leaderboard.movedUp" : row.rankChange < 0 ? "leaderboard.movedDown" : "leaderboard.unchanged", { count: Math.abs(row.rankChange) })}>{row.rankChange === 0 ? "—" : `${row.rankChange > 0 ? "↑" : "↓"} ${Math.abs(row.rankChange)}`}</span>}</b>
               <strong>{row.name}</strong>
-              <span>{row.lastGameweekPoints} {t("common.pointsShort")}</span>
               <em>{row.totalPoints} {t("common.pointsShort")} <i aria-hidden="true">›</i></em>
             </button>
           ))}

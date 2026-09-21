@@ -361,6 +361,7 @@ model AdminAuditLog {
 
 model FantasyTeamPlayer {
   id            String      @id @default(cuid())
+  purchasePrice Int?
   fantasyTeamId String
   playerId      String
   status        SquadStatus @default(BENCH)

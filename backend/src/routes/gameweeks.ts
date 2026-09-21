@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma.js";
 import { authenticate } from "../middleware/auth.js";
 import { scoringRules, synchronizeGameweeks } from "../services/gameweeks.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
+import { overallStandings } from "../services/leaderboard.js";
 
 const router = Router();
 router.use(authenticate);
@@ -21,10 +22,10 @@ router.get("/current", asyncRoute(async (request, response) => {
 router.get("/leaderboard", asyncRoute(async (_request, response) => {
   const totals = await prisma.user.findMany({
     where: { role: "USER" },
-    select: { id: true, name: true, avatarUrl: true, fantasyTeam: { select: { players: { select: { player: { select: { position: true } } } } } }, gameweekPoints: { select: { totalPoints: true }, where: { isFinal: true }, orderBy: { gameweek: { number: "asc" } } } },
+    select: { id: true, name: true, avatarUrl: true, fantasyTeam: { select: { players: { select: { player: { select: { position: true } } } } } }, gameweekPoints: { select: { totalPoints: true, gameweek: { select: { number: true } } }, where: { isFinal: true, gameweek: { status: "COMPLETED" } }, orderBy: { gameweek: { number: "asc" } } } },
   });
-  const ranked = totals.filter((user) => user.gameweekPoints.length > 0 || (user.fantasyTeam?.players.length === 10 && user.fantasyTeam.players.filter((entry) => entry.player.position === "GOALKEEPER").length === 2)).map((user) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, totalPoints: user.gameweekPoints.reduce((sum, row) => sum + row.totalPoints, 0), lastGameweekPoints: user.gameweekPoints.at(-1)?.totalPoints ?? 0 })).sort((a, b) => b.totalPoints - a.totalPoints);
-  response.json(ranked.map((row, index) => ({ ...row, rank: index + 1 })));
+  const weeks = await prisma.gameweek.findMany({ where: { status: "COMPLETED" }, orderBy: { number: "desc" }, take: 2, select: { number: true } });
+  response.json(overallStandings(totals, weeks.map(week => week.number)));
 }));
 
 router.get("/:id/leaderboard", asyncRoute(async (request, response) => {
