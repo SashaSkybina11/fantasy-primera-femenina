@@ -26,14 +26,14 @@ export function ProfilePage() {
   const [whatsapp, setWhatsapp] = useState("");
   const [contactConsent, setContactConsent] = useState(false);
   useEffect(() => {
-    if (profile.data) {
+    if (profile.data && !edit) {
       setName(profile.data.name);
       setTeamName(profile.data.fantasyTeam.name);
       setInstagram(profile.data.instagram ?? "");
       setWhatsapp(profile.data.whatsapp ?? "");
       setContactConsent(profile.data.contactConsent);
     }
-  }, [profile.data]);
+  }, [profile.data, edit]);
   const save = useMutation({
     mutationFn: async () => {
       const form = new FormData();

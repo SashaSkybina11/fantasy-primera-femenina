@@ -119,13 +119,21 @@ router.patch("/players/:playerId", asyncRoute(async (request, response) => {
     await assertOpenMarket(tx, request.method === "PATCH", new Date(), request.auth!.userId);
     const current = await tx.fantasyTeam.findUnique({
       where: { userId: request.auth!.userId },
-      include: { players: true },
+      include: { players: { include: { player: { select: { position: true } } } } },
     });
     if (!current) throw new ApiError(404, "Fantasy-команда не найдена");
     const entry = current.players.find((item) => item.playerId === playerId);
     if (!entry) throw new ApiError(404, "Этот игрок не состоит в вашей команде");
     if (status === SquadStatus.STARTER && entry.status !== SquadStatus.STARTER && current.players.filter((item) => item.status === SquadStatus.STARTER).length >= 5) {
       throw new ApiError(400, "В основном составе уже 5 игроков");
+    }
+    if (status === SquadStatus.STARTER && entry.status !== SquadStatus.STARTER) {
+      const limit = entry.player.position === PlayerPosition.GOALKEEPER ? 1 : 4;
+      if (current.players.filter((item) => item.status === SquadStatus.STARTER && item.player.position === entry.player.position).length >= limit) {
+        throw new ApiError(400, entry.player.position === PlayerPosition.GOALKEEPER
+          ? "В основном составе должен быть ровно один вратарь"
+          : "В основном составе должны быть четыре полевых игрока");
+      }
     }
     await tx.fantasyTeamPlayer.update({
       where: { id: entry.id },

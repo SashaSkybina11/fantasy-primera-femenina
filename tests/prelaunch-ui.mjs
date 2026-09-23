@@ -53,7 +53,7 @@ await Promise.all(['uk','es'].flatMap(locale => ['light','dark'].map(theme => ({
    await page.goto('http://localhost:5173'+path,{waitUntil:'domcontentloaded'});await page.locator('h1').first().waitFor();
    if(path==='/purchase-players'){
     await page.locator('.player-card').last().waitFor();
-    assert.equal(await page.locator('.player-card').count(),233);
+    assert.equal(await page.locator('.player-card').count(),players.length);
     const prices=await page.locator('.player-card footer strong').allTextContents();
     const format=new Intl.NumberFormat(locale==='uk'?'uk-UA':'es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0});
     assert.deepEqual(prices,players.map(p=>format.format(p.price)));

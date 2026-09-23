@@ -432,7 +432,7 @@ export const authToken = {
 export function imageUrl(path: string | null | undefined) {
   if (!path) return undefined;
   if (path.startsWith("http")) return path;
-  if (path.startsWith("/logo/")) return encodeURI(path);
+  if (path.startsWith("/logo/") || path.startsWith("/photos/")) return encodeURI(path);
   return encodeURI(`${SERVER_URL}${path}`);
 }
 
@@ -512,7 +512,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, { cache: "no-store", ...init, headers });
   if (response.status === 204) return undefined as T;
   const data = await response.json().catch(() => ({}));
-  if (response.status === 401 && token) {
+  if (response.status === 401 && token && authToken.get() === token) {
     authToken.clear();
     window.dispatchEvent(new Event(authRequiredEvent));
   }

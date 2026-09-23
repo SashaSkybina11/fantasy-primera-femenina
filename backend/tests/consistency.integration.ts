@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 import jwt from 'jsonwebtoken';
+import { mock } from 'node:test';
+// Keep market assertions independent of the day the suite is run.
 import { once } from 'node:events';
 
 const url = new URL(process.env.DATABASE_URL!);
@@ -10,6 +12,7 @@ assert.ok(['localhost', '127.0.0.1'].includes(url.hostname));
 const setup = new PrismaClient();
 // A fresh, isolated database; never reset the application database.
 const database = `fantasy_consistency_${Date.now()}`;
+mock.timers.enable({ apis: ['Date'], now: new Date('2026-09-06T12:00:00Z') });
 await setup.$executeRawUnsafe(`CREATE DATABASE "${database}"`);
 await setup.$disconnect();
 url.pathname = '/' + database;
@@ -108,6 +111,13 @@ try {
   // captain and purchase. ADMIN bypasses only the window/transfer quota.
   const adminId = users[2]!.id;
   const userId = users[0]!.id;
+  const adminDetail = await request('/admin/users/' + userId, adminId);
+  assert.equal(adminDetail.status, 200);
+  assert.equal('passwordHash' in adminDetail.data, false);
+  // An incomplete starting five still cannot contain two goalkeepers.
+  await request('/my-team/players/' + players[1]!.id, adminId, 'PATCH', { status: 'BENCH' });
+  assert.equal((await request('/my-team/players/' + players[5]!.id, adminId, 'PATCH', { status: 'STARTER' })).status, 400);
+  await request('/my-team/players/' + players[1]!.id, adminId, 'PATCH', { status: 'STARTER' });
   const lineup = { players: players.slice(0, 10).map((p, i) => ({ playerId: p.id, status: i < 5 ? 'STARTER' : 'BENCH' })) };
   for (const [path, method, body, expected] of [
     ['/my-team/players', 'POST', { playerId: players[2]!.id }, 423],

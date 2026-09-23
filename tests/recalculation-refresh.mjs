@@ -4,7 +4,7 @@ import fs from 'node:fs';
 
 const browser = await chromium.launch();
 const context = await browser.newContext();
-const origin = process.env.UI_BASE_URL ?? 'http://127.0.0.1:5186';
+const origin = process.env.UI_BASE_URL ?? 'http://127.0.0.1:5173';
 let revision = 1;
 const requests = new Map();
 const errors = [];

@@ -33,6 +33,11 @@ try {
  const form=new FormData();form.append('name','Friends');form.append('logo',new Blob([Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wl6ZQAAAABJRU5ErkJggg==','base64')],{type:'image/png'}),'logo.png');
  const league=await api('',0,'POST',form,201); assert.equal(league.startGameweek,3);assert.ok(league.logoUrl);
  await api('/join',1,'POST',{code:league.inviteCode});
+ // Reverse join order to catch inconsistent tie-breaking in /my.
+ await prisma.privateLeagueMember.update({where:{leagueId_userId:{leagueId:league.id,userId:users[1].id}},data:{joinedAt:new Date('2020-01-01')}});
+ const tied = await api('/'+league.id);
+ assert.equal(tied.members[0].id,users[1].id);
+ assert.equal((await api('/my',1))[0].rank,tied.members[0].rank);
  assert.deepEqual((await api('/'+league.id)).members.map((m:any)=>m.points),[0,0]);
  await api('',0,'POST',{name:'Second owned'},409);
  for(const [i,totalPoints] of [30,42,25].entries()) await prisma.userGameweekPoints.create({data:{userId:users[i].id,gameweekId:weeks[2].id,totalPoints,isFinal:true}});

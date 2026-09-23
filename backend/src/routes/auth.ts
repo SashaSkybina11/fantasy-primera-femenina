@@ -56,7 +56,7 @@ router.post("/register", asyncRoute(async (request, response) => {
 
 router.post("/login", asyncRoute(async (request, response) => {
   const input = credentialsSchema.parse(request.body);
-  const user = await prisma.user.findUnique({ where: { email: input.email.toLowerCase() } });
+  const user = await prisma.user.findUnique({ where: { email: input.email.toLowerCase() }, include: { favoriteClub: true } });
   if (!user || !(await bcrypt.compare(input.password, user.passwordHash))) {
     throw new ApiError(401, "Неверный email или пароль");
   }

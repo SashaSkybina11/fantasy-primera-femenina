@@ -14,7 +14,7 @@
       "destination": "/api"
     },
     {
-      "source": "/((?!api(?:/|$)|assets(?:/|$)|uploads(?:/|$)|logo(?:/|$)).*)",
+      "source": "/((?!api(?:/|$)|assets(?:/|$)|uploads(?:/|$)|logo(?:/|$)|photos(?:/|$)).*)",
       "destination": "/index.html"
     }
   ]

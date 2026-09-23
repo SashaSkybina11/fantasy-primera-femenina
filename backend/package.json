@@ -16,7 +16,7 @@
     "reset-game": "tsx scripts/run-reset-game-users.ts",
     "audit-prices": "tsx scripts/audit-player-prices.ts",
     "restore-game": "tsx scripts/restore-game-users.ts",
-    "test": "node --test tests/*.test.mjs"
+    "test": "npm run build && node --test tests/*.test.mjs"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

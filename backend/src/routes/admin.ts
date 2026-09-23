@@ -52,7 +52,8 @@ router.get("/users/:id", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const user = await prisma.user.findUnique({ where: { id }, include: { fantasyTeam: { include: { players: { include: { player: { include: { club: true } } } } } }, gameweekPoints: { include: { gameweek: true }, orderBy: { gameweek: { number: "desc" } } } } });
   if (!user) throw new ApiError(404, "Пользователь не найден");
-  response.json(user);
+  const { passwordHash: _passwordHash, ...publicUser } = user;
+  response.json(publicUser);
 }));
 
 const gameweekSchema = z.object({ number: z.number().int().positive(), name: z.string().trim().min(2), startsAt: z.coerce.date(), endsAt: z.coerce.date(), marketOpenAt: z.coerce.date(), deadlineAt: z.coerce.date() });

@@ -39,7 +39,7 @@ await page.route('**/api/**',route=>{
 const routes=['/','/profile','/my-team','/purchase-players','/player-prices','/teams','/teams/club','/calendar','/league','/friend-leagues','/league/friend','/league/member/user','/leaderboard','/rules','/admin','/admin/users','/admin/player-points','/admin/player-prices','/admin/friend-leagues','/login','/register'];
 const checks=[];
 try {
-await page.goto('http://127.0.0.1:5186/');
+await page.goto('http://127.0.0.1:5173/');
 await page.waitForFunction(()=>document.documentElement.lang==='es' && localStorage.getItem('fantasy-locale')==='es');
 await page.locator('.language-switcher:visible').first().selectOption('en');
 await page.reload();
@@ -76,7 +76,7 @@ for(const width of [390,1280]) {
  await page.setViewportSize({width,height:900});
  for(const path of routes) {
   anonymous=['/login','/register'].includes(path);
-  await page.goto('http://127.0.0.1:5186'+path);
+  await page.goto('http://127.0.0.1:5173'+path);
   await page.locator('h1').first().waitFor();
   await page.waitForLoadState('networkidle');
   if(path==='/player-prices') await page.locator('details').click();
@@ -95,6 +95,7 @@ for(const width of [390,1280]) {
    await page.locator('.language-switcher:visible').first().selectOption(locale);
    await page.waitForFunction(l=>document.documentElement.lang===l,locale);
    await page.locator('h1').first().waitFor();
+   await page.evaluate(async () => { await document.fonts.ready; await Promise.all(document.getAnimations().filter(a => a.effect?.getComputedTiming().iterations !== Infinity).map(a => a.finished.catch(() => {}))); });
    const body=await page.locator('body').innerText();
    const dictionary=dict[{es:'spanish',uk:'ukrainian',en:'english'}[locale]];
    assert.ok(!/Oleksandra Skybina|Creadora del juego|Творчиня гри|Game creator/.test(body));
@@ -112,7 +113,7 @@ for(const width of [390,1280]) {
    const attributes=await page.locator('[aria-label],[placeholder],[title],[alt]').evaluateAll(nodes=>nodes.flatMap(n=>['aria-label','placeholder','title','alt'].map(a=>n.getAttribute(a)??'')).join('\n'));
    bodies.push(body+'\n'+attributes);
    assert.ok(!/(Скрыть|Показать|@username)/.test(attributes),path+' untranslated attribute');
-   assert.ok(!/(undefined|\bGOALKEEPER\b|\bFIELD_PLAYER\b|Тур не найден|Loading\.\.\.)/.test(body),path);
+   assert.ok(!/(undefined|\bGOALKEEPER\b|\bFIELD_PLAYER\b|Тур не найден|Loading\.\.\.)/.test(await page.locator("body").textContent()),path+' '+locale+' '+body);
    // Translated language names may legitimately include Cyrillic in other locales.
    if(locale==='es' || locale==='en') assert.ok(!/[А-Яа-яІіЇїЄє]/.test(body+attributes),path+' mixed languages');
    if(locale==='en') {
@@ -126,10 +127,10 @@ for(const width of [390,1280]) {
 }
 fs.mkdirSync('artifacts/consistency',{recursive:true});
 anonymous=false;
-await page.goto('http://127.0.0.1:5186/player-prices');
+await page.goto('http://127.0.0.1:5173/player-prices');
 await page.locator('details').click();
 await page.screenshot({path:'artifacts/consistency/player-prices.png',fullPage:true});
-await page.goto('http://127.0.0.1:5186/admin');
+await page.goto('http://127.0.0.1:5173/admin');
 await page.locator('.admin-user__budget').first().waitFor();
 await page.screenshot({path:'artifacts/consistency/admin-budgets-contact.png',fullPage:true});
 assert.deepEqual(errors,[]);

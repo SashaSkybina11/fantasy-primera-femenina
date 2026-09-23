@@ -20,12 +20,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!authToken.get()) { setIsLoading(false); return; }
+    const token = authToken.get();
+    if (!token) { setIsLoading(false); return; }
+    let active = true;
     api.me()
-      .then(({ user: loadedUser }) => setUser(loadedUser))
-      .catch(() => authToken.clear())
-      .finally(() => setIsLoading(false));
-  }, []);
+      .then(({ user: loadedUser }) => {
+        if (active && authToken.get() === token) setUser(loadedUser);
+      })
+      // Unauthorized responses are handled by the API. Network failures must
+      // not erase a valid session or a newer login.
+      .catch(() => {})
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
+  }, [queryClient]);
 
   useEffect(() => {
     const endSession = () => {
@@ -36,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     window.addEventListener(authRequiredEvent, endSession);
     return () => window.removeEventListener(authRequiredEvent, endSession);
-  }, []);
+  }, [queryClient]);
 
   const value = useMemo<AuthContextValue>(() => ({
     user,
