@@ -21,14 +21,18 @@ export async function getOwnTeam(userId: string) {
 }
 
 export async function withTeamDisplayNumbers<T extends { players: Array<{ player: { id: string; clubId: string; number: number } }> }>(team: T) {
-  const catalog = await prisma.player.findMany({ orderBy: [{ clubId: "asc" }, { role: "asc" }, { number: "asc" }] });
+  const catalog = await prisma.player.findMany({
+    orderBy: [{ clubId: "asc" }, { role: "asc" }, { number: "asc" }],
+    include: { priceChanges: { orderBy: { gameweek: { number: "asc" } }, take: 1, select: { priceBefore: true } } },
+  });
   const displayNumbers = new Map(withDisplayNumbers(catalog).map((player) => [player.id, player.displayNumber]));
+  const initialPrices = new Map(catalog.map((player) => [player.id, player.priceChanges[0]?.priceBefore ?? player.price]));
 
   return {
     ...team,
     players: team.players.map((entry) => ({
       ...entry,
-      player: { ...entry.player, displayNumber: displayNumbers.get(entry.player.id) ?? String(entry.player.number) },
+      player: { ...entry.player, initialPrice: initialPrices.get(entry.player.id), displayNumber: displayNumbers.get(entry.player.id) ?? String(entry.player.number) },
     })),
   };
 }
