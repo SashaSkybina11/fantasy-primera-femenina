@@ -46,26 +46,6 @@ const prisma = new PrismaClient();
 
 test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin leagues", async () => {
   mock.timers.enable({ apis: ["Date"], now: new Date("2026-09-08T12:00:00Z") });
-  const { env } = await import("../src/config/env.js");
-  env.resendApiKey = "test-only-no-real-delivery";
-  env.emailFrom = "test@example.invalid";
-  const originalFetch = globalThis.fetch;
-  let verificationCode = "";
-  const emailMock = mock.method(
-    globalThis,
-    "fetch",
-    async (input: Parameters<typeof fetch>[0], init?: RequestInit) => {
-      if (String(input) === "https://api.resend.com/emails") {
-        verificationCode = JSON.parse(String(init?.body)).text.match(
-          /\b\d{6}\b/,
-        )[0];
-        return new Response(JSON.stringify({ id: "test-message" }), {
-          status: 200,
-        });
-      }
-      return originalFetch(input, init);
-    },
-  );
   const { app } = await import("../src/app.js");
   const { prisma: appPrisma } = await import("../src/lib/prisma.js");
   const { snapshotGameweek, recalculateGameweek } =
@@ -232,7 +212,7 @@ test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin
     assert.equal(old.players.length, 0);
     assert.deepEqual(await api("/gameweeks/history/me", login.token), []);
     assert.equal((await api("/gameweeks/leaderboard", login.token)).length, 0);
-    const registration = await api(
+    const fresh = await api(
       "/auth/register",
       undefined,
       "POST",
@@ -241,13 +221,6 @@ test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin
         email: "new-" + suffix + "@example.invalid",
         password: credentials.password,
       },
-      202,
-    );
-    const fresh = await api(
-      "/auth/verify-email",
-      undefined,
-      "POST",
-      { email: registration.email, code: verificationCode },
       201,
     );
     const initial = await api("/my-team", fresh.token);
@@ -464,7 +437,7 @@ test("prelaunch reset, recovery, prices, auth, squad limits, standings and admin
       ),
     );
   } finally {
-    emailMock.mock.restore();
+
     server.close();
     await appPrisma.$disconnect();
     await prisma.$disconnect();

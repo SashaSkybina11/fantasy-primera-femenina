@@ -15,6 +15,4 @@ export const env = {
   isProduction:
     process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL),
   blobReadWriteToken: process.env.AVATAR_BLOB_READ_WRITE_TOKEN,
-  resendApiKey: process.env.RESEND_API_KEY,
-  emailFrom: process.env.EMAIL_FROM,
 };

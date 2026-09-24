@@ -75,7 +75,7 @@ export function ProfilePage() {
       setNewPassword("");
       setConfirmPassword("");
       await logout().catch(() => {});
-      toast.success(t("auth.resetSuccess"));
+      toast.success(t("profile.passwordSaved"));
     },
     onError: (error) => toast.error(error.message),
   });
