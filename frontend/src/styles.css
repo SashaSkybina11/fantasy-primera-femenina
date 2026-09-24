@@ -5778,3 +5778,19 @@ form.admin-card.match-create {
   font-weight: 700;
   white-space: nowrap;
 }
+/* Shared compact catalog layouts, including narrow phones. */
+.catalog-filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+.catalog-filters > * { flex: 1 1 240px; min-width: 0; width: 100%; }
+.scorers-table-wrap { width: 100%; min-width: 0; }
+.scorers-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.scorers-table th, .scorers-table td { padding: 14px 10px; text-align: left; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.scorers-table th:first-child { width: 45%; }
+.scorers-table th:last-child { width: 64px; }
+.scorers-table td:last-child, .scorers-table th:last-child { text-align: center; }
+.scorer-club { display: flex; align-items: center; gap: 10px; }
+.scorer-club .club-mark, .scorer-club .club-logo { flex-shrink: 0; width: 32px; height: 32px; object-fit: contain; }
+@media (max-width: 480px) {
+  .scorers-table th, .scorers-table td { padding: 12px 5px; font-size: 12px; }
+  .scorers-table th:last-child { width: 44px; }
+  .scorer-club { flex-direction: column; align-items: flex-start; gap: 5px; }
+}

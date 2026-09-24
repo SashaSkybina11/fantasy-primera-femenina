@@ -527,6 +527,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 export type PublicLineup = { user: { id: string; name: string }; players: Array<import("../types").SquadEntry & { points: number }> };
 export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
+  scorers: () => request<Array<{ id: string; name: string; club: Club; goals: number }>>("/scorers"),
   deleteMatch: (id: string) => request<{ ok: boolean }>(`/matches/${id}`, { method: "DELETE" }),
   matchWeeks: () => request<Gameweek[]>("/matches/weeks"),
   matches: (week: string) => request<MatchRecord[]>(`/matches?gameweekId=${week}`),

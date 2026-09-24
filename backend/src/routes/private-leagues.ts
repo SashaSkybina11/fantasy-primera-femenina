@@ -71,7 +71,8 @@ router.get("/my", asyncRoute(async (request, response) => {
 
 router.get("/:id", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
-  const league = await prisma.privateLeague.findFirst({ where: { id, members: { some: { userId: request.auth!.userId } } }, include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, name: true, avatarUrl: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true, gameweek: { select: { number: true } } } } } } } } } });
+  const viewer = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { role: true } });
+  const league = await prisma.privateLeague.findFirst({ where: { id, ...(viewer?.role === "ADMIN" ? {} : { members: { some: { userId: request.auth!.userId } } }) }, include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, name: true, avatarUrl: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true, gameweek: { select: { number: true } } } } } } } } } });
   if (!league) throw new ApiError(404, "Лига не найдена или доступ запрещён");
   const members = league.members.map(({ user, joinedAt }) => ({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, joinedAt, points: user.gameweekPoints.filter(row => row.gameweek.number >= league.startGameweek).reduce((sum, row) => sum + row.totalPoints, 0) })).sort((a, b) => b.points - a.points || a.joinedAt.getTime() - b.joinedAt.getTime() || a.id.localeCompare(b.id)).map((member, index) => ({ ...member, rank: index + 1 }));
   response.json({ id: league.id, name: league.name, inviteCode: league.inviteCode, ownerId: league.ownerId, startGameweek: league.startGameweek, logoUrl: league.logoUrl, members });

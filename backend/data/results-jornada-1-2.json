@@ -5,7 +5,8 @@
     "away": "FSF Castro Bloques Cando",
     "homeScore": 1,
     "awayScore": 2,
-    "date": "2026-09-05"
+    "date": "2026-09-04",
+    "kickoffAt": "2026-09-04T21:00:00+02:00"
   },
   {
     "week": 1,
@@ -13,7 +14,8 @@
     "away": "STV Roldán",
     "homeScore": 6,
     "awayScore": 5,
-    "date": "2026-09-05"
+    "date": "2026-09-05",
+    "kickoffAt": "2026-09-05T11:03:00+02:00"
   },
   {
     "week": 1,
@@ -21,7 +23,8 @@
     "away": "AD Ceuta FC",
     "homeScore": 5,
     "awayScore": 0,
-    "date": "2026-09-05"
+    "date": "2026-09-05",
+    "kickoffAt": "2026-09-05T12:30:00+02:00"
   },
   {
     "week": 1,
@@ -29,7 +32,8 @@
     "away": "Nueces de Ronda Atlético Torcal",
     "homeScore": 6,
     "awayScore": 3,
-    "date": "2026-09-05"
+    "date": "2026-09-05",
+    "kickoffAt": "2026-09-05T13:00:00+02:00"
   },
   {
     "week": 1,
@@ -37,7 +41,8 @@
     "away": "Cajasol Guadalcacin FS",
     "homeScore": 3,
     "awayScore": 1,
-    "date": "2026-09-05"
+    "date": "2026-09-05",
+    "kickoffAt": "2026-09-05T16:38:00+02:00"
   },
   {
     "week": 1,
@@ -45,7 +50,8 @@
     "away": "Les Corts UBAE",
     "homeScore": 4,
     "awayScore": 3,
-    "date": "2026-09-05"
+    "date": "2026-09-05",
+    "kickoffAt": "2026-09-05T17:00:00+02:00"
   },
   {
     "week": 1,
@@ -53,7 +59,8 @@
     "away": "Poio Pescamar",
     "homeScore": 0,
     "awayScore": 3,
-    "date": "2026-09-05"
+    "date": "2026-09-05",
+    "kickoffAt": "2026-09-05T18:00:00+02:00"
   },
   {
     "week": 1,
@@ -61,7 +68,8 @@
     "away": "Futsi Atlético Navalcarnero",
     "homeScore": 1,
     "awayScore": 4,
-    "date": "2026-09-05"
+    "date": "2026-09-05",
+    "kickoffAt": "2026-09-05T18:30:00+02:00"
   },
   {
     "week": 2,
@@ -69,7 +77,8 @@
     "away": "Arriva AD Alcorcón",
     "homeScore": 2,
     "awayScore": 1,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T10:00:00+02:00"
   },
   {
     "week": 2,
@@ -77,7 +86,8 @@
     "away": "Melilla CD Torreblanca",
     "homeScore": 0,
     "awayScore": 1,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T12:00:00+02:00"
   },
   {
     "week": 2,
@@ -85,7 +95,8 @@
     "away": "FSF Castro Bloques Cando",
     "homeScore": 2,
     "awayScore": 2,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T13:00:00+02:00"
   },
   {
     "week": 2,
@@ -93,7 +104,8 @@
     "away": "Ourense Ontime",
     "homeScore": 1,
     "awayScore": 2,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T17:00:00+02:00"
   },
   {
     "week": 2,
@@ -101,7 +113,8 @@
     "away": "Wanapix Aldelis",
     "homeScore": 6,
     "awayScore": 3,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T18:00:00+02:00"
   },
   {
     "week": 2,
@@ -109,7 +122,8 @@
     "away": "Estrela Revoltosa Verín FSF",
     "homeScore": 0,
     "awayScore": 0,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T18:00:00+02:00"
   },
   {
     "week": 2,
@@ -117,7 +131,8 @@
     "away": "LBTL Futsal Alcantarilla",
     "homeScore": 4,
     "awayScore": 2,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T18:30:00+02:00"
   },
   {
     "week": 2,
@@ -125,6 +140,7 @@
     "away": "Rodiles FS",
     "homeScore": 11,
     "awayScore": 2,
-    "date": "2026-09-12"
+    "date": "2026-09-12",
+    "kickoffAt": "2026-09-12T18:30:00+02:00"
   }
 ]

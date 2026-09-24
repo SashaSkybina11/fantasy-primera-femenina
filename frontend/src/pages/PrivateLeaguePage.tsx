@@ -43,7 +43,7 @@ export function PrivateLeaguePage() {
   const isOwner = league.data.ownerId === user?.id;
   return (
     <div className="page page--narrow">
-      <Link className="back-link" to="/friend-leagues">
+      <Link className="back-link" to={user?.role === "ADMIN" ? "/admin/friend-leagues" : "/friend-leagues"}>
         ← {t("nav.friends")}
       </Link>
       <header className="page-heading">
@@ -79,7 +79,7 @@ export function PrivateLeaguePage() {
           </div>
         ))}
       </section>
-      <div className="league-danger-actions">
+      {(isOwner || own) && <div className="league-danger-actions">
         {isOwner ? (
           <button
             className="text-button text-button--danger"
@@ -99,7 +99,7 @@ export function PrivateLeaguePage() {
             {t("friends.leave")}
           </button>
         )}
-      </div>
+      </div>}
     </div>
   );
 }

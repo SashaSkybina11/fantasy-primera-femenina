@@ -5,18 +5,19 @@ import assert from 'node:assert/strict';
 
 // Import confirmed scores only. Never publish protocols or recalculate player data.
 const fixtures = JSON.parse(readFileSync(new URL('../data/results-jornada-1-2.json', import.meta.url), 'utf8')) as Array<{
-  week: number; home: string; away: string; homeScore: number; awayScore: number; date: string;
+  week: number; home: string; away: string; homeScore: number; awayScore: number; date: string; kickoffAt: string;
 }>;
 const prisma = new PrismaClient();
 try {
   const results = await prisma.$transaction(async tx => {
     const clubs = await tx.club.findMany();
     const weeks = await tx.gameweek.findMany({ where: { number: { in: [1, 2] } } });
-    const weekIds = weeks.map(w => w.id);
     const snapshot = async () => JSON.stringify({
-      stats: await tx.playerGameweekStats.findMany({ where: { gameweekId: { in: weekIds } }, orderBy: { id: 'asc' } }),
-      points: await tx.userGameweekPoints.findMany({ where: { gameweekId: { in: weekIds } }, orderBy: { id: 'asc' } }),
+      stats: await tx.playerGameweekStats.findMany({ orderBy: { id: 'asc' } }),
+      points: await tx.userGameweekPoints.findMany({ orderBy: { id: 'asc' } }),
       prices: await tx.player.findMany({ select: { id: true, price: true }, orderBy: { id: 'asc' } }),
+      priceHistory: await tx.playerPriceChange.findMany({ orderBy: { id: 'asc' } }),
+      teams: await tx.fantasyTeam.findMany({ orderBy: { id: 'asc' } }),
     });
     const before = await snapshot();
     const saved = [];
@@ -37,8 +38,8 @@ try {
         }
       }
       const reportedResult = { homeScore: fixture.homeScore, awayScore: fixture.awayScore, date: fixture.date };
-      if (match) await tx.match.update({ where: { id: match.id }, data: { reportedResult, version: { increment: 1 } } });
-      else await tx.match.create({ data: { gameweekId: week.id, reportedResult, teams: { create: [
+      if (match) await tx.match.update({ where: { id: match.id }, data: { reportedResult, kickoffAt: new Date(fixture.kickoffAt), version: { increment: 1 } } });
+      else await tx.match.create({ data: { gameweekId: week.id, reportedResult, kickoffAt: new Date(fixture.kickoffAt), teams: { create: [
         { gameweekId: week.id, clubId: home.id, side: 'home' },
         { gameweekId: week.id, clubId: away.id, side: 'away' },
       ] } } });

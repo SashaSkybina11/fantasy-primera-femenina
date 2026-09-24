@@ -6,6 +6,10 @@ export type Locale = "es" | "uk" | "en";
 const storageKey = "fantasy-locale";
 
 const spanish = {
+  "scorers.title": "Tabla de Goleadores",
+  "scorers.player": "Jugador",
+  "scorers.team": "Equipo",
+  "scorers.empty": "Todavía no hay goles registrados.",
   "friends.start": "Puntos desde la jornada {{number}}",
   "friends.limits": "Una liga propia y hasta 5 ligas de otras personas. Los puntos cuentan desde la misma jornada para todos, aunque se unan después.",
   "friends.logo": "Logo de la liga",
@@ -535,6 +539,10 @@ const spanish = {
 type TranslationKey = keyof typeof spanish;
 
 const ukrainian: Record<TranslationKey, string> = {
+  "scorers.title": "Таблиця бомбардирок",
+  "scorers.player": "Гравчиня",
+  "scorers.team": "Команда",
+  "scorers.empty": "Голів ще не зафіксовано.",
   "friends.start": "Очки з {{number}}-го туру",
   "friends.limits": "Одна власна ліга та до 5 чужих. Очки рахуються зі спільного туру старту, навіть якщо приєднатися пізніше.",
   "friends.logo": "Логотип ліги",
@@ -1055,6 +1063,10 @@ const ukrainian: Record<TranslationKey, string> = {
 };
 
 const english: Record<TranslationKey, string> = {
+  "scorers.title": "Top Scorers",
+  "scorers.player": "Player",
+  "scorers.team": "Team",
+  "scorers.empty": "No goals recorded yet.",
   "friends.start": "Points from gameweek {{number}}",
   "friends.limits": "One league of your own and up to 5 other leagues. Points count from the same starting gameweek for everyone, including late joiners.",
   "friends.logo": "League logo",

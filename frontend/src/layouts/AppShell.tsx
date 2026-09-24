@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoHomeOutline, IoFootballOutline, IoSwapHorizontalOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
+import { FaRankingStar } from "react-icons/fa6";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings } from "react-icons/md";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
@@ -19,13 +20,14 @@ type IconName =
   | "my-team"
   | "purchase"
   | "prices"
+  | "scorers"
   | "calendar"
   | "teams"
   | "profile"
   | "admin";
 
 function FootballIcon({ name }: { name: IconName }) {
-  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: IoSwapHorizontalOutline, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, admin: MdAdminPanelSettings };
+  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: IoSwapHorizontalOutline, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: FaRankingStar, admin: MdAdminPanelSettings };
   const Icon = icons[name];
   return <Icon aria-hidden="true" />;
 }
@@ -58,6 +60,7 @@ function NavLinks({
       label: t("prices.title"),
       icon: "prices" as const,
     },
+    { to: "/scorers", label: t("scorers.title"), icon: "scorers" as const },
     { to: "/results", label: t("matches.title"), icon: "trophy" as const },
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },

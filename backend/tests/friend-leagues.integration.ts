@@ -44,6 +44,13 @@ try {
  await prisma.gameweek.update({where:{id:weeks[2].id},data:{deadlineAt:new Date(now-1),status:'COMPLETED'}});
  await api('/join',2,'POST',{code:league.inviteCode});
  const detail=await api('/'+league.id);assert.deepEqual(detail.members.map((m:any)=>m.points),[42,30,25]);assert.equal(detail.startGameweek,3);
+ // Ordinary outsiders cannot read the league; administrators can without joining.
+ await api('/'+league.id,8,'GET',undefined,404);
+ await prisma.user.update({where:{id:users[8].id},data:{role:'ADMIN'}});
+ const adminView=await api('/'+league.id,8);
+ assert.deepEqual(adminView.members,detail.members);
+ assert.equal(await prisma.privateLeagueMember.count({where:{leagueId:league.id,userId:users[8].id}}),0);
+ await prisma.user.update({where:{id:users[8].id},data:{role:'USER'}});
  assert.equal((await api('/my',2))[0].rank,3);
  assert.equal((await prisma.userGameweekPoints.aggregate({where:{userId:users[2].id,isFinal:true},_sum:{totalPoints:true}}))._sum.totalPoints,165);
  for(let i=3;i<=7;i++) {const other=await api('',i,'POST',{name:`Other ${i}`},201);assert.equal(other.startGameweek,4);await api('/join',0,'POST',{code:other.inviteCode});}
