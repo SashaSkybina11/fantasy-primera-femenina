@@ -16,10 +16,10 @@
       "transfers": 1
     },
     "backup": {
-      "path": "C:\\Users\\sasha\\OneDrive\\Рабочий стол\\Fantasy Primera División Femenina\\backups\\test\\prelaunch-1788868800000-fbe1561c-8488-404c-92be-edd1aa224f08.json",
-      "sha256": "430bbd54c5a373411a7468a2d1a24a1472c8a8c272592964e181790d8928e70d"
+      "path": "C:\\Users\\sasha\\OneDrive\\Рабочий стол\\Fantasy Primera División Femenina\\backups\\test\\prelaunch-1788868800000-0f8acb79-da84-4d0f-aa8e-c66363eb0a72.json",
+      "sha256": "863ba34e8c3cfe4206a13478e6a68363e31ae4f50df42ec1f5fcd8c4d0d56bc6"
     },
-    "afterFingerprint": "2dbb388b2419dfba6c8506812cfcdd0aae55ff09ac53b47acaadcb0d5b115868",
+    "afterFingerprint": "53fa65ec117f7a509ba2954525b0393f55bcfb023f700b3ca193175b9c3f07bd",
     "errors": 0
   },
   "scenarios": [

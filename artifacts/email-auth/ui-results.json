@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "scenarios": [
+    "delivery failure",
+    "pending",
+    "code validation",
+    "invalid code",
+    "reload",
+    "resend",
+    "expired registration",
+    "rate limit",
+    "reset sent",
+    "expired reset",
+    "reset success",
+    "invalid link"
+  ],
+  "layouts": [
+    {
+      "locale": "uk",
+      "width": 320,
+      "theme": "light",
+      "passed": true
+    },
+    {
+      "locale": "uk",
+      "width": 320,
+      "theme": "dark",
+      "passed": true
+    },
+    {
+      "locale": "uk",
+      "width": 1440,
+      "theme": "light",
+      "passed": true
+    },
+    {
+      "locale": "uk",
+      "width": 1440,
+      "theme": "dark",
+      "passed": true
+    },
+    {
+      "locale": "es",
+      "width": 320,
+      "theme": "light",
+      "passed": true
+    },
+    {
+      "locale": "es",
+      "width": 320,
+      "theme": "dark",
+      "passed": true
+    },
+    {
+      "locale": "es",
+      "width": 1440,
+      "theme": "light",
+      "passed": true
+    },
+    {
+      "locale": "es",
+      "width": 1440,
+      "theme": "dark",
+      "passed": true
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "theme": "light",
+      "passed": true
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "theme": "dark",
+      "passed": true
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "theme": "light",
+      "passed": true
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "theme": "dark",
+      "passed": true
+    }
+  ]
+}

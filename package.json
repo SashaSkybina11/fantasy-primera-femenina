@@ -7,6 +7,8 @@
     "backend"
   ],
   "scripts": {
+    "test:email-auth": "node --import tsx backend/tests/email-auth.integration.ts",
+    "test:email-auth-ui": "node tests/email-auth-ui.mjs",
     "typecheck": "tsc -p backend/tsconfig.scripts.json && tsc -b frontend",
     "lint": "eslint backend/src frontend/src api && node tests/localization-source.mjs",
     "test:consistency": "node --import tsx backend/tests/consistency.integration.ts",

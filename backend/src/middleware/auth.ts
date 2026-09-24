@@ -4,19 +4,26 @@ import { env } from "../config/env.js";
 import { prisma } from "../lib/prisma.js";
 import { ApiError } from "../utils/http.js";
 
-export function authenticate(request: Request, _response: Response, next: NextFunction) {
+export async function authenticate(request: Request, _response: Response, next: NextFunction) {
   const token = request.header("authorization")?.replace(/^Bearer\s+/i, "");
   if (!token) return next(new ApiError(401, "Требуется авторизация"));
 
+  let payload: string | jwt.JwtPayload;
   try {
-    const payload = jwt.verify(token, env.jwtSecret);
+    payload = jwt.verify(token, env.jwtSecret);
     if (typeof payload !== "object" || !payload.sub) {
       return next(new ApiError(401, "Недействительный токен"));
     }
-    request.auth = { userId: String(payload.sub) };
-    return next();
   } catch {
     return next(new ApiError(401, "Сессия истекла. Войдите снова."));
+  }
+  try {
+    const user = await prisma.user.findUnique({ where: { id: String(payload.sub) }, select: { sessionVersion: true } });
+    if (!user || (payload.sessionVersion ?? 0) !== user.sessionVersion) return next(new ApiError(401, "Сессия истекла. Войдите снова."));
+    request.auth = { userId: String(payload.sub) };
+    return next();
+  } catch (error) {
+    return next(error);
   }
 }
 

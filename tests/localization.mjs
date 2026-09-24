@@ -2,6 +2,7 @@ import ts from 'typescript';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173';
 const source=ts.createSourceFile('locale.tsx',fs.readFileSync('frontend/src/contexts/LocaleContext.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
 const dict={};
 for(const stmt of source.statements) if(ts.isVariableStatement(stmt)) for(const decl of stmt.declarationList.declarations) if(['spanish','ukrainian','english'].includes(decl.name.getText(source))) {
@@ -19,6 +20,8 @@ for(const language of ['ukrainian','english']) {
 const browser=await chromium.launch();
 const page=await browser.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(e.message));
 page.setDefaultTimeout(15000);
+page.setDefaultNavigationTimeout(60000);
+await page.route('https://fonts.googleapis.com/**', route => route.fulfill({ contentType: 'text/css', body: '' }));
 let anonymous=false;
 let apiErrorMessage='Неверный email или пароль';
 const user={id:'user',name:'Test',email:'test@example.invalid',role:'ADMIN',status:'ACTIVE',createdAt:'2026-01-01',avatarUrl:null,budget:12345,playerCount:10,totalPoints:0};
@@ -39,7 +42,7 @@ await page.route('**/api/**',route=>{
 const routes=['/','/profile','/my-team','/purchase-players','/player-prices','/teams','/teams/club','/calendar','/league','/friend-leagues','/league/friend','/league/member/user','/leaderboard','/rules','/admin','/admin/users','/admin/player-points','/admin/player-prices','/admin/friend-leagues','/login','/register'];
 const checks=[];
 try {
-await page.goto('http://127.0.0.1:5173/');
+await page.goto(baseUrl + '/');
 await page.waitForFunction(()=>document.documentElement.lang==='es' && localStorage.getItem('fantasy-locale')==='es');
 await page.locator('.language-switcher:visible').first().selectOption('en');
 await page.reload();
@@ -76,7 +79,7 @@ for(const width of [390,1280]) {
  await page.setViewportSize({width,height:900});
  for(const path of routes) {
   anonymous=['/login','/register'].includes(path);
-  await page.goto('http://127.0.0.1:5173'+path);
+  await page.goto(baseUrl + path);
   await page.locator('h1').first().waitFor();
   await page.waitForLoadState('networkidle');
   if(path==='/player-prices') await page.locator('details').click();
@@ -127,10 +130,10 @@ for(const width of [390,1280]) {
 }
 fs.mkdirSync('artifacts/consistency',{recursive:true});
 anonymous=false;
-await page.goto('http://127.0.0.1:5173/player-prices');
+await page.goto(baseUrl + '/player-prices');
 await page.locator('details').click();
 await page.screenshot({path:'artifacts/consistency/player-prices.png',fullPage:true});
-await page.goto('http://127.0.0.1:5173/admin');
+await page.goto(baseUrl + '/admin');
 await page.locator('.admin-user__budget').first().waitFor();
 await page.screenshot({path:'artifacts/consistency/admin-budgets-contact.png',fullPage:true});
 assert.deepEqual(errors,[]);

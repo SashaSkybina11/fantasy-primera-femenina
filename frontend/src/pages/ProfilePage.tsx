@@ -12,7 +12,7 @@ import { PasswordInput } from "../components/PasswordInput";
 export function ProfilePage() {
   const profile = useQuery({ queryKey: ["profile"], queryFn: api.profile });
   const queryClient = useQueryClient();
-  const { setUser } = useAuth();
+  const { setUser, logout } = useAuth();
   const { t } = useLocale();
   const input = useRef<HTMLInputElement>(null);
   const [edit, setEdit] = useState(false);
@@ -70,11 +70,12 @@ export function ProfilePage() {
   });
   const changePassword = useMutation({
     mutationFn: () => api.updatePassword({ currentPassword, newPassword }),
-    onSuccess: () => {
+    onSuccess: async () => {
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      toast.success(t("profile.passwordSaved"));
+      await logout().catch(() => {});
+      toast.success(t("auth.resetSuccess"));
     },
     onError: (error) => toast.error(error.message),
   });

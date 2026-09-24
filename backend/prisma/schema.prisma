@@ -65,6 +65,8 @@ model User {
   id                       String                @id @default(cuid())
   email                    String                @unique
   passwordHash             String
+  emailVerifiedAt          DateTime?
+  sessionVersion           Int                   @default(0)
   name                     String
   role                     UserRole              @default(USER)
   status                   AccountStatus         @default(ACTIVE)
@@ -89,6 +91,31 @@ model User {
   updatedAt                DateTime              @updatedAt
 
   @@index([favoriteClubId])
+}
+
+model EmailChallenge {
+  id             String   @id @default(cuid())
+  email          String
+  purpose        String
+  secretHash     String
+  expiresAt      DateTime
+  attempts       Int      @default(0)
+  consumedAt     DateTime?
+  name           String?
+  passwordHash   String?
+  userId         String?
+  sessionVersion Int?
+
+  @@unique([email, purpose])
+  @@index([expiresAt])
+}
+
+model AuthRateLimit {
+  key       String   @id
+  count     Int
+  expiresAt DateTime
+
+  @@index([expiresAt])
 }
 
 model FantasyTeam {

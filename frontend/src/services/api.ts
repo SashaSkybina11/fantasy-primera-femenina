@@ -33,6 +33,11 @@ const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, Record<Locale, string>> = {
+  AUTH_EMAIL_UNAVAILABLE: { es: "No se pudo enviar el correo. Inténtalo de nuevo en un minuto o contacta con soporte.", uk: "Не вдалося надіслати лист. Спробуйте за хвилину або зверніться до підтримки.", en: "Could not send the email. Try again in a minute or contact support." },
+  AUTH_TOO_MANY_REQUESTS: { es: "Demasiados intentos. Espera un minuto antes de repetir. Si continúa, vuelve a intentarlo en una hora.", uk: "Забагато спроб. Зачекайте хвилину. Якщо обмеження залишиться, повторіть за годину.", en: "Too many attempts. Wait a minute before trying again. If the limit persists, try again in an hour." },
+  AUTH_INVALID_CODE: { es: "Código incorrecto, caducado o agotado. Comprueba el último código o solicita uno nuevo.", uk: "Код неправильний, прострочений або спроби вичерпано. Перевірте останній код або запросіть новий.", en: "The code is incorrect, expired, or has no attempts left. Check the latest code or request a new one." },
+  AUTH_INVALID_RESET: { es: "El enlace ha caducado o ya se ha utilizado. Solicita uno nuevo.", uk: "Посилання прострочене або вже використане. Запросіть нове.", en: "The link has expired or has already been used. Request a new one." },
+  AUTH_REGISTRATION_EXPIRED: { es: "Vuelve a empezar el registro para recibir un código nuevo.", uk: "Почніть реєстрацію знову, щоб отримати новий код.", en: "Restart registration to receive a new code." },
   FRIEND_OWNER_LIMIT: { uk: "Можна створити лише одну власну лігу.", en: "You can own one league.", es: "Solo puedes crear una liga propia." },
   FRIEND_JOIN_LIMIT: { uk: "Можна приєднатися максимум до 5 чужих ліг.", en: "You can join up to 5 other leagues.", es: "Puedes unirte a un máximo de 5 ligas de otras personas." },
  MATCH_UNPUBLISHED: { es: "Publica las actas de todos los partidos antes de finalizar la jornada.", uk: "Опублікуйте протоколи всіх матчів перед завершенням туру.", en: "Publish all match reports before completing the gameweek." },
@@ -541,10 +546,14 @@ export const api = {
   deleteAdminFriendLeague: (id: string) => request<void>("/admin/friend-leagues/" + id, { method: "DELETE" }),
   gameConfig: () => request<{ initialBudget: number }>("/game-config"),
   register: (payload: { email: string; password: string; name: string }) =>
-    request<{ token: string; user: User }>("/auth/register", {
+    request<{ verificationRequired: true; email: string; retryAfterSeconds: number }>("/auth/register", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+  verifyEmail: (payload: { email: string; code: string }) => request<{ token: string; user: User }>("/auth/verify-email", { method: "POST", body: JSON.stringify(payload) }),
+  resendVerification: (email: string) => request<{ retryAfterSeconds: number }>("/auth/resend-verification", { method: "POST", body: JSON.stringify({ email }) }),
+  forgotPassword: (email: string) => request<{ ok: true; retryAfterSeconds: number }>("/auth/forgot-password", { method: "POST", body: JSON.stringify({ email }) }),
+  resetPassword: (payload: { email: string; token: string; password: string }) => request<{ ok: true }>("/auth/reset-password", { method: "POST", body: JSON.stringify(payload) }),
   login: (payload: { email: string; password: string }) =>
     request<{ token: string; user: User }>("/auth/login", {
       method: "POST",

@@ -43,8 +43,10 @@ function ProtectedLayout() {
 export function App() {
   return (
     <Routes>
-      <Route path="/login" element={<AuthPage mode="login" />} />
-      <Route path="/register" element={<AuthPage mode="register" />} />
+      <Route path="/login" element={<AuthPage key="login" mode="login" />} />
+      <Route path="/register" element={<AuthPage key="register" mode="register" />} />
+      <Route path="/forgot-password" element={<AuthPage key="forgot" mode="forgot" />} />
+      <Route path="/reset-password" element={<AuthPage key="reset" mode="reset" />} />
       <Route element={<ProtectedLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />

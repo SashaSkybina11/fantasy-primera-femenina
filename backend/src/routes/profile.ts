@@ -158,10 +158,11 @@ router.patch(
     if (!(await bcrypt.compare(input.currentPassword, user.passwordHash))) {
       throw new ApiError(400, "Текущий пароль указан неверно");
     }
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { passwordHash: await bcrypt.hash(input.newPassword, 12) },
+    const updated = await prisma.user.updateMany({
+      where: { id: user.id, sessionVersion: user.sessionVersion },
+      data: { passwordHash: await bcrypt.hash(input.newPassword, 12), sessionVersion: { increment: 1 } },
     });
+    if (updated.count !== 1) throw new ApiError(401, "Сессия истекла. Войдите снова.");
     response.status(204).send();
   }),
 );

@@ -8,6 +8,7 @@ type AuthContextValue = {
   isLoading: boolean;
   login: (payload: { email: string; password: string }) => Promise<void>;
   register: (payload: { email: string; password: string; name: string }) => Promise<void>;
+  verifyEmail: (payload: { email: string; code: string }) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User) => void;
 };
@@ -49,7 +50,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     isLoading,
     login: async (payload) => { const result = await api.login(payload); authToken.set(result.token); queryClient.clear(); setUser(result.user); },
-    register: async (payload) => { const result = await api.register(payload); authToken.set(result.token); queryClient.clear(); setUser(result.user); },
+    register: async (payload) => { await api.register(payload); },
+    verifyEmail: async (payload) => { const result = await api.verifyEmail(payload); authToken.set(result.token); queryClient.clear(); setUser(result.user); },
     logout: async () => { try { await api.logout(); } finally { authToken.clear(); queryClient.clear(); setUser(null); } },
     setUser,
   }), [user, isLoading, queryClient]);
