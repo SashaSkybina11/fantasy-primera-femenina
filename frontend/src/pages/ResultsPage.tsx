@@ -24,7 +24,11 @@ export function ResultsPage() {
     {(weeks.isPending || (!!week && matches.isPending)) && <p role="status">{t("matches.loading")}</p>}
     {(weeks.isError || matches.isError) && <p role="alert">{t("matches.error")} <button onClick={() => { void weeks.refetch(); if (week) void matches.refetch(); }}>{t("matches.retry")}</button></p>}
     {matches.data?.length === 0 && <p className="state-card">{t("matches.empty")}</p>}
-    <div className="match-list">{matches.data?.map(match => <Link className="match-card" to={`/results/${match.id}`} key={match.id}><small>{match.kickoffAt ? new Date(match.kickoffAt).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" }) : match.reportedResult?.date ? new Date(match.reportedResult.date + "T12:00:00").toLocaleDateString(locale, { dateStyle: "medium" }) : t("matches.unscheduled")}</small><MatchHeading match={match} /><span className="match-card-footer">{match.published ? t("matches.published") : match.reportedResult ? t("matches.scoreOnly") : t("matches.pending")}<span>{t("matches.report")} →</span></span></Link>)}</div>
+    <div className="match-list">{matches.data?.map(match => {
+      const scoreOnly = !!match.reportedResult && !match.published;
+      const content = <><small>{match.kickoffAt ? new Date(match.kickoffAt).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Madrid" }) : match.reportedResult?.date ? new Date(match.reportedResult.date + "T12:00:00").toLocaleDateString(locale, { dateStyle: "medium" }) : t("matches.unscheduled")}</small><MatchHeading match={match} />{!scoreOnly && <span className="match-card-footer">{match.published ? t("matches.published") : t("matches.pending")}<span>{t("matches.report")} →</span></span>}</>;
+      return scoreOnly ? <article className="match-card" key={match.id}>{content}</article> : <Link className="match-card" to={`/results/${match.id}`} key={match.id}>{content}</Link>;
+    })}</div>
   </div>;
 }
 export function pointsBreakdown(row: MatchRow, rules: Record<string, number>) {
