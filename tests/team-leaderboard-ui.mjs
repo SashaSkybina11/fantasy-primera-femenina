@@ -41,7 +41,7 @@ try {
       if (i === 2) assert.match(await prices.innerText(), /Не збережено/);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1), false);
       if (i === 0) await page.screenshot({ path: `artifacts/team-leaderboard/price-${width}.png` });
-      await page.keyboard.press('Escape');
+      await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),1);await page.locator('dialog[open] .compact-modal__close').click();
     }
     await page.goto('http://127.0.0.1:5173/leaderboard');
     await page.locator('.leaderboard-row--overall').last().waitFor();

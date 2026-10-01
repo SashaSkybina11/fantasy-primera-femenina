@@ -19,7 +19,7 @@ else if(path==='/my-team/captain'){for(const e of entries)e.isCaptain=e.playerId
 await route.fulfill({json:data});});
 await page.goto(`${process.env.UI_BASE_URL ?? 'http://127.0.0.1:5173'}/my-team`);await page.locator('.squad-field').waitFor();
 assert.equal(await page.locator('.squad-slot--field').count(),5);
-await page.locator('.squad-field__goalkeeper button').click();await page.locator('dialog[open]').waitFor();assert.equal(await page.locator('.squad-picker__player').count(),0);await page.keyboard.press('Escape');
+await page.locator('.squad-field__goalkeeper button').click();await page.locator('dialog[open]').waitFor();assert.equal(await page.locator('.squad-picker__player').count(),0);await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),1);await page.locator('dialog[open] .compact-modal__close').click();
 team.players=entries;await page.reload();await page.locator('.squad-field__goalkeeper button').click();assert.equal(await page.locator('.squad-picker__player').count(),2);await page.locator('.squad-picker__player').first().click();await page.locator('dialog[open]').waitFor({state:'hidden'});assert.equal(patches,1);
 await page.locator('.squad-field__players .squad-slot').first().click();assert.equal(await page.locator('.squad-picker__player').count(),8);await page.locator('.squad-picker__player').first().click();await page.locator('dialog[open]').waitFor({state:'hidden'});
 for(const e of entries) e.status=[0,2,3,4,5].includes(entries.indexOf(e))?'STARTER':'BENCH';await page.reload();await page.locator('.squad-player-details').first().waitFor();
@@ -31,7 +31,7 @@ for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++){const a=rects[i
 assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Overflow ${width}`);
 await page.locator('.squad-field').screenshot({path:`artifacts/squad-update/${theme}-${width}.png`});
 }
-await page.locator('.squad-player-details').first().click();await page.locator('dialog[open]').waitFor();assert.ok((await page.locator('dialog').textContent()).includes('Test Club'));await page.keyboard.press('Escape');
+await page.locator('.squad-player-details').first().click();await page.locator('dialog[open]').waitFor();assert.ok((await page.locator('dialog').textContent()).includes('Test Club'));await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),1);await page.locator('dialog[open] .compact-modal__close').click();
 await page.locator('.squad-icon--captain').first().click();await page.locator('.squad-icon--captain.is-captain').waitFor();
 await page.locator('.squad-icon--remove').first().click();await page.locator('.remove-player-modal').waitFor();assert.equal(await page.locator('dialog[open]').count(),0);await page.locator('.remove-player-modal .button--secondary').click();
 await page.locator('.squad-bench-button').first().click();await page.locator('.squad-field__goalkeeper .squad-slot').waitFor();

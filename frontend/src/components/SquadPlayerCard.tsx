@@ -4,7 +4,7 @@ import { useState } from "react";
 import { GoArrowRight } from "react-icons/go";
 import { Modal } from "./Modal";
 import { ClubLogo } from "./ClubLogo";
-import { formatEuro, imageUrl, nationalityLabel, playerSummaryLabel } from "../services/api";
+import { formatEuro, imageUrl, nationalityLabel, playerAgeLabel, playerSummaryLabel, roleLabel } from "../services/api";
 import type { SquadEntry } from "../types";
 import { useLocale } from "../contexts/LocaleContext";
 
@@ -66,7 +66,7 @@ export function SquadPlayerCard({
       </div>
       <h2 className="fut-player-card__name">{entry.player.name} <span className="fut-player-card__number">#{entry.player.displayNumber ?? entry.player.number}</span></h2>
       <div className="squad-detail-club"><ClubLogo club={entry.player.club} /><strong>{entry.player.club.name}</strong></div>
-      <p className="fut-player-card__facts">{[entry.player.role, entry.player.age, country ? `${flag} ${nationalityLabel(country, locale)}`.trim() : null].filter(value => value != null && value !== "").join(" · ")}</p>
+      <p className="fut-player-card__facts">{[roleLabel(entry.player.role, locale), playerAgeLabel(entry.player.age, locale), country ? `${flag} ${nationalityLabel(country, locale)}`.trim() : null].filter(Boolean).join(" · ")}</p>
       <dl className="squad-price-comparison">
         <div><dt>{t("squad.initialPrice")}</dt><dd>{initialPrice == null ? t("squad.priceUnknown") : formatEuro(initialPrice, locale)}<span className="squad-price-comparison__arrow" aria-hidden="true"><GoArrowRight className="ui-arrow" /></span></dd></div>
         <div><dt>{t("prices.current")}</dt><dd className={priceClass}>{formatEuro(entry.player.price, locale)}</dd></div>

@@ -488,16 +488,23 @@ export function nationalityLabel(
   }
 }
 
+export function playerAgeLabel(age: number | null | undefined, locale: Locale = getStoredLocale()) {
+  if (age == null) return undefined;
+  if (locale === "uk") {
+    const plural = new Intl.PluralRules("uk").select(age);
+    return `${age} ${plural === "one" ? "рік" : plural === "few" ? "роки" : "років"}`;
+  }
+  if (locale === "en") return `${age} ${age === 1 ? "year" : "years"} old`;
+  if (locale.startsWith("pt")) return `${age} ${age === 1 ? "ano" : "anos"}`;
+  return `${age} ${age === 1 ? "año" : "años"}`;
+}
+
 export function playerFactsLabel(
   player: Pick<Player, "age" | "nationality">,
   locale: Locale = getStoredLocale(),
 ) {
   return [
-    player.age
-      ? locale === "uk"
-        ? `${player.age} років`
-        : locale === "en" ? `${player.age} years old` : `${player.age} ${locale.startsWith("pt") ? "anos" : "años"}`
-      : null,
+    playerAgeLabel(player.age, locale),
     nationalityLabel(player.nationality, locale),
   ]
     .filter(Boolean)

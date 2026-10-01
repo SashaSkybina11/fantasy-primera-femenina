@@ -61,7 +61,7 @@ await Promise.all(['uk','es'].flatMap(locale => ['light','dark'].map(theme => ({
     assert.equal(placement.tag,'HEADER');assert.ok(Math.abs(placement.center-(placement.left+placement.right)/2)<2);
     await page.locator('.view-team-button').click();await page.locator('dialog[open]').waitFor();
     assert.equal(await page.evaluate(()=>document.body.style.overflow),'hidden');
-    await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),0);
+    await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),1);await page.locator('dialog[open] .compact-modal__close').click();assert.equal(await page.locator('dialog[open]').count(),0);
    }
    if(path==='/calendar'){
     const buttons=await page.locator('.calendar-card .button').evaluateAll(els=>els.map(el=>({width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height})));
@@ -88,9 +88,9 @@ await Promise.all(['uk','es'].flatMap(locale => ['light','dark'].map(theme => ({
   if(state==='loading')await page.locator('.modal-loading').waitFor();
   if(state==='empty')await page.getByText(locale==='uk'?'Основний склад ще не сформовано.':'La alineación principal todavía no está formada.').waitFor();
   if(state==='error')await page.getByText(locale==='uk'?'Не вдалося завантажити склад користувача.':'No se pudo cargar la plantilla del usuario.').waitFor();
-  await page.keyboard.press('Escape');
+  await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),1);await page.locator('dialog[open] .compact-modal__close').click();
  }
- mode='normal';await page.goto('http://localhost:5173/leaderboard');await page.locator('.leaderboard-row').click();await page.locator('dialog[open]').waitFor();await page.mouse.click(2,2);assert.equal(await page.locator('dialog[open]').count(),0);
+ mode='normal';await page.goto('http://localhost:5173/leaderboard');await page.locator('.leaderboard-row').click();await page.locator('dialog[open]').waitFor();await page.mouse.click(2,2);assert.equal(await page.locator('dialog[open]').count(),1);await page.locator('dialog[open] .compact-modal__close').click();
  await page.goto('http://localhost:5173/admin/friend-leagues');await page.locator('.admin-league-card button').click();await page.locator('.modal-actions button').last().click();await page.locator('dialog').waitFor({state:'detached'});await page.locator('.admin-league-card').waitFor({state:'detached'});
  await context.close();
  const anonymous=await browser.newContext();await anonymous.addInitScript(({locale,theme})=>{localStorage.setItem('fantasy-locale',locale);localStorage.setItem('fantasy-theme',theme)},{locale,theme});

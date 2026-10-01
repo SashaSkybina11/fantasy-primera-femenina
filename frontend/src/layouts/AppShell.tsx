@@ -1,4 +1,4 @@
-import { GoArrowRight } from "react-icons/go";
+import { HiArrowsRightLeft } from "react-icons/hi2";
 import { RxCross1 } from "react-icons/rx";
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ type IconName =
   | "admin";
 
 function FootballIcon({ name }: { name: IconName }) {
-  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: GoArrowRight, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: FaRankingStar, admin: MdAdminPanelSettings };
+  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: HiArrowsRightLeft, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: FaRankingStar, admin: MdAdminPanelSettings };
   const Icon = icons[name];
   return <Icon aria-hidden="true" />;
 }

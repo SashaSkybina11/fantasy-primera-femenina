@@ -49,7 +49,7 @@ for (const locale of ['uk','es']) for (const theme of ['light','dark']) {
     await page.locator('.squad-player-details').first().click();
     const dialog=page.locator('dialog[open]');
     assert.equal(await dialog.evaluate(el=>el.scrollWidth<=el.clientWidth+1),true);
-    await page.keyboard.press('Escape');
+    await page.keyboard.press('Escape');assert.equal(await page.locator('dialog[open]').count(),1);await page.locator('dialog[open] .compact-modal__close').click();
     assert.equal(await dialog.count(),0);
     if(await page.locator('.menu-toggle').isVisible()) {
      await page.locator('.menu-toggle').click();

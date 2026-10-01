@@ -81,6 +81,10 @@ h6,
 * {
   box-sizing: border-box;
 }
+/* Preserve the content width when a dialog locks the page scrollbar. */
+html {
+  scrollbar-gutter: stable;
+}
 html,
 body,
 #root {
@@ -6212,6 +6216,15 @@ summary:focus-visible {
   padding-left: 40px;
   text-overflow: ellipsis;
 }
+
+@media (min-width: 761px) {
+  .language-control .language-switcher {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+}
+
 .market-controls {
   display: grid;
   gap: 12px;
