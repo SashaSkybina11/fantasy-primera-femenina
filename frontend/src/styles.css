@@ -6299,6 +6299,7 @@ summary:focus-visible {
     justify-self: start;
     border-radius: 10px;
     cursor: pointer;
+    border: 1px solid var(--primary-text);
   }
 
   .mobile-menu__bottom .language-control > svg {
