@@ -5872,33 +5872,10 @@ form.admin-card.match-create {
   overflow-wrap: anywhere;
 
   border-radius: 44% 44% 22% 22% / 8% 8% 18% 18%;
-
-  clip-path: polygon(
-    8% 0,
-    92% 0,
-    98% 4%,
-    100% 10%,
-
-    100% 78%,
-    98% 88%,
-    94% 94%,
-    88% 98%,
-    78% 100%,
-
-    22% 100%,
-    12% 98%,
-    6% 94%,
-    2% 88%,
-    0 78%,
-
-    0 10%,
-    2% 4%
-  );
-
   background:
     radial-gradient(ellipse at 50% 10%, #fff9df 0, transparent 52%),
-    linear-gradient(125deg, #b78b3d, #f9e5ac 30%, #e9ca7d 60%, #c69b49);
-  box-shadow: inset 0 0 0 2px #fbe8b0;
+    linear-gradient(125deg, #ffc400, #ffeeb7 30%, #ffcf2e 60%, #ffedb2);
+  box-shadow: inset 0 0 0 3px #fbe8b0;
 }
 
 .fut-player-card::before {
@@ -5939,7 +5916,7 @@ form.admin-card.match-create {
   place-items: center;
   width: 120px;
   height: 120px;
-  border: 1px solid #a5813b77;
+  border: 2px solid #a5813b77;
   border-radius: 50%;
   background: linear-gradient(150deg, #fff7da99, #b78b3d33);
   font-size: 2.4rem;
@@ -5950,6 +5927,7 @@ form.admin-card.match-create {
   display: inline-block;
   vertical-align: middle;
   padding: 6px 6px;
+  margin-left: 10px;
   border: 1px solid #98702566;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -5982,7 +5960,7 @@ form.admin-card.match-create {
 .fut-player-card .squad-price-comparison::before {
   content: "→";
   position: absolute;
-  top: 36px;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
   color: #705323;
