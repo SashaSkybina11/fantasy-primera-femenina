@@ -5779,20 +5779,69 @@ form.admin-card.match-create {
   white-space: nowrap;
 }
 /* Shared compact catalog layouts, including narrow phones. */
-.catalog-filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
-.catalog-filters > * { flex: 1 1 240px; min-width: 0; width: 100%; }
-.scorers-table-wrap { width: 100%; min-width: 0; }
-.scorers-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.scorers-table th, .scorers-table td { padding: 14px 10px; text-align: left; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
-.scorers-table th:first-child { width: 45%; }
-.scorers-table th:last-child { width: 64px; }
-.scorers-table td:last-child, .scorers-table th:last-child { text-align: center; }
-.scorer-club { display: flex; align-items: center; gap: 10px; }
-.scorer-club .club-mark, .scorer-club .club-logo { flex-shrink: 0; width: 32px; height: 32px; object-fit: contain; }
+.catalog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.catalog-filters > * {
+  flex: 1 1 240px;
+  min-width: 0;
+  width: 100%;
+}
+.scorers-table-wrap {
+  width: 100%;
+  min-width: 0;
+}
+.scorers-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.scorers-table th,
+.scorers-table td {
+  padding: 14px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+.scorers-table th:first-child {
+  width: 45%;
+}
+.scorers-table th:last-child {
+  width: 64px;
+}
+.scorers-table td:last-child,
+.scorers-table th:last-child {
+  text-align: center;
+}
+.scorer-club {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.scorer-club .club-mark,
+.scorer-club .club-logo {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
 @media (max-width: 480px) {
-  .scorers-table th, .scorers-table td { padding: 12px 5px; font-size: 12px; }
-  .scorers-table th:last-child { width: 44px; }
-  .scorer-club { flex-direction: column; align-items: flex-start; gap: 5px; }
+  .scorers-table th,
+  .scorers-table td {
+    padding: 12px 5px;
+    font-size: 12px;
+  }
+  .scorers-table th:last-child {
+    width: 44px;
+  }
+  .scorer-club {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
 }
 
 /* Compact gold shield with an inset close control. */
@@ -5804,10 +5853,12 @@ form.admin-card.match-create {
   background: transparent;
   box-shadow: none;
 }
-.fut-player-modal > .app-modal__title { display: none; }
+.fut-player-modal > .app-modal__title {
+  display: none;
+}
 .app-modal.fut-player-modal .compact-modal__close {
-  top: 2px;
-  right: 4px;
+  top: 24px;
+  right: 12px;
   color: #fff;
   background: #60491f;
   border-radius: 50%;
@@ -5819,31 +5870,70 @@ form.admin-card.match-create {
   color: #362811;
   text-align: center;
   overflow-wrap: anywhere;
-  border-radius: 44% 44% 28% 28% / 8% 8% 12% 12%;
-  clip-path: polygon(0 0, 100% 0, 100% 73%, 99% 81%, 96% 88%, 91% 93%, 83% 96%, 68% 98%, 50% 100%, 32% 98%, 17% 96%, 9% 93%, 4% 88%, 1% 81%, 0 73%);
-  background: radial-gradient(ellipse at 50% 10%, #fff9df 0, transparent 52%), linear-gradient(125deg, #b78b3d, #f9e5ac 30%, #e9ca7d 60%, #c69b49);
+
+  border-radius: 44% 44% 22% 22% / 8% 8% 18% 18%;
+
+  clip-path: polygon(
+    8% 0,
+    92% 0,
+    98% 4%,
+    100% 10%,
+
+    100% 78%,
+    98% 88%,
+    94% 94%,
+    88% 98%,
+    78% 100%,
+
+    22% 100%,
+    12% 98%,
+    6% 94%,
+    2% 88%,
+    0 78%,
+
+    0 10%,
+    2% 4%
+  );
+
+  background:
+    radial-gradient(ellipse at 50% 10%, #fff9df 0, transparent 52%),
+    linear-gradient(125deg, #b78b3d, #f9e5ac 30%, #e9ca7d 60%, #c69b49);
   box-shadow: inset 0 0 0 2px #fbe8b0;
 }
+
 .fut-player-card::before {
-  content: "";
+  /* content: "";
   position: absolute;
   z-index: -1;
   inset: 8px;
   border: 1px solid #9b742a66;
   border-radius: inherit;
-  background: repeating-linear-gradient(130deg, transparent 0 35px, #fff7d21f 36px 37px, transparent 38px 70px);
-  pointer-events: none;
+  background: repeating-linear-gradient(
+    130deg,
+    transparent 0 35px,
+    #fff7d21f 36px 37px,
+    transparent 38px 70px
+  );
+  pointer-events: none; */
+  background: none;
 }
+
 .fut-player-card__portrait {
   position: relative;
   display: grid;
   place-items: center;
   width: 100%;
-  height: 104px;
+  height: 130px;
   margin-bottom: 16px;
   border-bottom: 1px solid #98702566;
 }
-.fut-player-card__portrait img { width: 100%; height: 100%; min-height: 0; object-fit: contain; object-position: center bottom; }
+.fut-player-card__portrait img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center bottom;
+}
 .fut-player-card__initials {
   display: grid;
   place-items: center;
@@ -5856,31 +5946,97 @@ form.admin-card.match-create {
   font-weight: 800;
   letter-spacing: -0.05em;
 }
-.fut-player-card__number { display: inline-block; vertical-align: middle; padding: 3px 6px; border: 1px solid #98702566; border-radius: 6px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
-.fut-player-card__name { margin: 0; font-size: clamp(1.05rem, 4.8vw, 1.35rem); line-height: 1.15; }
-.fut-player-card .squad-detail-club { justify-content: center; margin: 10px 0; font-size: 0.8rem; }
-.fut-player-card__facts { margin: 12px 0 0; font-size: 0.8rem; line-height: 1.6; }
-.fut-player-card .squad-price-comparison { position: relative; gap: 10px 18px; margin-top: 12px; padding: 12px 6px; background: #fff8e066; border: 1px solid #9b742a44; }
-.fut-player-card .squad-price-comparison::before { content: "→"; position: absolute; top: 36px; left: 50%; transform: translateX(-50%); color: #705323; }
-.fut-player-card .squad-price-comparison dt { color: #60491f; font-size: 0.72rem; }
-.fut-player-card .squad-price-comparison dd { font-size: clamp(0.85rem, 3.8vw, 1.05rem); }
-.fut-player-card .squad-price-comparison__change { border-color: #9b742a44; }
-.fut-player-card .price-delta--up { color: #166534; }
-.fut-player-card .price-delta--down { color: #a51d25; }
+.fut-player-card__number {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 6px 6px;
+  border: 1px solid #98702566;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.fut-player-card__name {
+  margin: 0;
+  font-size: clamp(1.05rem, 4.8vw, 1.35rem);
+  line-height: 1.15;
+}
+.fut-player-card .squad-detail-club {
+  justify-content: center;
+  margin: 10px 0;
+  font-size: 1rem;
+}
+.fut-player-card__facts {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.fut-player-card .squad-price-comparison {
+  position: relative;
+  gap: 10px 18px;
+  margin-top: 12px;
+  padding: 12px 6px;
+  background: #fff8e066;
+  border: 1px solid #9b742a44;
+}
+.fut-player-card .squad-price-comparison::before {
+  content: "→";
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #705323;
+}
+.fut-player-card .squad-price-comparison dt {
+  color: #60491f;
+  font-size: 0.72rem;
+}
+.fut-player-card .squad-price-comparison dd {
+  font-size: clamp(0.85rem, 3.8vw, 1.05rem);
+}
+.fut-player-card .squad-price-comparison__change {
+  border-color: #9b742a44;
+}
+.fut-player-card .price-delta--up {
+  color: #166534;
+}
+.fut-player-card .price-delta--down {
+  color: #a51d25;
+}
 @media (max-width: 599px) {
   .squad-field--editable .squad-player-card,
-  .squad-field--editable .squad-slot--field { max-width: 144px; min-height: 132px; }
-  .squad-field--editable .squad-player-details { gap: 4px; }
-  .squad-field--editable .jersey-number { height: 24px; font-size: 0.8rem; }
-  .squad-field--editable .squad-player-card h3 { font-size: 0.8rem; line-height: 1.25; }
+  .squad-field--editable .squad-slot--field {
+    max-width: 144px;
+    min-height: 132px;
+  }
+  .squad-field--editable .squad-player-details {
+    gap: 4px;
+  }
+  .squad-field--editable .jersey-number {
+    height: 24px;
+    font-size: 0.8rem;
+  }
+  .squad-field--editable .squad-player-card h3 {
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
 }
 @media (max-height: 600px) {
-  .fut-player-card__portrait { height: 80px; }
-  .fut-player-card__initials { width: 68px; height: 68px; font-size: 2rem; }
+  .fut-player-card__portrait {
+    height: 80px;
+  }
+  .fut-player-card__initials {
+    width: 68px;
+    height: 68px;
+    font-size: 2rem;
+  }
 }
 
 /* Shared control rhythm across pages and dialogs. */
-:root { --control-height: 44px; --control-icon-size: 20px; }
+:root {
+  --control-height: 44px;
+  --control-icon-size: 20px;
+}
 .button {
   display: inline-flex;
   align-items: center;
@@ -5904,12 +6060,27 @@ form.admin-card.match-create {
   width: var(--control-icon-size);
   height: var(--control-icon-size);
 }
-.nav-link i { width: 20px; height: 20px; }
-.nav-link i svg { width: 20px; height: 20px; }
-.nav-link span, .theme-toggle { min-width: 0; overflow-wrap: anywhere; }
-.mobile-controls { flex-shrink: 0; }
-.mobile-theme-toggle, .menu-toggle, .icon-button,
-.compact-modal__close, .logout-modal__close {
+.nav-link i {
+  width: 20px;
+  height: 20px;
+}
+.nav-link i svg {
+  width: 20px;
+  height: 20px;
+}
+.nav-link span,
+.theme-toggle {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.mobile-controls {
+  flex-shrink: 0;
+}
+.mobile-theme-toggle,
+.menu-toggle,
+.icon-button,
+.compact-modal__close,
+.logout-modal__close {
   display: inline-grid;
   place-items: center;
   flex-shrink: 0;
@@ -5918,39 +6089,127 @@ form.admin-card.match-create {
   padding: 0;
   line-height: 1;
 }
-.compact-modal__close, .logout-modal__close { font-size: 1.5rem; }
-.theme-toggle { display: flex; align-items: center; gap: 10px; min-height: var(--control-height); }
-.password-input button { display: grid; place-items: center; min-width: 44px; min-height: 44px; }
-.password-input input { padding-right: 50px; }
-.catalog-filters input, .catalog-filters select,
-.filters input, .filters select, .admin-toolbar input, .admin-toolbar select {
+.compact-modal__close,
+.logout-modal__close {
+  font-size: 1.5rem;
+}
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--control-height);
+}
+.password-input button {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+}
+.password-input input {
+  padding-right: 50px;
+}
+.catalog-filters input,
+.catalog-filters select,
+.filters input,
+.filters select,
+.admin-toolbar input,
+.admin-toolbar select {
   min-width: 0;
   min-height: var(--control-height);
   max-width: 100%;
 }
-.filters { align-items: end; }
-.filters label { min-width: 0; }
-.page-heading, .team-heading, .purchase-heading, .member-heading { gap: 16px; }
-.page-heading > *, .team-heading > *, .purchase-heading > *, .member-heading > * { min-width: 0; }
-.page-heading h1, .team-heading h1, .member-heading h1 { overflow-wrap: anywhere; }
-.player-card__top { gap: 8px; }
-.player-card__top .club-logo, .player-card__top .club-mark { flex-shrink: 0; }
-.player-card footer .button { flex-shrink: 0; }
-.modal-actions, .form-actions, .friend-league-actions, .league-danger-actions { align-items: stretch; }
-.modal-actions > .button, .form-actions > .button { flex: 1 1 140px; }
-.compact-modal > h2, .compact-modal > h3 { padding-right: 44px; overflow-wrap: anywhere; }
-textarea:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.filters {
+  align-items: end;
+}
+.filters label {
+  min-width: 0;
+}
+.page-heading,
+.team-heading,
+.purchase-heading,
+.member-heading {
+  gap: 16px;
+}
+.page-heading > *,
+.team-heading > *,
+.purchase-heading > *,
+.member-heading > * {
+  min-width: 0;
+}
+.page-heading h1,
+.team-heading h1,
+.member-heading h1 {
+  overflow-wrap: anywhere;
+}
+.player-card__top {
+  gap: 8px;
+}
+.player-card__top .club-logo,
+.player-card__top .club-mark {
+  flex-shrink: 0;
+}
+.player-card footer .button {
+  flex-shrink: 0;
+}
+.modal-actions,
+.form-actions,
+.friend-league-actions,
+.league-danger-actions {
+  align-items: stretch;
+}
+.modal-actions > .button,
+.form-actions > .button {
+  flex: 1 1 140px;
+}
+.compact-modal > h2,
+.compact-modal > h3 {
+  padding-right: 44px;
+  overflow-wrap: anywhere;
+}
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
 @media (max-width: 600px) {
-  input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px; }
-  .form-actions, .modal-actions { width: 100%; }
-  .player-card footer { flex-wrap: wrap; }
-  .player-card footer .button { flex: 1 1 100px; }
-  .squad-field--editable .squad-bench-button { min-height: 44px; }
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  .form-actions,
+  .modal-actions {
+    width: 100%;
+  }
+  .player-card footer {
+    flex-wrap: wrap;
+  }
+  .player-card footer .button {
+    flex: 1 1 100px;
+  }
+  .squad-field--editable .squad-bench-button {
+    min-height: 44px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .button, .player-card { transition: none; }
-  .button:hover:not(:disabled), .player-card:hover { transform: none; }
+  .button,
+  .player-card {
+    transition: none;
+  }
+  .button:hover:not(:disabled),
+  .player-card:hover {
+    transform: none;
+  }
 }
-.brand-mark { flex-shrink: 0; }
-.price-change-notice { background: #b70510; color: #fff; line-height: 1.55; font-size: 0.8rem; }
-.password-input button { right: 4px; }
+.brand-mark {
+  flex-shrink: 0;
+}
+.price-change-notice {
+  background: #b70510;
+  color: #fff;
+  line-height: 1.55;
+  font-size: 0.8rem;
+}
+.password-input button {
+  right: 4px;
+}
