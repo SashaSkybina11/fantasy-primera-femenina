@@ -1,3 +1,6 @@
+import { portugueseApi } from "../locales/pt-api";
+import { toBrazilian } from "../locales/pt";
+import { marketSpanish, marketUkrainian, marketEnglish } from "../locales/market";
 import type { MatchRecord, MatchEditorData, MatchProtocol } from "../types/matches";
 import type {
   AdminUser,
@@ -32,7 +35,7 @@ const SERVER_URL = API_URL.startsWith("/")
 const tokenKey = "fantasy-futsal-token";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
-const apiMessages: Record<string, Record<Locale, string>> = {
+const apiMessages: Record<string, Record<"es" | "uk" | "en", string> & Partial<Record<Locale, string>>> = {
   FRIEND_OWNER_LIMIT: { uk: "Можна створити лише одну власну лігу.", en: "You can own one league.", es: "Solo puedes crear una liga propia." },
   FRIEND_JOIN_LIMIT: { uk: "Можна приєднатися максимум до 5 чужих ліг.", en: "You can join up to 5 other leagues.", es: "Puedes unirte a un máximo de 5 ligas de otras personas." },
  MATCH_UNPUBLISHED: { es: "Publica las actas de todos los partidos antes de finalizar la jornada.", uk: "Опублікуйте протоколи всіх матчів перед завершенням туру.", en: "Publish all match reports before completing the gameweek." },
@@ -407,8 +410,15 @@ const apiMessages: Record<string, Record<Locale, string>> = {
   }
 };
 
+apiMessages.MARKET_STALE = { es: marketSpanish["market.stale"], uk: marketUkrainian["market.stale"], en: marketEnglish["market.stale"] };
+apiMessages.MARKET_FINALIZED = { es: marketSpanish["market.finalized"], uk: marketUkrainian["market.finalized"], en: marketEnglish["market.finalized"] };
+apiMessages["Трансферный рынок закрыт"] = { es: "El mercado de fichajes está cerrado.", uk: "Трансферний ринок закрито.", en: "The transfer market is closed." };
+for (const [key, translations] of Object.entries(apiMessages)) {
+  translations.pt = portugueseApi[key];
+  translations["pt-BR"] = toBrazilian(portugueseApi[key]);
+}
 // The API can return either a stable message key or an already localized message.
-const apiMessageLookup = new Map<string, Record<Locale, string>>();
+const apiMessageLookup = new Map<string, Partial<Record<Locale, string>>>();
 for (const [key, translations] of Object.entries(apiMessages)) {
   apiMessageLookup.set(key, translations);
   for (const value of Object.values(translations)) apiMessageLookup.set(value, translations);
@@ -437,7 +447,7 @@ export function imageUrl(path: string | null | undefined) {
 }
 
 export function formatEuro(value: number, locale: Locale = getStoredLocale()) {
-  return new Intl.NumberFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", {
+  return new Intl.NumberFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : locale === "pt" ? "pt-PT" : locale === "pt-BR" ? "pt-BR" : "es-ES", {
     style: "currency",
     currency: "EUR",
     maximumFractionDigits: 0,
@@ -448,6 +458,7 @@ export function roleLabel(
   role: PlayerRole,
   locale: Locale = getStoredLocale(),
 ) {
+  if (locale === "pt" || locale === "pt-BR") return { PORTERA: locale === "pt-BR" ? "Goleira" : "Guarda-redes", CIERRE: "Fixa", ALA: "Ala", PIVOT: "Pivô" }[role];
   if (locale === "en") return { PORTERA: "Goalkeeper", CIERRE: "Defender", ALA: "Winger", PIVOT: "Pivot" }[role];
   if (locale === "uk") {
     return {
@@ -485,7 +496,7 @@ export function playerFactsLabel(
     player.age
       ? locale === "uk"
         ? `${player.age} років`
-        : locale === "en" ? `${player.age} years old` : `${player.age} años`
+        : locale === "en" ? `${player.age} years old` : `${player.age} ${locale.startsWith("pt") ? "anos" : "años"}`
       : null,
     nationalityLabel(player.nationality, locale),
   ]
@@ -527,6 +538,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 export type PublicLineup = { user: { id: string; name: string }; players: Array<import("../types").SquadEntry & { points: number }> };
 export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
+  setMarket: (input: { gameweekId: string; mode: "AUTO" | "OPEN" | "CLOSED" }) => request<Gameweek>("/admin/market", { method: "PATCH", body: JSON.stringify(input) }),
   scorers: () => request<Array<{ id: string; name: string; club: Club; goals: number }>>("/scorers"),
   deleteMatch: (id: string) => request<{ ok: boolean }>(`/matches/${id}`, { method: "DELETE" }),
   matchWeeks: () => request<Gameweek[]>("/matches/weeks"),

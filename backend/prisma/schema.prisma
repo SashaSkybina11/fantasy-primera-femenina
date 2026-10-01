@@ -54,6 +54,7 @@ enum TransferType {
 }
 
 enum AdminActionType {
+  MARKET_UPDATED
   PLAYER_STATS_UPDATED
   PLAYER_POINTS_ADJUSTED
   GAMEWEEK_COMPLETED
@@ -180,6 +181,7 @@ model Gameweek {
   startsAt       DateTime
   endsAt         DateTime
   marketOpenAt   DateTime
+  marketOverride Boolean?
   deadlineAt     DateTime
   completedAt    DateTime?
   entryFeeCents  Int                   @default(0)

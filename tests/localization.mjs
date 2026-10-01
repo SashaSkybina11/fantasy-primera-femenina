@@ -1,22 +1,8 @@
-import ts from 'typescript';
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 const baseUrl = process.env.TEST_BASE_URL || 'http://127.0.0.1:5173';
-const source=ts.createSourceFile('locale.tsx',fs.readFileSync('frontend/src/contexts/LocaleContext.tsx','utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
-const dict={};
-for(const stmt of source.statements) if(ts.isVariableStatement(stmt)) for(const decl of stmt.declarationList.declarations) if(['spanish','ukrainian','english'].includes(decl.name.getText(source))) {
- const props=(ts.isAsExpression(decl.initializer)?decl.initializer.expression:decl.initializer).properties; const keys=props.map(p=>p.name.text);
- assert.equal(new Set(keys).size,keys.length,'Duplicate translations');
- dict[decl.name.getText(source)]=Object.fromEntries(props.map(p=>[p.name.text,p.initializer.text]));
-}
-for(const language of ['ukrainian','english']) {
- assert.deepEqual(Object.keys(dict.spanish).sort(),Object.keys(dict[language]).sort());
- for(const key of Object.keys(dict.spanish)) {
-  assert.ok(dict[language][key].trim(), `${language}: ${key} is empty`);
-  assert.deepEqual(dict.spanish[key].match(/{{\w+}}/g),dict[language][key].match(/{{\w+}}/g),`${language}: ${key}`);
- }
-}
+import { dictionaries as dict } from './locale-dictionaries.mjs';
 const browser=await chromium.launch();
 const page=await browser.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(e.message));
 page.setDefaultTimeout(15000);
@@ -54,6 +40,8 @@ await page.waitForFunction(()=>document.documentElement.lang==='es' && localStor
 for(const [locale,role,country,age,error] of [
  ['es','Portera','España','25 años','El correo o la contraseña no son correctos'],
  ['uk','Воротарка','Іспанія','25 років','Неправильна електронна пошта або пароль'],
+ ['pt','Guarda-redes','Espanha','25 anos','Email ou palavra-passe incorretos.'],
+ ['pt-BR','Goleira','Espanha','25 anos','Email ou senha incorretos.'],
  ['en','Goalkeeper','Spain','25 years old','Incorrect email or password'],
 ]) {
  await page.locator('.language-switcher:visible').first().selectOption(locale);
@@ -93,14 +81,14 @@ for(const width of [390,1280]) {
   }
   if(path==='/league/member/user') await page.locator('.member-heading button').click();
   const bodies=[];
-  for(const locale of ['en','es','uk','en']) {
+  for(const locale of ['en','es','uk','pt','pt-BR','en']) {
    if(await page.locator('.language-switcher:visible').count()===0) await page.locator('.menu-toggle').click();
    await page.locator('.language-switcher:visible').first().selectOption(locale);
    await page.waitForFunction(l=>document.documentElement.lang===l,locale);
    await page.locator('h1').first().waitFor();
    await page.evaluate(async () => { await document.fonts.ready; await Promise.all(document.getAnimations().filter(a => a.effect?.getComputedTiming().iterations !== Infinity).map(a => a.finished.catch(() => {}))); });
    const body=await page.locator('body').innerText();
-   const dictionary=dict[{es:'spanish',uk:'ukrainian',en:'english'}[locale]];
+   const dictionary=dict[{es:'spanish',uk:'ukrainian',en:'english',pt:'portuguese','pt-BR':'brazilian'}[locale]];
    assert.ok(!/Oleksandra Skybina|Creadora del juego|Творчиня гри|Game creator/.test(body));
    if(!anonymous) {
     const contact=page.locator('.site-footer .admin-contact');
@@ -109,7 +97,7 @@ for(const width of [390,1280]) {
     assert.equal(await contact.locator('small').innerText(),'fantasyfutsalspain@gmail.com');
    }
    if(path==='/admin' || path==='/admin/users') {
-    const money=new Intl.NumberFormat({es:'es-ES',uk:'uk-UA',en:'en-GB'}[locale],{style:'currency',currency:'EUR',maximumFractionDigits:0});
+    const money=new Intl.NumberFormat({es:'es-ES',uk:'uk-UA',en:'en-GB',pt:'pt-PT','pt-BR':'pt-BR'}[locale],{style:'currency',currency:'EUR',maximumFractionDigits:0});
     const budgets=await page.locator('.admin-user__budget').allTextContents();
     assert.deepEqual(budgets.map(s=>s.trim()),[12345,0,null].map(value=>dictionary['admin.budget']+': '+(value===null?dictionary['league.teamNotCreated']:money.format(value))));
    }
@@ -121,22 +109,22 @@ for(const width of [390,1280]) {
    if(locale==='es' || locale==='en') assert.ok(!/[А-Яа-яІіЇїЄє]/.test(body+attributes),path+' mixed languages');
    if(locale==='en') {
     assert.ok(!/\b(Jornada|Portera|Jugadoras|Cargando|Guardar|Clasificación)\b/.test(body+attributes),path+' Spanish text in English');
-    assert.equal(await page.locator('.language-switcher').first().locator('option').count(),3);
+    assert.equal(await page.locator('.language-switcher').first().locator('option').count(),5);
    }
   }
-  assert.equal(bodies[0],bodies[3],path+' round trip');
+  assert.equal(bodies[0],bodies[5],path+' round trip');
   checks.push({path,width,roundTrip:true});
  }
 }
-fs.mkdirSync('artifacts/consistency',{recursive:true});
+fs.mkdirSync('artifacts/five-languages',{recursive:true});
 anonymous=false;
 await page.goto(baseUrl + '/player-prices');
 await page.locator('details').click();
-await page.screenshot({path:'artifacts/consistency/player-prices.png',fullPage:true});
+await page.screenshot({path:'artifacts/five-languages/player-prices.png',fullPage:true});
 await page.goto(baseUrl + '/admin');
 await page.locator('.admin-user__budget').first().waitFor();
-await page.screenshot({path:'artifacts/consistency/admin-budgets-contact.png',fullPage:true});
+await page.screenshot({path:'artifacts/five-languages/admin-budgets-contact.png',fullPage:true});
 assert.deepEqual(errors,[]);
-fs.writeFileSync('artifacts/consistency/localization.json',JSON.stringify({keys:Object.keys(dict.spanish).length,checks,errors},null,2));
-console.log(`PASS: ${Object.keys(dict.spanish).length} matching translation keys in 3 languages; ${routes.length} pages × 2 widths × EN→ES→UK→EN; Spanish default and English persistence; no page errors`);
+fs.writeFileSync('artifacts/five-languages/localization.json',JSON.stringify({keys:Object.keys(dict.spanish).length,checks,errors},null,2));
+console.log(`PASS: ${Object.keys(dict.spanish).length} matching translation keys in 5 languages; ${routes.length} pages × 2 widths × EN→ES→UK→PT→PT-BR→EN; Spanish default and English persistence; no page errors`);
 } finally { await browser.close(); }

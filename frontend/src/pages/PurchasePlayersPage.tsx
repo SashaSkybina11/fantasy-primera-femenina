@@ -44,6 +44,7 @@ export function PurchasePlayersPage() {
   const transfers = useQuery({
     queryKey: ["transfer-status"],
     queryFn: api.transferStatus,
+    refetchInterval: 15000,
   });
   const buy = useMutation({
     mutationFn: api.addPlayer,
@@ -53,6 +54,18 @@ export function PurchasePlayersPage() {
       void queryClient.invalidateQueries({ queryKey: ["transfer-status"] });
       void queryClient.invalidateQueries({ queryKey: ["popular-player"] });
       toast.success(t("purchase.success"));
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  const setMarket = useMutation({
+    mutationFn: api.setMarket,
+    onSuccess: (updated) => {
+      queryClient.setQueryData(["current-gameweek"], updated);
+      void queryClient.invalidateQueries({ queryKey: ["current-gameweek"] });
+      void queryClient.invalidateQueries({ queryKey: ["transfer-status"] });
+      void queryClient.invalidateQueries({ queryKey: ["admin-gameweeks"] });
+      toast.success(t("market.saved"));
     },
     onError: (error) => toast.error(error.message),
   });
@@ -81,9 +94,11 @@ export function PurchasePlayersPage() {
     counts.set(entry.player.clubId, (counts.get(entry.player.clubId) ?? 0) + 1);
     return counts;
   }, new Map<string, number>());
-  const marketIsOpen = user?.role === "ADMIN" || gameweek.data?.marketIsOpen === true;
+  const marketIsOpen = gameweek.data?.marketIsOpen === true;
+  const canTrade = user?.role === "ADMIN" || marketIsOpen;
+  const transferLimitReached = user?.role !== "ADMIN" && transfers.data?.initialSquad === false && transfers.data.bought >= transfers.data.limit;
   const dateFormatter = new Intl.DateTimeFormat(
-    locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES",
+    locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : locale === "pt" ? "pt-PT" : locale === "pt-BR" ? "pt-BR" : "es-ES",
     { timeZone: "Europe/Madrid", dateStyle: "full", timeStyle: "short" },
   );
 
@@ -150,6 +165,19 @@ export function PurchasePlayersPage() {
           <small>{t("purchase.timezoneLabel")}: Europe/Madrid</small>
         </section>
       )}
+      {user?.role === "ADMIN" && gameweek.data && <section className="market-controls" aria-label={t("market.manage")}>
+        <h2>{t("market.manage")}</h2>
+        <p>{t("market.help")}</p>
+        <strong role="status">{t(gameweek.data.marketOverride == null ? "market.automatic" : gameweek.data.marketOverride ? "market.manualOpen" : "market.manualClosed")}</strong>
+        <div className="market-controls__actions">
+          {(["OPEN", "CLOSED", "AUTO"] as const).map(mode => <button key={mode} className="button button--secondary"
+            aria-pressed={mode === "AUTO" ? gameweek.data!.marketOverride == null : gameweek.data!.marketOverride === (mode === "OPEN")}
+            disabled={setMarket.isPending || (mode === "OPEN" && ["CALCULATING", "COMPLETED"].includes(gameweek.data!.status))}
+            onClick={() => setMarket.mutate({ gameweekId: gameweek.data!.id, mode })}>
+            {t(mode === "OPEN" ? "market.open" : mode === "CLOSED" ? "market.close" : "market.auto")}
+          </button>)}
+        </div>
+      </section>}
       <aside className="price-change-notice">
         {t("purchase.dynamicPriceNotice")}
       </aside>
@@ -232,35 +260,24 @@ export function PurchasePlayersPage() {
                   team.data.players.filter(
                     (entry) => entry.player.position === player.position,
                   ).length >= (player.position === "GOALKEEPER" ? 2 : 8);
-                const disabled =
-                  !marketIsOpen ||
-                  alreadySelected ||
-                  clubLimitReached ||
-                  squadFull ||
-                  positionFull ||
-                  noBudget ||
-                  buy.isPending;
-                const label = !marketIsOpen
-                  ? t("purchase.marketClosed")
-                  : alreadySelected
-                    ? t("player.alreadySelected")
-                    : clubLimitReached
-                      ? t("purchase.clubLimit")
-                      : positionFull
-                        ? t("purchase.positionLimit")
-                        : squadFull
-                          ? t("budget.full")
-                          : noBudget
-                            ? t("player.noBudget")
-                            : t("purchase.buy");
+                const notice = alreadySelected ? t("player.alreadySelected")
+                  : !canTrade ? t(gameweek.isError ? "purchase.scheduleUnavailable" : gameweek.isPending ? "purchase.scheduleLoading" : "purchase.marketClosed")
+                  : clubLimitReached ? t("purchase.clubLimit")
+                  : positionFull ? t(player.position === "GOALKEEPER" ? "purchase.goalkeeperLimit" : "purchase.fieldLimit")
+                  : squadFull ? t("budget.full")
+                  : noBudget ? t("player.noBudget")
+                  : transferLimitReached ? t("purchase.transferLimit")
+                  : transfers.isPending ? t("purchase.scheduleLoading")
+                  : transfers.isError ? t("purchase.scheduleUnavailable")
+                  : buy.isPending ? t("auth.wait") : undefined;
+                const disabled = Boolean(notice);
+                const label = alreadySelected ? t("purchase.purchased") : disabled ? t("purchase.unavailable") : t("purchase.buy");
                 return (
                   <PlayerCard
                     key={player.id}
                     player={player}
                     label={label}
-                    notice={
-                      clubLimitReached ? t("purchase.clubLimit") : undefined
-                    }
+                    notice={notice}
                     disabled={disabled}
                     onClick={() => buy.mutate(player.id)}
                   />

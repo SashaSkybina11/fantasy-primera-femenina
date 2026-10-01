@@ -1,0 +1,2 @@
+ALTER TABLE "Gameweek" ADD COLUMN "marketOverride" BOOLEAN;
+ALTER TYPE "AdminActionType" ADD VALUE 'MARKET_UPDATED';

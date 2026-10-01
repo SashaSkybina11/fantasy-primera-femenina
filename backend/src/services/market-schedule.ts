@@ -20,5 +20,10 @@ export function marketDatesForWeek(date: Date) {
   const day = new Date(Date.UTC(+parts.year!, +parts.month! - 1, +parts.day!));
   day.setUTCDate(day.getUTCDate() - (day.getUTCDay() + 6) % 7);
   const at = (offset: number, hour: number, minute = 0, second = 0) => madridInstant(day.getUTCFullYear(), day.getUTCMonth(), day.getUTCDate() + offset, hour, minute, second);
-  return { marketOpenAt: at(1, 10), deadlineAt: at(4, 12), endsAt: at(6, 23, 59, 59) };
+  return { marketOpenAt: at(0, 8), deadlineAt: at(4, 19), endsAt: at(6, 23, 59, 59) };
+}
+
+export function marketIsOpen(gameweek: { status: string; marketOverride?: boolean | null; marketOpenAt: Date; deadlineAt: Date; endsAt: Date }, now = new Date()) {
+  if (gameweek.endsAt < now || ["CALCULATING", "COMPLETED"].includes(gameweek.status)) return false;
+  return gameweek.marketOverride ?? (gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt);
 }

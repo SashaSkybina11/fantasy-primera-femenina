@@ -1,3 +1,4 @@
+import { RxCross1 } from "react-icons/rx";
 import { Avatar } from "./Avatar";
 import { useAuth } from "../contexts/AuthContext";
 import { optimizeAvatar } from "../utils/avatar";
@@ -104,7 +105,7 @@ export function FriendLeaguesPanel() {
               onClick={close}
               aria-label={t("friends.close")}
             >
-              ×
+              <RxCross1 className="ui-cross" aria-hidden="true" />
             </button>
             <h2>
               {mode === "create" ? t("friends.create") : t("friends.join")}

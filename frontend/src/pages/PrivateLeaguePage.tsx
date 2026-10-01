@@ -1,3 +1,4 @@
+import { GoArrowRight } from "react-icons/go";
 import { Avatar } from "../components/Avatar";
 import { Loader } from "../components/Loader";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -44,7 +45,7 @@ export function PrivateLeaguePage() {
   return (
     <div className="page page--narrow">
       <Link className="back-link" to={user?.role === "ADMIN" ? "/admin/friend-leagues" : "/friend-leagues"}>
-        ← {t("nav.friends")}
+        <GoArrowRight className="ui-arrow ui-arrow--back" aria-hidden="true" /> {t("nav.friends")}
       </Link>
       <header className="page-heading">
         <p className="eyebrow">{t("friends.title")}</p>

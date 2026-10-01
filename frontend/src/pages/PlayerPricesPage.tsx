@@ -1,3 +1,4 @@
+import { GoArrowRight } from "react-icons/go";
 import { ClubLogo } from "../components/ClubLogo";
 import { Loader } from "../components/Loader";
 import { useState } from "react";
@@ -12,7 +13,7 @@ export function PlayerPricesPage() {
   const prices = useQuery({ queryKey: ["player-prices"], queryFn: api.playerPrices });
   const clubs = Array.from(new Map(prices.data?.flatMap(player => player.club ? [[player.club.id, player.club] as const] : [])).values()).sort((a, b) => a.name.localeCompare(b.name));
   const money = (value: number) => formatEuro(value, locale);
-  const delta = (value: number) => value === 0 ? "—" : `${value > 0 ? "↑" : "↓"} ${money(Math.abs(value))}`;
+  const delta = (value: number) => value === 0 ? "—" : <span className="price-trend" aria-label={`${value > 0 ? "+" : "−"}${money(Math.abs(value))}`}><GoArrowRight className={`ui-arrow ${value > 0 ? "ui-arrow--up" : "ui-arrow--down"}`} aria-hidden="true" />{money(Math.abs(value))}</span>;
   const deltaClass = (value: number) => value > 0 ? "price-delta price-delta--up" : value < 0 ? "price-delta price-delta--down" : "price-delta";
   return <div className="page">
     <header className="page-heading"><h1>{t("prices.title")}</h1></header>

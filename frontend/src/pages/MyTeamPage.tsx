@@ -1,3 +1,4 @@
+import { RxCross1 } from "react-icons/rx";
 import { Loader } from "../components/Loader";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -191,7 +192,7 @@ export function MyTeamPage() {
               aria-label={t("squad.closeRemove")}
               onClick={() => setRemoveTarget(null)}
             >
-              ×
+              <RxCross1 className="ui-cross" aria-hidden="true" />
             </button>
             <h2>{t("squad.removeTitle")}</h2>
             <p>

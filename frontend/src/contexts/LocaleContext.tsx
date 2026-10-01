@@ -1,11 +1,14 @@
+import { marketSpanish, marketUkrainian, marketEnglish } from "../locales/market";
+import { portuguese, brazilian } from "../locales/pt";
 import toast from "react-hot-toast";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-export type Locale = "es" | "uk" | "en";
+export type Locale = "es" | "uk" | "en" | "pt" | "pt-BR";
 
 const storageKey = "fantasy-locale";
 
 const spanish = {
+  ...marketSpanish,
   "scorers.title": "Tabla de Goleadores",
   "scorers.player": "Jugador",
   "scorers.team": "Equipo",
@@ -320,7 +323,7 @@ const spanish = {
     "La capitana forma parte del quinteto inicial. Sus puntos cuentan una vez, como los de las otras cuatro titulares.",
   "rules.marketTitle": "Mercado de fichajes",
   "rules.marketBody":
-    "El mercado de fichajes abre cada martes a las 10:00 y cierra cada viernes a las 12:00, hora de Madrid. Tras completar la plantilla inicial puedes vender 2 y fichar 2 jugadoras por jornada; los fichajes no se acumulan.",
+    "El mercado de fichajes abre cada lunes a las 08:00 y cierra cada viernes a las 19:00, hora de Madrid. Tras completar la plantilla inicial puedes vender 2 y fichar 2 jugadoras por jornada; los fichajes no se acumulan.",
   "rules.ratingTitle": "Clasificación",
   "rules.ratingBody":
     "Todas las participantes compiten en la clasificación general con los puntos obtenidos por su único equipo fantasy.",
@@ -537,9 +540,10 @@ const spanish = {
   "footer.email": "fantasyfutsalspain@gmail.com",
 } as const;
 
-type TranslationKey = keyof typeof spanish;
+export type TranslationKey = keyof typeof spanish;
 
 const ukrainian: Record<TranslationKey, string> = {
+  ...marketUkrainian,
   "scorers.title": "Таблиця бомбардирок",
   "scorers.player": "Гравчиня",
   "scorers.team": "Команда",
@@ -851,7 +855,7 @@ const ukrainian: Record<TranslationKey, string> = {
     "Капітанка входить до основної п’ятірки. Її очки враховуються один раз, як і очки решти гравчинь основи.",
   "rules.marketTitle": "Трансферний ринок",
   "rules.marketBody":
-    "Трансферне вікно відкривається щовівторка о 10:00 та закривається щоп'ятниці о 12:00 за часом Мадрида. Після формування першого складу можна продати 2 та придбати 2 гравчинь за тур; трансфери не накопичуються.",
+    "Трансферне вікно відкривається щопонеділка о 08:00 та закривається щоп'ятниці о 19:00 за часом Мадрида. Після формування першого складу можна продати 2 та придбати 2 гравчинь за тур; трансфери не накопичуються.",
   "rules.ratingTitle": "Рейтинг",
   "rules.ratingBody":
     "Усі учасниці змагаються в загальному рейтингу, використовуючи очки своєї єдиної fantasy-команди.",
@@ -1065,6 +1069,7 @@ const ukrainian: Record<TranslationKey, string> = {
 };
 
 const english: Record<TranslationKey, string> = {
+  ...marketEnglish,
   "scorers.title": "Top Scorers",
   "scorers.player": "Player",
   "scorers.team": "Team",
@@ -1378,7 +1383,7 @@ const english: Record<TranslationKey, string> = {
     "The captain is part of the starting five. Her points count once, just like those of the other four starters.",
   "rules.marketTitle": "Transfer market",
   "rules.marketBody":
-    "The transfer market opens every Tuesday at 10:00 and closes every Friday at 12:00, Madrid time. After completing your initial squad, you can sell 2 and buy 2 players per gameweek; unused transfers do not carry over.",
+    "The transfer market opens every Monday at 08:00 and closes every Friday at 19:00, Madrid time. After completing your initial squad, you can sell 2 and buy 2 players per gameweek; unused transfers do not carry over.",
   "rules.ratingTitle": "Standings",
   "rules.ratingBody":
     "All members compete in the overall standings using the points earned by their single fantasy team.",
@@ -1597,6 +1602,8 @@ const dictionaries: Record<Locale, Record<TranslationKey, string>> = {
   es: spanish,
   uk: ukrainian,
   en: english,
+  pt: portuguese,
+  "pt-BR": brazilian,
 };
 
 type LocaleContextValue = {
@@ -1655,7 +1662,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       .querySelector('meta[property="og:locale"]')
       ?.setAttribute(
         "content",
-        { es: "es_ES", uk: "uk_UA", en: "en_GB" }[locale],
+        { es: "es_ES", uk: "uk_UA", en: "en_GB", pt: "pt_PT", "pt-BR": "pt_BR" }[locale],
       );
     localStorage.setItem(storageKey, locale);
     return () => {
@@ -1693,5 +1700,5 @@ export function useLocale() {
 
 export function getStoredLocale(): Locale {
   const stored = localStorage.getItem(storageKey);
-  return stored === "uk" || stored === "en" ? stored : "es";
+  return stored === "uk" || stored === "en" || stored === "pt" || stored === "pt-BR" ? stored : "es";
 }

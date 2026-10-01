@@ -1,3 +1,4 @@
+import { GoArrowRight } from "react-icons/go";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -92,10 +93,10 @@ export function AdminPlayerPointsPage() {
       <header className="page-heading">
         <p className="eyebrow">{t("adminStats.eyebrow")}</p>
         <h1>{t("adminStats.title")}</h1>
-        <Link className="button" to="/admin/matches">{t("matches.admin")} →</Link>
+        <Link className="button" to="/admin/matches">{t("matches.admin")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
         <p className="muted">{t("adminStats.description")}</p>
-        <Link to="/admin/player-prices">{t("prices.title")} →</Link>
-        <Link to="/admin/users">{t("adminStats.usersLink")} →</Link>
+        <Link to="/admin/player-prices">{t("prices.title")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
+        <Link to="/admin/users">{t("adminStats.usersLink")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
       </header>
       <section className="admin-toolbar">
         <select

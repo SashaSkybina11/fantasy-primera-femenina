@@ -1,3 +1,4 @@
+import { GoArrowRight } from "react-icons/go";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, Navigate } from "react-router-dom";
@@ -24,7 +25,7 @@ export function AdminPlayerPricesPage() {
     onError: error => { setPreview(null); toast.error(error.message); },
   });
   if (!enabled) return <Navigate to="/" replace />;
-  const money = (value: number) => new Intl.NumberFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+  const money = (value: number) => new Intl.NumberFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : locale === "pt" ? "pt-PT" : locale === "pt-BR" ? "pt-BR" : "es-ES", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
   const delta = (value: number) => `${value > 0 ? "+" : ""}${money(value)}`;
   const matches = (row: { name: string; number: number; clubId: string }) => (!club || row.clubId === club) && `${row.name} ${row.number}`.toLocaleLowerCase().includes(search.toLocaleLowerCase());
   const current = weeks.data?.find(row => row.id === gameweekId);
@@ -35,7 +36,7 @@ export function AdminPlayerPricesPage() {
     ["redCardsDelta", "adminStats.redCards"], ["goalkeeperDelta", "prices.goalkeeperDelta"],
   ] as const;
   return <div className="page admin-prices admin-page">
-    <header className="page-heading"><p className="eyebrow">{t("nav.admin")}</p><h1>{t("prices.title")}</h1><Link to="/admin/player-points">{t("adminStats.title")} →</Link></header>
+    <header className="page-heading"><p className="eyebrow">{t("nav.admin")}</p><h1>{t("prices.title")}</h1><Link to="/admin/player-points">{t("adminStats.title")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link></header>
     <section className="admin-toolbar">
       <select aria-label={t("adminStats.selectGameweek")} value={gameweekId} disabled={busy} onChange={e => { setGameweekId(e.target.value); setPreview(null); }}><option value="">{t("adminStats.selectGameweek")}</option>{weeks.data?.map(row => <option key={row.id} value={row.id}>{t("gameweek.label", { number: row.number })} · {t(`gameweek.${row.status}`)}</option>)}</select>
       <input aria-label={t("adminStats.searchPlaceholder")} placeholder={t("adminStats.searchPlaceholder")} value={search} onChange={e => setSearch(e.target.value)} />

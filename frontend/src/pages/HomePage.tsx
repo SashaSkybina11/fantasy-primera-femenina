@@ -12,6 +12,7 @@ export function HomePage() {
   const gameweek = useQuery({
     queryKey: ["current-gameweek"],
     queryFn: api.currentGameweek,
+    refetchInterval: 15000,
   });
   const favoriteClub = useMutation({
     mutationFn: api.setFavoriteClub,
@@ -34,7 +35,7 @@ export function HomePage() {
           <div>
             <p className="eyebrow">{t("gameweek.label", { number: gameweek.data.number })}</p>
             <h2>
-              {gameweek.data.status === "OPEN"
+              {gameweek.data.marketIsOpen === true
                 ? t("home.marketOpen")
                 : gameweek.data.status === "COMPLETED"
                   ? t("home.gameweekCompleted")
@@ -42,18 +43,18 @@ export function HomePage() {
             </h2>
           </div>
           <p>
-            {gameweek.data.status === "OPEN"
+            {gameweek.data.marketIsOpen === true
               ? t("home.changesUntil")
               : t("home.nextControlDate")}
             :{" "}
             <strong>
-              {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", {
+              {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : locale === "pt" ? "pt-PT" : locale === "pt-BR" ? "pt-BR" : "es-ES", {
                 timeZone: "Europe/Madrid",
                 dateStyle: "full",
                 timeStyle: "short",
               }).format(
                 new Date(
-                  gameweek.data.status === "OPEN"
+                  gameweek.data.marketIsOpen === true
                     ? gameweek.data.deadlineAt
                     : gameweek.data.endsAt,
                 ),

@@ -8,6 +8,7 @@ import { getPlayerPopularity } from "../services/player-popularity.js";
 import { ensureValidLineup, getOwnTeam, teamInclude, withTeamDisplayNumbers } from "../services/team.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { assertOpenMarket, requireOpenMarket, synchronizeGameweeks } from "../services/gameweeks.js";
+import { marketIsOpen } from "../services/market-schedule.js";
 
 const router = Router();
 const playerIdSchema = z.object({ playerId: z.string().cuid() });
@@ -41,7 +42,7 @@ router.get("/transfers", asyncRoute(async (request, response) => {
     prisma.fantasyTeam.findUnique({ where: { userId: request.auth!.userId }, select: { isInitialSquadComplete: true } }),
     prisma.userTransfer.groupBy({ by: ["type"], where: { userId: request.auth!.userId, gameweekId: gameweek.id }, _count: true }),
   ]);
-  response.json({ gameweek, marketIsOpen: await isAdmin(request.auth!.userId) || (gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt), bought: grouped.find((row) => row.type === "BUY")?._count ?? 0, sold: grouped.find((row) => row.type === "SELL")?._count ?? 0, limit: 2, initialSquad: !team?.isInitialSquadComplete });
+  response.json({ gameweek, marketIsOpen: await isAdmin(request.auth!.userId) || marketIsOpen(gameweek, now), bought: grouped.find((row) => row.type === "BUY")?._count ?? 0, sold: grouped.find((row) => row.type === "SELL")?._count ?? 0, limit: 2, initialSquad: !team?.isInitialSquadComplete });
 }));
 
 router.post("/players", asyncRoute(async (request, response) => {

@@ -5,18 +5,19 @@ import { authenticate } from "../middleware/auth.js";
 import { scoringRules, synchronizeGameweeks } from "../services/gameweeks.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { overallStandings } from "../services/leaderboard.js";
+import { marketIsOpen } from "../services/market-schedule.js";
 
 const router = Router();
 router.use(authenticate);
 
 router.get("/scoring-rules", (_request, response) => response.json(scoringRules));
 
-router.get("/current", asyncRoute(async (request, response) => {
+router.get("/current", asyncRoute(async (_request, response) => {
   await synchronizeGameweeks();
   const now = new Date();
   const gameweek = await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
     ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { marketOpenAt: "asc" } });
-  response.json(gameweek ? { ...gameweek, marketIsOpen: (await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { role: true } }))?.role === "ADMIN" || (gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt) } : null);
+  response.json(gameweek ? { ...gameweek, marketIsOpen: marketIsOpen(gameweek, now) } : null);
 }));
 
 router.get("/leaderboard", asyncRoute(async (_request, response) => {

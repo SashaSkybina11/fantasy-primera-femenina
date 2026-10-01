@@ -5,7 +5,7 @@ import { prisma } from "../lib/prisma.js";
 import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { inTransaction } from "../lib/transaction.js";
-import { marketDatesForWeek } from "../services/market-schedule.js";
+import { marketDatesForWeek, marketIsOpen } from "../services/market-schedule.js";
 import { audit, calculatePlayerPoints, recalculateGameweek, synchronizeGameweeks } from "../services/gameweeks.js";
 
 import { applyTeamResults, normalizeGoalkeeperStats } from "../services/player-stats.js";
@@ -14,6 +14,22 @@ import { applyPlayerPrices, previewPlayerPrices } from "../services/player-price
 const router = Router();
 
 router.use(authenticate, requireAdmin);
+
+router.patch("/market", asyncRoute(async (request, response) => {
+  const input = z.object({ gameweekId: z.string().cuid(), mode: z.enum(["AUTO", "OPEN", "CLOSED"]) }).parse(request.body);
+  await synchronizeGameweeks();
+  const result = await inTransaction(async tx => {
+    const now = new Date();
+    const current = await tx.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
+      ?? await tx.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { number: "asc" } });
+    if (!current || current.id !== input.gameweekId) throw new ApiError(409, "MARKET_STALE");
+    if (input.mode === "OPEN" && ["CALCULATING", "COMPLETED"].includes(current.status)) throw new ApiError(409, "MARKET_FINALIZED");
+    const updated = await tx.gameweek.update({ where: { id: current.id }, data: { marketOverride: input.mode === "AUTO" ? null : input.mode === "OPEN" } });
+    await audit(tx, request.auth!.userId, AdminActionType.MARKET_UPDATED, "Gameweek", current.id, { marketOverride: current.marketOverride }, { marketOverride: updated.marketOverride });
+    return { ...updated, marketIsOpen: marketIsOpen(updated, now) };
+  });
+  response.json(result);
+}));
 
 router.get("/friend-leagues", asyncRoute(async (_request, response) => {
   response.json(await prisma.privateLeague.findMany({ orderBy: { createdAt: "desc" }, select: {

@@ -1,3 +1,4 @@
+import { GoArrowRight } from "react-icons/go";
 import { Loader } from "../components/Loader";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -40,10 +41,10 @@ export function AdminPage() {
         <p className="eyebrow">{t("admin.eyebrow")}</p>
         <h1>{t("admin.title")}</h1>
         <p className="muted">{t("admin.description")}</p>
-        <Link to="/admin/friend-leagues">{t("adminLeagues.title")} →</Link>
-        <Link to="/admin/player-prices">{t("prices.title")} →</Link>
-        <Link to="/admin/matches">{t("matches.admin")} →</Link>
-        <Link to="/admin/player-points">{t("admin.playerPointsLink")} →</Link>
+        <Link to="/admin/friend-leagues">{t("adminLeagues.title")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
+        <Link to="/admin/player-prices">{t("prices.title")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
+        <Link to="/admin/matches">{t("matches.admin")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
+        <Link to="/admin/player-points">{t("admin.playerPointsLink")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
       </header>
       <section className="admin-card">
         <div className="admin-card__head">
@@ -91,7 +92,7 @@ export function AdminPage() {
               <small>
                 {member.totalPoints} {t("common.pointsShort")} ·{" "}
                 {t("admin.players", { count: member.playerCount })} ·{" "}
-                {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : "es-ES", {
+                {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : locale === "pt" ? "pt-PT" : locale === "pt-BR" ? "pt-BR" : "es-ES", {
                   dateStyle: "medium",
                 }).format(new Date(member.createdAt))}
               </small>

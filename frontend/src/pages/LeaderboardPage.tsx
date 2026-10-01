@@ -1,3 +1,4 @@
+import { GoArrowRight } from "react-icons/go";
 import { Loader } from "../components/Loader";
 import { useState } from "react";
 import { PublicLineupModal } from "../components/PublicLineupModal";
@@ -35,9 +36,9 @@ export function LeaderboardPage() {
           {leaderboard.data?.length === 0 && <p className="state-card">{t("lineup.rankingEmpty")}</p>}
           {leaderboard.data?.map((row) => (
             <button type="button" className="leaderboard-row leaderboard-row--interactive leaderboard-row--overall" key={row.id} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={t("lineup.view", { name: row.name ?? "" })}>
-              <b className="leaderboard-position">{row.rank}{row.rankChange != null && <span className={`rank-change ${row.rankChange > 0 ? "price-delta--up" : row.rankChange < 0 ? "price-delta--down" : ""}`} aria-label={t(row.rankChange > 0 ? "leaderboard.movedUp" : row.rankChange < 0 ? "leaderboard.movedDown" : "leaderboard.unchanged", { count: Math.abs(row.rankChange) })}>{row.rankChange === 0 ? "—" : `${row.rankChange > 0 ? "↑" : "↓"} ${Math.abs(row.rankChange)}`}</span>}</b>
+              <b className="leaderboard-position">{row.rank}{row.rankChange != null && <span className={`rank-change ${row.rankChange > 0 ? "price-delta--up" : row.rankChange < 0 ? "price-delta--down" : ""}`} aria-label={t(row.rankChange > 0 ? "leaderboard.movedUp" : row.rankChange < 0 ? "leaderboard.movedDown" : "leaderboard.unchanged", { count: Math.abs(row.rankChange) })}>{row.rankChange === 0 ? "—" : <><GoArrowRight className={`ui-arrow ${row.rankChange > 0 ? "ui-arrow--up" : "ui-arrow--down"}`} aria-hidden="true" />{Math.abs(row.rankChange)}</>}</span>}</b>
               <strong>{row.name}</strong>
-              <em>{row.totalPoints} {t("common.pointsShort")} <i aria-hidden="true">›</i></em>
+              <em>{row.totalPoints} {t("common.pointsShort")} <i aria-hidden="true"><GoArrowRight className="ui-arrow" aria-hidden="true" /></i></em>
             </button>
           ))}
         </section>

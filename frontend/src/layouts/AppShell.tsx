@@ -1,6 +1,8 @@
+import { GoArrowRight } from "react-icons/go";
+import { RxCross1 } from "react-icons/rx";
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoCloseOutline, IoHomeOutline, IoFootballOutline, IoSwapHorizontalOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
+import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoHomeOutline, IoFootballOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
 import { FaRankingStar } from "react-icons/fa6";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings } from "react-icons/md";
@@ -27,7 +29,7 @@ type IconName =
   | "admin";
 
 function FootballIcon({ name }: { name: IconName }) {
-  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: IoSwapHorizontalOutline, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: FaRankingStar, admin: MdAdminPanelSettings };
+  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: GoArrowRight, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: FaRankingStar, admin: MdAdminPanelSettings };
   const Icon = icons[name];
   return <Icon aria-hidden="true" />;
 }
@@ -232,7 +234,7 @@ export function AppShell() {
                 onClick={closeMenu}
                 aria-label={t("nav.closeMenu")}
               >
-                <IoCloseOutline aria-hidden="true" />
+                <RxCross1 className="ui-cross" aria-hidden="true" />
               </button>
             </div>
             <nav>
@@ -279,7 +281,7 @@ export function AppShell() {
               onClick={() => setLogoutDialogOpen(false)}
               aria-label={t("logout.close")}
             >
-              ×
+              <RxCross1 className="ui-cross" aria-hidden="true" />
             </button>
             <p className="eyebrow">{t("logout.eyebrow")}</p>
             <h2 id="logout-modal-title">{t("logout.title")}</h2>

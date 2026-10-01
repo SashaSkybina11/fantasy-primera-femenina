@@ -69,6 +69,7 @@ export type GameweekStatus =
   | "CALCULATING"
   | "COMPLETED";
 export type Gameweek = {
+  marketOverride?: boolean | null;
   marketIsOpen?: boolean;
   id: string;
   number: number;

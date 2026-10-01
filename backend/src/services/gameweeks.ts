@@ -1,5 +1,5 @@
 import { AdminActionType, GameweekStatus, MatchResult, PlayerPosition, Prisma, SquadStatus } from "@prisma/client";
-import { marketDatesForWeek } from "./market-schedule.js";
+import { marketDatesForWeek, marketIsOpen } from "./market-schedule.js";
 import { prisma } from "../lib/prisma.js";
 import { applyPlayerPrices, previewPlayerPrices } from "./player-prices.js";
 import { ApiError } from "../utils/http.js";
@@ -25,6 +25,7 @@ export async function ensureSeasonGameweeks() {
       const monday = firstMonday + (number - 1) * 7 * 24 * 60 * 60 * 1000;
       const { marketOpenAt, deadlineAt, endsAt } = marketDatesForWeek(new Date(monday));
       const existing = await tx.gameweek.findUnique({ where: { number } });
+      if (existing && ["LOCKED", "CALCULATING", "COMPLETED"].includes(existing.status)) continue;
       if (existing && existing.marketOpenAt.getTime() === marketOpenAt.getTime() && existing.deadlineAt.getTime() === deadlineAt.getTime()) continue;
       await tx.gameweek.upsert({
         where: { number },
@@ -96,10 +97,9 @@ export async function assertOpenMarket(tx: Db, lineup = false, now = new Date(),
       ?? tx.gameweek.findFirstOrThrow({ orderBy: { number: "asc" } });
   }
   const gameweek = await tx.gameweek.findFirst({
-    where: { status: GameweekStatus.OPEN, marketOpenAt: { lte: now }, deadlineAt: { gt: now } },
-    orderBy: { number: "asc" },
-  });
-  if (!gameweek) throw new ApiError(lineup ? 409 : 423, lineup ? "LINEUP_MARKET_CLOSED" : "Трансферный рынок закрыт");
+    where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" },
+  }) ?? await tx.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { number: "asc" } });
+  if (!gameweek || !marketIsOpen(gameweek, now)) throw new ApiError(lineup ? 409 : 423, lineup ? "LINEUP_MARKET_CLOSED" : "Трансферный рынок закрыт");
   return gameweek;
 }
 

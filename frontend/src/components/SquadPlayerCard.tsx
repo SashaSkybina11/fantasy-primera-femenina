@@ -1,6 +1,7 @@
+import { RxCross1 } from "react-icons/rx";
 import { createPortal } from "react-dom";
 import { useState } from "react";
-import { FaExchangeAlt } from "react-icons/fa";
+import { GoArrowRight } from "react-icons/go";
 import { Modal } from "./Modal";
 import { ClubLogo } from "./ClubLogo";
 import { formatEuro, imageUrl, nationalityLabel, playerSummaryLabel } from "../services/api";
@@ -47,17 +48,17 @@ export function SquadPlayerCard({
     <article className={`squad-player-card squad-player-card--compact ${entry.status === "BENCH" ? "squad-player-card--bench" : ""}`}>
       {!readOnly && <>
         {entry.status === "STARTER" && <button className={`squad-icon squad-icon--captain ${entry.isCaptain ? "is-captain" : ""}`} aria-label={entry.isCaptain ? t("squad.removeCaptain") : t("squad.captain")} aria-pressed={entry.isCaptain} disabled={disabled} onClick={onCaptain}>★</button>}
-        <button className="squad-icon squad-icon--remove" aria-label={t("squad.remove")} disabled={disabled} onClick={onRemove}>×</button>
+        <button className="squad-icon squad-icon--remove" aria-label={t("squad.remove")} disabled={disabled} onClick={onRemove}><RxCross1 className="ui-cross" aria-hidden="true" /></button>
       </>}
       <button className="squad-player-details" onClick={() => setDetailsOpen(true)} aria-label={t("squad.details", { name: entry.player.name })}>
         <span className="jersey-number">#{entry.player.displayNumber ?? entry.player.number}</span>
         <h3>{entry.player.name}</h3>
       </button>
-      {!readOnly && <button className={entry.status === "BENCH" ? "squad-exchange-button" : "squad-bench-button"} aria-label={moveLabel} title={moveLabel} disabled={disabled} onClick={onMove}>{entry.status === "BENCH" ? <FaExchangeAlt aria-hidden="true" /> : moveLabel}</button>}
+      {!readOnly && <button className={entry.status === "BENCH" ? "squad-exchange-button" : "squad-bench-button"} aria-label={moveLabel} title={moveLabel} disabled={disabled} onClick={onMove}>{entry.status === "BENCH" ? <GoArrowRight className="ui-arrow" aria-hidden="true" /> : moveLabel}</button>}
     </article>
     {detailsOpen && createPortal(<Modal title={entry.player.name} onClose={() => setDetailsOpen(false)} className="squad-detail-modal fut-player-modal" hideCloseButton>
       <article className="fut-player-card">
-      <button type="button" className="compact-modal__close" aria-label={t("friends.close")} onClick={() => setDetailsOpen(false)} autoFocus>×</button>
+      <button type="button" className="compact-modal__close" aria-label={t("friends.close")} onClick={() => setDetailsOpen(false)} autoFocus><RxCross1 className="ui-cross" aria-hidden="true" /></button>
       <div className="fut-player-card__portrait">
         {photo && failedPhoto !== photo
           ? <img src={photo} alt={entry.player.name} onError={() => setFailedPhoto(photo)} />
@@ -67,7 +68,7 @@ export function SquadPlayerCard({
       <div className="squad-detail-club"><ClubLogo club={entry.player.club} /><strong>{entry.player.club.name}</strong></div>
       <p className="fut-player-card__facts">{[entry.player.role, entry.player.age, country ? `${flag} ${nationalityLabel(country, locale)}`.trim() : null].filter(value => value != null && value !== "").join(" · ")}</p>
       <dl className="squad-price-comparison">
-        <div><dt>{t("squad.initialPrice")}</dt><dd>{initialPrice == null ? t("squad.priceUnknown") : formatEuro(initialPrice, locale)}</dd></div>
+        <div><dt>{t("squad.initialPrice")}</dt><dd>{initialPrice == null ? t("squad.priceUnknown") : formatEuro(initialPrice, locale)}<span className="squad-price-comparison__arrow" aria-hidden="true"><GoArrowRight className="ui-arrow" /></span></dd></div>
         <div><dt>{t("prices.current")}</dt><dd className={priceClass}>{formatEuro(entry.player.price, locale)}</dd></div>
         {priceDelta !== null && <div className="squad-price-comparison__change"><dt>{t("squad.valueChange")}</dt><dd className={priceClass}>{priceDelta > 0 ? "+" : ""}{formatEuro(priceDelta, locale)}</dd></div>}
       </dl>
