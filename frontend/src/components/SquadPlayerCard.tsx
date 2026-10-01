@@ -55,15 +55,15 @@ export function SquadPlayerCard({
       </button>
       {!readOnly && <button className={entry.status === "BENCH" ? "squad-exchange-button" : "squad-bench-button"} aria-label={moveLabel} title={moveLabel} disabled={disabled} onClick={onMove}>{entry.status === "BENCH" ? <FaExchangeAlt aria-hidden="true" /> : moveLabel}</button>}
     </article>
-    {detailsOpen && createPortal(<Modal title={entry.player.name} onClose={() => setDetailsOpen(false)} className="squad-detail-modal fut-player-modal">
+    {detailsOpen && createPortal(<Modal title={entry.player.name} onClose={() => setDetailsOpen(false)} className="squad-detail-modal fut-player-modal" hideCloseButton>
       <article className="fut-player-card">
+      <button type="button" className="compact-modal__close" aria-label={t("friends.close")} onClick={() => setDetailsOpen(false)} autoFocus>×</button>
       <div className="fut-player-card__portrait">
-        <span className="fut-player-card__number">#{entry.player.displayNumber ?? entry.player.number}</span>
         {photo && failedPhoto !== photo
           ? <img src={photo} alt={entry.player.name} onError={() => setFailedPhoto(photo)} />
           : <span className="fut-player-card__initials" aria-hidden="true">{playerInitials(entry.player.name)}</span>}
       </div>
-      <h2 className="fut-player-card__name">{entry.player.name}</h2>
+      <h2 className="fut-player-card__name">{entry.player.name} <span className="fut-player-card__number">#{entry.player.displayNumber ?? entry.player.number}</span></h2>
       <div className="squad-detail-club"><ClubLogo club={entry.player.club} /><strong>{entry.player.club.name}</strong></div>
       <p className="fut-player-card__facts">{[entry.player.role, entry.player.age, country ? `${flag} ${nationalityLabel(country, locale)}`.trim() : null].filter(value => value != null && value !== "").join(" · ")}</p>
       <dl className="squad-price-comparison">

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { IoHomeOutline, IoFootballOutline, IoSwapHorizontalOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
+import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoCloseOutline, IoHomeOutline, IoFootballOutline, IoSwapHorizontalOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
 import { FaRankingStar } from "react-icons/fa6";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings } from "react-icons/md";
@@ -170,7 +170,7 @@ export function AppShell() {
         <div className="sidebar__bottom">
           <LanguageSwitcher />
           <button className="theme-toggle" onClick={toggleTheme}>
-            <span>{theme === "light" ? "☼" : "☾"}</span>
+            {theme === "light" ? <IoSunnyOutline aria-hidden="true" /> : <IoMoonOutline aria-hidden="true" />}
             {theme === "light" ? t("theme.light") : t("theme.dark")}
           </button>
           {user && (
@@ -197,7 +197,7 @@ export function AppShell() {
             onClick={toggleTheme}
             aria-label={t("theme.switch")}
           >
-            {theme === "light" ? "☾" : "☼"}
+            {theme === "light" ? <IoMoonOutline aria-hidden="true" /> : <IoSunnyOutline aria-hidden="true" />}
           </button>
           <button
             className="menu-toggle"
@@ -206,7 +206,7 @@ export function AppShell() {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
           >
-            ☰
+            <IoMenuOutline aria-hidden="true" />
           </button>
         </div>
       </header>
@@ -232,7 +232,7 @@ export function AppShell() {
                 onClick={closeMenu}
                 aria-label={t("nav.closeMenu")}
               >
-                ×
+                <IoCloseOutline aria-hidden="true" />
               </button>
             </div>
             <nav>
@@ -245,7 +245,7 @@ export function AppShell() {
             <div className="mobile-menu__bottom">
               <LanguageSwitcher />
               <button className="theme-toggle" onClick={toggleTheme}>
-                <span>{theme === "light" ? "☼" : "☾"}</span>
+                {theme === "light" ? <IoSunnyOutline aria-hidden="true" /> : <IoMoonOutline aria-hidden="true" />}
                 {theme === "light" ? t("theme.light") : t("theme.dark")}
               </button>
               {user && (
