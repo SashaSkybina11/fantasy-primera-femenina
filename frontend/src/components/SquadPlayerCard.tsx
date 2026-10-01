@@ -3,9 +3,16 @@ import { useState } from "react";
 import { FaExchangeAlt } from "react-icons/fa";
 import { Modal } from "./Modal";
 import { ClubLogo } from "./ClubLogo";
-import { formatEuro, playerSummaryLabel } from "../services/api";
+import { formatEuro, imageUrl, nationalityLabel, playerSummaryLabel } from "../services/api";
 import type { SquadEntry } from "../types";
 import { useLocale } from "../contexts/LocaleContext";
+
+function playerInitials(name: string) {
+  const latin: Record<string, string> = { А: "A", Б: "B", В: "V", Г: "H", Ґ: "G", Д: "D", Е: "E", Є: "Y", Ё: "Y", Ж: "Z", З: "Z", И: "I", І: "I", Ї: "Y", Й: "Y", К: "K", Л: "L", М: "M", Н: "N", О: "O", П: "P", Р: "R", С: "S", Т: "T", У: "U", Ф: "F", Х: "K", Ц: "T", Ч: "C", Ш: "S", Щ: "S", Э: "E", Ю: "Y", Я: "Y" };
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return [parts[0], parts.length > 1 ? parts[parts.length - 1] : null]
+    .filter(Boolean).map(part => { const letter = Array.from(part!)[0].toUpperCase(); return latin[letter] ?? letter; }).join("");
+}
 
 export function SquadPlayerCard({
   entry,
@@ -25,7 +32,12 @@ export function SquadPlayerCard({
   onRemove?: () => void;
 }) {
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
   const { locale, t } = useLocale();
+  const photo = imageUrl(entry.player.photoUrl);
+  const country = entry.player.nationality?.toUpperCase();
+  const flag = country && /^[A-Z]{2}$/.test(country)
+    ? Array.from(country).map(letter => String.fromCodePoint(127397 + letter.charCodeAt(0))).join("") : "";
   const initialPrice = entry.player.initialPrice;
   const priceDelta = initialPrice == null ? null : entry.player.price - initialPrice;
   const priceClass = priceDelta === null || priceDelta === 0 ? "" : priceDelta > 0 ? "price-delta--up" : "price-delta--down";
@@ -43,15 +55,23 @@ export function SquadPlayerCard({
       </button>
       {!readOnly && <button className={entry.status === "BENCH" ? "squad-exchange-button" : "squad-bench-button"} aria-label={moveLabel} title={moveLabel} disabled={disabled} onClick={onMove}>{entry.status === "BENCH" ? <FaExchangeAlt aria-hidden="true" /> : moveLabel}</button>}
     </article>
-    {detailsOpen && createPortal(<Modal title={entry.player.name} onClose={() => setDetailsOpen(false)} className="squad-detail-modal">
-      <span className="jersey-number">#{entry.player.displayNumber ?? entry.player.number}</span>
+    {detailsOpen && createPortal(<Modal title={entry.player.name} onClose={() => setDetailsOpen(false)} className="squad-detail-modal fut-player-modal">
+      <article className="fut-player-card">
+      <div className="fut-player-card__portrait">
+        <span className="fut-player-card__number">#{entry.player.displayNumber ?? entry.player.number}</span>
+        {photo && failedPhoto !== photo
+          ? <img src={photo} alt={entry.player.name} onError={() => setFailedPhoto(photo)} />
+          : <span className="fut-player-card__initials" aria-hidden="true">{playerInitials(entry.player.name)}</span>}
+      </div>
+      <h2 className="fut-player-card__name">{entry.player.name}</h2>
       <div className="squad-detail-club"><ClubLogo club={entry.player.club} /><strong>{entry.player.club.name}</strong></div>
-      <p>{playerSummaryLabel(entry.player, locale)}</p>
+      <p className="fut-player-card__facts">{[entry.player.role, entry.player.age, country ? `${flag} ${nationalityLabel(country, locale)}`.trim() : null].filter(value => value != null && value !== "").join(" · ")}</p>
       <dl className="squad-price-comparison">
         <div><dt>{t("squad.initialPrice")}</dt><dd>{initialPrice == null ? t("squad.priceUnknown") : formatEuro(initialPrice, locale)}</dd></div>
         <div><dt>{t("prices.current")}</dt><dd className={priceClass}>{formatEuro(entry.player.price, locale)}</dd></div>
         {priceDelta !== null && <div className="squad-price-comparison__change"><dt>{t("squad.valueChange")}</dt><dd className={priceClass}>{priceDelta > 0 ? "+" : ""}{formatEuro(priceDelta, locale)}</dd></div>}
       </dl>
+      </article>
     </Modal>, document.body)}
   </>;
   return (

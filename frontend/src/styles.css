@@ -5794,3 +5794,87 @@ form.admin-card.match-create {
   .scorers-table th:last-child { width: 44px; }
   .scorer-club { flex-direction: column; align-items: flex-start; gap: 5px; }
 }
+
+/* Gold player detail shield; the dialog keeps its close control outside the silhouette. */
+.app-modal.fut-player-modal {
+  width: min(390px, calc(100% - 24px));
+  padding: 50px 8px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.fut-player-modal > .app-modal__title { display: none; }
+.app-modal.fut-player-modal .compact-modal__close {
+  top: 2px;
+  right: 4px;
+  color: #fff;
+  background: #263040;
+  border-radius: 50%;
+}
+.fut-player-card {
+  position: relative;
+  isolation: isolate;
+  padding: 28px clamp(18px, 6vw, 30px) 48px;
+  color: #362811;
+  text-align: center;
+  overflow-wrap: anywhere;
+  border-radius: 46% 46% 24% 24% / 9% 9% 7% 7%;
+  clip-path: polygon(0 0, 100% 0, 100% 79%, 96% 85%, 93% 93%, 74% 96%, 50% 100%, 26% 96%, 7% 93%, 4% 85%, 0 79%);
+  background: radial-gradient(ellipse at 50% 10%, #fff9df 0, transparent 52%), linear-gradient(125deg, #b78b3d, #f9e5ac 30%, #e9ca7d 60%, #c69b49);
+  box-shadow: inset 0 0 0 2px #fbe8b0;
+}
+.fut-player-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 8px;
+  border: 1px solid #9b742a66;
+  border-radius: inherit;
+  background: repeating-linear-gradient(130deg, transparent 0 35px, #fff7d21f 36px 37px, transparent 38px 70px);
+  pointer-events: none;
+}
+.fut-player-card__portrait {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: clamp(130px, 33vw, 180px);
+  margin-bottom: 16px;
+  border-bottom: 1px solid #98702566;
+}
+.fut-player-card__portrait img { width: 100%; height: 100%; min-height: 0; object-fit: contain; object-position: center bottom; }
+.fut-player-card__initials {
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  border: 1px solid #a5813b77;
+  border-radius: 50%;
+  background: linear-gradient(150deg, #fff7da99, #b78b3d33);
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+.fut-player-card__number { position: absolute; top: 4px; left: 0; font-size: 0.85rem; font-weight: 700; }
+.fut-player-card__name { margin: 0; font-size: clamp(1.3rem, 5.8vw, 1.8rem); line-height: 1.15; }
+.fut-player-card .squad-detail-club { justify-content: center; margin: 12px 0; font-size: 0.9rem; }
+.fut-player-card__facts { margin: 12px 0 0; font-size: 0.8rem; line-height: 1.6; }
+.fut-player-card .squad-price-comparison { position: relative; gap: 14px 20px; margin-top: 18px; padding: 16px 8px; background: #fff8e066; border: 1px solid #9b742a44; }
+.fut-player-card .squad-price-comparison::before { content: "→"; position: absolute; top: 40px; left: 50%; transform: translateX(-50%); color: #705323; }
+.fut-player-card .squad-price-comparison dt { color: #60491f; font-size: 0.72rem; }
+.fut-player-card .squad-price-comparison dd { font-size: clamp(0.95rem, 4.4vw, 1.2rem); }
+.fut-player-card .squad-price-comparison__change { border-color: #9b742a44; }
+.fut-player-card .price-delta--up { color: #166534; }
+.fut-player-card .price-delta--down { color: #a51d25; }
+@media (max-width: 599px) {
+  .squad-field--editable .squad-player-card,
+  .squad-field--editable .squad-slot--field { max-width: 144px; min-height: 132px; }
+  .squad-field--editable .squad-player-details { gap: 4px; }
+  .squad-field--editable .jersey-number { height: 24px; font-size: 0.8rem; }
+  .squad-field--editable .squad-player-card h3 { font-size: 0.8rem; line-height: 1.25; }
+}
+@media (max-height: 600px) {
+  .fut-player-card__portrait { height: 110px; }
+  .fut-player-card__initials { width: 92px; height: 92px; font-size: 2.6rem; }
+}
