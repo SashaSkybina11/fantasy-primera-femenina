@@ -173,6 +173,7 @@ model Player {
 }
 
 model Gameweek {
+  control        GameweekControl?
   matches Match[]
   id             String                @id @default(cuid())
   number         Int                   @unique
@@ -198,6 +199,13 @@ model Gameweek {
   updatedAt      DateTime              @updatedAt
 
   @@index([status, deadlineAt])
+}
+
+model GameweekControl {
+  id          String   @id @default("default")
+  gameweekId  String?  @unique
+  gameweek    Gameweek? @relation(fields: [gameweekId], references: [id], onDelete: SetNull)
+  updatedAt   DateTime @updatedAt
 }
 
 model Match {

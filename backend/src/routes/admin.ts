@@ -15,6 +15,18 @@ const router = Router();
 
 router.use(authenticate, requireAdmin);
 
+router.get("/current-gameweek", asyncRoute(async (_request, response) => {
+  const selected = await prisma.gameweekControl.findUnique({ where: { id: "default" }, select: { gameweekId: true } });
+  response.json({ gameweekId: selected?.gameweekId ?? null });
+}));
+
+router.patch("/current-gameweek", asyncRoute(async (request, response) => {
+  const { gameweekId } = z.object({ gameweekId: z.string().cuid().nullable() }).parse(request.body);
+  if (gameweekId && !(await prisma.gameweek.findUnique({ where: { id: gameweekId }, select: { id: true } }))) throw new ApiError(404, "Тур не найден");
+  const saved = await prisma.gameweekControl.upsert({ where: { id: "default" }, create: { id: "default", gameweekId }, update: { gameweekId } });
+  response.json({ gameweekId: saved.gameweekId });
+}));
+
 router.patch("/market", asyncRoute(async (request, response) => {
   const input = z.object({ gameweekId: z.string().cuid(), mode: z.enum(["AUTO", "OPEN", "CLOSED"]) }).parse(request.body);
   await synchronizeGameweeks();

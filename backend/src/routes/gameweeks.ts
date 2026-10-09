@@ -15,7 +15,8 @@ router.get("/scoring-rules", (_request, response) => response.json(scoringRules)
 router.get("/current", asyncRoute(async (_request, response) => {
   await synchronizeGameweeks();
   const now = new Date();
-  const gameweek = await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
+  const control = await prisma.gameweekControl.findUnique({ where: { id: "default" }, include: { gameweek: true } });
+  const gameweek = control?.gameweek ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
     ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { marketOpenAt: "asc" } });
   response.json(gameweek ? { ...gameweek, marketIsOpen: marketIsOpen(gameweek, now) } : null);
 }));

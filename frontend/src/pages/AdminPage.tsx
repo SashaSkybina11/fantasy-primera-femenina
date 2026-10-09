@@ -18,6 +18,17 @@ export function AdminPage() {
     queryFn: api.adminUsers,
     enabled: user?.role === "ADMIN",
   });
+  const weeks = useQuery({ queryKey: ["admin-gameweeks"], queryFn: api.adminGameweeks, enabled: user?.role === "ADMIN" });
+  const selectedWeek = useQuery({ queryKey: ["admin-current-gameweek"], queryFn: api.adminCurrentGameweek, enabled: user?.role === "ADMIN" });
+  const setCurrentWeek = useMutation({
+    mutationFn: api.setCurrentGameweek,
+    onSuccess: (result) => {
+      queryClient.setQueryData(["admin-current-gameweek"], result);
+      void queryClient.invalidateQueries({ queryKey: ["current-gameweek"] });
+      toast.success(t("admin.currentGameweekSaved"));
+    },
+    onError: (error) => toast.error(error.message),
+  });
   const removeUser = useMutation({
     mutationFn: api.deleteAdminUser,
     onSuccess: () => {
@@ -46,6 +57,14 @@ export function AdminPage() {
         <Link to="/admin/matches">{t("matches.admin")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
         <Link to="/admin/player-points">{t("admin.playerPointsLink")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
       </header>
+      <section className="admin-card">
+        <div className="admin-card__head"><h2>{t("admin.currentGameweek")}</h2></div>
+        <p className="muted">{t("admin.currentGameweekHelp")}</p>
+        <select aria-label={t("admin.currentGameweek")} value={selectedWeek.data?.gameweekId ?? ""} disabled={setCurrentWeek.isPending || weeks.isLoading} onChange={event => setCurrentWeek.mutate(event.target.value || null)}>
+          <option value="">{t("admin.currentGameweekAuto")}</option>
+          {weeks.data?.map(week => <option key={week.id} value={week.id}>{t("gameweek.label", { number: week.number })} · {t(`gameweek.${week.status}`)}</option>)}
+        </select>
+      </section>
       <section className="admin-card">
         <div className="admin-card__head">
           <h2>{t("admin.users")}</h2>
