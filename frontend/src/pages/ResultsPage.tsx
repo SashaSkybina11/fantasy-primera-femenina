@@ -17,7 +17,8 @@ export function ResultsPage() {
   const { t, locale } = useLocale(); const { user } = useAuth();
   const [params, setParams] = useSearchParams();
   const weeks = useQuery({ queryKey: ["match-weeks"], queryFn: api.matchWeeks });
-  const week = params.get("week") ?? weeks.data?.find(w => new Date(w.endsAt) >= new Date())?.id ?? weeks.data?.at(-1)?.id ?? "";
+  const currentWeek = useQuery({ queryKey: ["current-gameweek"], queryFn: api.currentGameweek });
+  const week = params.get("week") ?? currentWeek.data?.id ?? weeks.data?.find(w => new Date(w.endsAt) >= new Date())?.id ?? weeks.data?.at(-1)?.id ?? "";
   const matches = useQuery({ queryKey: ["matches", week], queryFn: () => api.matches(week), enabled: !!week });
   const index = weeks.data?.findIndex(w => w.id === week) ?? -1;
   return <div className="page page--narrow"><header className="page-heading"><p className="eyebrow">{t("competition.title")}</p><h1>{t("matches.title")}</h1><p>{t("matches.intro")}</p>{user?.role === "ADMIN" && <Link to={`/admin/matches?week=${week}`}>{t("matches.admin")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>}</header>

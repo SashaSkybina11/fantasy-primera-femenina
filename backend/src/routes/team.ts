@@ -7,7 +7,7 @@ import { authenticate } from "../middleware/auth.js";
 import { getPlayerPopularity } from "../services/player-popularity.js";
 import { ensureValidLineup, getOwnTeam, teamInclude, withTeamDisplayNumbers } from "../services/team.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
-import { assertOpenMarket, requireOpenMarket, synchronizeGameweeks } from "../services/gameweeks.js";
+import { assertOpenMarket, currentGameweek, requireOpenMarket, synchronizeGameweeks } from "../services/gameweeks.js";
 import { marketIsOpen } from "../services/market-schedule.js";
 
 const router = Router();
@@ -35,8 +35,7 @@ router.get("/", asyncRoute(async (request, response) => {
 router.get("/transfers", asyncRoute(async (request, response) => {
   await synchronizeGameweeks();
   const now = new Date();
-  const gameweek = await prisma.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
-    ?? await prisma.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { number: "asc" } });
+  const gameweek = await currentGameweek(prisma, now);
   if (!gameweek) return response.json({ gameweek: null, marketIsOpen: false, bought: 0, sold: 0, limit: 2, initialSquad: true });
   const [team, grouped] = await Promise.all([
     prisma.fantasyTeam.findUnique({ where: { userId: request.auth!.userId }, select: { isInitialSquadComplete: true } }),

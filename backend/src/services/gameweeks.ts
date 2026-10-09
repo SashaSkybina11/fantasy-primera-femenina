@@ -6,6 +6,16 @@ import { ApiError } from "../utils/http.js";
 
 type Db = Prisma.TransactionClient;
 
+export async function currentGameweek(tx: Db, now = new Date()) {
+  const control = await tx.gameweekControl.findUnique({ where: { id: "default" }, include: { gameweek: true } });
+  if (!control) {
+    const initial = await tx.gameweek.findUnique({ where: { number: 4 } });
+    if (initial) return initial;
+  }
+  return control?.gameweek ?? await tx.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
+    ?? await tx.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { marketOpenAt: "asc" } });
+}
+
 export const scoringRules = {
   started: 2,
   win: 2,
@@ -78,11 +88,12 @@ export async function synchronizeGameweeks(now = new Date()) {
       where: { status: GameweekStatus.UPCOMING, marketOpenAt: { lte: now }, deadlineAt: { gt: now } },
       data: { status: GameweekStatus.OPEN },
     });
-    const expired = await tx.gameweek.findMany({ where: { status: { in: [GameweekStatus.OPEN, GameweekStatus.UPCOMING] }, deadlineAt: { lte: now } } });
-    for (const gameweek of expired) {
-      await snapshotGameweek(tx, gameweek.id);
-      await tx.gameweek.update({ where: { id: gameweek.id }, data: { status: GameweekStatus.LOCKED } });
-    }
+    await tx.gameweek.updateMany({
+      where: { status: GameweekStatus.LOCKED, matches: { none: { publishedAt: { not: null } } } },
+      data: { status: GameweekStatus.OPEN },
+    });
+    // Keep expired rounds editable until an admin publishes the match results.
+    // The market still closes by deadline via marketIsOpen().
   });
 }
 
@@ -92,13 +103,11 @@ export async function requireOpenMarket(lineup = false, userId?: string) {
 }
 
 export async function assertOpenMarket(tx: Db, lineup = false, now = new Date(), userId?: string) {
+  const gameweek = await currentGameweek(tx, now);
   if (userId && (await tx.user.findUnique({ where: { id: userId }, select: { role: true } }))?.role === "ADMIN") {
-    return await tx.gameweek.findFirst({ orderBy: { number: "desc" }, where: { marketOpenAt: { lte: now } } })
-      ?? tx.gameweek.findFirstOrThrow({ orderBy: { number: "asc" } });
+    if (gameweek) return gameweek;
+    throw new ApiError(423, "Трансферный рынок закрыт");
   }
-  const gameweek = await tx.gameweek.findFirst({
-    where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" },
-  }) ?? await tx.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { number: "asc" } });
   if (!gameweek || !marketIsOpen(gameweek, now)) throw new ApiError(lineup ? 409 : 423, lineup ? "LINEUP_MARKET_CLOSED" : "Трансферный рынок закрыт");
   return gameweek;
 }

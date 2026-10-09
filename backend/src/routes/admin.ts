@@ -6,7 +6,7 @@ import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { inTransaction } from "../lib/transaction.js";
 import { marketDatesForWeek, marketIsOpen } from "../services/market-schedule.js";
-import { audit, calculatePlayerPoints, recalculateGameweek, synchronizeGameweeks } from "../services/gameweeks.js";
+import { audit, calculatePlayerPoints, currentGameweek, recalculateGameweek, synchronizeGameweeks } from "../services/gameweeks.js";
 
 import { applyTeamResults, normalizeGoalkeeperStats } from "../services/player-stats.js";
 import { applyPlayerPrices, previewPlayerPrices } from "../services/player-prices.js";
@@ -16,8 +16,10 @@ const router = Router();
 router.use(authenticate, requireAdmin);
 
 router.get("/current-gameweek", asyncRoute(async (_request, response) => {
+  await synchronizeGameweeks();
   const selected = await prisma.gameweekControl.findUnique({ where: { id: "default" }, select: { gameweekId: true } });
-  response.json({ gameweekId: selected?.gameweekId ?? null });
+  const initial = selected ? null : await prisma.gameweek.findUnique({ where: { number: 4 }, select: { id: true } });
+  response.json({ gameweekId: selected?.gameweekId ?? initial?.id ?? null });
 }));
 
 router.patch("/current-gameweek", asyncRoute(async (request, response) => {
@@ -32,8 +34,7 @@ router.patch("/market", asyncRoute(async (request, response) => {
   await synchronizeGameweeks();
   const result = await inTransaction(async tx => {
     const now = new Date();
-    const current = await tx.gameweek.findFirst({ where: { marketOpenAt: { lte: now }, endsAt: { gte: now } }, orderBy: { number: "desc" } })
-      ?? await tx.gameweek.findFirst({ where: { marketOpenAt: { gt: now } }, orderBy: { number: "asc" } });
+    const current = await currentGameweek(tx, now);
     if (!current || current.id !== input.gameweekId) throw new ApiError(409, "MARKET_STALE");
     if (input.mode === "OPEN" && ["CALCULATING", "COMPLETED"].includes(current.status)) throw new ApiError(409, "MARKET_FINALIZED");
     const updated = await tx.gameweek.update({ where: { id: current.id }, data: { marketOverride: input.mode === "AUTO" ? null : input.mode === "OPEN" } });
@@ -128,7 +129,12 @@ router.post("/gameweeks/:id/complete", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const result = await inTransaction(async (tx) => {
     const gameweek = await tx.gameweek.findUnique({ where: { id } }); if (!gameweek) throw new ApiError(404, "Тур не найден");
-    if (await tx.match.count({ where: { gameweekId: id, publishedAt: null } })) throw new ApiError(409, "MATCH_UNPUBLISHED");
+    const [matchCount, expectedMatchCount, unpublishedCount] = await Promise.all([
+      tx.match.count({ where: { gameweekId: id } }),
+      tx.club.count().then(count => Math.floor(count / 2)),
+      tx.match.count({ where: { gameweekId: id, publishedAt: null } }),
+    ]);
+    if (expectedMatchCount === 0 || matchCount !== expectedMatchCount || unpublishedCount > 0) throw new ApiError(409, "MATCH_UNPUBLISHED");
     if (gameweek.deadlineAt > new Date()) throw new ApiError(409, "GAMEWEEK_NOT_LOCKED");
     const oldWinners = await tx.gameweekWinner.findMany({ where: { gameweekId: id } });
     await tx.gameweek.update({ where: { id }, data: { status: GameweekStatus.COMPLETED } });
