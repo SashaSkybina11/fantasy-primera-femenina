@@ -3142,7 +3142,8 @@ select:focus {
 }
 .purchase-deadline small {
   color: var(--muted);
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .leaderboard-row {
   display: grid;

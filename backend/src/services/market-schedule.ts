@@ -24,6 +24,7 @@ export function marketDatesForWeek(date: Date) {
 }
 
 export function marketIsOpen(gameweek: { status: string; marketOverride?: boolean | null; marketOpenAt: Date; deadlineAt: Date; endsAt: Date }, now = new Date()) {
-  if (gameweek.endsAt < now || ["CALCULATING", "COMPLETED"].includes(gameweek.status)) return false;
-  return gameweek.marketOverride ?? (gameweek.status === "OPEN" && gameweek.marketOpenAt <= now && now < gameweek.deadlineAt);
+  if (["CALCULATING", "COMPLETED"].includes(gameweek.status)) return false;
+  if (gameweek.marketOverride != null) return gameweek.marketOverride;
+  return gameweek.marketOpenAt <= now && now < gameweek.deadlineAt;
 }

@@ -20,10 +20,6 @@ const lineupSchema = z.object({
 
 router.use(authenticate);
 
-async function isAdmin(userId: string) {
-  return (await prisma.user.findUnique({ where: { id: userId }, select: { role: true } }))?.role === "ADMIN";
-}
-
 router.get("/popular-player", asyncRoute(async (_request, response) => {
   response.json(await inTransaction(getPlayerPopularity));
 }));
@@ -41,7 +37,7 @@ router.get("/transfers", asyncRoute(async (request, response) => {
     prisma.fantasyTeam.findUnique({ where: { userId: request.auth!.userId }, select: { isInitialSquadComplete: true } }),
     prisma.userTransfer.groupBy({ by: ["type"], where: { userId: request.auth!.userId, gameweekId: gameweek.id }, _count: true }),
   ]);
-  response.json({ gameweek, marketIsOpen: await isAdmin(request.auth!.userId) || marketIsOpen(gameweek, now), bought: grouped.find((row) => row.type === "BUY")?._count ?? 0, sold: grouped.find((row) => row.type === "SELL")?._count ?? 0, limit: 2, initialSquad: !team?.isInitialSquadComplete });
+  response.json({ gameweek, marketIsOpen: marketIsOpen(gameweek, now), bought: grouped.find((row) => row.type === "BUY")?._count ?? 0, sold: grouped.find((row) => row.type === "SELL")?._count ?? 0, limit: 2, initialSquad: !team?.isInitialSquadComplete });
 }));
 
 router.post("/players", asyncRoute(async (request, response) => {

@@ -148,7 +148,7 @@ export function PurchasePlayersPage() {
                 : t("purchase.marketClosed")}
             </strong>
             <span>
-              {t("purchase.gameweekLabel")}: {t("gameweek.label", { number: gameweek.data.number })}
+              {t("purchase.gameweekLabel")}: {gameweek.data.number}
             </span>
           </div>
           <div className="purchase-deadline__schedule">
