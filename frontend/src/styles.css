@@ -3010,8 +3010,7 @@ select:focus {
   border-radius: 16px;
   background: var(--surface);
 }
-.market-status--locked,
-.market-status--calculating {
+.market-status--closed {
   border-left-color: #e4a11b;
 }
 .market-status h2,
@@ -3022,6 +3021,18 @@ select:focus {
   display: grid;
   gap: 0.2rem;
   text-align: right;
+}
+.market-status .market-status__schedule {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.market-status__team-link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 .admin-toolbar {
   display: grid;
@@ -3427,6 +3438,10 @@ select:focus {
   }
   .market-status p {
     text-align: left;
+  }
+  .market-status__team-link {
+    width: 100%;
+    justify-content: center;
   }
   .purchase-deadline {
     grid-template-columns: 1fr;

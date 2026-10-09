@@ -1,3 +1,5 @@
+import { GoArrowRight } from "react-icons/go";
+import { Link } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { BudgetDisplay } from "../components/BudgetDisplay";
 import { useLocale } from "../contexts/LocaleContext";
@@ -5,7 +7,7 @@ import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 
 export function HomePage() {
-  const { locale, t } = useLocale();
+  const { t } = useLocale();
   const { user, setUser } = useAuth();
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
@@ -30,38 +32,23 @@ export function HomePage() {
       </section>
       {gameweek.data && (
         <section
-          className={`market-status market-status--${gameweek.data.status.toLowerCase()}`}
+          className={`market-status market-status--${gameweek.data.marketIsOpen ? "open" : "closed"}`}
         >
           <div>
             <p className="eyebrow">{t("gameweek.label", { number: gameweek.data.number })}</p>
             <h2>
               {gameweek.data.marketIsOpen === true
-                ? t("home.marketOpen")
-                : gameweek.data.status === "COMPLETED"
-                  ? t("home.gameweekCompleted")
-                  : t("home.squadLocked")}
+                ? t("purchase.marketOpen")
+                : t("purchase.marketClosed")}
             </h2>
           </div>
-          <p>
-            {gameweek.data.marketIsOpen === true
-              ? t("home.changesUntil")
-              : t("home.nextControlDate")}
-            :{" "}
-            <strong>
-              {new Intl.DateTimeFormat(locale === "uk" ? "uk-UA" : locale === "en" ? "en-GB" : locale === "pt" ? "pt-PT" : locale === "pt-BR" ? "pt-BR" : "es-ES", {
-                timeZone: "Europe/Madrid",
-                dateStyle: "full",
-                timeStyle: "short",
-              }).format(
-                new Date(
-                  gameweek.data.marketIsOpen === true
-                    ? gameweek.data.deadlineAt
-                    : gameweek.data.endsAt,
-                ),
-              )}
-            </strong>{" "}
+          <p className="market-status__schedule">
+            {t("purchase.weeklySchedule")}
             <small>{t("purchase.timezoneLabel")}: Europe/Madrid</small>
           </p>
+          <Link className="button market-status__team-link" to="/my-team">
+            {t("nav.myTeam")} <GoArrowRight className="ui-arrow" aria-hidden="true" />
+          </Link>
         </section>
       )}
       <section className="home-support-card">
