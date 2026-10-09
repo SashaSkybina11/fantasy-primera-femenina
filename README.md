@@ -1,40 +1,56 @@
-# Fantasy Primera Division Futbol Sala Femenino
+# Fantasy Primera División Fútbol Sala Femenino
 
-Интерактивная fantasy-игра о женском футзале Испании. Проект посвящён Primera Division Futbol Sala Femenino - соревнованию, где каждая участница может собрать собственную команду из реальных игрокиц, следить за клубами и стать частью небольшой лиги единомышленниц.
+An interactive fantasy game dedicated to Spanish women's futsal. The project is built around the **Primera División Fútbol Sala Femenino**, allowing users to create their own teams from real players, explore clubs, follow the competition, and compete with other members of the fantasy league.
 
-## Идея проекта
+## About the Project
 
-Fantasy Primera Division Futbol Sala Femenino создана, чтобы сделать женский футзал более заметным, близким и интересным для болельщиков. Это не просто таблица игроков: здесь можно выбрать любимый клуб, узнать больше о командах чемпионата, собрать свой состав и сравнить его с командами других участниц.
+Fantasy Primera División Fútbol Sala Femenino aims to make women's futsal more visible, accessible, and engaging for fans. More than a collection of player statistics, the platform offers a personal way to experience the league: choose a favorite club, discover the teams competing in the championship, build a fantasy squad, and compare it with those created by other users.
 
-Проект соединяет спортивную статистику, личный выбор и атмосферу дружеской лиги. Он задуман как спокойное, понятное и визуально тёплое пространство для тех, кто уже любит футзал или только начинает с ним знакомиться.
+The project combines sports statistics, strategic team management, and the community spirit of a friendly fantasy league. It is designed for both dedicated futsal fans and people discovering the sport for the first time.
 
-## Внутри игры
+## Features
 
-- Своя fantasy-команда с фиксированным бюджетом.
-- Реальные игрокицы и клубы Primera Division Futbol Sala Femenino.
-- Возможность покупать игрокиц, формировать основу и запас, выбирать капитана.
-- Страница клубов с составами и ключевой информацией.
-- Лига, где можно увидеть команды других участниц и сравнить составы.
-- Рейтинг любимых клубов, который формируют голоса игроков.
-- Официальный календарь соревнования RFEF.
-- Испанский, украинский и английский языки интерфейса.
-- Таблица бомбардиров и голы в составах клубов: исходные итоги после 3-го тура плюс голы последующих туров из статистики игроков.
-- Светлая и тёмная темы, а также адаптивный интерфейс для компьютеров, планшетов и телефонов.
+- **Fantasy team management** with a fixed budget.
+- **Real players and clubs** from the Spanish Primera División Fútbol Sala Femenino.
+- **Squad building:** sign players, choose a starting lineup and substitutes, and appoint a captain.
+- **Club pages** with squad lists and key information.
+- **Fantasy league** where users can explore and compare other teams.
+- **Favorite club rankings** based on user votes.
+- **Official competition calendar** based on RFEF data.
+- **Top scorers and club goal statistics**, combining baseline data through Matchday 3 with player statistics from subsequent matchdays.
+- **Multilingual interface** in Spanish, Ukrainian, and English.
+- **Light and dark themes**, with a responsive layout for desktop, tablet, and mobile devices.
 
-## Путь игрока
+## How to Play
 
-1. Создать профиль и дать имя своей команде.
-2. Выбрать клуб, который хочется поддерживать в течение сезона.
-3. Собрать состав из любимых или самых интересных игрокиц.
-4. Продумать стартовую пятёрку, запас и капитана.
-5. Наблюдать за лигой, сравнивать команды и следить за соревнованием.
+1. Create a profile and give your fantasy team a name.
+2. Choose the club you want to support throughout the season.
+3. Build your squad by selecting your favorite players or those you consider the strongest options.
+4. Set your starting lineup, substitutes, and captain.
+5. Follow the league, compare teams, and track the real competition as the season progresses.
 
-## Для кого эта игра
+## Who Is It For?
 
-Для болельщиков женского футзала, любителей fantasy-форматов, игроков и всех, кто хочет открыть для себя Primera Division Futbol Sala Femenino через живой и личный опыт.
+The platform is designed for women's futsal fans, fantasy sports enthusiasts, players, and anyone interested in discovering the Spanish Primera División Fútbol Sala Femenino through an interactive and personal experience.
 
-## Результаты и бомбардиры
+## Results and Top Scorers
 
-`backend/src/data/scorers.ts` хранит предоставленную администратором таблицу после 3-го тура: 87 игроков, 133 гола. Короткие имена в составах сопоставляются по клубу через `scorer-aliases.ts`. Эти данные используются только для отображения: цены, бюджеты и фэнтези-очки не изменяются. Начиная с 4-го тура таблица автоматически читает голы из `PlayerGameweekStats`; исправления заменяют прежние значения. Для обновления нужны авторы голов в протоколах, одного командного счёта недостаточно.
+The file `backend/src/data/scorers.ts` contains the administrator-provided top-scorer dataset through Matchday 3, covering **87 players and 133 goals**.
 
-Для импорта 16 результатов первых двух туров: `node --import tsx backend/scripts/import-match-results.ts` из корня проекта с настроенной `DATABASE_URL`. Скрипт записывает только счёт и время начала, проверяет совпадение уже опубликованных результатов и в одной транзакции сверяет неизменность цен, истории цен, фэнтези-статистики, очков и команд. Он не запускает пересчёт и не публикует протоколы.
+Shortened player names in club squads are matched to the dataset by club using `scorer-aliases.ts`.
+
+These baseline data are used for display purposes only and do not affect player prices, budgets, or fantasy points. Starting from Matchday 4, the top-scorer table automatically retrieves goals from `PlayerGameweekStats`. Subsequent corrections replace previously recorded values.
+
+To update the statistics, the system requires individual goal scorers from match reports. A team's final score alone is insufficient to determine individual player totals.
+
+## Importing Match Results
+
+To import the 16 results from the first two matchdays, run the following command from the project root with `DATABASE_URL` configured:
+
+```bash
+node --import tsx backend/scripts/import-match-results.ts
+```
+
+The script records only match scores and kickoff times. It validates consistency with results that have already been published and, within a single transaction, verifies that player prices, price history, fantasy statistics, points, and teams remain unchanged.
+
+The script does not trigger a fantasy points recalculation or publish match reports.
