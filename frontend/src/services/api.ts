@@ -684,6 +684,10 @@ export const api = {
     request<Gameweek>(`/admin/gameweeks/${id}/complete`, { method: "POST" }),
   reopenGameweek: (id: string) =>
     request<Gameweek>(`/admin/gameweeks/${id}/reopen`, { method: "POST" }),
+  recalculateGameweek: (id: string) =>
+    request<{ recalculatedUsers: number }>(`/admin/gameweeks/${id}/recalculate`, { method: "POST" }),
+  adjustUserPoints: (gameweekId: string, userId: string, points: number, reason: string) =>
+    request<unknown>(`/admin/gameweeks/${gameweekId}/users/${userId}/adjustments`, { method: "POST", body: JSON.stringify({ points, reason }) }),
   privateLeagues: () => request<PrivateLeagueSummary[]>("/private-leagues/my"),
   privateLeague: (id: string) =>
     request<PrivateLeagueDetail>(`/private-leagues/${id}`),

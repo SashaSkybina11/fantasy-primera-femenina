@@ -12,6 +12,7 @@ export function SquadSection({
   disabled = false,
   onMove,
   onCaptain,
+  onChange,
   onRemove,
   onAdd,
 }: {
@@ -24,6 +25,7 @@ export function SquadSection({
   disabled?: boolean;
   onMove?: (entry: SquadEntry) => void;
   onCaptain?: (entry: SquadEntry) => void;
+  onChange?: () => void;
   onAdd?: (position: "GOALKEEPER" | "FIELD_PLAYER") => void;
   onRemove?: (entry: SquadEntry) => void;
 }) {
@@ -44,8 +46,8 @@ export function SquadSection({
       compact={!readOnly}
       readOnly={readOnly}
       disabled={disabled}
-      onMove={() => onMove?.(entry)}
-      onCaptain={() => onCaptain?.(entry)}
+      onMove={() => { onChange?.(); onMove?.(entry); }}
+      onCaptain={() => { onChange?.(); onCaptain?.(entry); }}
       onRemove={() => onRemove?.(entry)}
     />
   );

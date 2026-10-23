@@ -6,7 +6,7 @@ import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { inTransaction } from "../lib/transaction.js";
 import { marketDatesForWeek, marketIsOpen } from "../services/market-schedule.js";
-import { audit, calculatePlayerPoints, currentGameweek, recalculateGameweek, synchronizeGameweeks } from "../services/gameweeks.js";
+import { audit, calculatePlayerPoints, currentGameweek, recalculateGameweek, synchronizeGameweeks, snapshotGameweek } from "../services/gameweeks.js";
 
 import { applyTeamResults, normalizeGoalkeeperStats } from "../services/player-stats.js";
 import { applyPlayerPrices, previewPlayerPrices } from "../services/player-prices.js";
@@ -150,6 +150,20 @@ router.post("/gameweeks/:id/complete", asyncRoute(async (request, response) => {
 router.post("/gameweeks/:id/reopen", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const result = await inTransaction(async (tx) => { const old = await tx.gameweek.findUnique({ where: { id } }); if (!old) throw new ApiError(404, "Тур не найден"); if (old.status !== GameweekStatus.COMPLETED) throw new ApiError(409, "Тур не завершён"); await tx.userGameweekPoints.updateMany({ where: { gameweekId: id }, data: { isFinal: false } }); const saved = await tx.gameweek.update({ where: { id }, data: { status: GameweekStatus.CALCULATING, completedAt: null } }); await audit(tx, request.auth!.userId, AdminActionType.GAMEWEEK_REOPENED, "Gameweek", id, old, saved); return saved; }); response.json(result);
+}));
+
+router.post("/gameweeks/:id/recalculate", asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  const result = await inTransaction(async tx => {
+    const week = await tx.gameweek.findUnique({ where: { id } });
+    if (!week) throw new ApiError(404, "Тур не найден");
+    if (week.deadlineAt > new Date()) throw new ApiError(409, "GAMEWEEK_NOT_LOCKED");
+    await snapshotGameweek(tx, id);
+    const rows = await recalculateGameweek(tx, id);
+    await audit(tx, request.auth!.userId, AdminActionType.PLAYER_STATS_UPDATED, "Gameweek", id, null, { recalculatedUsers: rows.length });
+    return { recalculatedUsers: rows.length };
+  });
+  response.json(result);
 }));
 
 router.post("/gameweeks/:gameweekId/users/:userId/adjustments", asyncRoute(async (request, response) => {

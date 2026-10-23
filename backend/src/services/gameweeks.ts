@@ -61,7 +61,7 @@ export function calculatePlayerPoints(input: {
 
 export async function snapshotGameweek(tx: Db, gameweekId: string) {
   const gameweek = await tx.gameweek.findUniqueOrThrow({ where: { id: gameweekId } });
-  const teams = await tx.fantasyTeam.findMany({ where: { players: { every: { createdAt: { lte: gameweek.deadlineAt } } } }, include: { user: true, players: { include: { player: true } } } });
+  const teams = await tx.fantasyTeam.findMany({ where: { createdAt: { lte: gameweek.deadlineAt }, players: { every: { createdAt: { lte: gameweek.deadlineAt } } } }, include: { user: true, players: { include: { player: true } } } });
   for (const team of teams) {
     const starters = team.players.filter((item) => item.status === SquadStatus.STARTER);
     const valid = team.players.length === 10 && starters.length === 5
@@ -70,6 +70,8 @@ export async function snapshotGameweek(tx: Db, gameweekId: string) {
       && starters.filter((item) => item.player.position === PlayerPosition.FIELD_PLAYER).length === 4
       && starters.filter((item) => item.isCaptain).length === 1;
     if (!valid) continue;
+    const snapshot = await tx.userGameweekSquad.findUnique({ where: { gameweekId_userId: { gameweekId, userId: team.userId } }, include: { players: true } });
+    if (snapshot) continue;
     await tx.userGameweekSquad.upsert({
       where: { gameweekId_userId: { gameweekId, userId: team.userId } },
       update: {},
@@ -132,7 +134,9 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
   const adjustments = await tx.userPointAdjustment.groupBy({ by: ["userId"], where: { gameweekId }, _sum: { points: true } });
   const adjustmentsByUser = new Map(adjustments.map((item) => [item.userId, item._sum.points ?? 0]));
 
-  for (const squad of squads) {
+  const squadUsers = new Set(squads.map(squad => squad.userId));
+  const targets = [...squads, ...[...adjustmentsByUser.keys()].filter(userId => !squadUsers.has(userId)).map(userId => ({ userId, players: [] as typeof squads[number]["players"] }))];
+  for (const squad of targets) {
     let playerPoints = 0; const captainBonus = 0; let starterGoals = 0;
     const breakdown = squad.players.filter((item) => item.status === SquadStatus.STARTER).map((item) => {
       const stat = statsByPlayer.get(item.playerId);

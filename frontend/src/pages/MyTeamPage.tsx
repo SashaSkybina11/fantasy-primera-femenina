@@ -22,6 +22,7 @@ export function MyTeamPage() {
   const queryClient = useQueryClient();
   const [addPosition, setAddPosition] = useState<"GOALKEEPER" | "FIELD_PLAYER" | null>(null);
   const [removeTarget, setRemoveTarget] = useState<SquadEntry | null>(null);
+  const [lineupDirty, setLineupDirty] = useState(false);
   const refresh = () =>
     void Promise.all([
       queryClient.invalidateQueries({ queryKey: ["team"] }),
@@ -69,6 +70,7 @@ export function MyTeamPage() {
         })),
       ),
     onSuccess: () => {
+      setLineupDirty(false);
       refresh();
       toast.success(t("team.lineupSaved"));
     },
@@ -94,6 +96,7 @@ export function MyTeamPage() {
     });
   };
   const isComplete = team.players.length === 10;
+  const hasCaptain = team.players.some((entry) => entry.isCaptain && entry.status === "STARTER");
 
   return (
     <div className="page">
@@ -106,6 +109,10 @@ export function MyTeamPage() {
         <BudgetDisplay budget={team.budget} count={team.players.length} />
       </header>
       {locked && <p className="state-card">{t("team.marketLocked")}</p>}
+      {(!hasCaptain || lineupDirty) && <div className="state-card state-card--error" role="status" aria-live="polite">
+        {!hasCaptain && <p>{t("team.captainWarning")}</p>}
+        {lineupDirty && <p>{t("team.unsavedWarning")}</p>}
+      </div>}
       <div className="team-toolbar">
         <div>
           <span className="captain-status-star" aria-hidden="true">★</span>
@@ -137,6 +144,7 @@ export function MyTeamPage() {
               onAdd={setAddPosition}
               disabled={locked || move.isPending || captain.isPending || remove.isPending}
               onMove={onMove}
+              onChange={() => setLineupDirty(true)}
               onCaptain={(entry) =>
                 captain.mutate(entry.isCaptain ? null : entry.playerId)
               }
@@ -150,6 +158,7 @@ export function MyTeamPage() {
               showEmptySlots={false}
               disabled={locked || move.isPending || captain.isPending || remove.isPending}
               onMove={onMove}
+              onChange={() => setLineupDirty(true)}
               onRemove={setRemoveTarget}
             />
           </div>
@@ -160,7 +169,7 @@ export function MyTeamPage() {
             </div>
             <button
               className="button"
-              disabled={locked || !isComplete || save.isPending}
+              disabled={locked || !isComplete || !hasCaptain || save.isPending}
               onClick={() => save.mutate()}
             >
               {save.isPending ? t("team.checking") : t("team.saveLineup")}

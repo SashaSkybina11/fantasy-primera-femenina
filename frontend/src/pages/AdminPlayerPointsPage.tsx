@@ -6,6 +6,7 @@ import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { api, roleLabel } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
+import type { Gameweek } from "../types";
 
 const empty = {
   started: false,
@@ -35,6 +36,10 @@ export function AdminPlayerPointsPage() {
     }
   }, [selected, gameweekId]);
   const [teamResults, setTeamResults] = useState<Record<string, string>>({});
+  const [users, setUsers] = useState<Array<{ id: string; name: string; email: string }>>([]);
+  const [adjustUserId, setAdjustUserId] = useState("");
+  const [adjustPoints, setAdjustPoints] = useState("");
+  const [adjustReason, setAdjustReason] = useState("");
   const gameweeks = useQuery({
     queryKey: ["admin-gameweeks"],
     queryFn: api.adminGameweeks,
@@ -69,6 +74,17 @@ export function AdminPlayerPointsPage() {
     },
     onError: (error) => toast.error(error.message),
   });
+  const recalculate = useMutation({
+    mutationFn: (id: string) => api.recalculateGameweek(id),
+    onSuccess: () => { toast.success(t("adminStats.recalculated")); void queryClient.invalidateQueries(); },
+    onError: (error) => toast.error(error.message),
+  });
+  const adjustment = useMutation({
+    mutationFn: () => api.adjustUserPoints(gameweekId, adjustUserId, Number(adjustPoints), adjustReason),
+    onSuccess: () => { setAdjustPoints(""); setAdjustReason(""); toast.success(t("adminStats.adjustmentSaved")); void queryClient.invalidateQueries(); },
+    onError: (error) => toast.error(error.message),
+  });
+  useEffect(() => { void api.adminUsers().then(setUsers).catch(() => setUsers([])); }, []);
   const bulk = useMutation({
     mutationFn: () => api.applyTeamResults(gameweekId, Object.entries(teamResults).map(([clubId, result]) => ({ clubId, result }))),
     onSuccess: () => { setTeamResults({}); setSelected(null); toast.success(t("adminStats.saved")); void queryClient.invalidateQueries(); },
@@ -106,6 +122,7 @@ export function AdminPlayerPointsPage() {
             setGameweekId(event.target.value);
             setSelected(null);
             setTeamResults({});
+            setAdjustUserId("");
           }}
         >
           <option value="">{t("adminStats.selectGameweek")}</option>
@@ -158,6 +175,16 @@ export function AdminPlayerPointsPage() {
               {t("adminStats.complete")}
             </button>
           ))}
+        {current && current.status !== "COMPLETED" && <button className="button button--secondary" disabled={recalculate.isPending || !current} onClick={() => recalculate.mutate(current.id)}>{t("adminStats.recalculate")}</button>}
+      </section>
+      <section className="admin-card team-results">
+        <h2>{t("adminStats.manualAdjustment")}</h2>
+        <div className="team-results-grid">
+          <label>{t("adminStats.participant")}<select value={adjustUserId} onChange={e => setAdjustUserId(e.target.value)}><option value="">{t("adminStats.selectParticipant")}</option>{users.map(item => <option key={item.id} value={item.id}>{item.name} · {item.email}</option>)}</select></label>
+          <label>{t("adminStats.adjustment")}<input type="number" min="-100" max="100" step="1" value={adjustPoints} onChange={e => setAdjustPoints(e.target.value)} /></label>
+          <label>{t("adminStats.reason")}<input value={adjustReason} maxLength={500} onChange={e => setAdjustReason(e.target.value)} /></label>
+        </div>
+        <button className="button" disabled={!gameweekId || !adjustUserId || !Number(adjustPoints) || !adjustReason.trim() || adjustment.isPending || current?.status === "COMPLETED"} onClick={() => adjustment.mutate()}>{t("adminStats.addPoints")}</button>
       </section>
       <section className="admin-card team-results">
         <h2>{t("adminStats.teamResults")}</h2>
