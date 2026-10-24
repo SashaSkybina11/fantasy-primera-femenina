@@ -1,6 +1,7 @@
 import type { TranslationKey } from "../contexts/LocaleContext";
 
 export const portuguese: Record<TranslationKey, string> = {
+"adminPlayers.add":"Adicionar nova jogadora","adminPlayers.addHelp":"Preencha os dados e guarde-os diretamente no catálogo.","adminPlayers.namePlaceholder":"Nome completo","adminPlayers.chooseClub":"Selecionar equipa","adminPlayers.requiredHelp":"Nome, número, equipa e preço são obrigatórios.","adminPlayers.create":"Criar jogadora","adminPlayers.created":"{{name}} foi adicionada ao catálogo",
 "adminPlayers.title":"Editar jogadoras","adminPlayers.description":"Atualize os dados das jogadoras. As alterações são guardadas na base de dados e aparecem em toda a aplicação.","adminPlayers.search":"Pesquisar por nome, número ou equipa","adminPlayers.name":"Nome","adminPlayers.club":"Equipa","adminPlayers.position":"Posição geral","adminPlayers.role":"Posição","adminPlayers.age":"Idade","adminPlayers.nationality":"Nacionalidade","adminPlayers.photo":"URL da fotografia","adminPlayers.save":"Guardar alterações","adminPlayers.saved":"Dados da jogadora atualizados","adminPlayers.unsaved":"Alterações por guardar","adminPlayers.empty":"Não foram encontradas jogadoras.",
 "player.goalkeeper":"Guarda-redes","player.cierre":"Fixa","player.ala":"Ala","player.pivot":"Pivô","player.fieldPlayer":"Jogadora de campo","player.market":"Mercado de jogadoras","player.close":"Fechar",
 "language.pt":"Português (Portugal)","language.pt-BR":"Português (Brasil)",

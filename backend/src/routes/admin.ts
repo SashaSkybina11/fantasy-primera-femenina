@@ -35,6 +35,15 @@ router.get("/players", asyncRoute(async (_request, response) => {
   response.json({ players, clubs });
 }));
 
+router.post("/players", asyncRoute(async (request, response) => {
+  const input = adminPlayerSchema.parse(request.body);
+  if (!(await prisma.club.findUnique({ where: { id: input.clubId }, select: { id: true } }))) throw new ApiError(404, "Команда не найдена");
+  const duplicate = await prisma.player.findUnique({ where: { clubId_number_name: { clubId: input.clubId, number: input.number, name: input.name } }, select: { id: true } });
+  if (duplicate) throw new ApiError(409, "Игрок с таким именем и номером уже есть в этой команде");
+  const player = await prisma.player.create({ data: input, include: { club: true } });
+  response.status(201).json(player);
+}));
+
 router.put("/players/:playerId", asyncRoute(async (request, response) => {
   const playerId = z.string().cuid().parse(request.params.playerId);
   const input = adminPlayerSchema.parse(request.body);

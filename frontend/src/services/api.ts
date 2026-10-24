@@ -672,6 +672,8 @@ export const api = {
       >
     >(`/admin/player-points${gameweekId ? `?gameweekId=${gameweekId}` : ""}`),
   adminPlayers: () => request<{ players: import("../types").Player[]; clubs: import("../types").Club[] }>("/admin/players"),
+  createAdminPlayer: (payload: Omit<import("../types").Player, "id" | "displayNumber" | "goals" | "initialPrice" | "club">) =>
+    request<import("../types").Player>("/admin/players", { method: "POST", body: JSON.stringify(payload) }),
   updateAdminPlayer: (playerId: string, payload: Omit<import("../types").Player, "id" | "displayNumber" | "goals" | "initialPrice" | "club">) =>
     request<import("../types").Player>(`/admin/players/${playerId}`, { method: "PUT", body: JSON.stringify(payload) }),
   savePlayerStats: (

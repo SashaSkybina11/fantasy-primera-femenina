@@ -9,6 +9,7 @@ import type { Player } from "../types";
 import { api, formatEuro, roleLabel } from "../services/api";
 
 type EditablePlayer = Omit<Player, "id" | "displayNumber" | "goals" | "initialPrice" | "club">;
+const blankPlayer: EditablePlayer = { name: "", number: 1, position: "FIELD_PLAYER", role: "ALA", price: 3000, age: null, nationality: null, photoUrl: null, clubId: "" };
 
 export function AdminPlayersPage() {
   const { user } = useAuth();
@@ -17,6 +18,7 @@ export function AdminPlayersPage() {
   const [search, setSearch] = useState("");
   const [clubFilter, setClubFilter] = useState("");
   const [drafts, setDrafts] = useState<Record<string, EditablePlayer>>({});
+  const [newPlayer, setNewPlayer] = useState<EditablePlayer>(blankPlayer);
   const query = useQuery({ queryKey: ["admin-players"], queryFn: api.adminPlayers, enabled: user?.role === "ADMIN" });
   const save = useMutation({
     mutationFn: ({ id, value }: { id: string; value: EditablePlayer }) => api.updateAdminPlayer(id, value),
@@ -24,6 +26,15 @@ export function AdminPlayersPage() {
       setDrafts(current => { const next = { ...current }; delete next[updated.id]; return next; });
       await client.invalidateQueries();
       toast.success(t("adminPlayers.saved"));
+    },
+    onError: error => toast.error(error.message),
+  });
+  const create = useMutation({
+    mutationFn: api.createAdminPlayer,
+    onSuccess: async (created) => {
+      setNewPlayer(current => ({ ...current, name: "", number: current.number + 1 }));
+      await client.invalidateQueries();
+      toast.success(t("adminPlayers.created", { name: created.name }));
     },
     onError: error => toast.error(error.message),
   });
@@ -41,6 +52,7 @@ export function AdminPlayersPage() {
   const setField = <K extends keyof EditablePlayer>(player: Player, key: K, value: EditablePlayer[K]) => {
     setDrafts(current => ({ ...current, [player.id]: { ...edit(player), [key]: value } }));
   };
+  const setNewField = <K extends keyof EditablePlayer>(key: K, value: EditablePlayer[K]) => setNewPlayer(current => ({ ...current, [key]: value }));
   const field = (label: string, control: React.ReactNode) => <label className="admin-player-field"><span>{label}</span>{control}</label>;
 
   return <div className="page admin-page admin-players-page">
@@ -49,6 +61,21 @@ export function AdminPlayersPage() {
       <p className="muted">{t("adminPlayers.description")}</p>
       <Link to="/admin">{t("admin.title")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
     </header>
+    <details className="admin-player-create">
+      <summary><span><strong>＋ {t("adminPlayers.add")}</strong><small>{t("adminPlayers.addHelp")}</small></span></summary>
+      <div className="admin-player-fields admin-player-create__fields">
+        {field(t("adminPlayers.name"), <input required maxLength={100} value={newPlayer.name} onChange={event => setNewField("name", event.target.value)} placeholder={t("adminPlayers.namePlaceholder")} />)}
+        {field(t("prices.number"), <input required type="number" min="0" max="999" value={newPlayer.number} onChange={event => setNewField("number", Number(event.target.value))} />)}
+        {field(t("adminPlayers.club"), <select required value={newPlayer.clubId} onChange={event => setNewField("clubId", event.target.value)}><option value="">{t("adminPlayers.chooseClub")}</option>{clubs.map(club => <option value={club.id} key={club.id}>{club.name}</option>)}</select>)}
+        {field(t("adminPlayers.position"), <select value={newPlayer.position} onChange={event => setNewField("position", event.target.value as Player["position"])}><option value="FIELD_PLAYER">{t("prices.field")}</option><option value="GOALKEEPER">{t("prices.goalkeeper")}</option></select>)}
+        {field(t("adminPlayers.role"), <select value={newPlayer.role} onChange={event => setNewField("role", event.target.value as Player["role"])}>{(["PORTERA", "CIERRE", "ALA", "PIVOT"] as const).map(role => <option key={role} value={role}>{roleLabel(role, locale)}</option>)}</select>)}
+        {field(t("adminPlayers.age"), <input type="number" min="0" max="120" value={newPlayer.age ?? ""} onChange={event => setNewField("age", event.target.value === "" ? null : Number(event.target.value))} />)}
+        {field(t("adminPlayers.nationality"), <input maxLength={80} value={newPlayer.nationality ?? ""} onChange={event => setNewField("nationality", event.target.value || null)} />)}
+        {field(t("prices.current"), <input required type="number" min="1" step="10000" value={newPlayer.price} onChange={event => setNewField("price", Number(event.target.value))} />)}
+        {field(t("adminPlayers.photo"), <input maxLength={1000} value={newPlayer.photoUrl ?? ""} onChange={event => setNewField("photoUrl", event.target.value || null)} />)}
+      </div>
+      <footer className="admin-player-editor__footer"><span>{t("adminPlayers.requiredHelp")}</span><button className="button" disabled={create.isPending || !newPlayer.name.trim() || !newPlayer.clubId || newPlayer.price <= 0} onClick={() => create.mutate(newPlayer)}>{create.isPending ? t("team.checking") : t("adminPlayers.create")}</button></footer>
+    </details>
     <section className="admin-toolbar admin-players-toolbar">
       <input value={search} onChange={event => setSearch(event.target.value)} placeholder={t("adminPlayers.search")} aria-label={t("adminPlayers.search")} />
       <select value={clubFilter} onChange={event => setClubFilter(event.target.value)} aria-label={t("adminStats.allClubs")}>

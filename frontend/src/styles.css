@@ -6377,6 +6377,21 @@ summary:focus-visible {
 
 .admin-players-count { color: var(--muted); white-space: nowrap; }
 
+.admin-player-create {
+  margin-bottom: 20px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.admin-player-create > summary { cursor: pointer; list-style-position: inside; }
+.admin-player-create > summary > span { display: inline-grid; gap: 4px; vertical-align: middle; }
+.admin-player-create > summary strong { color: var(--text); }
+.admin-player-create > summary small { color: var(--muted); }
+.admin-player-create[open] > summary { margin-bottom: 18px; }
+.admin-player-create__fields { padding-top: 2px; }
+
 .admin-player-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 430px), 1fr));
