@@ -20,7 +20,7 @@ export function MyTeamPage() {
   const market = useQuery({ queryKey: ["transfer-status"], queryFn: api.transferStatus, refetchInterval: 15000 });
   const locked = user?.role !== "ADMIN" && market.data?.marketIsOpen !== true;
   const queryClient = useQueryClient();
-  const [addPosition, setAddPosition] = useState<"GOALKEEPER" | "FIELD_PLAYER" | null>(null);
+  const [addTarget, setAddTarget] = useState<{ position: "GOALKEEPER" | "FIELD_PLAYER"; fieldSlot?: number } | null>(null);
   const [removeTarget, setRemoveTarget] = useState<SquadEntry | null>(null);
   const [lineupDirty, setLineupDirty] = useState(false);
   const [lineupSaveError, setLineupSaveError] = useState(false);
@@ -33,13 +33,15 @@ export function MyTeamPage() {
     mutationFn: ({
       playerId,
       status,
+      fieldSlot,
     }: {
       playerId: string;
       status: "STARTER" | "BENCH";
-    }) => api.setStatus(playerId, status),
+      fieldSlot?: number;
+    }) => api.setStatus(playerId, status, fieldSlot),
     onSuccess: async () => {
       await refresh();
-      setAddPosition(null);
+      setAddTarget(null);
       toast.success(t("team.updated"));
     },
     onError: (error) => toast.error(error.message),
@@ -89,7 +91,7 @@ export function MyTeamPage() {
   const team = teamQuery.data;
   const starters = team.players.filter((entry) => entry.status === "STARTER");
   const bench = team.players.filter((entry) => entry.status === "BENCH");
-  const onMove = (entry: SquadEntry) => {
+  const onMove = (entry: SquadEntry, fieldSlot?: number) => {
     if (entry.status === "BENCH" && starters.filter(item => item.player.position === entry.player.position).length >= (entry.player.position === "GOALKEEPER" ? 1 : 4)) {
       toast.error(t("squad.positionFull"));
       return;
@@ -97,6 +99,7 @@ export function MyTeamPage() {
     move.mutate({
       playerId: entry.playerId,
       status: entry.status === "STARTER" ? "BENCH" : "STARTER",
+      fieldSlot,
     });
   };
   const isComplete = team.players.length === 10;
@@ -156,7 +159,7 @@ export function MyTeamPage() {
               status="STARTER"
               players={starters}
               showEmptySlots
-              onAdd={setAddPosition}
+              onAdd={(position, fieldSlot) => setAddTarget({ position, fieldSlot })}
               disabled={locked || move.isPending || captain.isPending || remove.isPending}
               onMove={onMove}
               onChange={() => setLineupDirty(true)}
@@ -191,13 +194,13 @@ export function MyTeamPage() {
             </button>
           </div>
         </>
-      {addPosition && <Modal title={t(addPosition === "GOALKEEPER" ? "squad.addGoalkeeper" : "squad.addFieldPlayer")} onClose={() => setAddPosition(null)} className="squad-detail-modal">
+      {addTarget && <Modal title={t(addTarget.position === "GOALKEEPER" ? "squad.addGoalkeeper" : "squad.addFieldPlayer")} onClose={() => setAddTarget(null)} className="squad-detail-modal">
         <div className="squad-picker">
-          {bench.filter(entry => entry.player.position === addPosition).map(entry => <button key={entry.id} className="squad-picker__player" disabled={locked || move.isPending || captain.isPending || remove.isPending} onClick={() => onMove(entry)}>
+          {bench.filter(entry => entry.player.position === addTarget.position).map(entry => <button key={entry.id} className="squad-picker__player" disabled={locked || move.isPending || captain.isPending || remove.isPending} onClick={() => onMove(entry, addTarget.fieldSlot)}>
             <span className="jersey-number">#{entry.player.displayNumber ?? entry.player.number}</span>
             <span><strong>{entry.player.name}</strong><span className="squad-detail-club"><ClubLogo club={entry.player.club} />{entry.player.club.name}</span></span>
           </button>)}
-          {!bench.some(entry => entry.player.position === addPosition) && <p>{t("squad.noBenchPlayers")}</p>}
+          {!bench.some(entry => entry.player.position === addTarget.position) && <p>{t("squad.noBenchPlayers")}</p>}
         </div>
       </Modal>}
       {removeTarget && (

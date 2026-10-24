@@ -403,6 +403,7 @@ model FantasyTeamPlayer {
   playerId      String
   status        SquadStatus @default(BENCH)
   isCaptain     Boolean     @default(false)
+  fieldSlot     Int?
   fantasyTeam   FantasyTeam @relation(fields: [fantasyTeamId], references: [id], onDelete: Cascade)
   player        Player      @relation(fields: [playerId], references: [id], onDelete: Cascade)
   createdAt     DateTime    @default(now())

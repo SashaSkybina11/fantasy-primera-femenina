@@ -32,6 +32,7 @@ export type SquadEntry = {
   purchasePrice?: number | null;
   playerId: string;
   status: SquadStatus;
+  fieldSlot?: number | null;
   isCaptain: boolean;
   player: Player & { club: Club };
 };

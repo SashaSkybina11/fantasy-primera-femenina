@@ -26,7 +26,7 @@ export function SquadSection({
   onMove?: (entry: SquadEntry) => void;
   onCaptain?: (entry: SquadEntry) => void;
   onChange?: () => void;
-  onAdd?: (position: "GOALKEEPER" | "FIELD_PLAYER") => void;
+  onAdd?: (position: "GOALKEEPER" | "FIELD_PLAYER", fieldSlot?: number) => void;
   onRemove?: (entry: SquadEntry) => void;
 }) {
   const { t } = useLocale();
@@ -38,6 +38,13 @@ export function SquadSection({
   const fieldPlayers = players.filter(
     (entry) => entry.player.position !== "GOALKEEPER",
   );
+  const positionedFieldPlayers: Array<SquadEntry | undefined> = Array.from({ length: 4 });
+  const unassignedFieldPlayers = fieldPlayers.filter(entry => entry.fieldSlot == null || entry.fieldSlot < 0 || entry.fieldSlot > 3);
+  fieldPlayers.filter(entry => entry.fieldSlot != null && entry.fieldSlot >= 0 && entry.fieldSlot < 4)
+    .forEach(entry => { positionedFieldPlayers[entry.fieldSlot!] = entry; });
+  for (let index = 0; index < positionedFieldPlayers.length; index += 1) {
+    if (!positionedFieldPlayers[index]) positionedFieldPlayers[index] = unassignedFieldPlayers.shift();
+  }
 
   const renderPlayer = (entry: SquadEntry) => (
     <SquadPlayerCard
@@ -78,22 +85,15 @@ export function SquadSection({
           </div>
 
           <div className="squad-field__players">
-            {fieldPlayers.map(renderPlayer)}
-
-            {showEmptySlots &&
-              Array.from({
-                length: Math.max(0, 4 - fieldPlayers.length),
-              }).map((_, index) => (
-                <button
-                  disabled={disabled || !onAdd}
-                  aria-label={t("squad.addFieldPlayer")}
-                  onClick={() => onAdd?.("FIELD_PLAYER")}
-                  className="squad-slot squad-slot--field"
-                  key={`field-slot-${index}`}
-                >
-                  +
-                </button>
-              ))}
+            {showEmptySlots
+              ? positionedFieldPlayers.map((entry, index) => entry ? renderPlayer(entry) : <button
+                    disabled={disabled || !onAdd}
+                    aria-label={t("squad.addFieldPlayer")}
+                    onClick={() => onAdd?.("FIELD_PLAYER", index)}
+                    className="squad-slot squad-slot--field"
+                    key={`field-slot-${index}`}
+                  >+</button>)
+              : fieldPlayers.map(renderPlayer)}
           </div>
         </div>
       ) : (

@@ -13,7 +13,7 @@ import { marketIsOpen } from "../services/market-schedule.js";
 const router = Router();
 const playerIdSchema = z.object({ playerId: z.string().cuid() });
 const captainSchema = z.object({ playerId: z.string().cuid().nullable() });
-const statusSchema = z.object({ status: z.nativeEnum(SquadStatus) });
+const statusSchema = z.object({ status: z.nativeEnum(SquadStatus), fieldSlot: z.number().int().min(0).max(3).optional() });
 const lineupSchema = z.object({
   players: z.array(z.object({ playerId: z.string().cuid(), status: z.nativeEnum(SquadStatus) })).length(10),
 });
@@ -110,7 +110,7 @@ router.delete("/players/:playerId", asyncRoute(async (request, response) => {
 router.patch("/players/:playerId", asyncRoute(async (request, response) => {
   await requireOpenMarket(true, request.auth!.userId);
   const playerId = z.string().cuid().parse(request.params.playerId);
-  const { status } = statusSchema.parse(request.body);
+  const { status, fieldSlot } = statusSchema.parse(request.body);
   const team = await inTransaction(async (tx) => {
     await assertOpenMarket(tx, request.method === "PATCH", new Date(), request.auth!.userId);
     const current = await tx.fantasyTeam.findUnique({
@@ -131,9 +131,15 @@ router.patch("/players/:playerId", asyncRoute(async (request, response) => {
           : "В основном составе должны быть четыре полевых игрока");
       }
     }
+    let assignedFieldSlot: number | null = null;
+    if (status === SquadStatus.STARTER && entry.player.position === PlayerPosition.FIELD_PLAYER) {
+      const occupied = current.players.filter(item => item.status === SquadStatus.STARTER && item.player.position === PlayerPosition.FIELD_PLAYER && item.playerId !== playerId);
+      assignedFieldSlot = fieldSlot ?? entry.fieldSlot ?? [0, 1, 2, 3].find(slot => !occupied.some(item => item.fieldSlot === slot)) ?? 0;
+      if (occupied.some(item => item.fieldSlot === assignedFieldSlot)) throw new ApiError(409, "Ячейка уже занята");
+    }
     await tx.fantasyTeamPlayer.update({
       where: { id: entry.id },
-      data: { status, ...(status === SquadStatus.BENCH && entry.isCaptain ? { isCaptain: false } : {}) },
+      data: { status, fieldSlot: status === SquadStatus.STARTER ? assignedFieldSlot : null, ...(status === SquadStatus.BENCH && entry.isCaptain ? { isCaptain: false } : {}) },
     });
     return tx.fantasyTeam.findUniqueOrThrow({ where: { id: current.id }, include: teamInclude });
   });

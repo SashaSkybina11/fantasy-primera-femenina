@@ -607,10 +607,10 @@ export const api = {
     }),
   removePlayer: (playerId: string) =>
     request<FantasyTeam>(`/my-team/players/${playerId}`, { method: "DELETE" }),
-  setStatus: (playerId: string, status: SquadStatus) =>
+  setStatus: (playerId: string, status: SquadStatus, fieldSlot?: number) =>
     request<FantasyTeam>(`/my-team/players/${playerId}`, {
       method: "PATCH",
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status, ...(fieldSlot == null ? {} : { fieldSlot }) }),
     }),
   saveLineup: (players: Array<{ playerId: string; status: SquadStatus }>) =>
     request<FantasyTeam>("/my-team/lineup", {
