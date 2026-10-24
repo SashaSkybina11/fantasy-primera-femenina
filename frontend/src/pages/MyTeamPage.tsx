@@ -1,6 +1,6 @@
 import { RxCross1 } from "react-icons/rx";
 import { Loader } from "../components/Loader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -23,8 +23,9 @@ export function MyTeamPage() {
   const [addPosition, setAddPosition] = useState<"GOALKEEPER" | "FIELD_PLAYER" | null>(null);
   const [removeTarget, setRemoveTarget] = useState<SquadEntry | null>(null);
   const [lineupDirty, setLineupDirty] = useState(false);
+  const [lineupSaveError, setLineupSaveError] = useState(false);
   const refresh = () =>
-    void Promise.all([
+    Promise.all([
       queryClient.invalidateQueries({ queryKey: ["team"] }),
       queryClient.invalidateQueries({ queryKey: ["transfer-status"] }),
     ]);
@@ -36,8 +37,8 @@ export function MyTeamPage() {
       playerId: string;
       status: "STARTER" | "BENCH";
     }) => api.setStatus(playerId, status),
-    onSuccess: () => {
-      refresh();
+    onSuccess: async () => {
+      await refresh();
       setAddPosition(null);
       toast.success(t("team.updated"));
     },
@@ -45,8 +46,8 @@ export function MyTeamPage() {
   });
   const captain = useMutation({
     mutationFn: api.setCaptain,
-    onSuccess: () => {
-      refresh();
+    onSuccess: async () => {
+      await refresh();
       toast.success(t("team.captainSet"));
     },
     onError: (error) => toast.error(error.message),
@@ -56,7 +57,7 @@ export function MyTeamPage() {
     onSuccess: () => {
       setRemoveTarget(null);
       void queryClient.invalidateQueries({ queryKey: ["popular-player"] });
-      refresh();
+      void refresh();
       toast.success(t("team.playerRemoved"));
     },
     onError: (error) => toast.error(error.message),
@@ -71,10 +72,13 @@ export function MyTeamPage() {
       ),
     onSuccess: () => {
       setLineupDirty(false);
+      setLineupSaveError(false);
       refresh();
-      toast.success(t("team.lineupSaved"));
     },
-    onError: (error) => toast.error(error.message),
+    onError: (error) => {
+      setLineupSaveError(true);
+      toast.error(error.message);
+    },
   });
   if (teamQuery.isLoading)
     return <div className="state-card"><Loader label={t("loading.team")} /></div>;
@@ -97,6 +101,16 @@ export function MyTeamPage() {
   };
   const isComplete = team.players.length === 10;
   const hasCaptain = team.players.some((entry) => entry.isCaptain && entry.status === "STARTER");
+  const hasValidShape = starters.length === 5
+    && starters.filter((entry) => entry.player.position === "GOALKEEPER").length === 1
+    && starters.filter((entry) => entry.player.position !== "GOALKEEPER").length === 4
+    && team.players.filter((entry) => entry.player.position === "GOALKEEPER").length === 2
+    && team.players.filter((entry) => entry.player.position !== "GOALKEEPER").length === 8;
+
+  useEffect(() => {
+    if (!lineupDirty || !isComplete || !hasValidShape || !hasCaptain || locked || move.isPending || captain.isPending || save.isPending) return;
+    save.mutate();
+  }, [lineupDirty, isComplete, hasValidShape, hasCaptain, locked, move.isPending, captain.isPending, save.isPending, team.players]);
 
   return (
     <div className="page">
@@ -109,9 +123,10 @@ export function MyTeamPage() {
         <BudgetDisplay budget={team.budget} count={team.players.length} />
       </header>
       {locked && <p className="state-card">{t("team.marketLocked")}</p>}
-      {(!hasCaptain || lineupDirty) && <div className="state-card state-card--error" role="status" aria-live="polite">
+      {(!hasCaptain || lineupDirty || lineupSaveError) && <div className="state-card state-card--error" role="status" aria-live="polite">
         {!hasCaptain && <p>{t("team.captainWarning")}</p>}
         {lineupDirty && <p>{t("team.unsavedWarning")}</p>}
+        {lineupSaveError && <p>{t("team.unsavedWarning")}</p>}
       </div>}
       <div className="team-toolbar">
         <div>
@@ -169,7 +184,7 @@ export function MyTeamPage() {
             </div>
             <button
               className="button"
-              disabled={locked || !isComplete || !hasCaptain || save.isPending}
+              disabled={locked || !isComplete || !hasCaptain || !hasValidShape || save.isPending || !lineupDirty}
               onClick={() => save.mutate()}
             >
               {save.isPending ? t("team.checking") : t("team.saveLineup")}

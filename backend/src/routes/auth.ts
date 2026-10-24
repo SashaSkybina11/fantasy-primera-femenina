@@ -23,7 +23,7 @@ function publicUser(user: { id: string; email: string; name: string; role: "USER
 }
 
 function issueToken(userId: string, sessionVersion: number) {
-  return jwt.sign({ sessionVersion }, env.jwtSecret, { subject: userId, expiresIn: "30d" });
+  return jwt.sign({ sessionVersion }, env.jwtSecret, { subject: userId, expiresIn: "365d" });
 }
 
 router.post("/register", asyncRoute(async (request, response) => {
