@@ -1,4 +1,4 @@
-import { AdminActionType, GameweekStatus, MatchResult } from "@prisma/client";
+import { AdminActionType, GameweekStatus, MatchResult, PlayerPosition, PlayerRole } from "@prisma/client";
 import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
@@ -14,6 +14,34 @@ import { applyPlayerPrices, previewPlayerPrices } from "../services/player-price
 const router = Router();
 
 router.use(authenticate, requireAdmin);
+
+const adminPlayerSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  number: z.number().int().min(0).max(999),
+  position: z.nativeEnum(PlayerPosition),
+  role: z.nativeEnum(PlayerRole),
+  price: z.number().int().positive(),
+  age: z.number().int().min(0).max(120).nullable(),
+  nationality: z.string().trim().max(80).nullable(),
+  photoUrl: z.string().trim().max(1000).nullable(),
+  clubId: z.string().cuid(),
+});
+
+router.get("/players", asyncRoute(async (_request, response) => {
+  const [players, clubs] = await Promise.all([
+    prisma.player.findMany({ include: { club: true }, orderBy: [{ club: { name: "asc" } }, { name: "asc" }] }),
+    prisma.club.findMany({ orderBy: { name: "asc" } }),
+  ]);
+  response.json({ players, clubs });
+}));
+
+router.put("/players/:playerId", asyncRoute(async (request, response) => {
+  const playerId = z.string().cuid().parse(request.params.playerId);
+  const input = adminPlayerSchema.parse(request.body);
+  if (!(await prisma.club.findUnique({ where: { id: input.clubId }, select: { id: true } }))) throw new ApiError(404, "Команда не найдена");
+  const player = await prisma.player.update({ where: { id: playerId }, data: input, include: { club: true } });
+  response.json(player);
+}));
 
 router.get("/current-gameweek", asyncRoute(async (_request, response) => {
   await synchronizeGameweeks();

@@ -98,6 +98,11 @@ function NavLinks({
             label: t("prices.title"),
             icon: "admin" as const,
           },
+          {
+            to: "/admin/players",
+            label: t("adminPlayers.title"),
+            icon: "admin" as const,
+          },
         ]
       : []),
   ];

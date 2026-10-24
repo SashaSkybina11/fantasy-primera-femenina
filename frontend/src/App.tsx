@@ -20,6 +20,7 @@ import { TeamsPage } from "./pages/TeamsPage";
 import { AdminPlayerPricesPage } from "./pages/AdminPlayerPricesPage";
 import { AdminPage } from "./pages/AdminPage";
 import { AdminPlayerPointsPage } from "./pages/AdminPlayerPointsPage";
+import { AdminPlayersPage } from "./pages/AdminPlayersPage";
 import { Loader } from "./components/Loader";
 import { LeaderboardPage } from "./pages/LeaderboardPage";
 import { RulesPage } from "./pages/RulesPage";
@@ -49,6 +50,7 @@ export function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin/player-prices" element={<AdminPlayerPricesPage />} />
+        <Route path="/admin/players" element={<AdminPlayersPage />} />
         <Route path="/admin/friend-leagues" element={<AdminFriendLeaguesPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/users" element={<AdminPage />} />
