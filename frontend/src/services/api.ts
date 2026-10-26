@@ -542,7 +542,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   return data as T;
 }
 
-export type PublicLineup = { user: { id: string; name: string }; players: Array<import("../types").SquadEntry & { points: number }> };
+export type PublicLineup = { user: { id: string; name: string }; gameweek: { id: string; number: number } | null; players: Array<import("../types").SquadEntry & { points: number }> };
 export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
   adminCurrentGameweek: () => request<{ gameweekId: string | null }>("/admin/current-gameweek"),

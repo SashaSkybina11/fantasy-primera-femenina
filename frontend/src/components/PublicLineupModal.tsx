@@ -10,7 +10,7 @@ export function PublicLineupModal({ userId, name, onClose }: { userId: string; n
   const { t } = useLocale();
   const lineup = useQuery({ queryKey: ["public-lineup", userId], queryFn: () => api.publicLineup(userId), gcTime: 0 });
   return <Modal title={lineup.data?.user.name ?? name} onClose={onClose} className="lineup-modal">
-    <p className="eyebrow">{t("lineup.title")}</p>
+    <p className="eyebrow">{lineup.data?.gameweek ? t("gameweek.label", { number: lineup.data.gameweek.number }) : t("lineup.title")}</p>
     {lineup.isPending ? <div className="modal-loading" role="status"><Loader label={t("loading.team")} /></div>
       : lineup.isError ? <div role="alert" className="state-card state-card--error">{t("lineup.error")} <button className="button button--secondary" onClick={() => void lineup.refetch()}>{t("friends.retry")}</button></div>
       : !lineup.data.players.length ? <p className="state-card">{t("lineup.empty")}</p>

@@ -59,9 +59,12 @@ export function calculatePlayerPoints(input: {
     + input.redCards * scoringRules.redCard;
 }
 
-export async function snapshotGameweek(tx: Db, gameweekId: string) {
+export async function snapshotGameweek(tx: Db, gameweekId: string, refreshExisting = false) {
   const gameweek = await tx.gameweek.findUniqueOrThrow({ where: { id: gameweekId } });
-  const teams = await tx.fantasyTeam.findMany({ where: { createdAt: { lte: gameweek.deadlineAt }, players: { every: { createdAt: { lte: gameweek.deadlineAt } } } }, include: { user: true, players: { include: { player: true } } } });
+  // Include every valid team when sealing/recalculating a round. A user may
+  // have registered after the first match was published, so their team would
+  // not have been in that initial snapshot.
+  const teams = await tx.fantasyTeam.findMany({ include: { user: true, players: { include: { player: true } } } });
   for (const team of teams) {
     const starters = team.players.filter((item) => item.status === SquadStatus.STARTER);
     const valid = team.players.length === 10 && starters.length === 5
@@ -71,7 +74,15 @@ export async function snapshotGameweek(tx: Db, gameweekId: string) {
       && starters.filter((item) => item.isCaptain).length === 1;
     if (!valid) continue;
     const snapshot = await tx.userGameweekSquad.findUnique({ where: { gameweekId_userId: { gameweekId, userId: team.userId } }, include: { players: true } });
-    if (snapshot) continue;
+    if (snapshot && !refreshExisting) continue;
+    if (snapshot && refreshExisting) {
+      await tx.userGameweekPlayer.deleteMany({ where: { squadId: snapshot.id } });
+      await tx.userGameweekSquad.update({ where: { id: snapshot.id }, data: {
+        fantasyTeamName: team.name,
+        players: { create: team.players.map((item) => ({ playerId: item.playerId, status: item.status, isCaptain: item.isCaptain })) },
+      } });
+      continue;
+    }
     await tx.userGameweekSquad.upsert({
       where: { gameweekId_userId: { gameweekId, userId: team.userId } },
       update: {},

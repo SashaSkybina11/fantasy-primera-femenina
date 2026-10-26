@@ -74,6 +74,10 @@ router.patch("/market", asyncRoute(async (request, response) => {
     const current = await currentGameweek(tx, now);
     if (!current || current.id !== input.gameweekId) throw new ApiError(409, "MARKET_STALE");
     if (input.mode === "OPEN" && ["CALCULATING", "COMPLETED"].includes(current.status)) throw new ApiError(409, "MARKET_FINALIZED");
+    // Capture eligible squads at the actual admin-controlled market close.
+    // The scheduled deadline may have passed while the admin temporarily
+    // reopened the market for late weekend purchases.
+    if (input.mode === "CLOSED") await snapshotGameweek(tx, current.id, true);
     const updated = await tx.gameweek.update({ where: { id: current.id }, data: { marketOverride: input.mode === "AUTO" ? null : input.mode === "OPEN" } });
     await audit(tx, request.auth!.userId, AdminActionType.MARKET_UPDATED, "Gameweek", current.id, { marketOverride: current.marketOverride }, { marketOverride: updated.marketOverride });
     return { ...updated, marketIsOpen: marketIsOpen(updated, now) };
