@@ -215,10 +215,6 @@ async function drawPoster(
   wood.addColorStop(1, "#d3a448");
   ctx.fillStyle = wood;
   ctx.fillRect(court.x, court.y, court.w, court.h);
-  for (let i = 0; i < 10; i += 1) {
-    ctx.fillStyle = i % 2 ? "rgba(255,255,255,.035)" : "rgba(2,16,38,.035)";
-    ctx.fillRect(court.x + i * 106, court.y, 53, court.h);
-  }
   ctx.strokeStyle = "rgba(255,255,255,.78)";
   ctx.lineWidth = 5;
   ctx.strokeRect(court.x + 28, court.y + 28, court.w - 56, court.h - 56);
@@ -229,12 +225,17 @@ async function drawPoster(
   ctx.beginPath();
   ctx.arc(540, court.y + court.h / 2, 112, 0, Math.PI * 2);
   ctx.stroke();
+  ctx.save();
   ctx.beginPath();
-  ctx.arc(540, court.y + 5, 158, 0, Math.PI);
+  ctx.rect(court.x + 28, court.y + 28, court.w - 56, court.h - 56);
+  ctx.clip();
+  ctx.beginPath();
+  ctx.arc(540, court.y + 28, 130, 0, Math.PI);
   ctx.stroke();
   ctx.beginPath();
-  ctx.arc(540, court.y + court.h - 5, 158, Math.PI, Math.PI * 2);
+  ctx.arc(540, court.y + court.h - 28, 130, Math.PI, Math.PI * 2);
   ctx.stroke();
+  ctx.restore();
   ctx.restore();
 
   const locations = [
