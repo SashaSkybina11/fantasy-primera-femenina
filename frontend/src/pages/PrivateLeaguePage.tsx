@@ -51,7 +51,6 @@ export function PrivateLeaguePage() {
         <p className="eyebrow">{t("friends.title")}</p>
         <Avatar name={league.data.name} src={league.data.logoUrl} size="lg" />
         <h1>{league.data.name}</h1>
-        <p>{t("friends.start", { number: league.data.startGameweek })}</p>
         <p className="muted">{t("friends.limits")}</p>
         <p>
           {t("friends.inviteCode")}: <strong>{league.data.inviteCode}</strong>

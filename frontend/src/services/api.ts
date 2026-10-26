@@ -548,6 +548,7 @@ export const api = {
   adminCurrentGameweek: () => request<{ gameweekId: string | null }>("/admin/current-gameweek"),
   setCurrentGameweek: (gameweekId: string | null) => request<{ gameweekId: string | null }>("/admin/current-gameweek", { method: "PATCH", body: JSON.stringify({ gameweekId }) }),
   setMarket: (input: { gameweekId: string; mode: "AUTO" | "OPEN" | "CLOSED" }) => request<Gameweek>("/admin/market", { method: "PATCH", body: JSON.stringify(input) }),
+  updateMarketSchedule: (gameweekId: string, input: { marketOpenAt: string; deadlineAt: string }) => request<Gameweek>(`/admin/gameweeks/${gameweekId}/market-schedule`, { method: "PATCH", body: JSON.stringify(input) }),
   scorers: () => request<Array<{ id: string; name: string; club: Club; goals: number }>>("/scorers"),
   deleteMatch: (id: string) => request<{ ok: boolean }>(`/matches/${id}`, { method: "DELETE" }),
   matchWeeks: () => request<Gameweek[]>("/matches/weeks"),

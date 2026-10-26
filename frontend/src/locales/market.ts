@@ -8,6 +8,8 @@ export const marketSpanish = {
   "market.manualOpen": "Abierto manualmente", "market.manualClosed": "Cerrado manualmente", "market.automatic": "Horario automático",
   "market.saved": "Estado del mercado actualizado", "market.finalized": "No se puede abrir el mercado de una jornada en cálculo o finalizada.",
   "market.stale": "La jornada ha cambiado. Actualiza la página.",
+  "market.scheduleTitle": "Horario del mercado para esta jornada", "market.scheduleHelp": "El horario guardado vuelve a activar la apertura y el cierre automáticos.",
+  "market.opensAt": "Abrir desde", "market.closesAt": "Cerrar el", "market.saveSchedule": "Guardar horario", "market.savingSchedule": "Guardando…", "market.scheduleSaved": "Horario guardado; la apertura y el cierre serán automáticos",
 };
 export const marketUkrainian: Record<keyof typeof marketSpanish, string> = {
   "language.pt": "Португальська (Португалія)", "language.pt-BR": "Португальська (Бразилія)",
@@ -19,6 +21,8 @@ export const marketUkrainian: Record<keyof typeof marketSpanish, string> = {
   "market.manualOpen": "Відкрито вручну", "market.manualClosed": "Закрито вручну", "market.automatic": "Автоматичний розклад",
   "market.saved": "Стан ринку оновлено", "market.finalized": "Не можна відкрити ринок для туру, який розраховується або завершений.",
   "market.stale": "Тур змінився. Оновіть сторінку.",
+  "market.scheduleTitle": "Розклад ринку для цього туру", "market.scheduleHelp": "Збереження розкладу знову вмикає автоматичне відкриття та закриття.",
+  "market.opensAt": "Відкрити з", "market.closesAt": "Закрити о", "market.saveSchedule": "Зберегти розклад", "market.savingSchedule": "Збереження…", "market.scheduleSaved": "Розклад збережено; ринок відкриватиметься та закриватиметься автоматично",
 };
 export const marketEnglish: Record<keyof typeof marketSpanish, string> = {
   "language.pt": "Portuguese (Portugal)", "language.pt-BR": "Portuguese (Brazil)",
@@ -30,4 +34,6 @@ export const marketEnglish: Record<keyof typeof marketSpanish, string> = {
   "market.manualOpen": "Manually opened", "market.manualClosed": "Manually closed", "market.automatic": "Automatic schedule",
   "market.saved": "Market status updated", "market.finalized": "The market cannot open for a calculating or completed gameweek.",
   "market.stale": "The gameweek has changed. Refresh the page.",
+  "market.scheduleTitle": "Market schedule for this gameweek", "market.scheduleHelp": "Saving the schedule restores automatic opening and closing.",
+  "market.opensAt": "Open from", "market.closesAt": "Close at", "market.saveSchedule": "Save schedule", "market.savingSchedule": "Saving…", "market.scheduleSaved": "Schedule saved; the market will open and close automatically",
 };

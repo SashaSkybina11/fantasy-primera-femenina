@@ -35,8 +35,8 @@ export async function ensureSeasonGameweeks() {
       const monday = firstMonday + (number - 1) * 7 * 24 * 60 * 60 * 1000;
       const { marketOpenAt, deadlineAt, endsAt } = marketDatesForWeek(new Date(monday));
       const existing = await tx.gameweek.findUnique({ where: { number } });
-      if (existing && ["LOCKED", "CALCULATING", "COMPLETED"].includes(existing.status)) continue;
-      if (existing && existing.marketOpenAt.getTime() === marketOpenAt.getTime() && existing.deadlineAt.getTime() === deadlineAt.getTime()) continue;
+      // Existing dates may have been set by an admin for this gameweek.
+      if (existing) continue;
       await tx.gameweek.upsert({
         where: { number },
         update: { marketOpenAt, deadlineAt },

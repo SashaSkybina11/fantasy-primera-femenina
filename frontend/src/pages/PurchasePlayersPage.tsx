@@ -1,7 +1,7 @@
 import { Loader } from "../components/Loader";
 import { ClubLogo } from "../components/ClubLogo";
 import { Modal } from "../components/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { BudgetDisplay } from "../components/BudgetDisplay";
@@ -14,6 +14,25 @@ import { useLocale } from "../contexts/LocaleContext";
 import { useAuth } from "../contexts/AuthContext";
 import { api, formatEuro, nationalityLabel, roleLabel } from "../services/api";
 
+const madridDateTime = (value: string) => {
+  const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(value));
+  const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}T${values.hour}:${values.minute}`;
+};
+
+const madridDateTimeIso = (value: string) => {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(value);
+  if (!match) throw new Error("Enter a valid date and time");
+  const [, year, month, day, hour, minute] = match;
+  const target = Date.UTC(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
+  let instant = target;
+  for (let pass = 0; pass < 3; pass += 1) {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(new Date(instant)).map(part => [part.type, part.value]));
+    instant += target - Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day), Number(parts.hour), Number(parts.minute));
+  }
+  return new Date(instant).toISOString();
+};
+
 export function PurchasePlayersPage() {
   const { user } = useAuth();
   const { locale, t } = useLocale();
@@ -25,6 +44,8 @@ export function PurchasePlayersPage() {
     priceSort: "",
   });
   const [squadOpen, setSquadOpen] = useState(false);
+  const [marketOpenAt, setMarketOpenAt] = useState("");
+  const [marketCloseAt, setMarketCloseAt] = useState("");
   const queryClient = useQueryClient();
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
   const popularity = useQuery({
@@ -69,6 +90,23 @@ export function PurchasePlayersPage() {
     },
     onError: (error) => toast.error(error.message),
   });
+  const updateSchedule = useMutation({
+    mutationFn: () => api.updateMarketSchedule(gameweek.data!.id, { marketOpenAt: madridDateTimeIso(marketOpenAt), deadlineAt: madridDateTimeIso(marketCloseAt) }),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(["current-gameweek"], updated);
+      void queryClient.invalidateQueries({ queryKey: ["current-gameweek"] });
+      void queryClient.invalidateQueries({ queryKey: ["transfer-status"] });
+      void queryClient.invalidateQueries({ queryKey: ["admin-gameweeks"] });
+      toast.success(t("market.scheduleSaved"));
+    },
+    onError: (error) => toast.error(error.message),
+  });
+
+  useEffect(() => {
+    if (!gameweek.data) return;
+    setMarketOpenAt(madridDateTime(gameweek.data.marketOpenAt));
+    setMarketCloseAt(madridDateTime(gameweek.data.deadlineAt));
+  }, [gameweek.data?.id, gameweek.data?.marketOpenAt, gameweek.data?.deadlineAt]);
 
   const nationalities = [...new Set((players.data ?? []).flatMap((player) => player.nationality ? [player.nationality.toUpperCase()] : []))]
     .sort((a, b) => (nationalityLabel(a, locale) ?? a).localeCompare(nationalityLabel(b, locale) ?? b, locale));
@@ -177,6 +215,14 @@ export function PurchasePlayersPage() {
             {t(mode === "OPEN" ? "market.open" : mode === "CLOSED" ? "market.close" : "market.auto")}
           </button>)}
         </div>
+        <form className="market-schedule-form" onSubmit={(event) => { event.preventDefault(); updateSchedule.mutate(); }}>
+          <h3>{t("market.scheduleTitle")}</h3>
+          <p>{t("market.scheduleHelp")}</p>
+          <label>{t("market.opensAt")}<input type="datetime-local" value={marketOpenAt} onChange={event => setMarketOpenAt(event.target.value)} required /></label>
+          <label>{t("market.closesAt")}<input type="datetime-local" value={marketCloseAt} onChange={event => setMarketCloseAt(event.target.value)} required /></label>
+          <small>{t("purchase.timezoneLabel")}: Europe/Madrid</small>
+          <button className="button" type="submit" disabled={updateSchedule.isPending || !marketOpenAt || !marketCloseAt || marketOpenAt >= marketCloseAt}>{updateSchedule.isPending ? t("market.savingSchedule") : t("market.saveSchedule")}</button>
+        </form>
       </section>}
       <aside className="price-change-notice">
         {t("purchase.dynamicPriceNotice")}

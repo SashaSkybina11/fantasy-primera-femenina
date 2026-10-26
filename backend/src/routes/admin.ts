@@ -85,6 +85,24 @@ router.patch("/market", asyncRoute(async (request, response) => {
   response.json(result);
 }));
 
+router.patch("/gameweeks/:id/market-schedule", asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  const input = z.object({ marketOpenAt: z.coerce.date(), deadlineAt: z.coerce.date() }).parse(request.body);
+  if (input.marketOpenAt >= input.deadlineAt) throw new ApiError(400, "Некорректный диапазон дат рынка");
+  const result = await inTransaction(async tx => {
+    const gameweek = await tx.gameweek.findUnique({ where: { id } });
+    if (!gameweek) throw new ApiError(404, "Тур не найден");
+    if (gameweek.status === GameweekStatus.CALCULATING || gameweek.status === GameweekStatus.COMPLETED) throw new ApiError(409, "Нельзя изменить расписание завершённого тура");
+    const saved = await tx.gameweek.update({ where: { id }, data: { marketOpenAt: input.marketOpenAt, deadlineAt: input.deadlineAt, endsAt: input.deadlineAt > gameweek.endsAt ? input.deadlineAt : gameweek.endsAt, marketOverride: null } });
+    await audit(tx, request.auth!.userId, AdminActionType.MARKET_UPDATED, "Gameweek", id,
+      { marketOpenAt: gameweek.marketOpenAt, deadlineAt: gameweek.deadlineAt, marketOverride: gameweek.marketOverride },
+      { marketOpenAt: saved.marketOpenAt, deadlineAt: saved.deadlineAt, marketOverride: saved.marketOverride });
+    const now = new Date();
+    return { ...saved, marketIsOpen: marketIsOpen(saved, now) };
+  });
+  response.json(result);
+}));
+
 router.get("/friend-leagues", asyncRoute(async (_request, response) => {
   response.json(await prisma.privateLeague.findMany({ orderBy: { createdAt: "desc" }, select: {
     id: true, name: true, inviteCode: true, createdAt: true,
