@@ -174,6 +174,8 @@ router.post("/gameweeks/:id/complete", asyncRoute(async (request, response) => {
     if (expectedMatchCount === 0 || matchCount !== expectedMatchCount || unpublishedCount > 0) throw new ApiError(409, "MATCH_UNPUBLISHED");
     if (gameweek.deadlineAt > new Date()) throw new ApiError(409, "GAMEWEEK_NOT_LOCKED");
     const oldWinners = await tx.gameweekWinner.findMany({ where: { gameweekId: id } });
+    // Capture any eligible squads created after the first match was published.
+    await snapshotGameweek(tx, id);
     await tx.gameweek.update({ where: { id }, data: { status: GameweekStatus.COMPLETED } });
     await recalculateGameweek(tx, id);
     const leaders = await tx.userGameweekPoints.findMany({ where: { gameweekId: id, rank: 1, user: { role: "USER" } } });
