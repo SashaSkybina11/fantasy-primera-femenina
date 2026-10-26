@@ -122,7 +122,7 @@ async function drawPoster(canvas: HTMLCanvasElement, team: FantasyTeam, copy: Co
   ctx.font = "600 32px system-ui, sans-serif";
   ctx.fillText(team.name || copy.title, 540, 270, 900);
 
-  const court = { x: 70, y: 330, w: 940, h: 950 };
+  const court = { x: 42, y: 300, w: 996, h: 1020 };
   drawRoundedRect(ctx, court.x, court.y, court.w, court.h, 42);
   ctx.fillStyle = "#c79a39"; ctx.fill();
   ctx.save();
@@ -132,7 +132,7 @@ async function drawPoster(canvas: HTMLCanvasElement, team: FantasyTeam, copy: Co
   ctx.fillStyle = wood; ctx.fillRect(court.x, court.y, court.w, court.h);
   for (let i = 0; i < 10; i += 1) {
     ctx.fillStyle = i % 2 ? "rgba(255,255,255,.035)" : "rgba(2,16,38,.035)";
-    ctx.fillRect(court.x + i * 100, court.y, 50, court.h);
+    ctx.fillRect(court.x + i * 106, court.y, 53, court.h);
   }
   ctx.strokeStyle = "rgba(255,255,255,.78)"; ctx.lineWidth = 5;
   ctx.strokeRect(court.x + 28, court.y + 28, court.w - 56, court.h - 56);
@@ -143,13 +143,13 @@ async function drawPoster(canvas: HTMLCanvasElement, team: FantasyTeam, copy: Co
   ctx.restore();
 
   const locations = [
-    { x: 540, y: 505 },
-    { x: 300, y: 730 },
-    { x: 780, y: 730 },
-    { x: 300, y: 1030 },
-    { x: 780, y: 1030 },
+    { x: 540, y: 445 },
+    { x: 280, y: 700 },
+    { x: 800, y: 700 },
+    { x: 280, y: 1025 },
+    { x: 800, y: 1025 },
   ];
-  const cardW = 255, cardH = 280;
+  const cardW = 270, cardH = 250;
   starters.forEach((entry, index) => {
     const { x: cx, y: cy } = locations[index]!;
     const x = cx - cardW / 2, y = cy - cardH / 2;
@@ -160,34 +160,38 @@ async function drawPoster(canvas: HTMLCanvasElement, team: FantasyTeam, copy: Co
     ctx.strokeStyle = entry.isCaptain ? "#ffc400" : "rgba(255,255,255,.72)"; ctx.lineWidth = entry.isCaptain ? 6 : 3;
     drawRoundedRect(ctx, x, y, cardW, cardH, 28); ctx.stroke();
 
-    const portraitX = cx - 65, portraitY = y + 16, portraitSize = 130;
+    const portraitX = cx - 52, portraitY = y + 13, portraitSize = 104;
     ctx.save(); ctx.beginPath(); ctx.arc(cx, portraitY + portraitSize / 2, portraitSize / 2, 0, Math.PI * 2); ctx.clip();
     if (photos[index]) drawCover(ctx, photos[index]!, portraitX, portraitY, portraitSize, portraitSize);
     else {
       const fallback = ctx.createLinearGradient(portraitX, portraitY, portraitX + portraitSize, portraitY + portraitSize);
       fallback.addColorStop(0, "#344f75"); fallback.addColorStop(1, "#112744");
       ctx.fillStyle = fallback; ctx.fillRect(portraitX, portraitY, portraitSize, portraitSize);
-      ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.font = "800 44px system-ui, sans-serif"; ctx.fillText(initials(entry.player.name), cx, portraitY + 82);
+      ctx.fillStyle = "#ffffff"; ctx.textAlign = "center"; ctx.font = "800 38px system-ui, sans-serif"; ctx.fillText(initials(entry.player.name), cx, portraitY + 67);
     }
     ctx.restore();
 
-    ctx.fillStyle = "#ffc400"; ctx.textAlign = "center"; ctx.font = "800 23px system-ui, sans-serif";
-    ctx.fillText(`#${entry.player.displayNumber ?? entry.player.number}`, cx, y + 173);
-    if (entry.isCaptain) { ctx.textAlign = "right"; ctx.font = "700 20px system-ui, sans-serif"; ctx.fillText("★", x + cardW - 20, y + 34); }
+    ctx.fillStyle = "#ffc400"; ctx.textAlign = "center"; ctx.font = "800 21px system-ui, sans-serif";
+    ctx.fillText(`#${entry.player.displayNumber ?? entry.player.number}`, cx, y + 139);
     ctx.fillStyle = "#ffffff";
-    const nameSize = fitText(ctx, entry.player.name, cardW - 24, 25, 800);
+    const nameSize = fitText(ctx, entry.player.name, cardW - 30, 24, 800);
     ctx.font = `800 ${nameSize}px system-ui, sans-serif`;
-    const nameLines = wrappedLines(ctx, entry.player.name, cardW - 24, 2);
-    nameLines.forEach((line, lineIndex) => ctx.fillText(line, cx, y + 208 + lineIndex * 29, cardW - 24));
-    const clubY = y + (nameLines.length > 1 ? 266 : 241);
-    ctx.fillStyle = "#d5deed"; ctx.font = "600 17px system-ui, sans-serif";
+    const nameLines = wrappedLines(ctx, entry.player.name, cardW - 30, 2);
+    nameLines.forEach((line, lineIndex) => ctx.fillText(line, cx, y + 167 + lineIndex * 26, cardW - 30));
+    const clubY = y + 232;
+    ctx.fillStyle = "#d5deed"; ctx.font = "600 16px system-ui, sans-serif";
     const logo = logos[index];
     if (logo) {
-      ctx.save(); ctx.beginPath(); ctx.arc(cx - 73, clubY - 5, 17, 0, Math.PI * 2); ctx.clip(); drawCover(ctx, logo, cx - 90, clubY - 22, 34, 34); ctx.restore();
+      ctx.save(); ctx.beginPath(); ctx.arc(x + 27, clubY - 6, 14, 0, Math.PI * 2); ctx.clip(); drawCover(ctx, logo, x + 13, clubY - 20, 28, 28); ctx.restore();
+      ctx.textAlign = "left";
+      const clubTextX = x + 50;
+      fitText(ctx, entry.player.club.name, cardW - 62, 16, 600);
+      ctx.fillText(entry.player.club.name, clubTextX, clubY, cardW - 62);
+    } else {
+      ctx.textAlign = "center";
+      fitText(ctx, entry.player.club.name, cardW - 30, 16, 600);
+      ctx.fillText(entry.player.club.name, cx, clubY, cardW - 30);
     }
-    const clubTextX = logo ? cx + 10 : cx;
-    fitText(ctx, entry.player.club.name, cardW - 34, 17, 600);
-    ctx.fillText(entry.player.club.name, clubTextX, clubY, cardW - 50);
     ctx.restore();
   });
 
