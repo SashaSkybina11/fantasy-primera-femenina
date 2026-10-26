@@ -1,4 +1,8 @@
-import { marketSpanish, marketUkrainian, marketEnglish } from "../locales/market";
+import {
+  marketSpanish,
+  marketUkrainian,
+  marketEnglish,
+} from "../locales/market";
 import { portuguese, brazilian } from "../locales/pt";
 import toast from "react-hot-toast";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -14,7 +18,8 @@ const spanish = {
   "scorers.team": "Equipo",
   "scorers.empty": "Todavía no hay goles registrados.",
   "friends.start": "Puntos desde la jornada {{number}}",
-  "friends.limits": "Una liga propia y hasta 5 ligas de otras personas. Los puntos cuentan desde la misma jornada para todos, aunque se unan después.",
+  "friends.limits":
+    "Una liga propia y hasta 5 ligas de otras personas. Los puntos cuentan desde la misma jornada para todos, aunque se unan después.",
   "friends.logo": "Logo de la liga",
   "matches.remove": "Eliminar partido sin publicar",
   "matches.removeConfirm": "¿Eliminar este partido y su borrador?",
@@ -28,7 +33,8 @@ const spanish = {
   "matches.unscheduled": "Horario pendiente",
   "matches.empty": "Todavía no hay partidos en esta jornada.",
   "matches.report": "Acta del partido",
-  "matches.scoreOnly": "Resultado confirmado. El acta de jugadoras se gestiona por separado.",
+  "matches.scoreOnly":
+    "Resultado confirmado. El acta de jugadoras se gestiona por separado.",
   "matches.pending": "Acta pendiente",
   "matches.published": "Publicado",
   "matches.draft": "Borrador",
@@ -43,19 +49,23 @@ const spanish = {
   "matches.previous": "Usar el quinteto anterior",
   "matches.noPrevious": "No hay quinteto anterior disponible.",
   "matches.ownGoals": "Goles en propia puerta",
-  "matches.ownHelp": "Los autogoles se suman al marcador rival, sin asignar un gol a otra jugadora.",
+  "matches.ownHelp":
+    "Los autogoles se suman al marcador rival, sin asignar un gol a otra jugadora.",
   "matches.points": "Puntos Fantasy",
   "matches.breakdown": "Desglose de puntos",
   "matches.back": "Volver a resultados",
   "matches.loading": "Cargando partidos…",
   "matches.error": "No se pudieron cargar los partidos.",
   "matches.retry": "Reintentar",
-  "matches.locked": "Jornada finalizada. Reábrela desde la gestión de puntos para editar el acta.",
+  "matches.locked":
+    "Jornada finalizada. Reábrela desde la gestión de puntos para editar el acta.",
   "matches.legacy": "Correcciones y cierre de jornada",
   "matches.dirty": "Hay cambios sin guardar.",
   "matches.leave": "¿Descartar los cambios sin guardar?",
-  "matches.scoreHelp": "Para publicar: 5 titulares y 1 portera por equipo; los goles y autogoles deben coincidir con el marcador.",
-  "matches.editorHelp": "Marca el quinteto y añade los eventos. Los puntos se calculan al publicar.",
+  "matches.scoreHelp":
+    "Para publicar: 5 titulares y 1 portera por equipo; los goles y autogoles deben coincidir con el marcador.",
+  "matches.editorHelp":
+    "Marca el quinteto y añade los eventos. Los puntos se calculan al publicar.",
   "matches.adjustment": "Ajuste",
   "matches.result": "Resultado del equipo",
   "matches.hatTrick": "Bonus por hat-trick",
@@ -128,13 +138,16 @@ const spanish = {
   "adminStats.teamResults": "Resultados de los equipos",
   "adminPlayers.title": "Editar jugadoras",
   "adminPlayers.add": "Añadir nueva jugadora",
-  "adminPlayers.addHelp": "Completa los datos y guárdalos directamente en el catálogo.",
+  "adminPlayers.addHelp":
+    "Completa los datos y guárdalos directamente en el catálogo.",
   "adminPlayers.namePlaceholder": "Nombre completo",
   "adminPlayers.chooseClub": "Seleccionar equipo",
-  "adminPlayers.requiredHelp": "El nombre, el número, el equipo y el precio son obligatorios.",
+  "adminPlayers.requiredHelp":
+    "El nombre, el número, el equipo y el precio son obligatorios.",
   "adminPlayers.create": "Crear jugadora",
   "adminPlayers.created": "{{name}} se ha añadido al catálogo",
-  "adminPlayers.description": "Actualiza la ficha de cada jugadora. Los cambios se guardan en la base de datos y se reflejan en el resto de la aplicación.",
+  "adminPlayers.description":
+    "Actualiza la ficha de cada jugadora. Los cambios se guardan en la base de datos y se reflejan en el resto de la aplicación.",
   "adminPlayers.search": "Buscar por nombre, número o equipo",
   "adminPlayers.name": "Nombre",
   "adminPlayers.club": "Equipo",
@@ -261,7 +274,8 @@ const spanish = {
   "admin.title": "Administración",
   "admin.description": "Gestiona las cuentas registradas en la liga.",
   "admin.currentGameweek": "Jornada actual",
-  "admin.currentGameweekHelp": "Elige qué jornada se muestra como actual durante las pausas de la competición.",
+  "admin.currentGameweekHelp":
+    "Elige qué jornada se muestra como actual durante las pausas de la competición.",
   "admin.currentGameweekAuto": "Automática (según el calendario)",
   "admin.currentGameweekSaved": "Jornada actualizada",
   "admin.users": "Usuarios",
@@ -414,8 +428,10 @@ const spanish = {
   "team.captainSet": "Capitana asignada",
   "team.playerRemoved": "Jugadora eliminada; presupuesto actualizado",
   "team.lineupSaved": "Plantilla guardada correctamente",
-  "team.captainWarning": "Elige una capitana antes del cierre de la jornada para que tu equipo pueda entrar en el cálculo de puntos.",
-  "team.unsavedWarning": "Has cambiado el quinteto. Guarda la plantilla antes del cierre de la jornada.",
+  "team.captainWarning":
+    "Elige una capitana antes del cierre de la jornada para que tu equipo pueda entrar en el cálculo de puntos.",
+  "team.unsavedWarning":
+    "Has cambiado el quinteto. Guarda la plantilla antes del cierre de la jornada.",
   "team.emptyTitle": "Tu equipo aún no está formado",
   "team.empty":
     "Aún no has comprado jugadoras. Ve a «Comprar jugadoras» para formar tu equipo.",
@@ -453,7 +469,8 @@ const spanish = {
   "purchase.marketOpen": "Mercado abierto",
   "purchase.marketClosed": "Mercado cerrado",
   "market.manage": "Control del mercado",
-  "market.help": "Abre o cierra el mercado manualmente, o usa el horario automático.",
+  "market.help":
+    "Abre o cierra el mercado manualmente, o usa el horario automático.",
   "market.automatic": "Apertura y cierre automáticos",
   "market.manualOpen": "Abierto manualmente",
   "market.manualClosed": "Cerrado manualmente",
@@ -462,20 +479,21 @@ const spanish = {
   "market.auto": "Automático",
   "market.saved": "Estado del mercado actualizado",
   "market.scheduleTitle": "Horario del mercado para esta jornada",
-  "market.scheduleHelp": "El horario guardado vuelve a activar la apertura y el cierre automáticos.",
+  "market.scheduleHelp":
+    "El horario guardado vuelve a activar la apertura y el cierre automáticos.",
   "market.opensAt": "Abrir desde",
   "market.closesAt": "Cerrar el",
   "market.saveSchedule": "Guardar horario",
   "market.savingSchedule": "Guardando…",
-  "market.scheduleSaved": "Horario guardado; la apertura y el cierre serán automáticos",
+  "market.scheduleSaved":
+    "Horario guardado; la apertura y el cierre serán automáticos",
   "purchase.deadlineRange":
     "Puedes comprar jugadoras desde {{from}} hasta {{to}}.",
   "purchase.gameweekLabel": "Jornada",
   "purchase.timezoneLabel": "Zona horaria",
   "purchase.scheduleLoading": "Cargando el horario del mercado…",
   "purchase.scheduleUnavailable": "No se pudo cargar el horario del mercado.",
-  "purchase.weeklySchedule":
-    "El horario puede cambiar según la jornada. Consulta las fechas indicadas arriba.",
+  "purchase.weeklySchedule": "El horario puede cambiar según la jornada. ",
   "purchase.dynamicPriceNotice":
     "Los precios de las jugadoras pueden aumentar durante la temporada según su rendimiento y sus acciones en los partidos.",
   "purchase.viewSquad": "Ver plantilla",
@@ -584,7 +602,8 @@ const spanish = {
     "Resultados oficiales de la jornada en la web de la RFEF.",
   "calendar.openResults": "Abrir resultados RFEF",
   "calendar.standingsTitle": "Clasificación",
-  "calendar.standingsDescription": "Clasificación oficial de Primera División Fútbol Sala Femenino en la web de la RFEF.",
+  "calendar.standingsDescription":
+    "Clasificación oficial de Primera División Fútbol Sala Femenino en la web de la RFEF.",
   "calendar.openStandings": "Abrir clasificación RFEF",
   "footer.contactAdmin": "Contactar con la administración",
   "footer.email": "fantasyfutsalspain@gmail.com",
@@ -599,7 +618,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "scorers.team": "Команда",
   "scorers.empty": "Голів ще не зафіксовано.",
   "friends.start": "Очки з {{number}}-го туру",
-  "friends.limits": "Одна власна ліга та до 5 чужих. Очки рахуються зі спільного туру старту, навіть якщо приєднатися пізніше.",
+  "friends.limits":
+    "Одна власна ліга та до 5 чужих. Очки рахуються зі спільного туру старту, навіть якщо приєднатися пізніше.",
   "friends.logo": "Логотип ліги",
   "matches.remove": "Видалити неопублікований матч",
   "matches.removeConfirm": "Видалити цей матч і його чернетку?",
@@ -613,7 +633,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "matches.unscheduled": "Час ще не визначено",
   "matches.empty": "У цьому турі ще немає матчів.",
   "matches.report": "Протокол матчу",
-  "matches.scoreOnly": "Рахунок підтверджено. Протокол гравчинь заповнюється окремо.",
+  "matches.scoreOnly":
+    "Рахунок підтверджено. Протокол гравчинь заповнюється окремо.",
   "matches.pending": "Протокол готується",
   "matches.published": "Опубліковано",
   "matches.draft": "Чернетка",
@@ -628,19 +649,23 @@ const ukrainian: Record<TranslationKey, string> = {
   "matches.previous": "Взяти попередню стартову п’ятірку",
   "matches.noPrevious": "Попереднього стартового складу ще немає.",
   "matches.ownGoals": "Автоголи",
-  "matches.ownHelp": "Автоголи додаються до рахунку суперника, без зарахування гола іншій гравчині.",
+  "matches.ownHelp":
+    "Автоголи додаються до рахунку суперника, без зарахування гола іншій гравчині.",
   "matches.points": "Fantasy-очки",
   "matches.breakdown": "Розрахунок очок",
   "matches.back": "Назад до результатів",
   "matches.loading": "Завантаження матчів…",
   "matches.error": "Не вдалося завантажити матчі.",
   "matches.retry": "Спробувати ще раз",
-  "matches.locked": "Тур завершено. Відкрийте його знову в керуванні очками, щоб змінити протокол.",
+  "matches.locked":
+    "Тур завершено. Відкрийте його знову в керуванні очками, щоб змінити протокол.",
   "matches.legacy": "Коригування та завершення туру",
   "matches.dirty": "Є незбережені зміни.",
   "matches.leave": "Відкинути незбережені зміни?",
-  "matches.scoreHelp": "Для публікації: 5 стартових гравчинь і 1 воротарка в кожній команді; голи та автоголи мають відповідати рахунку.",
-  "matches.editorHelp": "Позначте стартову п’ятірку та додайте події. Очки нараховуються під час публікації.",
+  "matches.scoreHelp":
+    "Для публікації: 5 стартових гравчинь і 1 воротарка в кожній команді; голи та автоголи мають відповідати рахунку.",
+  "matches.editorHelp":
+    "Позначте стартову п’ятірку та додайте події. Очки нараховуються під час публікації.",
   "matches.adjustment": "Коригування",
   "matches.result": "Результат команди",
   "matches.hatTrick": "Бонус за хет-трик",
@@ -715,10 +740,12 @@ const ukrainian: Record<TranslationKey, string> = {
   "adminPlayers.addHelp": "Заповніть дані та збережіть їх у каталозі.",
   "adminPlayers.namePlaceholder": "Повне ім’я",
   "adminPlayers.chooseClub": "Виберіть команду",
-  "adminPlayers.requiredHelp": "Ім’я, номер, команда та ціна — обов’язкові поля.",
+  "adminPlayers.requiredHelp":
+    "Ім’я, номер, команда та ціна — обов’язкові поля.",
   "adminPlayers.create": "Створити гравчиню",
   "adminPlayers.created": "{{name}} додано до каталогу",
-  "adminPlayers.description": "Редагуйте дані гравчинь. Зміни зберігаються в базі даних і відображаються в усьому застосунку.",
+  "adminPlayers.description":
+    "Редагуйте дані гравчинь. Зміни зберігаються в базі даних і відображаються в усьому застосунку.",
   "adminPlayers.search": "Пошук за ім’ям, номером або командою",
   "adminPlayers.name": "Ім’я",
   "adminPlayers.club": "Команда",
@@ -844,7 +871,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "admin.title": "Адміністрування",
   "admin.description": "Керуйте зареєстрованими акаунтами ліги.",
   "admin.currentGameweek": "Поточний тур",
-  "admin.currentGameweekHelp": "Оберіть, який тур показувати поточним під час пауз у чемпіонаті.",
+  "admin.currentGameweekHelp":
+    "Оберіть, який тур показувати поточним під час пауз у чемпіонаті.",
   "admin.currentGameweekAuto": "Автоматично (за календарем)",
   "admin.currentGameweekSaved": "Поточний тур оновлено",
   "admin.users": "Користувачі",
@@ -996,8 +1024,10 @@ const ukrainian: Record<TranslationKey, string> = {
   "team.captainSet": "Капітанку призначено",
   "team.playerRemoved": "Гравчиню видалено — бюджет оновлено",
   "team.lineupSaved": "Склад успішно збережено",
-  "team.captainWarning": "Оберіть капітанку до закриття туру, щоб ваша команда потрапила до розрахунку очок.",
-  "team.unsavedWarning": "Ви змінили основний склад. Збережіть його до закриття туру.",
+  "team.captainWarning":
+    "Оберіть капітанку до закриття туру, щоб ваша команда потрапила до розрахунку очок.",
+  "team.unsavedWarning":
+    "Ви змінили основний склад. Збережіть його до закриття туру.",
   "team.emptyTitle": "Ваша команда ще не сформована",
   "team.empty":
     "Ви ще не придбали гравчинь. Перейдіть до розділу «Купівля гравчинь», щоб сформувати команду.",
@@ -1035,7 +1065,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "purchase.marketOpen": "Ринок відкрито",
   "purchase.marketClosed": "Ринок закрито",
   "market.manage": "Керування ринком",
-  "market.help": "Відкрийте або закрийте ринок вручну чи використовуйте автоматичний розклад.",
+  "market.help":
+    "Відкрийте або закрийте ринок вручну чи використовуйте автоматичний розклад.",
   "market.automatic": "Автоматичне відкриття та закриття",
   "market.manualOpen": "Відкрито вручну",
   "market.manualClosed": "Закрито вручну",
@@ -1044,19 +1075,20 @@ const ukrainian: Record<TranslationKey, string> = {
   "market.auto": "Автоматично",
   "market.saved": "Стан ринку оновлено",
   "market.scheduleTitle": "Розклад ринку для цього туру",
-  "market.scheduleHelp": "Збереження розкладу знову вмикає автоматичне відкриття та закриття.",
+  "market.scheduleHelp":
+    "Збереження розкладу знову вмикає автоматичне відкриття та закриття.",
   "market.opensAt": "Відкрити з",
   "market.closesAt": "Закрити о",
   "market.saveSchedule": "Зберегти розклад",
   "market.savingSchedule": "Збереження…",
-  "market.scheduleSaved": "Розклад збережено; ринок відкриватиметься та закриватиметься автоматично",
+  "market.scheduleSaved":
+    "Розклад збережено; ринок відкриватиметься та закриватиметься автоматично",
   "purchase.deadlineRange": "Купувати гравчинь можна з {{from}} до {{to}}.",
   "purchase.gameweekLabel": "Тур",
   "purchase.timezoneLabel": "Часовий пояс",
   "purchase.scheduleLoading": "Завантажуємо розклад ринку…",
   "purchase.scheduleUnavailable": "Не вдалося завантажити розклад ринку.",
-  "purchase.weeklySchedule":
-    "Розклад може відрізнятися для кожного туру. Перевірте дати вище.",
+  "purchase.weeklySchedule": "Розклад може відрізнятися для кожного туру.",
   "purchase.dynamicPriceNotice":
     "Ціни гравчинь можуть зростати протягом сезону залежно від їхніх результатів і дій у матчах.",
   "purchase.viewSquad": "Переглянути склад",
@@ -1162,7 +1194,8 @@ const ukrainian: Record<TranslationKey, string> = {
   "calendar.resultsDescription": "Офіційні результати туру на сайті RFEF.",
   "calendar.openResults": "Відкрити результати RFEF",
   "calendar.standingsTitle": "Турнірна таблиця",
-  "calendar.standingsDescription": "Офіційна турнірна таблиця Primera División Fútbol Sala Femenino на сайті RFEF.",
+  "calendar.standingsDescription":
+    "Офіційна турнірна таблиця Primera División Fútbol Sala Femenino на сайті RFEF.",
   "calendar.openStandings": "Відкрити турнірну таблицю RFEF",
   "footer.contactAdmin": "Зв’язатися з адміністратором",
   "footer.email": "fantasyfutsalspain@gmail.com",
@@ -1175,7 +1208,8 @@ const english: Record<TranslationKey, string> = {
   "scorers.team": "Team",
   "scorers.empty": "No goals recorded yet.",
   "friends.start": "Points from gameweek {{number}}",
-  "friends.limits": "One league of your own and up to 5 other leagues. Points count from the same starting gameweek for everyone, including late joiners.",
+  "friends.limits":
+    "One league of your own and up to 5 other leagues. Points count from the same starting gameweek for everyone, including late joiners.",
   "friends.logo": "League logo",
   "matches.remove": "Delete unpublished match",
   "matches.removeConfirm": "Delete this match and its draft?",
@@ -1189,7 +1223,8 @@ const english: Record<TranslationKey, string> = {
   "matches.unscheduled": "Time to be confirmed",
   "matches.empty": "No matches in this gameweek yet.",
   "matches.report": "Match report",
-  "matches.scoreOnly": "Score confirmed. The player report is managed separately.",
+  "matches.scoreOnly":
+    "Score confirmed. The player report is managed separately.",
   "matches.pending": "Report pending",
   "matches.published": "Published",
   "matches.draft": "Draft",
@@ -1204,19 +1239,23 @@ const english: Record<TranslationKey, string> = {
   "matches.previous": "Use previous starting five",
   "matches.noPrevious": "No previous starting five available.",
   "matches.ownGoals": "Own goals",
-  "matches.ownHelp": "Own goals count toward the opponent’s score without crediting another player.",
+  "matches.ownHelp":
+    "Own goals count toward the opponent’s score without crediting another player.",
   "matches.points": "Fantasy points",
   "matches.breakdown": "Points breakdown",
   "matches.back": "Back to results",
   "matches.loading": "Loading matches…",
   "matches.error": "Could not load matches.",
   "matches.retry": "Retry",
-  "matches.locked": "Gameweek completed. Reopen it in points management to edit the report.",
+  "matches.locked":
+    "Gameweek completed. Reopen it in points management to edit the report.",
   "matches.legacy": "Adjustments and gameweek completion",
   "matches.dirty": "You have unsaved changes.",
   "matches.leave": "Discard unsaved changes?",
-  "matches.scoreHelp": "To publish: 5 starters and 1 goalkeeper per team; goals and own goals must match the score.",
-  "matches.editorHelp": "Select the starting five and add events. Points are applied when you publish.",
+  "matches.scoreHelp":
+    "To publish: 5 starters and 1 goalkeeper per team; goals and own goals must match the score.",
+  "matches.editorHelp":
+    "Select the starting five and add events. Points are applied when you publish.",
   "matches.adjustment": "Adjustment",
   "matches.result": "Team result",
   "matches.hatTrick": "Hat-trick bonus",
@@ -1290,13 +1329,15 @@ const english: Record<TranslationKey, string> = {
   "adminStats.teamResults": "Team results",
   "adminPlayers.title": "Edit players",
   "adminPlayers.add": "Add a new player",
-  "adminPlayers.addHelp": "Enter the player details and save them to the catalog.",
+  "adminPlayers.addHelp":
+    "Enter the player details and save them to the catalog.",
   "adminPlayers.namePlaceholder": "Full name",
   "adminPlayers.chooseClub": "Select a club",
   "adminPlayers.requiredHelp": "Name, number, club, and price are required.",
   "adminPlayers.create": "Create player",
   "adminPlayers.created": "{{name}} was added to the catalog",
-  "adminPlayers.description": "Update player profiles. Changes are saved to the database and reflected throughout the app.",
+  "adminPlayers.description":
+    "Update player profiles. Changes are saved to the database and reflected throughout the app.",
   "adminPlayers.search": "Search by name, number, or club",
   "adminPlayers.name": "Name",
   "adminPlayers.club": "Club",
@@ -1423,7 +1464,8 @@ const english: Record<TranslationKey, string> = {
   "admin.title": "Administration",
   "admin.description": "Manage registered league accounts.",
   "admin.currentGameweek": "Current gameweek",
-  "admin.currentGameweekHelp": "Choose which gameweek appears as current during breaks in the competition.",
+  "admin.currentGameweekHelp":
+    "Choose which gameweek appears as current during breaks in the competition.",
   "admin.currentGameweekAuto": "Automatic (from schedule)",
   "admin.currentGameweekSaved": "Current gameweek updated",
   "admin.users": "Users",
@@ -1574,8 +1616,10 @@ const english: Record<TranslationKey, string> = {
   "team.captainSet": "Captain assigned",
   "team.playerRemoved": "Player removed; budget updated",
   "team.lineupSaved": "Lineup saved successfully",
-  "team.captainWarning": "Choose a captain before the gameweek closes so your team can be included in the points calculation.",
-  "team.unsavedWarning": "You changed your starting lineup. Save it before the gameweek closes.",
+  "team.captainWarning":
+    "Choose a captain before the gameweek closes so your team can be included in the points calculation.",
+  "team.unsavedWarning":
+    "You changed your starting lineup. Save it before the gameweek closes.",
   "team.emptyTitle": "Your team has not been formed yet",
   "team.empty":
     "You have not bought any players yet. Go to Buy players to build your team.",
@@ -1613,7 +1657,8 @@ const english: Record<TranslationKey, string> = {
   "purchase.marketOpen": "Market open",
   "purchase.marketClosed": "Market closed",
   "market.manage": "Market controls",
-  "market.help": "Open or close the market manually, or use the automatic schedule.",
+  "market.help":
+    "Open or close the market manually, or use the automatic schedule.",
   "market.automatic": "Automatic opening and closing",
   "market.manualOpen": "Opened manually",
   "market.manualClosed": "Closed manually",
@@ -1622,19 +1667,20 @@ const english: Record<TranslationKey, string> = {
   "market.auto": "Automatic",
   "market.saved": "Market status updated",
   "market.scheduleTitle": "Market schedule for this gameweek",
-  "market.scheduleHelp": "Saving the schedule restores automatic opening and closing.",
+  "market.scheduleHelp":
+    "Saving the schedule restores automatic opening and closing.",
   "market.opensAt": "Open from",
   "market.closesAt": "Close at",
   "market.saveSchedule": "Save schedule",
   "market.savingSchedule": "Saving…",
-  "market.scheduleSaved": "Schedule saved; the market will open and close automatically",
+  "market.scheduleSaved":
+    "Schedule saved; the market will open and close automatically",
   "purchase.deadlineRange": "You can buy players from {{from}} to {{to}}.",
   "purchase.gameweekLabel": "Gameweek",
   "purchase.timezoneLabel": "Time zone",
   "purchase.scheduleLoading": "Loading market schedule…",
   "purchase.scheduleUnavailable": "Could not load the market schedule.",
-  "purchase.weeklySchedule":
-    "The schedule can vary by gameweek. Check the dates shown above.",
+  "purchase.weeklySchedule": "The schedule can vary by gameweek. ",
   "purchase.dynamicPriceNotice":
     "Player prices may increase during the season based on their performances and match events.",
   "purchase.viewSquad": "View squad",
@@ -1742,7 +1788,8 @@ const english: Record<TranslationKey, string> = {
     "Official gameweek results on the RFEF website.",
   "calendar.openResults": "Open RFEF results",
   "calendar.standingsTitle": "Standings",
-  "calendar.standingsDescription": "Official Women's Futsal First Division standings on the RFEF website.",
+  "calendar.standingsDescription":
+    "Official Women's Futsal First Division standings on the RFEF website.",
   "calendar.openStandings": "Open RFEF standings",
   "footer.contactAdmin": "Contact the administrator",
   "footer.email": "fantasyfutsalspain@gmail.com",
@@ -1812,7 +1859,13 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       .querySelector('meta[property="og:locale"]')
       ?.setAttribute(
         "content",
-        { es: "es_ES", uk: "uk_UA", en: "en_GB", pt: "pt_PT", "pt-BR": "pt_BR" }[locale],
+        {
+          es: "es_ES",
+          uk: "uk_UA",
+          en: "en_GB",
+          pt: "pt_PT",
+          "pt-BR": "pt_BR",
+        }[locale],
       );
     localStorage.setItem(storageKey, locale);
     return () => {
@@ -1850,5 +1903,10 @@ export function useLocale() {
 
 export function getStoredLocale(): Locale {
   const stored = localStorage.getItem(storageKey);
-  return stored === "uk" || stored === "en" || stored === "pt" || stored === "pt-BR" ? stored : "es";
+  return stored === "uk" ||
+    stored === "en" ||
+    stored === "pt" ||
+    stored === "pt-BR"
+    ? stored
+    : "es";
 }

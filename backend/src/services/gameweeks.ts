@@ -60,7 +60,6 @@ export function calculatePlayerPoints(input: {
 }
 
 export async function snapshotGameweek(tx: Db, gameweekId: string, refreshExisting = false) {
-  const gameweek = await tx.gameweek.findUniqueOrThrow({ where: { id: gameweekId } });
   // Include every valid team when sealing/recalculating a round. A user may
   // have registered after the first match was published, so their team would
   // not have been in that initial snapshot.

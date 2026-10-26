@@ -6,7 +6,6 @@ import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { api, roleLabel } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
-import type { Gameweek } from "../types";
 
 const empty = {
   started: false,

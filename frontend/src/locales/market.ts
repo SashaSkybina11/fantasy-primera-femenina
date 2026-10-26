@@ -10,6 +10,8 @@ export const marketSpanish = {
   "market.stale": "La jornada ha cambiado. Actualiza la página.",
   "market.scheduleTitle": "Horario del mercado para esta jornada", "market.scheduleHelp": "El horario guardado vuelve a activar la apertura y el cierre automáticos.",
   "market.opensAt": "Abrir desde", "market.closesAt": "Cerrar el", "market.saveSchedule": "Guardar horario", "market.savingSchedule": "Guardando…", "market.scheduleSaved": "Horario guardado; la apertura y el cierre serán automáticos",
+  "share.button": "Compartir equipo", "share.dialogTitle": "Comparte tu equipo", "share.generating": "Generando imagen…", "share.error": "No se pudo generar la imagen. Inténtalo de nuevo.", "share.retry": "Reintentar", "share.incomplete": "Elige cinco titulares antes de compartir tu equipo.", "share.download": "Descargar imagen", "share.share": "Compartir",
+  "share.posterTitle": "MI EQUIPO ⚽", "share.brand": "FANTASY PRIMERA DIVISIÓN FEMENINA", "share.join": "¿TE UNES AL FANTASY?", "share.body": "Crea tu equipo y compite con tus amigos.", "share.play": "JUEGA AHORA", "share.website": "fantasy-primera-femenina-frontend.vercel.app",
 };
 export const marketUkrainian: Record<keyof typeof marketSpanish, string> = {
   "language.pt": "Португальська (Португалія)", "language.pt-BR": "Португальська (Бразилія)",
@@ -23,6 +25,8 @@ export const marketUkrainian: Record<keyof typeof marketSpanish, string> = {
   "market.stale": "Тур змінився. Оновіть сторінку.",
   "market.scheduleTitle": "Розклад ринку для цього туру", "market.scheduleHelp": "Збереження розкладу знову вмикає автоматичне відкриття та закриття.",
   "market.opensAt": "Відкрити з", "market.closesAt": "Закрити о", "market.saveSchedule": "Зберегти розклад", "market.savingSchedule": "Збереження…", "market.scheduleSaved": "Розклад збережено; ринок відкриватиметься та закриватиметься автоматично",
+  "share.button": "Поділитися командою", "share.dialogTitle": "Поділитися командою", "share.generating": "Створюємо зображення…", "share.error": "Не вдалося створити зображення. Спробуйте ще раз.", "share.retry": "Спробувати ще раз", "share.incomplete": "Оберіть п’ятьох гравчинь до стартового складу.", "share.download": "Завантажити зображення", "share.share": "Поділитися",
+  "share.posterTitle": "МОЯ КОМАНДА ⚽", "share.brand": "FANTASY PRIMERA DIVISIÓN FEMENINA", "share.join": "ПРИЄДНАЄШСЯ ДО FANTASY?", "share.body": "Створи команду та змагайся з друзями.", "share.play": "ГРАЙ ЗАРАЗ", "share.website": "fantasy-primera-femenina-frontend.vercel.app",
 };
 export const marketEnglish: Record<keyof typeof marketSpanish, string> = {
   "language.pt": "Portuguese (Portugal)", "language.pt-BR": "Portuguese (Brazil)",
@@ -36,4 +40,6 @@ export const marketEnglish: Record<keyof typeof marketSpanish, string> = {
   "market.stale": "The gameweek has changed. Refresh the page.",
   "market.scheduleTitle": "Market schedule for this gameweek", "market.scheduleHelp": "Saving the schedule restores automatic opening and closing.",
   "market.opensAt": "Open from", "market.closesAt": "Close at", "market.saveSchedule": "Save schedule", "market.savingSchedule": "Saving…", "market.scheduleSaved": "Schedule saved; the market will open and close automatically",
+  "share.button": "Share my team", "share.dialogTitle": "Share your team", "share.generating": "Generating image…", "share.error": "Could not create the image. Please try again.", "share.retry": "Try again", "share.incomplete": "Choose five starters before sharing your team.", "share.download": "Download image", "share.share": "Share",
+  "share.posterTitle": "MY TEAM ⚽", "share.brand": "FANTASY PRIMERA DIVISIÓN FEMENINA", "share.join": "JOIN THE FANTASY?", "share.body": "Build your team and compete with your friends.", "share.play": "PLAY NOW", "share.website": "fantasy-primera-femenina-frontend.vercel.app",
 };

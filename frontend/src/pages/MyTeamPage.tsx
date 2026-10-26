@@ -12,6 +12,7 @@ import { api } from "../services/api";
 import type { SquadEntry } from "../types";
 import { useLocale } from "../contexts/LocaleContext";
 import { useAuth } from "../contexts/AuthContext";
+import { ShareTeamButton } from "../components/ShareTeamButton";
 
 export function MyTeamPage() {
   const { user } = useAuth();
@@ -138,9 +139,12 @@ export function MyTeamPage() {
             ? t("team.captainSelected")
             : t("team.selectCaptain")}
         </div>
-        <Link className="button" to="/purchase-players">
-          ＋ {t("nav.purchase")}
-        </Link>
+        <div className="team-toolbar__actions">
+          <ShareTeamButton team={team} />
+          <Link className="button" to="/purchase-players">
+            ＋ {t("nav.purchase")}
+          </Link>
+        </div>
       </div>
       {team.players.length === 0 ? (
         <section className="state-card empty-team-card">

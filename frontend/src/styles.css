@@ -1174,6 +1174,13 @@ select:focus {
   font-size: 0.78rem;
   font-weight: 700;
 }
+.team-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+.team-toolbar__actions .button { display: inline-flex; align-items: center; gap: 0.45rem; }
 .captain-status-star {
   display: inline-block;
   margin-right: 0.45rem;
@@ -3982,6 +3989,32 @@ select:focus {
   gap: 0.75rem;
   margin-top: 1.3rem;
 }
+dialog.app-modal.share-team-modal {
+  width: min(540px, calc(100vw - 1rem));
+  max-height: calc(100dvh - 1rem);
+  padding: 0.9rem;
+}
+.share-team-modal .app-modal__title { margin-bottom: 0.7rem; }
+.share-team-card {
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  max-height: 72dvh;
+  border-radius: 12px;
+  background: #07152d;
+}
+.share-team-card canvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 72dvh;
+  object-fit: contain;
+}
+.share-team-loading { margin: 0 0 0.6rem; color: var(--muted); text-align: center; }
+.share-team-actions { justify-content: center; }
+.share-team-actions .button { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.home-team-summary > .button { flex: none; }
 .public-lineup-list {
   display: grid;
   gap: 0.7rem;

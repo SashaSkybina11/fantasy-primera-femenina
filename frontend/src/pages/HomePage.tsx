@@ -5,6 +5,7 @@ import { BudgetDisplay } from "../components/BudgetDisplay";
 import { useLocale } from "../contexts/LocaleContext";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
+import { ShareTeamButton } from "../components/ShareTeamButton";
 
 export function HomePage() {
   const { t } = useLocale();
@@ -85,6 +86,7 @@ export function HomePage() {
             budget={team.data.budget}
             count={team.data.players.length}
           />
+          <ShareTeamButton team={team.data} />
         </section>
       )}
     </div>
