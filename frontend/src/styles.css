@@ -1052,6 +1052,14 @@ select:focus {
 .profile-card--password .profile-form {
   gap: 0.8rem;
 }
+.profile-card--password .form-actions {
+  justify-content: flex-start;
+}
+.profile-card--password .form-actions > .button {
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 0;
+}
 .profile-form label {
   display: grid;
   gap: 0.4rem;
@@ -5181,6 +5189,193 @@ dialog.app-modal.share-team-modal {
     transition: none;
   }
 }
+.profile-card--password .form-actions > .button {
+  flex: 0 1 auto;
+  width: auto;
+}
+.notification-list,
+.notification-composer {
+  display: grid;
+  gap: 1rem;
+}
+.notification-card {
+  display: grid;
+  gap: 0.65rem;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.notification-card.is-unread {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--danger) 20%, transparent);
+}
+.notification-card time {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.notification-card h2,
+.notification-card p {
+  margin: 0;
+}
+.notification-card .button {
+  justify-self: start;
+}
+.notification-composer > label {
+  display: grid;
+  gap: 0.4rem;
+}
+.notification-composer > label select,
+.notification-composer > label input {
+  width: 100%;
+  min-width: 0;
+}
+.notification-user-picker > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 0.5rem;
+  max-height: 18rem;
+  overflow: auto;
+  margin-top: 0.65rem;
+  padding: 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.notification-user-picker label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 0.55rem;
+  border-radius: 8px;
+  background: var(--surface);
+}
+.notification-user-picker label span {
+  display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.notification-user-picker small {
+  color: var(--muted);
+}
+.notification-preview {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.notification-preview h2,
+.notification-preview p {
+  margin: 0;
+}
+.notification-template-editor,
+.notification-template-fields {
+  display: grid;
+  gap: 0.75rem;
+}
+.notification-template-editor > h2 {
+  margin: 0;
+}
+.notification-template-editor details {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.notification-template-editor summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.notification-template-fields {
+  margin-top: 0.8rem;
+}
+.notification-template-fields label {
+  display: grid;
+  gap: 0.35rem;
+}
+.notification-template-fields input,
+.notification-template-fields textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+.notification-recipient-count {
+  padding: 0.7rem 0.85rem;
+  border-radius: 9px;
+  background: var(--surface);
+  font-weight: 700;
+}
+.notification-user-picker {
+  display: grid;
+  gap: 0.65rem;
+}
+.notification-history {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+.notification-history > header h2 {
+  margin: 0;
+}
+.notification-history-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  padding: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.notification-history-row > div {
+  display: grid;
+  gap: 0.2rem;
+  min-width: min(100%, 14rem);
+}
+.notification-history-row time,
+.notification-history-row small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.notifications-page > .page-heading h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.notifications-bell--unread {
+  color: #ef233c;
+}
+.notification-count {
+  margin-left: auto;
+  min-width: 1.35rem;
+  padding: 0.12rem 0.35rem;
+  border-radius: 999px;
+  background: #ef233c;
+  color: #fff;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  text-align: center;
+}
+.notification-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.notification-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.notification-card__meta > span {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
 
 .popular-player__summary {
   display: flex;
@@ -6646,4 +6841,10 @@ summary:focus-visible {
 @media (max-width: 620px) {
   .admin-players-toolbar { grid-template-columns: 1fr; }
   .admin-player-editor { padding: 14px; }
+}
+
+/* Keep the password submit control compact on phones and tablets. */
+.profile-card--password .form-actions > .button {
+  flex: 0 1 auto;
+  width: auto;
 }

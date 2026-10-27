@@ -88,6 +88,8 @@ model User {
   transfers                UserTransfer[]
   ownedPrivateLeagues      PrivateLeague[]       @relation("PrivateLeagueOwner")
   privateLeagueMemberships PrivateLeagueMember[]
+  notificationRecipients  NotificationRecipient[]
+  notificationsCreated    Notification[]     @relation("NotificationCreator")
   favoriteClub             Club?                 @relation("FavoriteClub", fields: [favoriteClubId], references: [id], onDelete: SetNull)
   createdAt                DateTime              @default(now())
   updatedAt                DateTime              @updatedAt
@@ -278,6 +280,42 @@ model PrivateLeagueMember {
 
   @@unique([leagueId, userId])
   @@index([userId])
+}
+
+model Notification {
+  id          String                 @id @default(cuid())
+  type        String
+  payload     Json
+  audience    String
+  eventKey    String?                @unique
+  createdById String?
+  createdBy   User?                  @relation("NotificationCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime               @default(now())
+  sentAt      DateTime               @default(now())
+  recipients  NotificationRecipient[]
+
+  @@index([createdAt])
+}
+
+model NotificationTemplate {
+  type      String   @id
+  contents  Json
+  updatedAt DateTime @updatedAt
+}
+
+model NotificationRecipient {
+  notificationId String
+  userId         String
+  eventKey       String?
+  variables      Json?
+  readAt         DateTime?
+  deliveredAt    DateTime           @default(now())
+  notification   Notification       @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([notificationId, userId])
+  @@unique([userId, eventKey])
+  @@index([userId, readAt, deliveredAt])
 }
 
 model PlayerGameweekStats {

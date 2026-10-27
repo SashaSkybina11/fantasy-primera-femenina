@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { useLocale } from "../contexts/LocaleContext";
 import { api } from "../services/api";
+import { useState } from "react";
 
 export function PrivateLeaguePage() {
   const { id = "" } = useParams();
@@ -14,6 +15,7 @@ export function PrivateLeaguePage() {
   const { t } = useLocale();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [inviteEmail, setInviteEmail] = useState("");
   const league = useQuery({
     queryKey: ["private-league", id],
     queryFn: () => api.privateLeague(id),
@@ -35,6 +37,7 @@ export function PrivateLeaguePage() {
     },
     onError: (error) => toast.error(error.message),
   });
+  const invite = useMutation({ mutationFn: () => api.inviteToPrivateLeague(id, inviteEmail), onSuccess: () => { setInviteEmail(""); toast.success(t("friends.invitationSent")); void queryClient.invalidateQueries({ queryKey: ["notifications"] }); }, onError: error => toast.error(error.message) });
   if (league.isLoading) return <div className="state-card"><Loader label={t("loading.league")} /></div>;
   if (!league.data)
     return (
@@ -79,6 +82,7 @@ export function PrivateLeaguePage() {
           </div>
         ))}
       </section>
+      {own && <form className="admin-card notification-invite-form" onSubmit={event => { event.preventDefault(); invite.mutate(); }}><label>{t("friends.invitePlayer")}<input type="email" required maxLength={254} value={inviteEmail} onChange={event => setInviteEmail(event.target.value)} /></label><button className="button" disabled={invite.isPending}>{invite.isPending ? t("auth.wait") : t("friends.sendInvitation")}</button></form>}
       {(isOwner || own) && <div className="league-danger-actions">
         {isOwner ? (
           <button

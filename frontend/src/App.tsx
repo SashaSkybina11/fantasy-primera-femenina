@@ -26,6 +26,8 @@ import { LeaderboardPage } from "./pages/LeaderboardPage";
 import { RulesPage } from "./pages/RulesPage";
 import { PrivateLeaguePage } from "./pages/PrivateLeaguePage";
 import { FriendLeaguesPage } from "./pages/FriendLeaguesPage";
+import { NotificationsPage } from "./pages/NotificationsPage";
+import { AdminNotificationsPage } from "./pages/AdminNotificationsPage";
 
 function ProtectedLayout() {
   const { user, isLoading } = useAuth();
@@ -49,7 +51,9 @@ export function App() {
       <Route element={<ProtectedLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/admin/player-prices" element={<AdminPlayerPricesPage />} />
+        <Route path="/admin/notifications" element={<AdminNotificationsPage />} />
         <Route path="/admin/players" element={<AdminPlayersPage />} />
         <Route path="/admin/friend-leagues" element={<AdminFriendLeaguesPage />} />
         <Route path="/admin" element={<AdminPage />} />

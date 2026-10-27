@@ -544,6 +544,10 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export type PublicLineup = { user: { id: string; name: string }; gameweek: { id: string; number: number } | null; players: Array<import("../types").SquadEntry & { points: number }> };
+export type NotificationLocaleKey = "es" | "uk" | "en" | "pt";
+export type NotificationContent = { title: string; message: string; action: string; url: string };
+export type UserNotification = NotificationContent & { id: string; type: string; createdAt: string; readAt: string | null; isRead: boolean };
+export type NotificationAudience = "ALL" | "LEAGUE" | "USERS" | "INCOMPLETE_TEAM" | "CAPTAIN_MISSING";
 export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
   adminCurrentGameweek: () => request<{ gameweekId: string | null }>("/admin/current-gameweek"),
@@ -560,6 +564,15 @@ export const api = {
   saveMatch: (id: string, data: { protocol: MatchProtocol; version: number; publish: boolean; kickoffAt: string | null }) => request<MatchRecord>(`/matches/${id}/editor`, { method: "PUT", body: JSON.stringify(data) }),
   playerPrices: () => request<Array<Player & { priceChanges: Array<{ id: string; gameweek: Gameweek; priceBefore: number; priceAfter: number; priceDelta: number }> }>>("/player-prices"),
   publicLineup: (id: string) => request<PublicLineup>("/users/" + id + "/lineup"),
+  notifications: (status: "all" | "unread" | "read" = "all") => request<{ items: UserNotification[]; unreadCount: number; totalCount: number }>(`/notifications?status=${status}`),
+  unreadNotificationCount: () => request<{ unreadCount: number }>("/notifications/unread-count"),
+  markNotificationRead: (id: string) => request<{ ok: boolean }>(`/notifications/${id}/read`, { method: "POST" }),
+  notificationTargets: () => request<{ leagues: Array<{ id: string; name: string }>; users: Array<{ id: string; name: string; email: string }> }>("/admin/notifications/targets"),
+  notificationTemplates: () => request<Array<{ type: string; contents: Record<NotificationLocaleKey, NotificationContent> }>>("/admin/notifications/templates"),
+  updateNotificationTemplate: (type: string, contents: Record<NotificationLocaleKey, NotificationContent>) => request<unknown>(`/admin/notifications/templates/${type}`, { method: "PUT", body: JSON.stringify(contents) }),
+  previewNotificationAudience: (input: { audience: NotificationAudience; leagueId?: string; userIds?: string[] }) => request<{ count: number }>("/admin/notifications/preview", { method: "POST", body: JSON.stringify(input) }),
+  adminNotificationHistory: () => request<Array<{ id: string; type: string; audience: string; createdAt: string; sentAt: string; createdBy: { id: string; name: string } | null; recipientCount: number; readCount: number }>>("/admin/notifications/history"),
+  sendNotification: (input: { type: string; audience: NotificationAudience; leagueId?: string; userIds?: string[]; hours?: string; contents?: Record<NotificationLocaleKey, NotificationContent> }) => request<{ id: string }>("/admin/notifications/send", { method: "POST", body: JSON.stringify(input) }),
   adminFriendLeagues: () => request<AdminFriendLeague[]>("/admin/friend-leagues"),
   deleteAdminFriendLeague: (id: string) => request<void>("/admin/friend-leagues/" + id, { method: "DELETE" }),
   gameConfig: () => request<{ initialBudget: number }>("/game-config"),
@@ -712,6 +725,7 @@ export const api = {
     }),
   leavePrivateLeague: (id: string) =>
     request<void>(`/private-leagues/${id}/leave`, { method: "POST" }),
+  inviteToPrivateLeague: (id: string, email: string) => request<{ ok: boolean }>(`/private-leagues/${id}/invitations`, { method: "POST", body: JSON.stringify({ email }) }),
   deletePrivateLeague: (id: string) =>
     request<void>(`/private-leagues/${id}`, { method: "DELETE" }),
   deleteAdminUser: (id: string) =>

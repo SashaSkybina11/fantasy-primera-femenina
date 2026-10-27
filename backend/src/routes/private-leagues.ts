@@ -8,6 +8,7 @@ import { ApiError, asyncRoute } from "../utils/http.js";
 import { inTransaction } from "../lib/transaction.js";
 import { upload, storeAvatar, removeAvatar } from "../services/image-upload.js";
 import { marketIsOpen } from "../services/market-schedule.js";
+import { sendEventNotification } from "../services/notifications.js";
 
 const router = Router();
 router.use(authenticate);
@@ -100,6 +101,19 @@ router.get("/:id", asyncRoute(async (request, response) => {
   if (!league) throw new ApiError(404, "Лига не найдена или доступ запрещён");
   const members = league.members.map((member) => ({ id: member.user.id, name: member.user.name, avatarUrl: member.user.avatarUrl, joinedAt: member.joinedAt, points: pointsForLeague(member, league) })).sort((a, b) => b.points - a.points || a.joinedAt.getTime() - b.joinedAt.getTime() || a.id.localeCompare(b.id)).map((member, index) => ({ ...member, rank: index + 1 }));
   response.json({ id: league.id, name: league.name, inviteCode: league.inviteCode, ownerId: league.ownerId, startGameweek: league.startGameweek, logoUrl: league.logoUrl, members });
+}));
+
+router.post("/:id/invitations", asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  const { email } = z.object({ email: z.string().trim().email().max(254).transform(value => value.toLowerCase()) }).parse(request.body);
+  const league = await prisma.privateLeague.findFirst({ where: { id, members: { some: { userId: request.auth!.userId } } }, include: { owner: { select: { name: true } } } });
+  if (!league) throw new ApiError(404, "Лига не найдена");
+  const recipient = await prisma.user.findUnique({ where: { email }, select: { id: true, role: true, status: true } });
+  if (!recipient || recipient.role !== "USER" || recipient.status !== "ACTIVE") throw new ApiError(404, "Игрок не найден");
+  if (recipient.id === request.auth!.userId || await prisma.privateLeagueMember.findUnique({ where: { leagueId_userId: { leagueId: id, userId: recipient.id } }, select: { id: true } })) throw new ApiError(409, "Игрок уже состоит в лиге");
+  const inviter = await prisma.user.findUniqueOrThrow({ where: { id: request.auth!.userId }, select: { name: true } });
+  await sendEventNotification("INVITATION_RECEIVED", `INVITATION_RECEIVED:${league.id}:${recipient.id}`, [recipient.id], { leagueName: league.name, managerName: inviter.name, inviteCode: league.inviteCode });
+  response.status(201).json({ ok: true });
 }));
 
 router.post("/:id/leave", asyncRoute(async (request, response) => {

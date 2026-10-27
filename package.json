@@ -30,6 +30,8 @@
     "test:matches": "node --import tsx backend/tests/matches.integration.ts",
     "test:matches-ui": "node tests/matches-ui.mjs",
     "test:friend-leagues": "node --import tsx backend/tests/friend-leagues.integration.ts",
+    "test:notifications": "node --import tsx --test backend/tests/notifications.unit.ts",
+    "test:notifications:integration": "node --import tsx backend/tests/notifications.integration.ts",
     "test:friend-leagues-ui": "node --import tsx tests/friend-leagues-ui.mjs"
   },
   "devDependencies": {

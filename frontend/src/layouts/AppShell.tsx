@@ -6,11 +6,15 @@ import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoHomeOutline, IoFootball
 import { LuBookOpenText } from "react-icons/lu";
 import { FaRankingStar } from "react-icons/fa6";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings } from "react-icons/md";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import { MdOutlineNotificationsActive } from "react-icons/md";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { Avatar } from "../components/Avatar";
 import { LanguageSwitcher } from "../components/LanguageSwitcher";
 import { useLocale } from "../contexts/LocaleContext";
+import { api } from "../services/api";
 
 type IconName =
   | "participants"
@@ -44,6 +48,7 @@ function NavLinks({
   onNavigate?: () => void;
 }) {
   const { t } = useLocale();
+  const notifications = useQuery({ queryKey: ["notification-unread-count"], queryFn: api.unreadNotificationCount, enabled: mobile, refetchInterval: mobile ? 30000 : false });
   const navigation = [
     { to: "/", label: t("nav.home"), icon: "home" as const, end: true },
     {
@@ -74,6 +79,8 @@ function NavLinks({
       icon: "ranking" as const,
     },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },
+    ...(mobile ? [{ to: "/notifications", label: t("notifications.title"), icon: "notifications" as const }] : []),
+    ...(isAdmin ? [{ to: "/admin/notifications", label: t("notifications.adminTitle"), icon: "admin" as const }] : []),
     {
       to: "/rules",
       label: t("nav.rules"),
@@ -119,7 +126,7 @@ function NavLinks({
           }
         >
           <i>
-            <FootballIcon name={item.icon} />
+            {item.icon === "notifications" ? notifications.data?.unreadCount ? <><MdOutlineNotificationsActive className="notifications-bell notifications-bell--unread" aria-label={t("notifications.unread")} /><b className="notification-count">{notifications.data.unreadCount}</b></> : <IoMdNotificationsOutline className="notifications-bell" aria-hidden="true" /> : <FootballIcon name={item.icon} />}
           </i>
           <span>{mobile ? (item.mobile ?? item.label) : item.label}</span>
         </NavLink>

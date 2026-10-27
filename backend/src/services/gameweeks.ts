@@ -3,6 +3,7 @@ import { marketDatesForWeek, marketIsOpen } from "./market-schedule.js";
 import { prisma } from "../lib/prisma.js";
 import { applyPlayerPrices, previewPlayerPrices } from "./player-prices.js";
 import { ApiError } from "../utils/http.js";
+import { notifyGameweekResults } from "./notifications.js";
 
 type Db = Prisma.TransactionClient;
 
@@ -177,6 +178,7 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
     await tx.gameweekWinner.deleteMany({ where: { gameweekId } });
     const leaders = await tx.userGameweekPoints.findMany({ where: { gameweekId, rank: 1, user: { role: "USER" } } });
     if (leaders.length) await tx.gameweekWinner.createMany({ data: leaders.map(row => ({ gameweekId, userId: row.userId, rank: 1, points: row.totalPoints })) });
+    await notifyGameweekResults(tx, gameweekId);
   }
   return rows;
 }
