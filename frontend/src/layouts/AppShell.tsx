@@ -48,8 +48,9 @@ function NavLinks({
   onNavigate?: () => void;
 }) {
   const { t } = useLocale();
-  const notifications = useQuery({ queryKey: ["notification-unread-count"], queryFn: api.unreadNotificationCount, enabled: mobile, refetchInterval: mobile ? 30000 : false });
+  const notifications = useQuery({ queryKey: ["notification-unread-count"], queryFn: api.unreadNotificationCount, refetchInterval: 30000 });
   const navigation = [
+    { to: "/notifications", label: t("notifications.title"), icon: "notifications" as const },
     { to: "/", label: t("nav.home"), icon: "home" as const, end: true },
     {
       to: "/my-team",
@@ -79,7 +80,6 @@ function NavLinks({
       icon: "ranking" as const,
     },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },
-    ...(mobile ? [{ to: "/notifications", label: t("notifications.title"), icon: "notifications" as const }] : []),
     ...(isAdmin ? [{ to: "/admin/notifications", label: t("notifications.adminTitle"), icon: "admin" as const }] : []),
     {
       to: "/rules",

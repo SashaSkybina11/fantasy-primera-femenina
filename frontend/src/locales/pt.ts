@@ -101,6 +101,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "notifications.unreadCount": "{{count}} por ler",
   "notifications.read": "Lida",
   "notifications.unreadStatus": "Por ler",
+  "notifications.markRead": "Marcar como lida",
   "notifications.filterLabel": "Filtrar notificações",
   "notifications.filter.all": "Todas",
   "notifications.filter.unread": "Por ler",
