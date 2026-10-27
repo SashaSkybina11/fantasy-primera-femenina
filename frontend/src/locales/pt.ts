@@ -181,6 +181,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "adminLeagues.cancel": "Cancelar",
   "rules.pointsUnit": "pontos",
   "prices.title": "Preços das jogadoras",
+  "catalog.showMore": "Mostrar mais {{count}}",
   "prices.calculate": "Calcular alterações",
   "prices.apply": "Aplicar novos preços",
   "prices.applied": "Preços aplicados",

@@ -1,6 +1,7 @@
 import { nationalityLabel } from "../services/api";
 import type { Club, PlayerRole } from "../types";
 import { useLocale } from "../contexts/LocaleContext";
+import { ClubLogo } from "./ClubLogo";
 
 export type PlayerFilterState = {
   clubId: string;
@@ -24,22 +25,15 @@ export function PlayerFilters({
   const { locale, t } = useLocale();
   return (
     <div className={`filters${nationalities ? " filters--purchase" : ""}`}>
-      <label>
+      {nationalities ? <div className="purchase-club-filter"><span>{t("player.club")}</span><div className="purchase-club-logos" role="group" aria-label={t("player.club")}>
+        <button type="button" className={`purchase-club-choice${value.clubId === "" ? " is-selected" : ""}`} aria-pressed={!value.clubId} title={t("player.allClubs")} onClick={() => onChange({ ...value, clubId: "" })}><span className="purchase-club-all">{t("player.allClubs")}</span></button>
+        {clubs.map(club => <button type="button" key={club.id} className={`purchase-club-choice${value.clubId === club.id ? " is-selected" : ""}`} aria-pressed={value.clubId === club.id} title={club.name} onClick={() => onChange({ ...value, clubId: club.id })}><ClubLogo club={club} /></button>)}
+      </div></div> : <label>
         <span>{t("player.club")}</span>
-        <select
-          value={value.clubId}
-          onChange={(event) =>
-            onChange({ ...value, clubId: event.target.value })
-          }
-        >
-          <option value="">{t("player.allClubs")}</option>
-          {clubs.map((club) => (
-            <option key={club.id} value={club.id}>
-              {club.name}
-            </option>
-          ))}
+        <select value={value.clubId} onChange={(event) => onChange({ ...value, clubId: event.target.value })}>
+          <option value="">{t("player.allClubs")}</option>{clubs.map((club) => <option key={club.id} value={club.id}>{club.name}</option>)}
         </select>
-      </label>
+      </label>}
       <label>
         <span>{t("player.position")}</span>
         <select

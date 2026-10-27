@@ -3415,6 +3415,73 @@ select:focus {
 .member-gameweek-breakdown > div:last-child {
   border-bottom: 0;
 }
+.catalog-sort {
+  display: grid;
+  gap: 0.3rem;
+}
+.purchase-club-filter {
+  display: grid;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.purchase-club-filter > span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.purchase-club-logos {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  overflow-x: auto;
+  padding: 0.25rem 0.1rem 0.5rem;
+  scrollbar-width: thin;
+}
+.purchase-club-choice {
+  display: grid;
+  flex: 0 0 44px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+.purchase-club-choice:hover {
+  transform: translateY(-1px);
+}
+.purchase-club-choice.is-selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 24%, transparent);
+}
+.purchase-club-choice .club-logo,
+.purchase-club-choice .club-mark {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  font-size: 0.65rem;
+}
+.purchase-club-all {
+  font-size: 0.62rem;
+  line-height: 1.05;
+  text-align: center;
+}
+.catalog-load-more {
+  display: flex;
+  justify-content: center;
+  margin: 1.2rem 0 0.4rem;
+}
+.catalog-load-more .button {
+  min-width: min(100%, 13rem);
+}
+@media (min-width: 900px) {
+  .purchase-club-logos {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
 .purchase-heading-actions {
   display: grid;
   gap: 0.6rem;

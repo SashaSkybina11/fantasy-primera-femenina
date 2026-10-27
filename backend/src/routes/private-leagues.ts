@@ -71,15 +71,6 @@ router.post("/join", asyncRoute(async (request, response) => {
   response.json(league);
 }));
 
-router.get("/my", asyncRoute(async (request, response) => {
-  const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, include: { league: { include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true, gameweek: { select: { number: true, completedAt: true } } } } } } } }, _count: { select: { members: { where: { user: { role: "USER" } } } } } } } }, orderBy: { joinedAt: "desc" } });
-  response.json(memberships.map((membership) => {
-    const ranking = membership.league.members.map((member) => ({ id: member.userId, joinedAt: member.joinedAt, points: pointsForLeague(member, membership.league) })).sort((a, b) => b.points - a.points || a.joinedAt.getTime() - b.joinedAt.getTime() || a.id.localeCompare(b.id));
-    const { members: _members, ...league } = membership.league;
-    return { ...league, rank: ranking.findIndex((member) => member.id === request.auth!.userId) + 1 };
-  }));
-}));
-
 // Public directory: expose only the league display data, never invite codes or membership actions.
 router.get("/directory", asyncRoute(async (request, response) => {
   const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, select: { leagueId: true } });
@@ -90,6 +81,16 @@ router.get("/directory", asyncRoute(async (request, response) => {
     select: { id: true, name: true, logoUrl: true, _count: { select: { members: { where: { user: { role: "USER" } } } } } },
   });
   response.json(leagues);
+}));
+
+
+router.get("/my", asyncRoute(async (request, response) => {
+  const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, include: { league: { include: { members: { where: { user: { role: "USER" } }, include: { user: { select: { id: true, gameweekPoints: { where: { isFinal: true }, select: { totalPoints: true, gameweek: { select: { number: true, completedAt: true } } } } } } } }, _count: { select: { members: { where: { user: { role: "USER" } } } } } } } }, orderBy: { joinedAt: "desc" } });
+  response.json(memberships.map((membership) => {
+    const ranking = membership.league.members.map((member) => ({ id: member.userId, joinedAt: member.joinedAt, points: pointsForLeague(member, membership.league) })).sort((a, b) => b.points - a.points || a.joinedAt.getTime() - b.joinedAt.getTime() || a.id.localeCompare(b.id));
+    const { members: _members, ...league } = membership.league;
+    return { ...league, rank: ranking.findIndex((member) => member.id === request.auth!.userId) + 1 };
+  }));
 }));
 
 router.get("/:id", asyncRoute(async (request, response) => {

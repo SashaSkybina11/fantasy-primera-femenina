@@ -44,6 +44,7 @@ export function PurchasePlayersPage() {
     priceSort: "",
   });
   const [squadOpen, setSquadOpen] = useState(false);
+  const [visiblePlayerCount, setVisiblePlayerCount] = useState(10);
   const [marketOpenAt, setMarketOpenAt] = useState("");
   const [marketCloseAt, setMarketCloseAt] = useState("");
   const queryClient = useQueryClient();
@@ -115,10 +116,7 @@ export function PurchasePlayersPage() {
     (!filters.role || player.role === filters.role) &&
     (!filters.nationality || player.nationality?.toUpperCase() === filters.nationality) &&
     (!filters.search || player.name.toLocaleLowerCase(locale).includes(filters.search.trim().toLocaleLowerCase(locale)))
-  );
-  if (filters.priceSort) {
-    filteredPlayers?.sort((a, b) => filters.priceSort === "asc" ? a.price - b.price : b.price - a.price);
-  }
+  ).sort((a, b) => filters.priceSort === "asc" ? a.price - b.price : filters.priceSort === "desc" ? b.price - a.price : a.name.localeCompare(b.name));
   const popularClub = clubs.data?.find((club) => club.id === popularity.data?.player?.club.id);
 
   if (team.isLoading)
@@ -281,7 +279,7 @@ export function PurchasePlayersPage() {
           clubs={clubs.data ?? []}
           nationalities={nationalities}
           value={filters}
-          onChange={setFilters}
+          onChange={(next) => { setFilters(next); setVisiblePlayerCount(10); }}
         />
         {players.isLoading && (
           <div className="state-card"><Loader label={t("loading.players")} /></div>
@@ -296,7 +294,7 @@ export function PurchasePlayersPage() {
             {filteredPlayers.length === 0 ? (
               <div className="state-card">{t("player.notFound")}</div>
             ) : (
-              filteredPlayers.map((player) => {
+              filteredPlayers.slice(0, visiblePlayerCount).map((player) => {
                 const alreadySelected = selected.has(player.id);
                 const clubLimitReached =
                   (clubCounts.get(player.clubId) ?? 0) >= 2;
@@ -332,6 +330,7 @@ export function PurchasePlayersPage() {
             )}
           </div>
         )}
+        {filteredPlayers && filteredPlayers.length > visiblePlayerCount && <div className="catalog-load-more"><button className="button button--secondary" onClick={() => setVisiblePlayerCount(count => count + 20)}>{t("catalog.showMore", { count: Math.min(20, filteredPlayers.length - visiblePlayerCount) })}</button></div>}
       </section>
       {squadOpen && (
         <Modal
