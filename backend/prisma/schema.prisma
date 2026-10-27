@@ -292,6 +292,7 @@ model Notification {
   createdBy   User?                  @relation("NotificationCreator", fields: [createdById], references: [id], onDelete: SetNull)
   createdAt   DateTime               @default(now())
   sentAt      DateTime               @default(now())
+  cancelledAt DateTime?
   recipients  NotificationRecipient[]
 
   @@index([createdAt])

@@ -12,6 +12,16 @@ const localeKeys: NotificationLocaleKey[] = ["es", "uk", "en", "pt"];
 const notificationTypes = ["MARKET_OPEN", "MARKET_CLOSING", "INCOMPLETE_TEAM", "CAPTAIN_MISSING", "GAMEWEEK_STARTING", "GAMEWEEK_RESULTS", "INVITATION_RECEIVED", "GENERAL_ANNOUNCEMENT"];
 const emptyContent: NotificationContent = { title: "", message: "", action: "", url: "" };
 
+function NotificationReaders({ notificationId }: { notificationId: string }) {
+  const { t, locale } = useLocale();
+  const [open, setOpen] = useState(false);
+  const readers = useQuery({ queryKey: ["admin-notification-readers", notificationId], queryFn: () => api.adminNotificationReaders(notificationId), enabled: open });
+  return <details className="notification-readers" onToggle={event => setOpen(event.currentTarget.open)}>
+    <summary>{t("notifications.readers")}</summary>
+    {open && (readers.isPending ? <p>{t("loading.app")}</p> : readers.isError ? <p>{t("error.generic")}</p> : readers.data?.length ? <ul>{readers.data.map(reader => <li key={reader.email}><strong>{reader.name}</strong><span>{reader.email}</span><time>{new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(new Date(reader.readAt))}</time></li>)}</ul> : <p>{t("notifications.noReaders")}</p>)}
+  </details>;
+}
+
 export function AdminNotificationsPage() {
   const { user } = useAuth();
   const { t, locale } = useLocale();
@@ -33,6 +43,7 @@ export function AdminNotificationsPage() {
   const validAudience = audience !== "LEAGUE" || Boolean(leagueId);
   const audiencePreview = useQuery({ queryKey: ["notification-audience-preview", audienceInput], queryFn: () => api.previewNotificationAudience(audienceInput), enabled: validAudience && (audience !== "USERS" || userIds.length > 0) });
   const send = useMutation({ mutationFn: api.sendNotification, onSuccess: async () => { toast.success(t("notifications.sent")); await client.invalidateQueries({ queryKey: ["admin-notification-history"] }); }, onError: error => toast.error(error.message) });
+  const cancel = useMutation({ mutationFn: api.cancelAdminNotification, onSuccess: async () => { toast.success(t("notifications.cancelledSuccess")); await client.invalidateQueries({ queryKey: ["admin-notification-history"] }); }, onError: error => toast.error(error.message) });
   const saveTemplate = useMutation({ mutationFn: () => api.updateNotificationTemplate(type, contents), onSuccess: async () => { toast.success(t("notifications.templateSaved")); await client.invalidateQueries({ queryKey: ["notification-templates"] }); }, onError: error => toast.error(error.message) });
   if (user?.role !== "ADMIN") return <Navigate to="/" replace />;
   const language = locale === "pt-BR" ? "pt" : locale;
@@ -66,6 +77,11 @@ export function AdminNotificationsPage() {
       <button className="button button--secondary" disabled={saveTemplate.isPending || !contents.es.title || !contents.uk.title || !contents.en.title || !contents.pt.title} onClick={() => saveTemplate.mutate()}>{t("notifications.saveTemplate")}</button>
       <button className="button" disabled={send.isPending || saveTemplate.isPending || targets.isPending || audiencePreview.isPending || !audiencePreview.data?.count || localeKeys.some(key => !contents[key].title || !contents[key].message) || (audience === "LEAGUE" && !leagueId) || (audience === "USERS" && !userIds.length)} onClick={sendNotification}>{send.isPending ? t("auth.wait") : t("notifications.send")}</button>
     </section>
-    <section className="notification-history"><header className="admin-card__head"><h2>{t("notifications.history")}</h2></header>{history.isPending && <Loader label={t("loading.app")} />}{history.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}{history.data?.length === 0 && <p className="state-card">{t("notifications.historyEmpty")}</p>}{history.data?.map(item => <article className="notification-history-row" key={item.id}><div><strong>{t(`notifications.type.${item.type}` as TranslationKey)}</strong><time>{new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.sentAt))}</time><small>{item.createdBy?.name ?? t("notifications.system")}</small></div><span>{t("notifications.recipients")}: {item.recipientCount}</span><span>{t("notifications.readCount")}: {item.readCount}</span></article>)}</section>
+    <section className="notification-history"><header className="admin-card__head"><h2>{t("notifications.history")}</h2></header>{history.isPending && <Loader label={t("loading.app")} />}{history.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}{history.data?.length === 0 && <p className="state-card">{t("notifications.historyEmpty")}</p>}{history.data?.map(item => <article className={`notification-history-row${item.cancelledAt ? " is-cancelled" : ""}`} key={item.id}>
+      <div className="notification-history-row__summary"><strong>{t(`notifications.type.${item.type}` as TranslationKey)}</strong><time>{new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.sentAt))}</time><small>{item.createdBy?.name ?? t("notifications.system")}</small></div>
+      <div className="notification-history-row__stats"><span>{t("notifications.recipients")}: {item.recipientCount}</span><span>{t("notifications.readCount")}: {item.readCount}</span></div>
+      <NotificationReaders notificationId={item.id} />
+      {item.cancelledAt ? <span className="notification-cancelled-label">{t("notifications.cancelled")}</span> : <button className="button button--secondary notification-cancel-button" disabled={cancel.isPending} onClick={() => window.confirm(t("notifications.cancelConfirm", { count: item.recipientCount })) && cancel.mutate(item.id)}>{t("notifications.cancelSend")}</button>}
+    </article>)}</section>
   </div>;
 }

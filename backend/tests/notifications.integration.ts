@@ -69,11 +69,20 @@ try {
   assert.equal(privateSend.response.status, 201);
   const outsiderRead = await api(`/notifications/${privateSend.data.id}/read`, 2, "POST");
   assert.equal(outsiderRead.response.status, 404);
+  assert.equal((await api(`/notifications/${privateSend.data.id}/read`, 1, "POST")).response.status, 200);
   const history = await api("/admin/notifications/history", 0);
   assert.equal(history.response.status, 200);
   assert.equal(history.data.length, 3);
   assert.ok(history.data.some((entry: { recipientCount: number }) => entry.recipientCount === 2));
-  console.log("PASS: admin authorization, recipient targeting, per-user read persistence, language selection, and send history");
+  const privateHistory = history.data.find((entry: { id: string }) => entry.id === privateSend.data.id);
+  assert.equal(privateHistory.readCount, 1);
+  const readerList = await api(`/admin/notifications/history/${privateSend.data.id}/readers`, 0);
+  assert.equal(readerList.data[0].name, users[1]!.name);
+  assert.equal((await api(`/admin/notifications/${privateSend.data.id}/cancel`, 0, "POST")).response.status, 200);
+  assert.equal((await api("/notifications", 1, "GET", undefined, "en")).data.items.some((item: { id: string }) => item.id === privateSend.data.id), false);
+  const cancelledHistory = await api("/admin/notifications/history", 0);
+  assert.ok(cancelledHistory.data.find((entry: { id: string }) => entry.id === privateSend.data.id).cancelledAt);
+  console.log("PASS: admin authorization, recipient targeting, cross-device read state, localization, reader history, and cancellation");
 } finally {
   server.close();
   await prisma.$disconnect();

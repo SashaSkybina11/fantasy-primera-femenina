@@ -18,11 +18,11 @@ const visibleNotification = (userId: string) => ({ recipients: { some: { userId 
 router.get("/", asyncRoute(async (request, response) => {
   const status = z.enum(["all", "unread", "read"]).default("all").parse(request.query.status);
   const userId = request.auth!.userId;
-  const where = { ...visibleNotification(userId), ...(status === "unread" ? { recipients: { some: { userId, readAt: null } } } : status === "read" ? { recipients: { some: { userId, readAt: { not: null } } } } : {}) };
+  const where = { cancelledAt: null, ...visibleNotification(userId), ...(status === "unread" ? { recipients: { some: { userId, readAt: null } } } : status === "read" ? { recipients: { some: { userId, readAt: { not: null } } } } : {}) };
   const [rows, unreadCount, totalCount] = await Promise.all([
     prisma.notification.findMany({ where, orderBy: { createdAt: "desc" }, take: 200, include: { recipients: { where: { userId }, select: { readAt: true, variables: true } } } }),
-    prisma.notificationRecipient.count({ where: { userId, readAt: null } }),
-    prisma.notificationRecipient.count({ where: { userId } }),
+    prisma.notificationRecipient.count({ where: { userId, readAt: null, notification: { is: { cancelledAt: null } } } }),
+    prisma.notificationRecipient.count({ where: { userId, notification: { is: { cancelledAt: null } } } }),
   ]);
   const locale: NotificationLocale = normalizeNotificationLocale(request.header("accept-language"));
   const items = rows.map(notification => {
@@ -35,15 +35,15 @@ router.get("/", asyncRoute(async (request, response) => {
 }));
 
 router.get("/unread-count", asyncRoute(async (request, response) => {
-  const unreadCount = await prisma.notificationRecipient.count({ where: { userId: request.auth!.userId, readAt: null } });
+  const unreadCount = await prisma.notificationRecipient.count({ where: { userId: request.auth!.userId, readAt: null, notification: { is: { cancelledAt: null } } } });
   response.json({ unreadCount });
 }));
 
 router.post("/:id/read", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const userId = request.auth!.userId;
-  const result = await prisma.notificationRecipient.updateMany({ where: { notificationId: id, userId, readAt: null }, data: { readAt: new Date() } });
-  const exists = result.count || await prisma.notificationRecipient.count({ where: { notificationId: id, userId } });
+  const result = await prisma.notificationRecipient.updateMany({ where: { notificationId: id, userId, readAt: null, notification: { is: { cancelledAt: null } } }, data: { readAt: new Date() } });
+  const exists = result.count || await prisma.notificationRecipient.count({ where: { notificationId: id, userId, notification: { is: { cancelledAt: null } } } });
   if (!exists) throw new ApiError(404, "Уведомление не найдено");
   response.json({ ok: true });
 }));

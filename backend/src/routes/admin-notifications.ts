@@ -49,8 +49,24 @@ router.post("/preview", asyncRoute(async (request, response) => {
 }));
 
 router.get("/history", asyncRoute(async (_request, response) => {
-  const rows = await prisma.notification.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { createdBy: { select: { id: true, name: true } }, _count: { select: { recipients: true } }, recipients: { where: { readAt: { not: null } }, select: { userId: true } } } });
-  response.json(rows.map(row => ({ id: row.id, type: row.type, audience: row.audience, createdAt: row.createdAt, sentAt: row.sentAt, eventKey: row.eventKey, createdBy: row.createdBy, recipientCount: row._count.recipients, readCount: row.recipients.length })));
+  const rows = await prisma.notification.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { createdBy: { select: { id: true, name: true } }, _count: { select: { recipients: true } } } });
+  const reads = rows.length ? await prisma.notificationRecipient.groupBy({ by: ["notificationId"], where: { notificationId: { in: rows.map(row => row.id) }, readAt: { not: null } }, _count: { _all: true } }) : [];
+  const readCounts = new Map(reads.map(row => [row.notificationId, row._count._all]));
+  response.json(rows.map(row => ({ id: row.id, type: row.type, audience: row.audience, createdAt: row.createdAt, sentAt: row.sentAt, cancelledAt: row.cancelledAt, eventKey: row.eventKey, createdBy: row.createdBy, recipientCount: row._count.recipients, readCount: readCounts.get(row.id) ?? 0 })));
+}));
+
+router.get("/history/:id/readers", asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  if (!(await prisma.notification.findUnique({ where: { id }, select: { id: true } }))) throw new ApiError(404, "Уведомление не найдено");
+  const recipients = await prisma.notificationRecipient.findMany({ where: { notificationId: id, readAt: { not: null } }, orderBy: { readAt: "desc" }, select: { readAt: true, user: { select: { name: true, email: true } } } });
+  response.json(recipients.map(recipient => ({ ...recipient.user, readAt: recipient.readAt })));
+}));
+
+router.post("/:id/cancel", asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  const result = await prisma.notification.updateMany({ where: { id, cancelledAt: null }, data: { cancelledAt: new Date() } });
+  if (!result.count) throw new ApiError(404, "Уведомление не найдено или уже отменено");
+  response.json({ ok: true });
 }));
 
 router.post("/send", asyncRoute(async (request, response) => {

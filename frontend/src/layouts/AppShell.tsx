@@ -126,9 +126,10 @@ function NavLinks({
           }
         >
           <i>
-            {item.icon === "notifications" ? notifications.data?.unreadCount ? <><MdOutlineNotificationsActive className="notifications-bell notifications-bell--unread" aria-label={t("notifications.unread")} /><b className="notification-count">{notifications.data.unreadCount}</b></> : <IoMdNotificationsOutline className="notifications-bell" aria-hidden="true" /> : <FootballIcon name={item.icon} />}
+            {item.icon === "notifications" ? notifications.data?.unreadCount ? <MdOutlineNotificationsActive className="notifications-bell notifications-bell--unread" aria-label={t("notifications.unread")} /> : <IoMdNotificationsOutline className="notifications-bell" aria-hidden="true" /> : <FootballIcon name={item.icon} />}
           </i>
           <span>{mobile ? (item.mobile ?? item.label) : item.label}</span>
+          {item.icon === "notifications" && Boolean(notifications.data?.unreadCount) && <b className="notification-count">{notifications.data?.unreadCount}</b>}
         </NavLink>
       ))}
     </>

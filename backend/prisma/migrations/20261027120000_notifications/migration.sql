@@ -7,6 +7,7 @@ CREATE TABLE "Notification" (
   "createdById" TEXT,
   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "sentAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "cancelledAt" TIMESTAMP(3),
   CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
 );
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
 import { SlEnvolopeLetter } from "react-icons/sl";
 import { Loader } from "../components/Loader";
 import { api } from "../services/api";
@@ -22,7 +21,7 @@ export function NotificationsPage() {
     {notifications.data?.items.length === 0 && <p className="state-card">{t("notifications.empty")}</p>}
     <div className="notification-list">{notifications.data?.items.map(item => <article className={`notification-card${item.isRead ? " is-read" : " is-unread"}`} key={item.id}>
       <details><summary><div className="notification-card__meta"><time dateTime={item.createdAt}>{new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short" }).format(new Date(item.createdAt))}</time><span>{t(item.isRead ? "notifications.read" : "notifications.unreadStatus")}</span></div><h2>{item.title}</h2></summary>
-        <div className="notification-card__body"><p>{item.message}</p>{item.action && item.url && <div className="notification-card__actions"><Link className="button button--secondary notification-card__action" to={item.url}>{item.action}</Link></div>}</div>
+        <div className="notification-card__body"><p>{item.message}</p></div>
       </details>
       <button type="button" className={`button notification-card__read${item.isRead ? " button--secondary" : ""}`} disabled={item.isRead || markRead.isPending} onClick={() => markRead.mutate(item.id)}>{t(item.isRead ? "notifications.read" : "notifications.markRead")}</button>
     </article>)}</div>
