@@ -34,7 +34,7 @@ export function PlayerFilters({
           <option value="">{t("player.allClubs")}</option>{clubs.map((club) => <option key={club.id} value={club.id}>{club.name}</option>)}
         </select>
       </label>}
-      <label>
+      <label className={nationalities ? "purchase-filter-position" : undefined}>
         <span>{t("player.position")}</span>
         <select
           value={value.role}
@@ -53,14 +53,14 @@ export function PlayerFilters({
         </select>
       </label>
       {nationalities && <>
-      <label>
+      <label className={nationalities ? "purchase-filter-nationality" : undefined}>
         <span>{t("player.nationality")}</span>
         <select value={value.nationality} onChange={(event) => onChange({ ...value, nationality: event.target.value })}>
           <option value="">{t("player.allNationalities")}</option>
           {nationalities.map((code) => <option key={code} value={code}>{nationalityLabel(code, locale)}</option>)}
         </select>
       </label>
-      <label>
+      <label className={nationalities ? "purchase-filter-sort" : undefined}>
         <span>{t("player.priceSort")}</span>
         <select value={value.priceSort} onChange={(event) => onChange({ ...value, priceSort: event.target.value as PlayerFilterState["priceSort"] })}>
           <option value="">{t("player.defaultSort")}</option>
@@ -69,7 +69,7 @@ export function PlayerFilters({
         </select>
       </label>
       </>}
-      <label className="filters__search">
+      <label className={`filters__search${nationalities ? " purchase-filter-search" : ""}`}>
         <span>{t("player.search")}</span>
         <input
           value={value.search}
