@@ -80,6 +80,18 @@ router.get("/my", asyncRoute(async (request, response) => {
   }));
 }));
 
+// Public directory: expose only the league display data, never invite codes or membership actions.
+router.get("/directory", asyncRoute(async (request, response) => {
+  const memberships = await prisma.privateLeagueMember.findMany({ where: { userId: request.auth!.userId }, select: { leagueId: true } });
+  const excludedIds = memberships.map((membership) => membership.leagueId);
+  const leagues = await prisma.privateLeague.findMany({
+    where: { ...(excludedIds.length ? { id: { notIn: excludedIds } } : {}) },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, name: true, logoUrl: true, _count: { select: { members: { where: { user: { role: "USER" } } } } } },
+  });
+  response.json(leagues);
+}));
+
 router.get("/:id", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   const viewer = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { role: true } });

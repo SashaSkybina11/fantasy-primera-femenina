@@ -16,6 +16,7 @@ import type {
   PlayerRole,
   PrivateLeagueDetail,
   PrivateLeagueSummary,
+  PublicPrivateLeague,
   Profile,
   SquadStatus,
   TransferStatus,
@@ -695,6 +696,7 @@ export const api = {
   adjustUserPoints: (gameweekId: string, userId: string, points: number, reason: string) =>
     request<unknown>(`/admin/gameweeks/${gameweekId}/users/${userId}/adjustments`, { method: "POST", body: JSON.stringify({ points, reason }) }),
   privateLeagues: () => request<PrivateLeagueSummary[]>("/private-leagues/my"),
+  publicPrivateLeagues: () => request<PublicPrivateLeague[]>("/private-leagues/directory"),
   privateLeague: (id: string) =>
     request<PrivateLeagueDetail>(`/private-leagues/${id}`),
   createPrivateLeague: (name: string, logo?: File | null) => {

@@ -3365,6 +3365,56 @@ select:focus {
 .friend-league-list strong {
   overflow-wrap: anywhere;
 }
+.friend-leagues-directory {
+  display: grid;
+  gap: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+.friend-leagues-directory h2,
+.member-gameweek-history h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.friend-league-directory-row > span {
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+}
+.member-gameweek-history {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1.25rem 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.member-gameweek-history > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+.member-gameweek-history > header > div,
+.member-gameweek-history label {
+  display: grid;
+  gap: 0.25rem;
+}
+.member-gameweek-history select {
+  min-width: 9rem;
+}
+.member-gameweek-total,
+.member-gameweek-breakdown > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.member-gameweek-breakdown > div:last-child {
+  border-bottom: 0;
+}
 .purchase-heading-actions {
   display: grid;
   gap: 0.6rem;

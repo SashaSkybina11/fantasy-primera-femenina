@@ -114,6 +114,15 @@ export type ClubSupport = Pick<Club, "id" | "name" | "logoUrl"> & {
 
 export type MemberDetail = Pick<User, "id" | "name" | "avatarUrl"> & {
   fantasyTeam: FantasyTeam;
+  gameweekPoints: Array<{
+    id: string;
+    totalPoints: number;
+    playerPoints: number;
+    captainBonus: number;
+    adjustmentPoints: number;
+    breakdown: Array<{ playerId: string; name: string; isCaptain: boolean; basePoints: number; points: number }> | null;
+    gameweek: Pick<Gameweek, "id" | "number" | "name">;
+  }>;
 };
 
 export type AdminUser = {
@@ -149,6 +158,7 @@ export type PrivateLeagueSummary = {
   rank?: number;
   _count?: { members: number };
 };
+export type PublicPrivateLeague = Pick<PrivateLeagueSummary, "id" | "name" | "logoUrl"> & { _count: { members: number } };
 export type PrivateLeagueDetail = PrivateLeagueSummary & {
   members: Array<{
     id: string;

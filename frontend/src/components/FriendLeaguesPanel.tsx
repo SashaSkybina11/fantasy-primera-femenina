@@ -28,6 +28,7 @@ export function FriendLeaguesPanel() {
     queryKey: ["private-leagues"],
     queryFn: api.privateLeagues,
   });
+  const publicLeagues = useQuery({ queryKey: ["private-leagues-directory"], queryFn: api.publicPrivateLeagues });
   const owned = leagues.data?.some(league => league.ownerId === user?.id);
   const joined = leagues.data?.filter(league => league.ownerId !== user?.id).length ?? 0;
   const close = () => {
@@ -80,6 +81,17 @@ export function FriendLeaguesPanel() {
           </article>
         ))}
       </div>
+      <section className="friend-leagues-directory">
+        <h2>{t("friends.directory")}</h2>
+        {publicLeagues.isPending && <p role="status"><Loader label={t("loading.app")} /></p>}
+        {publicLeagues.isError && <p role="alert">{t("error.generic")} <button className="button button--secondary" onClick={() => void publicLeagues.refetch()}>{t("friends.retry")}</button></p>}
+        {publicLeagues.data?.length === 0 && <p className="muted">{t("friends.directoryEmpty")}</p>}
+        {!!publicLeagues.data?.length && <div className="friend-league-list">{publicLeagues.data.map((league) => <article key={league.id} className="friend-league-directory-row">
+          <Avatar name={league.name} src={league.logoUrl} />
+          <div><strong>{league.name}</strong><small>{league._count.members} · {t("friends.members")}</small></div>
+          <span className="muted">{t("friends.viewOnly")}</span>
+        </article>)}</div>}
+      </section>
       <div className="friend-league-actions">
         <button className="button" disabled={!leagues.isSuccess || owned} onClick={() => setMode("create")}>
           {t("friends.create")}

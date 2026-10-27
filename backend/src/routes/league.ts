@@ -44,12 +44,12 @@ router.get("/members/:userId", asyncRoute(async (request, response) => {
   const userId = z.string().cuid().parse(request.params.userId);
   const membership = await prisma.leagueMember.findFirst({
     where: { userId, league: { name: mainLeagueName } },
-    include: { user: { select: { id: true, name: true, avatarUrl: true, fantasyTeam: { include: teamInclude } } } },
+    include: { user: { select: { id: true, name: true, avatarUrl: true, fantasyTeam: { include: teamInclude }, gameweekPoints: { where: { isFinal: true, gameweek: { status: "COMPLETED" } }, orderBy: { gameweek: { number: "desc" } }, select: { id: true, totalPoints: true, playerPoints: true, captainBonus: true, adjustmentPoints: true, breakdown: true, gameweek: { select: { id: true, number: true, name: true } } } } } } },
   });
   const fantasyTeam = membership?.user.fantasyTeam;
   if (!membership || !fantasyTeam) throw new ApiError(404, "Участник не найден в этой лиге");
   const { user } = membership;
-  response.json({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, fantasyTeam: await withTeamDisplayNumbers(fantasyTeam) });
+  response.json({ id: user.id, name: user.name, avatarUrl: user.avatarUrl, fantasyTeam: await withTeamDisplayNumbers(fantasyTeam), gameweekPoints: user.gameweekPoints });
 }));
 
 export default router;

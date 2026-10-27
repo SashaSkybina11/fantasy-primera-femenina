@@ -227,6 +227,9 @@ export const portuguese: Record<TranslationKey, string> = {
   "friends.empty":
     "Crie a sua liga ou entre na liga dos seus amigos com um código.",
   "friends.retry": "Tentar novamente",
+  "friends.directory": "Outras ligas",
+  "friends.directoryEmpty": "Não há outras ligas para mostrar.",
+  "friends.viewOnly": "Só visualização",
   "purchase.popularTitle": "Jogadora mais popular",
   "purchase.popularEmpty": "Ainda não há dados suficientes",
   "purchase.popularOwners":
@@ -558,6 +561,13 @@ export const portuguese: Record<TranslationKey, string> = {
   "member.onlyTheirs": "Só na equipa de {{name}}",
   "member.noPlayers": "Sem jogadoras",
   "member.memberSquad": "Plantel do participante",
+  "member.pointsEyebrow": "Pontos",
+  "member.pointsTitle": "Pontos por jornada",
+  "member.selectGameweek": "Jornada",
+  "member.noPoints": "Ainda não há pontos de jornadas concluídas.",
+  "member.captain": "capitã",
+  "member.captainBonus": "Bónus de capitã",
+  "member.adjustment": "Ajuste",
   "avatar.alt": "Avatar de {{name}}",
   "clubLogo.alt": "Emblema de {{name}}",
   "home.eyebrow": "Fantasy de futsal feminino",
