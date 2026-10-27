@@ -12,7 +12,6 @@ export function MemberTeamPage() {
   const { t } = useLocale();
   const { userId = "" } = useParams();
   const [compare, setCompare] = useState(false);
-  const [selectedGameweekId, setSelectedGameweekId] = useState("");
   const member = useQuery({
     queryKey: ["member", userId],
     queryFn: () => api.member(userId),
@@ -56,10 +55,6 @@ export function MemberTeamPage() {
       )}
     </div>
   );
-  const gameweeks = member.data.gameweekPoints;
-  const selectedPoints =
-    gameweeks.find((row) => row.gameweek.id === selectedGameweekId) ??
-    gameweeks[0];
   return (
     <div className="page">
       <Link className="back-link" to="/league">
@@ -101,82 +96,6 @@ export function MemberTeamPage() {
           </div>
         </section>
       )}
-
-      <section className="member-gameweek-history">
-        <header>
-          <div>
-            <p className="eyebrow">{t("member.pointsEyebrow")}</p>
-            <h2>{t("member.pointsTitle")}</h2>
-          </div>
-
-          {gameweeks.length > 0 && (
-            <label>
-              {t("member.selectGameweek")}
-              <select
-                value={selectedPoints?.gameweek.id ?? ""}
-                onChange={(event) => setSelectedGameweekId(event.target.value)}
-              >
-                {gameweeks.map((row) => (
-                  <option key={row.gameweek.id} value={row.gameweek.id}>
-                    {t("gameweek.label", { number: row.gameweek.number })}
-                  </option>
-                ))}
-              </select>
-            </label>
-          )}
-        </header>
-
-        {!selectedPoints ? (
-          <p className="muted">{t("member.noPoints")}</p>
-        ) : (
-          <>
-            <div className="member-gameweek-total">
-              <span>
-                {t("gameweek.label", {
-                  number: selectedPoints.gameweek.number,
-                })}
-              </span>
-              <strong>
-                {selectedPoints.totalPoints} {t("common.pointsShort")}
-              </strong>
-            </div>
-
-            <div className="member-gameweek-breakdown">
-              {selectedPoints.breakdown?.map((entry) => (
-                <div key={entry.playerId}>
-                  <span>
-                    {entry.name}
-                    {entry.isCaptain ? ` 👑 ${t("member.captain")}` : ""}
-                  </span>
-                  <strong>
-                    {entry.points} {t("common.pointsShort")}
-                  </strong>
-                </div>
-              ))}
-
-              {selectedPoints.captainBonus !== 0 && (
-                <div>
-                  <span>{t("member.captainBonus")}</span>
-                  <strong>
-                    {selectedPoints.captainBonus > 0 ? "+" : ""}
-                    {selectedPoints.captainBonus} {t("common.pointsShort")}
-                  </strong>
-                </div>
-              )}
-
-              {selectedPoints.adjustmentPoints !== 0 && (
-                <div>
-                  <span>{t("member.adjustment")}</span>
-                  <strong>
-                    {selectedPoints.adjustmentPoints > 0 ? "+" : ""}
-                    {selectedPoints.adjustmentPoints} {t("common.pointsShort")}
-                  </strong>
-                </div>
-              )}
-            </div>
-          </>
-        )}
-      </section>
 
       <div className="team-grid">
         <SquadSection

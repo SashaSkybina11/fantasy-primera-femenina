@@ -44,7 +44,7 @@ export function PurchasePlayersPage() {
     priceSort: "",
   });
   const [squadOpen, setSquadOpen] = useState(false);
-  const [visiblePlayerCount, setVisiblePlayerCount] = useState(10);
+  const [visiblePlayerCount, setVisiblePlayerCount] = useState(8);
   const [marketOpenAt, setMarketOpenAt] = useState("");
   const [marketCloseAt, setMarketCloseAt] = useState("");
   const queryClient = useQueryClient();
@@ -279,7 +279,7 @@ export function PurchasePlayersPage() {
           clubs={clubs.data ?? []}
           nationalities={nationalities}
           value={filters}
-          onChange={(next) => { setFilters(next); setVisiblePlayerCount(10); }}
+          onChange={(next) => { setFilters(next); setVisiblePlayerCount(next.clubId ? Number.MAX_SAFE_INTEGER : 8); }}
         />
         {players.isLoading && (
           <div className="state-card"><Loader label={t("loading.players")} /></div>
@@ -330,7 +330,7 @@ export function PurchasePlayersPage() {
             )}
           </div>
         )}
-        {filteredPlayers && filteredPlayers.length > visiblePlayerCount && <div className="catalog-load-more"><button className="button button--secondary" onClick={() => setVisiblePlayerCount(count => count + 20)}>{t("catalog.showMore", { count: Math.min(20, filteredPlayers.length - visiblePlayerCount) })}</button></div>}
+        {filteredPlayers && filteredPlayers.length > visiblePlayerCount && <div className="catalog-load-more"><button className="button button--secondary" onClick={() => setVisiblePlayerCount(count => count + 16)}>{t("catalog.showMore", { count: Math.min(16, filteredPlayers.length - visiblePlayerCount) })}</button></div>}
       </section>
       {squadOpen && (
         <Modal

@@ -89,7 +89,6 @@ export function FriendLeaguesPanel() {
         {!!publicLeagues.data?.length && <div className="friend-league-list">{publicLeagues.data.map((league) => <article key={league.id} className="friend-league-directory-row">
           <Avatar name={league.name} src={league.logoUrl} />
           <div><strong>{league.name}</strong><small>{league._count.members} · {t("friends.members")}</small></div>
-          <span className="muted">{t("friends.viewOnly")}</span>
         </article>)}</div>}
       </section>
       <div className="friend-league-actions">

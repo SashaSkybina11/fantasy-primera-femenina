@@ -3376,45 +3376,6 @@ select:focus {
   margin: 0;
   font-size: 1.1rem;
 }
-.friend-league-directory-row > span {
-  flex: 0 0 auto;
-  font-size: 0.78rem;
-}
-.member-gameweek-history {
-  display: grid;
-  gap: 0.8rem;
-  margin: 1.25rem 0;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--surface);
-}
-.member-gameweek-history > header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  justify-content: space-between;
-  gap: 0.8rem;
-}
-.member-gameweek-history > header > div,
-.member-gameweek-history label {
-  display: grid;
-  gap: 0.25rem;
-}
-.member-gameweek-history select {
-  min-width: 9rem;
-}
-.member-gameweek-total,
-.member-gameweek-breakdown > div {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.65rem 0;
-  border-bottom: 1px solid var(--border);
-}
-.member-gameweek-breakdown > div:last-child {
-  border-bottom: 0;
-}
 .catalog-sort {
   display: grid;
   gap: 0.3rem;
@@ -3430,11 +3391,15 @@ select:focus {
 }
 .purchase-club-logos {
   display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.45rem;
+  width: 100%;
+  min-width: 0;
   overflow-x: auto;
   padding: 0.25rem 0.1rem 0.5rem;
   scrollbar-width: thin;
+  border-bottom: 1px solid var(--border);
 }
 .purchase-club-choice {
   display: grid;
@@ -3478,8 +3443,8 @@ select:focus {
 }
 @media (min-width: 900px) {
   .purchase-club-logos {
-    flex-wrap: wrap;
-    overflow: visible;
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 }
 .purchase-heading-actions {
@@ -5950,15 +5915,43 @@ form.admin-card.match-create {
 }
 /* Shared compact catalog layouts, including narrow phones. */
 .catalog-filters {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
   gap: 12px;
   margin-bottom: 20px;
 }
 .catalog-filters > * {
-  flex: 1 1 240px;
+  box-sizing: border-box;
   min-width: 0;
   width: 100%;
+}
+.catalog-filters input,
+.catalog-filters select {
+  height: var(--control-height);
+}
+.catalog-sort {
+  min-width: 0;
+}
+.catalog-sort select {
+  width: 100%;
+}
+@media (max-width: 760px) {
+  .catalog-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .catalog-filters > input {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 440px) {
+  .catalog-filters {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .catalog-filters > input {
+    grid-column: auto;
+  }
 }
 .scorers-table-wrap {
   width: 100%;
