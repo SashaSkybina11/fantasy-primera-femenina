@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { api, authRequiredEvent, authToken } from "../services/api";
+import { api, authRequiredEvent, authToken, cachedAuthUser } from "../services/api";
 import type { User } from "../types";
 
 type AuthContextValue = {
@@ -16,32 +16,37 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const queryClient = useQueryClient();
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUserState] = useState<User | null>(() => authToken.get() ? cachedAuthUser.get() : null);
+  const [isLoading, setIsLoading] = useState(() => Boolean(authToken.get() && !cachedAuthUser.get()));
+
+  const updateUser = (nextUser: User | null) => {
+    if (nextUser) cachedAuthUser.set(nextUser);
+    else cachedAuthUser.clear();
+    setUserState(nextUser);
+  };
 
   useEffect(() => {
     const token = authToken.get();
-    if (!token) { setIsLoading(false); return; }
+    if (!token) { cachedAuthUser.clear(); setUserState(null); setIsLoading(false); return; }
     let active = true;
-    const timeout = window.setTimeout(() => {
-      if (active) setIsLoading(false);
-    }, 8000);
+    setIsLoading(!cachedAuthUser.get());
     api.me()
       .then(({ user: loadedUser }) => {
-        if (active && authToken.get() === token) setUser(loadedUser);
+        if (active && authToken.get() === token) updateUser(loadedUser);
       })
       // Unauthorized responses are handled by the API. Network failures must
       // not erase a valid session or a newer login.
       .catch(() => {})
-      .finally(() => { window.clearTimeout(timeout); if (active) setIsLoading(false); });
-    return () => { active = false; window.clearTimeout(timeout); };
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
   }, [queryClient]);
 
   useEffect(() => {
     const endSession = () => {
       authToken.clear();
+      cachedAuthUser.clear();
       queryClient.clear();
-      setUser(null);
+      setUserState(null);
       setIsLoading(false);
     };
     window.addEventListener(authRequiredEvent, endSession);
@@ -51,10 +56,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<AuthContextValue>(() => ({
     user,
     isLoading,
-    login: async (payload) => { const result = await api.login(payload); authToken.set(result.token); queryClient.clear(); setUser(result.user); },
-    register: async (payload) => { const result = await api.register(payload); authToken.set(result.token); queryClient.clear(); setUser(result.user); },
-    logout: async () => { try { await api.logout(); } finally { authToken.clear(); queryClient.clear(); setUser(null); } },
-    setUser,
+    login: async (payload) => { const result = await api.login(payload); authToken.set(result.token); cachedAuthUser.set(result.user); queryClient.clear(); setUserState(result.user); },
+    register: async (payload) => { const result = await api.register(payload); authToken.set(result.token); cachedAuthUser.set(result.user); queryClient.clear(); setUserState(result.user); },
+    logout: async () => { try { await api.logout(); } finally { authToken.clear(); cachedAuthUser.clear(); queryClient.clear(); setUserState(null); } },
+    setUser: updateUser,
   }), [user, isLoading, queryClient]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

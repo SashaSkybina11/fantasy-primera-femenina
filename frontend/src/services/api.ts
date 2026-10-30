@@ -34,6 +34,7 @@ const SERVER_URL = API_URL.startsWith("/")
   ? ""
   : API_URL.replace(/\/api\/?$/, "");
 const tokenKey = "fantasy-futsal-token";
+const cachedUserKey = "fantasy-futsal-user";
 export const authRequiredEvent = "fantasy-futsal-auth-required";
 
 const apiMessages: Record<string, Record<"es" | "uk" | "en", string> & Partial<Record<Locale, string>>> = {
@@ -435,9 +436,22 @@ function localizedApiMessage(message: string | undefined): string {
 }
 
 export const authToken = {
-  get: () => localStorage.getItem(tokenKey),
-  set: (token: string) => localStorage.setItem(tokenKey, token),
-  clear: () => localStorage.removeItem(tokenKey),
+  get: () => { try { return localStorage.getItem(tokenKey); } catch { return null; } },
+  set: (token: string) => { try { localStorage.setItem(tokenKey, token); } catch { /* Storage can be unavailable in private browsing. */ } },
+  clear: () => { try { localStorage.removeItem(tokenKey); } catch { /* Ignore unavailable storage. */ } },
+};
+
+export const cachedAuthUser = {
+  get: (): User | null => {
+    try {
+      const value = localStorage.getItem(cachedUserKey);
+      if (!value) return null;
+      const user = JSON.parse(value) as User;
+      return user && typeof user.id === "string" && typeof user.role === "string" ? user : null;
+    } catch { return null; }
+  },
+  set: (user: User) => { try { localStorage.setItem(cachedUserKey, JSON.stringify(user)); } catch { /* Cache is optional. */ } },
+  clear: () => { try { localStorage.removeItem(cachedUserKey); } catch { /* Ignore unavailable storage. */ } },
 };
 
 export function imageUrl(path: string | null | undefined) {
@@ -528,11 +542,17 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   headers.set("Accept-Language", getStoredLocale());
   if (init.body && !(init.body instanceof FormData))
     headers.set("Content-Type", "application/json");
-  const response = await fetch(`${API_URL}${path}`, { cache: "no-store", ...init, headers });
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), path === "/auth/me" ? 5000 : 20000);
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}${path}`, { cache: "no-store", ...init, headers, signal: init.signal ?? controller.signal });
+  } finally { window.clearTimeout(timeout); }
   if (response.status === 204) return undefined as T;
   const data = await response.json().catch(() => ({}));
   if (response.status === 401 && token && authToken.get() === token) {
     authToken.clear();
+    cachedAuthUser.clear();
     window.dispatchEvent(new Event(authRequiredEvent));
   }
   if (!response.ok) {
