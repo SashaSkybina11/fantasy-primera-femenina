@@ -6420,6 +6420,8 @@ form.admin-card.match-create {
   font-weight: 700;
   text-transform: uppercase;
 }
+.club-standings-table .club-standings-points { background: color-mix(in srgb, var(--accent) 13%, var(--surface)); }
+.club-standings-table td.club-standings-points strong { font-weight: 800; }
 .club-standings-table tbody tr:last-child td { border-bottom: 0; }
 .club-standings-table .club-standings-rank { width: 54px; padding: 0; }
 .club-standings-rank span { display: grid; min-height: 42px; place-items: center; }

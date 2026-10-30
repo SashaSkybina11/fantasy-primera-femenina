@@ -285,8 +285,8 @@ const apiMessages: Record<string, Record<"es" | "uk" | "en", string> & Partial<R
     "en": "League not found"
   },
   "Участник не найден в этой лиге": {
-    "es": "No se encontró a la participante en esta liga",
-    "uk": "Учасницю не знайдено в цій лізі",
+    "es": "No se encontró al participante en esta liga",
+    "uk": "Учасника не знайдено в цій лізі",
     "en": "Member not found in this league"
   },
   "Команда не найдена": {
