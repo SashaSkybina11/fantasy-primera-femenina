@@ -5,6 +5,8 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoHomeOutline, IoFootballOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
 import { FaRankingStar } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa";
+import { RiTargetFill } from "react-icons/ri";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { MdOutlineNotificationsActive } from "react-icons/md";
@@ -30,10 +32,11 @@ type IconName =
   | "calendar"
   | "teams"
   | "profile"
-  | "admin";
+  | "admin"
+  | "standings";
 
 function FootballIcon({ name }: { name: IconName }) {
-  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: HiArrowsRightLeft, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: IoPersonOutline, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: FaRankingStar, admin: MdAdminPanelSettings };
+  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: HiArrowsRightLeft, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: FaUsers, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: RiTargetFill, admin: MdAdminPanelSettings, standings: FaRankingStar };
   const Icon = icons[name];
   return <Icon aria-hidden="true" />;
 }
@@ -68,6 +71,7 @@ function NavLinks({
       label: t("prices.title"),
       icon: "prices" as const,
     },
+    { to: "/standings", label: t("calendar.standingsTitle"), icon: "standings" as const },
     { to: "/scorers", label: t("scorers.title"), icon: "scorers" as const },
     { to: "/results", label: t("matches.title"), icon: "trophy" as const },
     { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },

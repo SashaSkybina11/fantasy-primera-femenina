@@ -2,6 +2,7 @@ import { ResultsPage, MatchReportPage } from "./pages/ResultsPage";
 import { AdminMatchesPage, AdminMatchEditorPage } from "./pages/AdminMatchesPage";
 import { PlayerPricesPage } from "./pages/PlayerPricesPage";
 import { ScorersPage } from "./pages/ScorersPage";
+import { ClubStandingsPage } from "./pages/ClubStandingsPage";
 import { AdminFriendLeaguesPage } from "./pages/AdminFriendLeaguesPage";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
@@ -63,6 +64,7 @@ export function App() {
           element={<AdminPlayerPointsPage />}
         />
         <Route path="/player-prices" element={<PlayerPricesPage />} />
+        <Route path="/standings" element={<ClubStandingsPage />} />
         <Route path="/scorers" element={<ScorersPage />} />
         <Route path="/my-team" element={<MyTeamPage />} />
         <Route path="/purchase-players" element={<PurchasePlayersPage />} />

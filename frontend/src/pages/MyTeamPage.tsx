@@ -129,7 +129,7 @@ export function MyTeamPage() {
       {locked && <p className="state-card">{t("team.marketLocked")}</p>}
       {(!hasCaptain || lineupDirty || lineupSaveError) && <div className="state-card state-card--error" role="status" aria-live="polite">
         {!hasCaptain && <p>{t("team.captainWarning")}</p>}
-        {lineupDirty && <p>{t("team.unsavedWarning")}</p>}
+        {lineupDirty && <p>{t("team.autoSavePending")}</p>}
         {lineupSaveError && <p>{t("team.unsavedWarning")}</p>}
       </div>}
       <div className="team-toolbar">
@@ -186,16 +186,9 @@ export function MyTeamPage() {
           </div>
           <div className="save-bar">
             <div>
-              <strong>{t("team.checkLineup")}</strong>
+              <strong>{save.isPending ? t("team.autoSaving") : t("team.autoSave")}</strong>
               <span>{t("team.lineupRequirements")}</span>
             </div>
-            <button
-              className="button"
-              disabled={locked || !isComplete || !hasCaptain || !hasValidShape || save.isPending || !lineupDirty}
-              onClick={() => save.mutate()}
-            >
-              {save.isPending ? t("team.checking") : t("team.saveLineup")}
-            </button>
           </div>
         </>
       {addTarget && <Modal title={t(addTarget.position === "GOALKEEPER" ? "squad.addGoalkeeper" : "squad.addFieldPlayer")} onClose={() => setAddTarget(null)} className="squad-detail-modal">

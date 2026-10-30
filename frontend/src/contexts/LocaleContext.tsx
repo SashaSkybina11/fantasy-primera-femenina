@@ -500,6 +500,9 @@ const spanish = {
   "team.lineupRequirements":
     "10 jugadoras · 5 titulares · 1 portera · capitana titular",
   "team.checking": "Comprobando…",
+  "team.autoSave": "Los cambios se guardan automáticamente",
+  "team.autoSaving": "Guardando cambios…",
+  "team.autoSavePending": "Los cambios se guardarán automáticamente cuando la plantilla cumpla los requisitos.",
   "team.saveLineup": "Guardar plantilla",
   "team.updated": "Plantilla actualizada",
   "team.captainSet": "Capitana asignada",
@@ -508,7 +511,7 @@ const spanish = {
   "team.captainWarning":
     "Elige una capitana antes del cierre de la jornada para que tu equipo pueda entrar en el cálculo de puntos.",
   "team.unsavedWarning":
-    "Has cambiado el quinteto. Guarda la plantilla antes del cierre de la jornada.",
+    "No se pudieron guardar los cambios automáticamente. Inténtalo de nuevo.",
   "team.emptyTitle": "Tu equipo aún no está formado",
   "team.empty":
     "Aún no has comprado jugadoras. Ve a «Comprar jugadoras» para formar tu equipo.",
@@ -682,6 +685,19 @@ const spanish = {
   "calendar.standingsDescription":
     "Clasificación oficial de Primera División Fútbol Sala Femenino en la web de la RFEF.",
   "calendar.openStandings": "Abrir clasificación RFEF",
+  "standings.position": "Pos.",
+  "standings.team": "Equipo",
+  "standings.played": "PJ",
+  "standings.wins": "G",
+  "standings.draws": "E",
+  "standings.losses": "P",
+  "standings.goalsFor": "GF",
+  "standings.goalsAgainst": "GC",
+  "standings.points": "Pts",
+  "standings.playoff": "Playoff por el título:",
+  "standings.playoffDescription": "los cuatro primeros equipos.",
+  "standings.relegation": "Descenso:",
+  "standings.relegationDescription": "los tres últimos equipos.",
   "footer.contactAdmin": "Contactar con la administración",
   "footer.email": "fantasyfutsalspain@gmail.com",
 } as const;
@@ -1173,6 +1189,9 @@ const ukrainian: Record<TranslationKey, string> = {
   "team.lineupRequirements":
     "10 гравчинь · 5 в основі · 1 воротарка · капітанка в основі",
   "team.checking": "Перевіряємо…",
+  "team.autoSave": "Зміни зберігаються автоматично",
+  "team.autoSaving": "Зберігаємо зміни…",
+  "team.autoSavePending": "Зміни збережуться автоматично, коли склад відповідатиме вимогам.",
   "team.saveLineup": "Зберегти склад",
   "team.updated": "Склад оновлено",
   "team.captainSet": "Капітанку призначено",
@@ -1181,7 +1200,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "team.captainWarning":
     "Оберіть капітанку до закриття туру, щоб ваша команда потрапила до розрахунку очок.",
   "team.unsavedWarning":
-    "Ви змінили основний склад. Збережіть його до закриття туру.",
+    "Не вдалося зберегти зміни автоматично. Спробуйте ще раз.",
   "team.emptyTitle": "Ваша команда ще не сформована",
   "team.empty":
     "Ви ще не придбали гравчинь. Перейдіть до розділу «Купівля гравчинь», щоб сформувати команду.",
@@ -1351,6 +1370,19 @@ const ukrainian: Record<TranslationKey, string> = {
   "calendar.standingsDescription":
     "Офіційна турнірна таблиця Primera División Fútbol Sala Femenino на сайті RFEF.",
   "calendar.openStandings": "Відкрити турнірну таблицю RFEF",
+  "standings.position": "Поз.",
+  "standings.team": "Команда",
+  "standings.played": "М",
+  "standings.wins": "В",
+  "standings.draws": "Н",
+  "standings.losses": "П",
+  "standings.goalsFor": "ЗМ",
+  "standings.goalsAgainst": "ПМ",
+  "standings.points": "Очки",
+  "standings.playoff": "Вихід до плей-оф:",
+  "standings.playoffDescription": "чотири найкращі команди.",
+  "standings.relegation": "Виліт:",
+  "standings.relegationDescription": "три команди внизу таблиці.",
   "footer.contactAdmin": "Зв’язатися з адміністратором",
   "footer.email": "fantasyfutsalspain@gmail.com",
 };
@@ -1842,6 +1874,9 @@ const english: Record<TranslationKey, string> = {
   "team.lineupRequirements":
     "10 players · 5 starters · 1 goalkeeper · captain in the starting five",
   "team.checking": "Checking…",
+  "team.autoSave": "Changes save automatically",
+  "team.autoSaving": "Saving changes…",
+  "team.autoSavePending": "Changes will save automatically once your lineup meets the requirements.",
   "team.saveLineup": "Save lineup",
   "team.updated": "Lineup updated",
   "team.captainSet": "Captain assigned",
@@ -1850,7 +1885,7 @@ const english: Record<TranslationKey, string> = {
   "team.captainWarning":
     "Choose a captain before the gameweek closes so your team can be included in the points calculation.",
   "team.unsavedWarning":
-    "You changed your starting lineup. Save it before the gameweek closes.",
+    "Changes could not be saved automatically. Please try again.",
   "team.emptyTitle": "Your team has not been formed yet",
   "team.empty":
     "You have not bought any players yet. Go to Buy players to build your team.",
@@ -2022,6 +2057,19 @@ const english: Record<TranslationKey, string> = {
   "calendar.standingsDescription":
     "Official Women's Futsal First Division standings on the RFEF website.",
   "calendar.openStandings": "Open RFEF standings",
+  "standings.position": "Pos.",
+  "standings.team": "Team",
+  "standings.played": "Pld",
+  "standings.wins": "W",
+  "standings.draws": "D",
+  "standings.losses": "L",
+  "standings.goalsFor": "GF",
+  "standings.goalsAgainst": "GA",
+  "standings.points": "Pts",
+  "standings.playoff": "Title playoffs:",
+  "standings.playoffDescription": "the top four teams.",
+  "standings.relegation": "Relegation:",
+  "standings.relegationDescription": "the bottom three teams.",
   "footer.contactAdmin": "Contact the administrator",
   "footer.email": "fantasyfutsalspain@gmail.com",
 };

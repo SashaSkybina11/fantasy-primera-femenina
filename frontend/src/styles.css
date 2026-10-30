@@ -1512,7 +1512,7 @@ select:focus {
 /* Calendar */
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
 }
 .calendar-card {
@@ -6393,6 +6393,54 @@ form.admin-card.match-create {
   width: 32px;
   height: 32px;
   object-fit: contain;
+}
+.club-standings-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.club-standings-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.club-standings-table th,
+.club-standings-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  white-space: nowrap;
+}
+.club-standings-table th {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.club-standings-table tbody tr:last-child td { border-bottom: 0; }
+.club-standings-table .club-standings-rank { width: 54px; padding: 0; }
+.club-standings-rank span { display: grid; min-height: 42px; place-items: center; }
+.club-standings-table tr.is-playoff .club-standings-rank { color: #fff; background: #388e45; }
+.club-standings-table tr.is-relegation .club-standings-rank { color: #fff; background: #d13f43; }
+.club-standings-table th:nth-child(2) { width: 34%; text-align: left; }
+.club-standings-team { display: flex; min-width: 0; align-items: center; gap: 9px; text-align: left; }
+.club-standings-team > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+.club-standings-team .club-mark,
+.club-standings-team .club-logo { width: 25px; height: 25px; flex: 0 0 25px; object-fit: contain; }
+.club-standings-legend { display: grid; gap: 8px; margin-top: 14px; }
+.club-standings-legend > div { display: flex; align-items: center; gap: 10px; }
+.club-standings-legend p { margin: 0; }
+.club-standings-legend__swatch { width: 18px; height: 18px; flex: 0 0 18px; border-radius: 4px; }
+.club-standings-legend__swatch.is-playoff { background: #388e45; }
+.club-standings-legend__swatch.is-relegation { background: #d13f43; }
+@media (max-width: 480px) {
+  .club-standings-table th, .club-standings-table td { padding: 9px 7px; font-size: 12px; }
+  .club-standings-rank span { min-height: 36px; }
+  .club-standings-team { gap: 6px; }
+  .club-standings-team .club-mark, .club-standings-team .club-logo { width: 21px; height: 21px; flex-basis: 21px; }
 }
 @media (max-width: 480px) {
   .scorers-table th,

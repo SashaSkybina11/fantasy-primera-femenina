@@ -555,6 +555,7 @@ export const api = {
   setMarket: (input: { gameweekId: string; mode: "AUTO" | "OPEN" | "CLOSED" }) => request<Gameweek>("/admin/market", { method: "PATCH", body: JSON.stringify(input) }),
   updateMarketSchedule: (gameweekId: string, input: { marketOpenAt: string; deadlineAt: string }) => request<Gameweek>(`/admin/gameweeks/${gameweekId}/market-schedule`, { method: "PATCH", body: JSON.stringify(input) }),
   scorers: () => request<Array<{ id: string; name: string; club: Club; goals: number }>>("/scorers"),
+  clubStandings: () => request<Array<{ id: string; name: string; logoUrl: string | null; coach: string | null; president: string | null; played: number; wins: number; draws: number; losses: number; goalsFor: number; goalsAgainst: number; points: number; rank: number }>>("/league/standings"),
   deleteMatch: (id: string) => request<{ ok: boolean }>(`/matches/${id}`, { method: "DELETE" }),
   matchWeeks: () => request<Gameweek[]>("/matches/weeks"),
   matches: (week: string) => request<MatchRecord[]>(`/matches?gameweekId=${week}`),

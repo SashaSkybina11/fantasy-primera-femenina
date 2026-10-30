@@ -247,6 +247,19 @@ export const portuguese: Record<TranslationKey, string> = {
   "adminLeagues.save": "Guardar alterações",
   "rules.pointsUnit": "pontos",
   "prices.title": "Preços das jogadoras",
+  "standings.position": "Pos.",
+  "standings.team": "Equipa",
+  "standings.played": "J",
+  "standings.wins": "V",
+  "standings.draws": "E",
+  "standings.losses": "D",
+  "standings.goalsFor": "GM",
+  "standings.goalsAgainst": "GS",
+  "standings.points": "Pts",
+  "standings.playoff": "Playoff pelo título:",
+  "standings.playoffDescription": "as quatro primeiras equipas.",
+  "standings.relegation": "Despromoção:",
+  "standings.relegationDescription": "as três últimas equipas.",
   "catalog.showMore": "Mostrar mais {{count}}",
   "prices.calculate": "Calcular alterações",
   "prices.apply": "Aplicar novos preços",
@@ -529,6 +542,9 @@ export const portuguese: Record<TranslationKey, string> = {
   "team.lineupRequirements":
     "10 jogadoras · 5 titulares · 1 guarda-redes · capitã titular",
   "team.checking": "A verificar…",
+  "team.autoSave": "As alterações são guardadas automaticamente",
+  "team.autoSaving": "A guardar alterações…",
+  "team.autoSavePending": "As alterações serão guardadas automaticamente quando a equipa cumprir os requisitos.",
   "team.saveLineup": "Guardar cinco inicial",
   "team.updated": "Cinco inicial atualizado",
   "team.captainSet": "Capitã escolhida",
@@ -537,7 +553,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "team.captainWarning":
     "Escolha uma capitã antes do fecho da jornada para que a sua equipa entre no cálculo de pontos.",
   "team.unsavedWarning":
-    "Alterou o cinco inicial. Guarde a equipa antes do fecho da jornada.",
+    "Não foi possível guardar as alterações automaticamente. Tente novamente.",
   "team.emptyTitle": "A sua equipa ainda não está formada",
   "team.empty":
     "Ainda não comprou jogadoras. Vá a Comprar jogadoras para formar a equipa.",
