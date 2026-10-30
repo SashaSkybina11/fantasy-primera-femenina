@@ -83,17 +83,30 @@ export function MyTeamPage() {
       toast.error(error.message);
     },
   });
+  const team = teamQuery.data;
+  const starters = team?.players.filter((entry) => entry.status === "STARTER") ?? [];
+  const bench = team?.players.filter((entry) => entry.status === "BENCH") ?? [];
+  const isComplete = team?.players.length === 10;
+  const hasCaptain = Boolean(team?.players.some((entry) => entry.isCaptain && entry.status === "STARTER"));
+  const hasValidShape = Boolean(team && starters.length === 5
+    && starters.filter((entry) => entry.player.position === "GOALKEEPER").length === 1
+    && starters.filter((entry) => entry.player.position !== "GOALKEEPER").length === 4
+    && team.players.filter((entry) => entry.player.position === "GOALKEEPER").length === 2
+    && team.players.filter((entry) => entry.player.position !== "GOALKEEPER").length === 8);
+  useEffect(() => {
+    if (!lineupDirty || !isComplete || !hasValidShape || !hasCaptain || locked || move.isPending || captain.isPending || save.isPending || !team) return;
+    save.mutate();
+  }, [lineupDirty, isComplete, hasValidShape, hasCaptain, locked, move.isPending, captain.isPending, save.isPending, team?.players]);
+
   if (teamQuery.isLoading)
     return <div className="state-card"><Loader label={t("loading.team")} /></div>;
   if (teamQuery.isError || !teamQuery.data)
     return (
       <div className="state-card state-card--error">{t("error.generic")}</div>
     );
-  const team = teamQuery.data;
-  const starters = team.players.filter((entry) => entry.status === "STARTER");
-  const bench = team.players.filter((entry) => entry.status === "BENCH");
+  const loadedTeam = teamQuery.data;
   const onMove = (entry: SquadEntry, fieldSlot?: number) => {
-    if (entry.status === "BENCH" && starters.filter(item => item.player.position === entry.player.position).length >= (entry.player.position === "GOALKEEPER" ? 1 : 4)) {
+    if (entry.status === "BENCH" && loadedTeam.players.filter(item => item.status === "STARTER" && item.player.position === entry.player.position).length >= (entry.player.position === "GOALKEEPER" ? 1 : 4)) {
       toast.error(t("squad.positionFull"));
       return;
     }
@@ -103,28 +116,15 @@ export function MyTeamPage() {
       fieldSlot,
     });
   };
-  const isComplete = team.players.length === 10;
-  const hasCaptain = team.players.some((entry) => entry.isCaptain && entry.status === "STARTER");
-  const hasValidShape = starters.length === 5
-    && starters.filter((entry) => entry.player.position === "GOALKEEPER").length === 1
-    && starters.filter((entry) => entry.player.position !== "GOALKEEPER").length === 4
-    && team.players.filter((entry) => entry.player.position === "GOALKEEPER").length === 2
-    && team.players.filter((entry) => entry.player.position !== "GOALKEEPER").length === 8;
-
-  useEffect(() => {
-    if (!lineupDirty || !isComplete || !hasValidShape || !hasCaptain || locked || move.isPending || captain.isPending || save.isPending) return;
-    save.mutate();
-  }, [lineupDirty, isComplete, hasValidShape, hasCaptain, locked, move.isPending, captain.isPending, save.isPending, team.players]);
-
   return (
     <div className="page">
       <header className="team-heading">
         <div>
           <p className="eyebrow">{t("team.eyebrow")}</p>
-          <h1>{team.name}</h1>
+          <h1>{loadedTeam.name}</h1>
           <p className="muted">{t("team.description")}</p>
         </div>
-        <BudgetDisplay budget={team.budget} count={team.players.length} />
+        <BudgetDisplay budget={loadedTeam.budget} count={loadedTeam.players.length} />
       </header>
       {locked && <p className="state-card">{t("team.marketLocked")}</p>}
       {(!hasCaptain || lineupDirty || lineupSaveError) && <div className="state-card state-card--error" role="status" aria-live="polite">
@@ -135,18 +135,18 @@ export function MyTeamPage() {
       <div className="team-toolbar">
         <div>
           <span className="captain-status-star" aria-hidden="true">★</span>
-          {team.players.some((entry) => entry.isCaptain)
+          {loadedTeam.players.some((entry) => entry.isCaptain)
             ? t("team.captainSelected")
             : t("team.selectCaptain")}
         </div>
         <div className="team-toolbar__actions">
-          <ShareTeamButton team={team} />
+          <ShareTeamButton team={loadedTeam} />
           <Link className="button" to="/purchase-players">
             ＋ {t("nav.purchase")}
           </Link>
         </div>
       </div>
-      {team.players.length === 0 ? (
+      {loadedTeam.players.length === 0 ? (
         <section className="state-card empty-team-card">
           <h2>{t("team.emptyTitle")}</h2>
           <p>{t("team.empty")}</p>
