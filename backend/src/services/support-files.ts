@@ -43,7 +43,7 @@ export async function storeSupportFile(file: Express.Multer.File, conversationId
 export async function deleteSupportFile(storageKey: string) {
   try {
     if (storageKey.startsWith("support/")) {
-      if (env.isProduction && env.supportBlobReadWriteToken) await del(storageKey, { access: "private", token: env.supportBlobReadWriteToken });
+      if (env.isProduction && env.supportBlobReadWriteToken) await del(storageKey, { token: env.supportBlobReadWriteToken });
       else await unlink(join(supportUploadsDirectory, storageKey.replaceAll("/", "_")));
     }
   } catch (error) { console.warn("Could not delete support attachment", error); }
