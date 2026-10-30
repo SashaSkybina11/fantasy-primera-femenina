@@ -90,6 +90,8 @@ model User {
   privateLeagueMemberships PrivateLeagueMember[]
   notificationRecipients  NotificationRecipient[]
   notificationsCreated    Notification[]     @relation("NotificationCreator")
+  supportConversation     SupportConversation?
+  supportMessages         SupportMessage[]
   favoriteClub             Club?                 @relation("FavoriteClub", fields: [favoriteClubId], references: [id], onDelete: SetNull)
   createdAt                DateTime              @default(now())
   updatedAt                DateTime              @updatedAt
@@ -317,6 +319,47 @@ model NotificationRecipient {
   @@id([notificationId, userId])
   @@unique([userId, eventKey])
   @@index([userId, readAt, deliveredAt])
+}
+
+model SupportConversation {
+  id                  String           @id @default(cuid())
+  userId              String           @unique
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages            SupportMessage[]
+  lastMessageAt       DateTime         @default(now())
+  lastReadByUserAt    DateTime?
+  lastReadByAdminAt   DateTime?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@index([lastMessageAt])
+}
+
+model SupportMessage {
+  id             String              @id @default(cuid())
+  conversationId String
+  senderId       String
+  isAdmin        Boolean             @default(false)
+  body           String              @default("")
+  conversation   SupportConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User                @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  attachments    SupportAttachment[]
+  createdAt      DateTime            @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+model SupportAttachment {
+  id          String        @id @default(cuid())
+  messageId   String
+  storageKey  String
+  fileName    String
+  contentType String
+  size        Int
+  message     SupportMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+
+  @@index([messageId])
 }
 
 model PlayerGameweekStats {

@@ -7,3 +7,7 @@ import { fileURLToPath } from "node:url";
 export const uploadsDirectory = process.env.VERCEL
   ? join(tmpdir(), "fantasy-futsal-uploads")
   : fileURLToPath(new URL("../../uploads", import.meta.url));
+
+export const supportUploadsDirectory = process.env.VERCEL
+  ? join(tmpdir(), "fantasy-futsal-private-support")
+  : fileURLToPath(new URL("../../private-support", import.meta.url));

@@ -547,9 +547,18 @@ export type PublicLineup = { user: { id: string; name: string }; gameweek: { id:
 export type NotificationLocaleKey = "es" | "uk" | "en" | "pt";
 export type NotificationContent = { title: string; message: string; action: string; url: string };
 export type UserNotification = NotificationContent & { id: string; type: string; createdAt: string; readAt: string | null; isRead: boolean };
+export type SupportAttachment = { id: string; fileName: string; contentType: string; size: number };
+export type SupportMessage = { id: string; body: string; isAdmin: boolean; createdAt: string; sender: { id: string; name: string; role: string }; attachments: SupportAttachment[] };
+export type SupportConversation = { id: string; lastMessageAt: string; user: { id: string; name: string; email: string; avatarUrl: string | null }; messages: SupportMessage[]; unreadCount?: number };
 export type NotificationAudience = "ALL" | "LEAGUE" | "USERS" | "INCOMPLETE_TEAM" | "CAPTAIN_MISSING";
 export type AdminFriendLeague = { id: string; name: string; logoUrl: string | null; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
+  supportConversation: () => request<SupportConversation | null>("/support/conversation"),
+  sendSupportMessage: (body: string, files: File[]) => { const form = new FormData(); form.set("body", body); files.forEach(file => form.append("attachments", file)); return request<SupportMessage>("/support/messages", { method: "POST", body: form }); },
+  adminSupportConversations: () => request<SupportConversation[]>("/support/admin/conversations"),
+  adminSupportMessages: (id: string) => request<SupportConversation>(`/support/admin/conversations/${id}/messages`),
+  sendAdminSupportMessage: (id: string, body: string, files: File[]) => { const form = new FormData(); form.set("body", body); files.forEach(file => form.append("attachments", file)); return request<SupportMessage>(`/support/admin/conversations/${id}/messages`, { method: "POST", body: form }); },
+  supportAttachment: async (id: string) => { const headers = new Headers({ "Accept-Language": getStoredLocale() }); const token = authToken.get(); if (token) headers.set("Authorization", `Bearer ${token}`); const response = await fetch(`${API_URL}/support/attachments/${id}`, { headers, cache: "no-store" }); if (response.status === 401 && token && authToken.get() === token) { authToken.clear(); window.dispatchEvent(new Event(authRequiredEvent)); } if (!response.ok) throw new Error("Attachment unavailable"); return response.blob(); },
   adminCurrentGameweek: () => request<{ gameweekId: string | null }>("/admin/current-gameweek"),
   setCurrentGameweek: (gameweekId: string | null) => request<{ gameweekId: string | null }>("/admin/current-gameweek", { method: "PATCH", body: JSON.stringify({ gameweekId }) }),
   setMarket: (input: { gameweekId: string; mode: "AUTO" | "OPEN" | "CLOSED" }) => request<Gameweek>("/admin/market", { method: "PATCH", body: JSON.stringify(input) }),
@@ -603,6 +612,7 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify(payload),
     }),
+  deleteAccount: () => request<void>("/profile", { method: "DELETE" }),
   setFavoriteClub: (clubId: string | null) =>
     request<Profile>("/profile/favorite-club", {
       method: "PATCH",

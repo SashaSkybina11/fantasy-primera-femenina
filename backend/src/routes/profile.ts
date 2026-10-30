@@ -167,6 +167,37 @@ router.patch(
   }),
 );
 
+router.delete(
+  "/",
+  authenticate,
+  asyncRoute(async (request, response) => {
+    const userId = request.auth!.userId;
+    const user = await inTransaction(async (tx) => {
+      const current = await tx.user.findUnique({ where: { id: userId }, select: { role: true, avatarUrl: true } });
+      if (!current) throw new ApiError(404, "Профиль не найден");
+      if (current.role !== "USER") throw new ApiError(403, "Администратор не может удалить аккаунт через профиль");
+
+      const ownedLeagues = await tx.privateLeague.findMany({
+        where: { ownerId: userId },
+        select: { id: true, members: { where: { userId: { not: userId } }, orderBy: { joinedAt: "asc" }, select: { userId: true }, take: 1 } },
+      });
+      for (const league of ownedLeagues) {
+        const nextOwner = league.members[0];
+        if (nextOwner) await tx.privateLeague.update({ where: { id: league.id }, data: { ownerId: nextOwner.userId } });
+        else await tx.privateLeague.delete({ where: { id: league.id } });
+      }
+
+      // This history relation is restrictive; remove the user's winner rows before
+      // deleting the account. Other user-owned history is removed by cascade.
+      await tx.gameweekWinner.deleteMany({ where: { userId } });
+      await tx.user.delete({ where: { id: userId } });
+      return current;
+    });
+    await removeAvatar(user.avatarUrl);
+    response.status(204).send();
+  }),
+);
+
 router.patch(
   "/favorite-club",
   authenticate,

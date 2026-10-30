@@ -7,7 +7,7 @@ import { LuBookOpenText } from "react-icons/lu";
 import { FaRankingStar } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
 import { RiTargetFill } from "react-icons/ri";
-import { MdOutlineEuroSymbol, MdAdminPanelSettings } from "react-icons/md";
+import { MdOutlineEuroSymbol, MdAdminPanelSettings, MdAlternateEmail, MdSupportAgent } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
@@ -85,6 +85,7 @@ function NavLinks({
     },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },
     ...(isAdmin ? [{ to: "/admin/notifications", label: t("notifications.adminTitle"), icon: "admin" as const }] : []),
+    ...(isAdmin ? [{ to: "/admin/support", label: t("support.adminInbox"), icon: "support" as const }] : []),
     {
       to: "/rules",
       label: t("nav.rules"),
@@ -130,7 +131,7 @@ function NavLinks({
           }
         >
           <i>
-            {item.icon === "notifications" ? notifications.data?.unreadCount ? <MdOutlineNotificationsActive className="notifications-bell notifications-bell--unread" aria-label={t("notifications.unread")} /> : <IoMdNotificationsOutline className="notifications-bell" aria-hidden="true" /> : <FootballIcon name={item.icon} />}
+            {item.icon === "support" ? <MdSupportAgent aria-hidden="true" /> : item.icon === "notifications" ? notifications.data?.unreadCount ? <MdOutlineNotificationsActive className="notifications-bell notifications-bell--unread" aria-label={t("notifications.unread")} /> : <IoMdNotificationsOutline className="notifications-bell" aria-hidden="true" /> : <FootballIcon name={item.icon} />}
           </i>
           <span>{mobile ? (item.mobile ?? item.label) : item.label}</span>
           {item.icon === "notifications" && Boolean(notifications.data?.unreadCount) && <b className="notification-count">{notifications.data?.unreadCount}</b>}
@@ -320,13 +321,10 @@ export function AppShell() {
       <main className="page-content">
         <Outlet />
         <footer className="site-footer">
-          <a
-            className="admin-contact"
-            href="mailto:fantasyfutsalspain@gmail.com"
-          >
-            <span>{t("footer.contactAdmin")}</span>
-            <small>{t("footer.email")}</small>
-          </a>
+          <div className="admin-contact-actions">
+            <a className="admin-contact" href="mailto:fantasyfutsalspain@gmail.com"><MdAlternateEmail aria-hidden="true" /><span>{t("support.email")}</span><small>{t("footer.email")}</small></a>
+            <button className="admin-contact" type="button" onClick={() => navigate(user?.role === "ADMIN" ? "/admin/support" : "/support")}><MdSupportAgent aria-hidden="true" /><span>{user?.role === "ADMIN" ? t("support.adminInbox") : t("support.openChat")}</span></button>
+          </div>
         </footer>
       </main>
     </div>

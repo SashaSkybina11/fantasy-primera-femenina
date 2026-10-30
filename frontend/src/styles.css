@@ -5193,6 +5193,68 @@ dialog.app-modal.share-team-modal {
   flex: 0 1 auto;
   width: auto;
 }
+
+.admin-contact-actions { display: flex; justify-content: center; gap: .75rem; flex-wrap: wrap; }
+.admin-contact-actions .admin-contact { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .25rem .55rem; text-decoration: none; cursor: pointer; }
+.admin-contact-actions .admin-contact > svg { grid-row: span 2; font-size: 1.35rem; }
+.admin-contact-actions .admin-contact small { grid-column: 2; }
+.support-page { min-width: 0; }
+.support-page .page-heading h1 { display: flex; align-items: center; gap: .5rem; }
+.support-layout { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); gap: 1rem; min-height: min(70vh, 760px); }
+.support-inbox, .support-chat, .support-admin-chat { min-width: 0; }
+.support-inbox, .support-chat { border: 1px solid var(--border, #d6d9df); border-radius: 16px; background: var(--surface, #fff); overflow: hidden; }
+.support-inbox { padding: .85rem; }
+.support-inbox h2 { margin: .25rem .5rem .8rem; font-size: 1rem; }
+.support-inbox__item { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .65rem; padding: .7rem .55rem; border: 0; border-radius: 11px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.support-inbox__item:hover, .support-inbox__item.is-active { background: var(--surface-muted, #f1f3f6); }
+.support-inbox__info { min-width: 0; display: grid; gap: .2rem; }
+.support-inbox__info > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.support-inbox__info small, .support-inbox__item time { color: var(--muted, #6b7280); font-size: .75rem; }
+.support-inbox__item time { grid-column: 2 / 4; justify-self: end; }
+.support-inbox__item > b { color: white; background: #c1123f; border-radius: 999px; padding: .1rem .45rem; font-size: .75rem; }
+.support-admin-chat > .state-card { min-height: 200px; display: grid; place-content: center; }
+.support-chat { display: flex; flex-direction: column; min-height: min(70vh, 760px); }
+.support-chat__header { display: flex; align-items: center; gap: .7rem; padding: .8rem 1rem; border-bottom: 1px solid var(--border, #d6d9df); }
+.support-chat__header h2, .support-chat__header p { margin: 0; }
+.support-chat__header h2 { font-size: 1rem; }
+.support-chat__header p { color: var(--muted, #6b7280); font-size: .85rem; overflow-wrap: anywhere; }
+.support-back { display: none; }
+.support-message-list { flex: 1; overflow: auto; display: flex; flex-direction: column; gap: .75rem; padding: 1rem; }
+.support-message { max-width: min(85%, 620px); align-self: flex-start; padding: .7rem .85rem; border-radius: 14px 14px 14px 4px; background: var(--surface-muted, #f1f3f6); overflow-wrap: anywhere; }
+.support-message--own { align-self: flex-end; border-radius: 14px 14px 4px 14px; background: color-mix(in srgb, #398650 13%, var(--surface, white)); }
+.support-message__meta { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; font-size: .8rem; }
+.support-message__meta time { color: var(--muted, #6b7280); font-size: .7rem; white-space: nowrap; }
+.support-message p { white-space: pre-wrap; margin: .35rem 0 0; }
+.support-attachments { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .5rem; margin-top: .5rem; }
+.support-attachment { min-width: 0; display: grid; justify-items: start; gap: .25rem; color: inherit; text-decoration: none; font-size: .75rem; overflow-wrap: anywhere; }
+.support-attachment img { width: 140px; max-width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
+.support-composer { padding: .7rem .85rem; border-top: 1px solid var(--border, #d6d9df); }
+.support-composer__hint { margin: 0 0 .45rem; color: var(--muted, #6b7280); font-size: .75rem; }
+.support-composer__row { display: flex; align-items: end; gap: .5rem; }
+.support-composer__row textarea { flex: 1; min-width: 0; resize: vertical; min-height: 44px; max-height: 150px; padding: .65rem; border: 1px solid var(--border, #d6d9df); border-radius: 10px; background: var(--surface, #fff); color: inherit; font: inherit; }
+.support-attach { position: relative; overflow: hidden; flex-shrink: 0; }
+.support-attach input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.support-file-queue { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; margin: 0 0 .45rem; padding: 0; }
+.support-file-queue li { display: flex; align-items: center; gap: .35rem; max-width: 100%; overflow-wrap: anywhere; border-radius: 8px; padding: .25rem .45rem; background: var(--surface-muted, #f1f3f6); font-size: .75rem; }
+.support-file-queue button { border: 0; background: transparent; color: inherit; cursor: pointer; font-size: 1rem; }
+.support-error { color: #b42318; margin: .35rem 0; }
+@media (max-width: 760px) {
+  .support-layout { display: block; min-height: auto; }
+  .support-layout--selected .support-inbox { display: none; }
+  .support-admin-chat:has(.support-chat) { display: block; }
+  .support-admin-page .support-layout:not(.support-layout--selected) .support-admin-chat { display: none; }
+  .support-chat { min-height: calc(100dvh - 210px); }
+  .support-back { display: inline-flex; flex-shrink: 0; }
+  .support-composer__row { flex-wrap: wrap; }
+  .support-composer__row textarea { order: 1; flex-basis: 100%; }
+  .support-composer__row > .button:last-child { margin-left: auto; }
+  .support-message { max-width: 94%; }
+}
+@media (max-width: 400px) {
+  .admin-contact-actions { flex-direction: column; align-items: stretch; }
+  .support-composer__row > .button { padding-inline: .65rem; }
+  .support-attach span { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
 .notification-list,
 .notification-composer {
   display: grid;
@@ -7064,6 +7126,41 @@ summary:focus-visible {
 @media (max-width: 620px) {
   .admin-players-toolbar { grid-template-columns: 1fr; }
   .admin-player-editor { padding: 14px; }
+}
+
+.profile-edit-actions {
+  justify-content: flex-start;
+  align-items: center;
+}
+.profile-edit-actions > .button {
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 0;
+}
+.account-delete-card {
+  gap: 1rem;
+  margin-top: 1.2rem;
+  border-color: color-mix(in srgb, var(--danger) 38%, var(--border));
+}
+.account-delete-card h2 { margin: 0.35rem 0 0.5rem; }
+.account-delete-trigger { align-self: flex-start; }
+.account-delete-modal { width: min(560px, calc(100% - 24px)); }
+.account-delete-warning { line-height: 1.6; }
+.account-delete-consent {
+  align-items: flex-start;
+  margin: 1rem 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.account-delete-actions { margin-top: 1.2rem; }
+@media (max-width: 600px) {
+  .profile-edit-actions {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }
 
 /* Keep the password submit control compact on phones and tablets. */

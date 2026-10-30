@@ -16,6 +16,7 @@ import gameweeksRouter from "./routes/gameweeks.js";
 import privateLeaguesRouter from "./routes/private-leagues.js";
 import notificationsRouter from "./routes/notifications.js";
 import adminNotificationsRouter from "./routes/admin-notifications.js";
+import supportRouter from "./routes/support.js";
 import { errorHandler } from "./utils/http.js";
 
 mkdirSync(uploadsDirectory, { recursive: true });
@@ -48,4 +49,5 @@ app.use("/api/league", leagueRouter);
 app.use("/api/gameweeks", gameweeksRouter);
 app.use("/api/private-leagues", privateLeaguesRouter);
 app.use("/api/notifications", notificationsRouter);
+app.use("/api/support", supportRouter);
 app.use(errorHandler);

@@ -8,11 +8,14 @@ import { api } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
 import { optimizeAvatar } from "../utils/avatar";
 import { PasswordInput } from "../components/PasswordInput";
+import { Modal } from "../components/Modal";
+import { useNavigate } from "react-router-dom";
 
 export function ProfilePage() {
   const profile = useQuery({ queryKey: ["profile"], queryFn: api.profile });
   const queryClient = useQueryClient();
   const { setUser, logout } = useAuth();
+  const navigate = useNavigate();
   const { t } = useLocale();
   const input = useRef<HTMLInputElement>(null);
   const [edit, setEdit] = useState(false);
@@ -25,6 +28,8 @@ export function ProfilePage() {
   const [instagram, setInstagram] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [contactConsent, setContactConsent] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteConfirmed, setDeleteConfirmed] = useState(false);
   useEffect(() => {
     if (profile.data && !edit) {
       setName(profile.data.name);
@@ -78,6 +83,14 @@ export function ProfilePage() {
       toast.success(t("profile.passwordSaved"));
     },
     onError: (error) => toast.error(error.message),
+  });
+  const deleteAccount = useMutation({
+    mutationFn: api.deleteAccount,
+    onSuccess: async () => {
+      setDeleteDialogOpen(false);
+      await logout().catch(() => {});
+      navigate("/login", { replace: true });
+    },
   });
   if (profile.isLoading)
     return <div className="state-card"><Loader label={t("loading.profile")} /></div>;
@@ -201,7 +214,7 @@ export function ProfilePage() {
                 </button>
               )}
             </div>
-            <div className="form-actions">
+            <div className="form-actions profile-edit-actions">
               <button className="button" disabled={save.isPending}>
                 {save.isPending
                   ? t("profile.saving")
@@ -273,6 +286,28 @@ export function ProfilePage() {
           </div>
         </form>
       </section>
+      {data.role === "USER" && <section className="profile-card account-delete-card">
+        <div>
+          <p className="eyebrow">{t("profile.security")}</p>
+          <h2>{t("profile.deleteAccountTitle")}</h2>
+          <p className="muted">{t("profile.deleteAccountDescription")}</p>
+        </div>
+        <button type="button" className="button button--danger account-delete-trigger" onClick={() => { deleteAccount.reset(); setDeleteConfirmed(false); setDeleteDialogOpen(true); }}>
+          {t("profile.deleteAccount")}
+        </button>
+      </section>}
+      {deleteDialogOpen && <Modal title={t("profile.deleteAccountTitle")} onClose={() => { if (!deleteAccount.isPending) setDeleteDialogOpen(false); }} className="account-delete-modal">
+        <p className="account-delete-warning">{t("profile.deleteAccountWarning")}</p>
+        <label className="consent-check account-delete-consent">
+          <input type="checkbox" checked={deleteConfirmed} disabled={deleteAccount.isPending} onChange={(event) => setDeleteConfirmed(event.target.checked)} />
+          <span>{t("profile.deleteAccountConfirm")}</span>
+        </label>
+        {deleteAccount.isError && <p className="state-card state-card--error" role="alert">{t("error.generic")}</p>}
+        <div className="modal-actions account-delete-actions">
+          <button type="button" className="button button--secondary" disabled={deleteAccount.isPending} onClick={() => setDeleteDialogOpen(false)}>{t("profile.cancel")}</button>
+          <button type="button" className="button button--danger" disabled={!deleteConfirmed || deleteAccount.isPending} onClick={() => deleteAccount.mutate()}>{deleteAccount.isPending ? t("profile.deletingAccount") : t("profile.deleteAccount")}</button>
+        </div>
+      </Modal>}
     </div>
   );
 }

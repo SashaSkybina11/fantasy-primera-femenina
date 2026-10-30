@@ -15,5 +15,6 @@ export const env = {
   isProduction:
     process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL),
   blobReadWriteToken: process.env.AVATAR_BLOB_READ_WRITE_TOKEN,
+  supportBlobReadWriteToken: process.env.SUPPORT_BLOB_READ_WRITE_TOKEN,
   cronSecret: process.env.CRON_SECRET,
 };
