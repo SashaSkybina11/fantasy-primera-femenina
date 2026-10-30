@@ -241,6 +241,10 @@ export const portuguese: Record<TranslationKey, string> = {
   "adminLeagues.confirm":
     "Tem a certeza de que pretende eliminar esta liga de amigos?",
   "adminLeagues.cancel": "Cancelar",
+  "adminLeagues.edit": "Editar liga",
+  "adminLeagues.name": "Nome da liga",
+  "adminLeagues.avatar": "Avatar da liga",
+  "adminLeagues.save": "Guardar alterações",
   "rules.pointsUnit": "pontos",
   "prices.title": "Preços das jogadoras",
   "catalog.showMore": "Mostrar mais {{count}}",

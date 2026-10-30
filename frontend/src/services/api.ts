@@ -548,7 +548,7 @@ export type NotificationLocaleKey = "es" | "uk" | "en" | "pt";
 export type NotificationContent = { title: string; message: string; action: string; url: string };
 export type UserNotification = NotificationContent & { id: string; type: string; createdAt: string; readAt: string | null; isRead: boolean };
 export type NotificationAudience = "ALL" | "LEAGUE" | "USERS" | "INCOMPLETE_TEAM" | "CAPTAIN_MISSING";
-export type AdminFriendLeague = { id: string; name: string; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
+export type AdminFriendLeague = { id: string; name: string; logoUrl: string | null; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
   adminCurrentGameweek: () => request<{ gameweekId: string | null }>("/admin/current-gameweek"),
   setCurrentGameweek: (gameweekId: string | null) => request<{ gameweekId: string | null }>("/admin/current-gameweek", { method: "PATCH", body: JSON.stringify({ gameweekId }) }),
@@ -576,6 +576,10 @@ export const api = {
   cancelAdminNotification: (id: string) => request<{ ok: boolean }>(`/admin/notifications/${id}/cancel`, { method: "POST" }),
   sendNotification: (input: { type: string; audience: NotificationAudience; leagueId?: string; userIds?: string[]; hours?: string; contents?: Record<NotificationLocaleKey, NotificationContent> }) => request<{ id: string }>("/admin/notifications/send", { method: "POST", body: JSON.stringify(input) }),
   adminFriendLeagues: () => request<AdminFriendLeague[]>("/admin/friend-leagues"),
+  updateAdminFriendLeague: (id: string, name: string, logo: File | null) => {
+    const body = new FormData(); body.set("name", name); if (logo) body.set("logo", logo);
+    return request<{ id: string; name: string; logoUrl: string | null }>(`/admin/friend-leagues/${id}`, { method: "PATCH", body });
+  },
   deleteAdminFriendLeague: (id: string) => request<void>("/admin/friend-leagues/" + id, { method: "DELETE" }),
   gameConfig: () => request<{ initialBudget: number }>("/game-config"),
   register: (payload: { email: string; password: string; name: string }) =>

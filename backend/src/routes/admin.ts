@@ -3,6 +3,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { authenticate, requireAdmin } from "../middleware/auth.js";
+import { upload, storeAvatar, removeAvatar } from "../services/image-upload.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { inTransaction } from "../lib/transaction.js";
 import { marketDatesForWeek, marketIsOpen } from "../services/market-schedule.js";
@@ -105,9 +106,26 @@ router.patch("/gameweeks/:id/market-schedule", asyncRoute(async (request, respon
 
 router.get("/friend-leagues", asyncRoute(async (_request, response) => {
   response.json(await prisma.privateLeague.findMany({ orderBy: { createdAt: "desc" }, select: {
-    id: true, name: true, inviteCode: true, createdAt: true,
+    id: true, name: true, logoUrl: true, inviteCode: true, createdAt: true,
     owner: { select: { id: true, name: true } }, _count: { select: { members: true } }
   } }));
+}));
+router.patch("/friend-leagues/:id", upload.single("logo"), asyncRoute(async (request, response) => {
+  const id = z.string().cuid().parse(request.params.id);
+  const { name } = z.object({ name: z.string().trim().min(3).max(50) }).parse(request.body);
+  let logoUrl: string | null = null;
+  try {
+    if (request.file) logoUrl = await storeAvatar(request.file);
+    const current = await prisma.privateLeague.findUnique({ where: { id }, select: { logoUrl: true } });
+    if (!current) throw new ApiError(404, "FRIEND_LEAGUE_NOT_FOUND");
+    const updated = await prisma.privateLeague.update({ where: { id }, data: { name, ...(logoUrl ? { logoUrl } : {}) }, select: { id: true, name: true, logoUrl: true } });
+    if (logoUrl && current.logoUrl) await removeAvatar(current.logoUrl);
+    response.json(updated);
+  } catch (error) {
+    if (logoUrl) await removeAvatar(logoUrl);
+    else if (request.file?.filename) await removeAvatar(`/uploads/${request.file.filename}`);
+    throw error;
+  }
 }));
 router.delete("/friend-leagues/:id", asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
