@@ -12,10 +12,17 @@ const allowedTypes: Record<string, string> = {
   ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".gif": "image/gif", ".avif": "image/avif", ".heic": "image/heic", ".heif": "image/heif",
   ".pdf": "application/pdf", ".txt": "text/plain", ".csv": "text/csv", ".doc": "application/msword", ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", ".xls": "application/vnd.ms-excel", ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".odt": "application/vnd.oasis.opendocument.text", ".ods": "application/vnd.oasis.opendocument.spreadsheet",
 };
+const allowedImageTypes = new Set([
+  "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif", "image/heic", "image/heif",
+]);
+const imageExtensionByType: Record<string, string> = {
+  "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/gif": ".gif",
+  "image/avif": ".avif", "image/heic": ".heic", "image/heif": ".heif",
+};
 const maxFileSize = 10 * 1024 * 1024;
 export const supportUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: maxFileSize, files: 5 }, fileFilter: (_request, file, callback) => {
   const extension = extname(basename(file.originalname)).toLowerCase();
-  if (!allowedTypes[extension]) return callback(new ApiError(400, "Unsupported support attachment format"));
+  if (!allowedTypes[extension] && !allowedImageTypes.has(file.mimetype.toLowerCase())) return callback(new ApiError(400, "Unsupported support attachment format"));
   callback(null, true);
 } });
 
@@ -27,9 +34,11 @@ export function safeSupportFileName(name: string) {
 export async function storeSupportFile(file: Express.Multer.File, conversationId: string) {
   const fileName = safeSupportFileName(file.originalname);
   const extension = extname(fileName).toLowerCase();
-  const contentType = allowedTypes[extension];
+  const mimeType = file.mimetype.toLowerCase();
+  const contentType = allowedTypes[extension] ?? (allowedImageTypes.has(mimeType) ? mimeType : undefined);
   if (!contentType) throw new ApiError(400, "Unsupported support attachment format");
-  const storageKey = `support/${conversationId}/${randomUUID()}${extension}`;
+  const storageExtension = extension || imageExtensionByType[contentType] || "";
+  const storageKey = `support/${conversationId}/${randomUUID()}${storageExtension}`;
   if (env.isProduction) {
     if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
     await put(storageKey, file.buffer, { access: "private", addRandomSuffix: false, contentType, token: env.supportBlobReadWriteToken });

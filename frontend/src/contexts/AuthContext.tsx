@@ -23,6 +23,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = authToken.get();
     if (!token) { setIsLoading(false); return; }
     let active = true;
+    const timeout = window.setTimeout(() => {
+      if (active) setIsLoading(false);
+    }, 8000);
     api.me()
       .then(({ user: loadedUser }) => {
         if (active && authToken.get() === token) setUser(loadedUser);
@@ -30,8 +33,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Unauthorized responses are handled by the API. Network failures must
       // not erase a valid session or a newer login.
       .catch(() => {})
-      .finally(() => { if (active) setIsLoading(false); });
-    return () => { active = false; };
+      .finally(() => { window.clearTimeout(timeout); if (active) setIsLoading(false); });
+    return () => { active = false; window.clearTimeout(timeout); };
   }, [queryClient]);
 
   useEffect(() => {

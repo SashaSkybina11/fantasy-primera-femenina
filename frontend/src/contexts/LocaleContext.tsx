@@ -1418,7 +1418,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "standings.relegationDescription": "три команди внизу таблиці.",
   "footer.contactAdmin": "Зв’язатися з адміністратором",
   "support.title": "Чат з адміністратором",
-  "support.description": "Напишіть адміністратору. Можна додати до 5 фото або файлів.",
+  "support.description": "",
   "support.adminInbox": "Повідомлення гравців",
   "support.empty": "Повідомлень ще немає. Напишіть, щоб розпочати чат.",
   "support.noConversations": "Повідомлень від гравців поки немає.",

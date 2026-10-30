@@ -35,7 +35,6 @@ function Composer({ conversationId, admin = false, onSent }: { conversationId?: 
   return <form className="support-composer" onSubmit={event => { event.preventDefault(); mutation.mutate(); }}>
     {files.length > 0 && <ul className="support-file-queue">{files.map((file, index) => <li key={`${file.name}-${index}`}>{file.name}<button type="button" aria-label={t("support.removeFile")} onClick={() => setFiles(current => current.filter((_, i) => i !== index))}>×</button></li>)}</ul>}
     {mutation.isError && <p className="support-error">{mutation.error.message || t("error.generic")}</p>}
-    <p className="support-composer__hint">{t("support.fileLimit")}</p>
     <div className="support-composer__row"><label className="button button--secondary support-attach"><IoAttachOutline aria-hidden="true" /><span>{t("support.attach")}</span><input type="file" multiple accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.odt,.ods" onChange={event => { addFiles(event.currentTarget.files); event.currentTarget.value = ""; }} /></label><textarea value={body} onChange={event => setBody(event.target.value)} maxLength={4000} rows={2} placeholder={t("support.messagePlaceholder")} /><button className="button" type="submit" disabled={mutation.isPending || (!body.trim() && !files.length)}><IoSendOutline aria-hidden="true" />{t("support.send")}</button></div>
   </form>;
 }

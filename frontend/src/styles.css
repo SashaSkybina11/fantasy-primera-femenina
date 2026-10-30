@@ -5221,6 +5221,7 @@ dialog.app-modal.share-team-modal {
 .support-back { display: none; }
 .support-message-list { flex: 1; overflow: auto; display: flex; flex-direction: column; gap: .75rem; padding: 1rem; }
 .support-message { max-width: min(85%, 620px); align-self: flex-start; padding: .7rem .85rem; border-radius: 14px 14px 14px 4px; background: var(--surface-muted, #f1f3f6); overflow-wrap: anywhere; }
+:root[data-theme="dark"] .support-message { background: #4e4a4a; }
 .support-message--own { align-self: flex-end; border-radius: 14px 14px 4px 14px; background: color-mix(in srgb, #398650 13%, var(--surface, white)); }
 .support-message__meta { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; font-size: .8rem; }
 .support-message__meta time { color: var(--muted, #6b7280); font-size: .7rem; white-space: nowrap; }
