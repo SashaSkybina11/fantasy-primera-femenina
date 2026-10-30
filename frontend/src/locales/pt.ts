@@ -248,6 +248,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "rules.pointsUnit": "pontos",
   "prices.title": "Preços das jogadoras",
   "standings.position": "Pos.",
+  "standings.empty": "Ainda não há equipas na classificação.",
   "standings.team": "Equipa",
   "standings.played": "J",
   "standings.wins": "V",
