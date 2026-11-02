@@ -28,7 +28,7 @@ export function LeaderboardPage() {
   const visibleHistory = isAdmin ? selectedHistory.data : history.data;
   return (
     <div className="page">
-      {selected && <PublicLineupModal userId={selected.id} name={selected.name} admin={isAdmin} onClose={() => setSelected(null)} />}
+      {selected && !isAdmin && <PublicLineupModal userId={selected.id} name={selected.name} onClose={() => setSelected(null)} />}
       <header className="page-heading">
         <p className="eyebrow">{t("leaderboard.eyebrow")}</p>
         <h1>{t("leaderboard.title")}</h1>
@@ -59,7 +59,7 @@ export function LeaderboardPage() {
           {isAdmin && selectedHistory.isPending && <p className="state-card"><Loader label={t("admin.loading")} /></p>}
           {isAdmin && selectedHistory.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}
           {visibleHistory?.map((row) => (
-            <details className="history-row" key={row.id}>
+            <details className="history-row" key={row.id} open={isAdmin && Boolean(selected)}>
               <summary>
                 <strong>{t("gameweek.label", { number: row.gameweek.number })}</strong>
                 <b>{row.totalPoints} {t("common.pointsShort")}</b>
