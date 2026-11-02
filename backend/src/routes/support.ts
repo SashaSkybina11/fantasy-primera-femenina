@@ -67,8 +67,9 @@ async function createMessage(conversationId: string, senderId: string, isAdmin: 
       try {
         blob = await head(file.storageKey, supportBlobOptions());
       } catch (error) {
-        console.error("Support attachment verification failed", { conversationId, storageKey: file.storageKey, error });
-        throw new ApiError(502, "Не вдалося перевірити завантажений файл. Спробуйте прикріпити його ще раз.");
+        const details = error instanceof Error ? error.message : String(error);
+        console.error("Support attachment verification failed", { conversationId, storageKey: file.storageKey, details, error });
+        throw new ApiError(502, `Не вдалося перевірити вкладення у Blob: ${details}`);
       }
       if (blob.size !== file.size || blob.contentType !== file.contentType) throw new ApiError(400, "Invalid support attachment");
       stored.push({ ...file, fileName });
