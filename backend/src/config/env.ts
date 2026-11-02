@@ -15,8 +15,6 @@ export const env = {
   isProduction:
     process.env.NODE_ENV === "production" || Boolean(process.env.VERCEL),
   blobReadWriteToken: process.env.AVATAR_BLOB_READ_WRITE_TOKEN,
-  // Reuse the configured Vercel Blob token for support uploads unless a
-  // dedicated token is supplied. Many deployments only configure the avatar token.
-  supportBlobReadWriteToken: process.env.SUPPORT_BLOB_READ_WRITE_TOKEN ?? process.env.AVATAR_BLOB_READ_WRITE_TOKEN,
+  supportBlobReadWriteToken: process.env.SUPPORT_BLOB_READ_WRITE_TOKEN,
   cronSecret: process.env.CRON_SECRET,
 };

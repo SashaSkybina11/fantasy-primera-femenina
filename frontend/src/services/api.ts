@@ -1,4 +1,3 @@
-import { upload as uploadBlob } from "@vercel/blob/client";
 import { portugueseApi } from "../locales/pt-api";
 import { toBrazilian } from "../locales/pt";
 import { marketSpanish, marketUkrainian, marketEnglish } from "../locales/market";
@@ -571,19 +570,14 @@ export type UserNotification = NotificationContent & { id: string; type: string;
 export type SupportAttachment = { id: string; fileName: string; contentType: string; size: number };
 export type SupportMessage = { id: string; body: string; isAdmin: boolean; createdAt: string; sender: { id: string; name: string; role: string }; attachments: SupportAttachment[] };
 async function uploadSupportFiles(conversationId: string, files: File[]) {
-  const token = authToken.get();
-  if (!token) throw new Error("Please sign in again.");
   return Promise.all(files.map(async file => {
-    const name = file.name.replace(/[\\/]/g, "_");
-    const blob = await uploadBlob(`support/${conversationId}/${name}`, file, {
-      access: "private",
-      handleUploadUrl: `${API_URL}/support/blob-upload`,
-      headers: { Authorization: `Bearer ${token}` },
-      clientPayload: JSON.stringify({ conversationId }),
-      ...(file.type ? { contentType: file.type } : {}),
-      multipart: file.size > 5 * 1024 * 1024,
+    const signed = await request<{ storageKey: string; presignedUrl: string; fileName: string; contentType: string; size: number }>("/support/presign-upload", {
+      method: "POST",
+      body: JSON.stringify({ conversationId, fileName: file.name, contentType: file.type, size: file.size }),
     });
-    return { storageKey: blob.pathname, fileName: name, contentType: blob.contentType, size: file.size };
+    const uploaded = await fetch(signed.presignedUrl, { method: "PUT", headers: { "Content-Type": signed.contentType }, body: file });
+    if (!uploaded.ok) throw new Error(`Could not upload attachment (${uploaded.status}). Please try again.`);
+    return { storageKey: signed.storageKey, fileName: signed.fileName, contentType: signed.contentType, size: signed.size };
   }));
 }
 export type SupportConversation = { id: string; lastMessageAt: string; user: { id: string; name: string; email: string; avatarUrl: string | null }; messages: SupportMessage[]; unreadCount?: number };

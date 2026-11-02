@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
-import { handleUpload } from "@vercel/blob/client";
-import { head } from "@vercel/blob";
+import { head, issueSignedToken, presignUrl } from "@vercel/blob";
+import { randomUUID } from "node:crypto";
+import { extname } from "node:path";
 import { prisma } from "../lib/prisma.js";
 import { authenticate } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
@@ -9,34 +10,6 @@ import { env } from "../config/env.js";
 import { allowedImageTypes, allowedTypes, deleteSupportFile, maxSupportFileSize, safeSupportFileName, sendSupportFile, storeSupportFile, supportUpload } from "../services/support-files.js";
 
 const router = Router();
-const blobUploadAuth: import("express").RequestHandler = (request, response, next) => request.body?.type === "blob.upload-completed" ? next() : authenticate(request, response, next);
-router.post("/blob-upload", blobUploadAuth, asyncRoute(async (request, response) => {
-  if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
-  const body = request.body as import("@vercel/blob/client").HandleUploadBody;
-  const result = await handleUpload({
-    body,
-    request,
-    token: env.supportBlobReadWriteToken,
-    onBeforeGenerateToken: async (pathname, clientPayload) => {
-      const input = z.object({ conversationId: z.string().cuid() }).parse(JSON.parse(clientPayload ?? "{}"));
-      const viewer = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { id: true, role: true, status: true, email: true } });
-      const conversation = await prisma.supportConversation.findUnique({ where: { id: input.conversationId }, select: { userId: true } });
-      const allowed = viewer?.role === "USER"
-        ? viewer.status === "ACTIVE" && conversation?.userId === viewer.id
-        : viewer?.role === "ADMIN" && viewer.email?.toLowerCase() === "sashaskibina16@gmail.com" && Boolean(conversation);
-      if (!viewer || !allowed) throw new ApiError(403, "You cannot upload to this support conversation");
-      if (!pathname.startsWith(`support/${input.conversationId}/`)) throw new ApiError(400, "Invalid support attachment path");
-      return {
-        allowedContentTypes: [...new Set([...Object.values(allowedTypes), ...allowedImageTypes])],
-        maximumSizeInBytes: maxSupportFileSize,
-        addRandomSuffix: true,
-        tokenPayload: JSON.stringify({ conversationId: input.conversationId, uploaderId: viewer.id }),
-      };
-    },
-    onUploadCompleted: async () => {},
-  });
-  response.json(result);
-}));
 router.use(authenticate);
 async function requireSupportAdmin(request: import("express").Request, _response: import("express").Response, next: import("express").NextFunction) {
   try {
@@ -51,6 +24,25 @@ const messageInclude = { sender: { select: { id: true, name: true, role: true } 
 const conversationInclude = { user: { select: { id: true, name: true, email: true, avatarUrl: true } }, messages: { orderBy: { createdAt: "asc" as const }, include: messageInclude } };
 
 type UploadedSupportFile = { storageKey: string; fileName: string; contentType: string; size: number };
+router.post("/presign-upload", asyncRoute(async (request, response) => {
+  if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
+  const input = z.object({ conversationId: z.string().cuid(), fileName: z.string().min(1).max(255), contentType: z.string().max(150), size: z.number().int().positive().max(maxSupportFileSize) }).parse(request.body);
+  const viewer = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { id: true, role: true, status: true, email: true } });
+  const conversation = await prisma.supportConversation.findUnique({ where: { id: input.conversationId }, select: { userId: true } });
+  const allowed = viewer?.role === "USER"
+    ? viewer.status === "ACTIVE" && conversation?.userId === viewer.id
+    : viewer?.role === "ADMIN" && viewer.email?.toLowerCase() === "sashaskibina16@gmail.com" && Boolean(conversation);
+  if (!viewer || !allowed) throw new ApiError(403, "You cannot upload to this support conversation");
+  const fileName = safeSupportFileName(input.fileName);
+  const extension = extname(fileName).toLowerCase();
+  const contentType = input.contentType || allowedTypes[extension];
+  if (!contentType || (allowedTypes[extension] && allowedTypes[extension] !== contentType) || (!allowedTypes[extension] && !allowedImageTypes.has(contentType))) throw new ApiError(400, "Unsupported support attachment format");
+  const storageKey = `support/${input.conversationId}/${randomUUID()}${extension}`;
+  const validUntil = Date.now() + 15 * 60 * 1000;
+  const signedToken = await issueSignedToken({ token: env.supportBlobReadWriteToken, pathname: storageKey, operations: ["put"], validUntil, allowedContentTypes: [contentType], maximumSizeInBytes: input.size });
+  const { presignedUrl } = await presignUrl(signedToken, { operation: "put", pathname: storageKey, access: "private", validUntil, allowedContentTypes: [contentType], maximumSizeInBytes: input.size });
+  response.json({ storageKey, presignedUrl, fileName, contentType, size: input.size });
+}));
 async function createMessage(conversationId: string, senderId: string, isAdmin: boolean, bodyText: string, files: Express.Multer.File[], uploaded: UploadedSupportFile[] = []) {
   const body = bodySchema.parse(bodyText);
   if (!body && !files.length && !uploaded.length) throw new ApiError(400, "Write a message or attach a file");
