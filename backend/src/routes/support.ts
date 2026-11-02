@@ -23,6 +23,18 @@ const uploadedFilesSchema = z.array(z.object({ storageKey: z.string(), fileName:
 const messageInclude = { sender: { select: { id: true, name: true, role: true } }, attachments: { select: { id: true, fileName: true, contentType: true, size: true } } } as const;
 const conversationInclude = { user: { select: { id: true, name: true, email: true, avatarUrl: true } }, messages: { orderBy: { createdAt: "asc" as const }, include: messageInclude } };
 
+async function getOrCreateConversation(userId: string) {
+  const existing = await prisma.supportConversation.findUnique({ where: { userId } });
+  if (existing) return existing;
+  try {
+    return await prisma.supportConversation.create({ data: { userId } });
+  } catch (error) {
+    const concurrent = await prisma.supportConversation.findUnique({ where: { userId } });
+    if (concurrent) return concurrent;
+    throw error;
+  }
+}
+
 type UploadedSupportFile = { storageKey: string; fileName: string; contentType: string; size: number };
 router.post("/presign-upload", asyncRoute(async (request, response) => {
   if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
@@ -100,14 +112,14 @@ router.get("/conversation", asyncRoute(async (request, response) => {
 router.post("/prepare", asyncRoute(async (request, response) => {
   const user = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { role: true, status: true } });
   if (!user || user.role !== "USER" || user.status !== "ACTIVE") throw new ApiError(403, "Only active players can contact support");
-  const conversation = await prisma.supportConversation.upsert({ where: { userId: request.auth!.userId }, create: { userId: request.auth!.userId }, update: {} });
+  const conversation = await getOrCreateConversation(request.auth!.userId);
   response.json({ id: conversation.id });
 }));
 router.post("/messages", supportUpload.array("attachments", 5), asyncRoute(async (request, response) => {
   const userId = request.auth!.userId;
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, status: true } });
   if (!user || user.role !== "USER" || user.status !== "ACTIVE") throw new ApiError(403, "Only active players can contact support");
-  const conversation = await prisma.supportConversation.upsert({ where: { userId }, create: { userId }, update: {} });
+  const conversation = await getOrCreateConversation(userId);
   const uploaded = uploadedFilesSchema.parse(request.body?.uploads ?? []);
   const message = await createMessage(conversation.id, userId, false, String(request.body?.body ?? ""), request.files as Express.Multer.File[] ?? [], uploaded);
   response.status(201).json(message);
