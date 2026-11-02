@@ -18,7 +18,7 @@ async function requireSupportAdmin(request: import("express").Request, _response
   } catch (error) { next(error); }
 }
 const bodySchema = z.string().trim().max(4000);
-const uploadedFilesSchema = z.array(z.object({ storageKey: z.string(), fileName: z.string(), contentType: z.string(), size: z.number().int() })).max(5);
+const uploadedFilesSchema = z.array(z.object({ storageKey: z.string(), blobUrl: z.string().url().optional(), fileName: z.string(), contentType: z.string(), size: z.number().int() })).max(5);
 const messageInclude = { sender: { select: { id: true, name: true, role: true } }, attachments: { select: { id: true, fileName: true, contentType: true, size: true } } } as const;
 const conversationInclude = { user: { select: { id: true, name: true, email: true, avatarUrl: true } }, messages: { orderBy: { createdAt: "asc" as const }, include: messageInclude } };
 
@@ -34,7 +34,7 @@ async function getOrCreateConversation(userId: string) {
   }
 }
 
-type UploadedSupportFile = { storageKey: string; fileName: string; contentType: string; size: number };
+type UploadedSupportFile = { storageKey: string; blobUrl?: string; fileName: string; contentType: string; size: number };
 router.post("/presign-upload", asyncRoute(async (request, response) => {
   if (!supportBlobConfigured()) throw new ApiError(503, "Configure private Blob OIDC access or SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
   const input = z.object({ conversationId: z.string().cuid(), fileName: z.string().min(1).max(255), contentType: z.string().max(150), size: z.number().int().positive().max(maxSupportFileSize) }).parse(request.body);
@@ -66,10 +66,16 @@ async function createMessage(conversationId: string, senderId: string, isAdmin: 
       let blob;
       try {
         const blobOptions = supportBlobOptions();
-        const privateBlobUrl = blobOptions.storeId
-          ? `https://${blobOptions.storeId.replace(/^store_/, "")}.private.blob.vercel-storage.com/${file.storageKey}`
-          : file.storageKey;
-        blob = await head(privateBlobUrl, blobOptions);
+        let blobLookup = file.storageKey;
+        if (file.blobUrl) {
+          const uploadedBlobUrl = new URL(file.blobUrl);
+          const uploadedPath = decodeURIComponent(uploadedBlobUrl.pathname.replace(/^\/+/, ""));
+          if (uploadedBlobUrl.protocol !== "https:" || !uploadedBlobUrl.hostname.endsWith(".private.blob.vercel-storage.com") || uploadedPath !== file.storageKey) {
+            throw new ApiError(400, "Invalid support attachment URL");
+          }
+          blobLookup = file.blobUrl;
+        }
+        blob = await head(blobLookup, blobOptions);
       } catch (error) {
         const details = error instanceof Error ? error.message : String(error);
         console.error("Support attachment verification failed", { conversationId, storageKey: file.storageKey, details, error });

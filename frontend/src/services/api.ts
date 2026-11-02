@@ -578,7 +578,9 @@ async function uploadSupportFiles(conversationId: string, files: File[]) {
     });
     const uploaded = await fetch(signed.presignedUrl, { method: "PUT", headers: { "Content-Type": signed.contentType }, body: file });
     if (!uploaded.ok) throw new Error(`Could not upload attachment (${uploaded.status}). Please try again.`);
-    return { storageKey: signed.storageKey, fileName: signed.fileName, contentType: signed.contentType, size: signed.size };
+    const blob = await uploaded.json() as { url?: string; pathname?: string };
+    if (!blob.url || !blob.pathname || blob.pathname !== signed.storageKey) throw new Error("The uploaded attachment could not be verified. Please try again.");
+    return { storageKey: signed.storageKey, blobUrl: blob.url, fileName: signed.fileName, contentType: signed.contentType, size: signed.size };
   }));
 }
 export type SupportConversation = { id: string; lastMessageAt: string; user: { id: string; name: string; email: string; avatarUrl: string | null }; messages: SupportMessage[]; unreadCount?: number };
