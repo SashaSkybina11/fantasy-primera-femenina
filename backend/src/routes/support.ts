@@ -6,8 +6,7 @@ import { extname } from "node:path";
 import { prisma } from "../lib/prisma.js";
 import { authenticate } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
-import { env } from "../config/env.js";
-import { allowedImageTypes, allowedTypes, deleteSupportFile, maxSupportFileSize, safeSupportFileName, sendSupportFile, storeSupportFile, supportUpload } from "../services/support-files.js";
+import { allowedImageTypes, allowedTypes, deleteSupportFile, maxSupportFileSize, safeSupportFileName, sendSupportFile, storeSupportFile, supportBlobConfigured, supportBlobOptions, supportUpload } from "../services/support-files.js";
 
 const router = Router();
 router.use(authenticate);
@@ -37,7 +36,7 @@ async function getOrCreateConversation(userId: string) {
 
 type UploadedSupportFile = { storageKey: string; fileName: string; contentType: string; size: number };
 router.post("/presign-upload", asyncRoute(async (request, response) => {
-  if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
+  if (!supportBlobConfigured()) throw new ApiError(503, "Configure private Blob OIDC access or SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
   const input = z.object({ conversationId: z.string().cuid(), fileName: z.string().min(1).max(255), contentType: z.string().max(150), size: z.number().int().positive().max(maxSupportFileSize) }).parse(request.body);
   const viewer = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { id: true, role: true, status: true, email: true } });
   const conversation = await prisma.supportConversation.findUnique({ where: { id: input.conversationId }, select: { userId: true } });
@@ -51,7 +50,7 @@ router.post("/presign-upload", asyncRoute(async (request, response) => {
   if (!contentType || (allowedTypes[extension] && allowedTypes[extension] !== contentType) || (!allowedTypes[extension] && !allowedImageTypes.has(contentType))) throw new ApiError(400, "Unsupported support attachment format");
   const storageKey = `support/${input.conversationId}/${randomUUID()}${extension}`;
   const validUntil = Date.now() + 15 * 60 * 1000;
-  const signedToken = await issueSignedToken({ token: env.supportBlobReadWriteToken, pathname: storageKey, operations: ["put"], validUntil, allowedContentTypes: [contentType], maximumSizeInBytes: input.size });
+  const signedToken = await issueSignedToken({ ...supportBlobOptions(), pathname: storageKey, operations: ["put"], validUntil, allowedContentTypes: [contentType], maximumSizeInBytes: input.size });
   const { presignedUrl } = await presignUrl(signedToken, { operation: "put", pathname: storageKey, access: "private", validUntil, allowedContentTypes: [contentType], maximumSizeInBytes: input.size });
   response.json({ storageKey, presignedUrl, fileName, contentType, size: input.size });
 }));
@@ -64,7 +63,7 @@ async function createMessage(conversationId: string, senderId: string, isAdmin: 
     for (const file of uploaded) {
       const fileName = safeSupportFileName(file.fileName);
       if (!file.storageKey.startsWith(`support/${conversationId}/`) || file.size < 0 || file.size > maxSupportFileSize || !Object.values(allowedTypes).includes(file.contentType) && !allowedImageTypes.has(file.contentType)) throw new ApiError(400, "Invalid support attachment");
-      const blob = await head(file.storageKey, { token: env.supportBlobReadWriteToken });
+      const blob = await head(file.storageKey, supportBlobOptions());
       if (blob.size !== file.size || blob.contentType !== file.contentType) throw new ApiError(400, "Invalid support attachment");
       stored.push({ ...file, fileName });
     }

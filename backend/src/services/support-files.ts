@@ -20,6 +20,12 @@ const imageExtensionByType: Record<string, string> = {
   "image/avif": ".avif", "image/heic": ".heic", "image/heif": ".heif",
 };
 export const maxSupportFileSize = 10 * 1024 * 1024;
+export const supportBlobOptions = () => env.supportBlobReadWriteToken
+  ? { token: env.supportBlobReadWriteToken }
+  : env.supportBlobStoreId
+    ? { storeId: env.supportBlobStoreId }
+    : {};
+export const supportBlobConfigured = () => Boolean(env.supportBlobReadWriteToken || env.supportBlobStoreId);
 export const supportUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: maxSupportFileSize, files: 5 }, fileFilter: (_request, file, callback) => {
   const extension = extname(basename(file.originalname)).toLowerCase();
   if (!allowedTypes[extension] && !allowedImageTypes.has(file.mimetype.toLowerCase())) return callback(new ApiError(400, "Unsupported support attachment format"));
@@ -40,8 +46,8 @@ export async function storeSupportFile(file: Express.Multer.File, conversationId
   const storageExtension = extension || imageExtensionByType[contentType] || "";
   const storageKey = `support/${conversationId}/${randomUUID()}${storageExtension}`;
   if (env.isProduction) {
-    if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
-    await put(storageKey, file.buffer, { access: "private", addRandomSuffix: false, contentType, token: env.supportBlobReadWriteToken });
+    if (!supportBlobConfigured()) throw new ApiError(503, "Configure private Blob OIDC access or SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
+    await put(storageKey, file.buffer, { access: "private", addRandomSuffix: false, contentType, ...supportBlobOptions() });
   } else {
     await mkdir(supportUploadsDirectory, { recursive: true });
     await writeFile(join(supportUploadsDirectory, storageKey.replaceAll("/", "_")), file.buffer, { flag: "wx" });
@@ -52,8 +58,9 @@ export async function storeSupportFile(file: Express.Multer.File, conversationId
 export async function deleteSupportFile(storageKey: string) {
   try {
     if (storageKey.startsWith("support/")) {
-      if (env.isProduction && env.supportBlobReadWriteToken) await del(storageKey, { token: env.supportBlobReadWriteToken });
-      else await unlink(join(supportUploadsDirectory, storageKey.replaceAll("/", "_")));
+      if (env.isProduction) {
+        if (supportBlobConfigured()) await del(storageKey, supportBlobOptions());
+      } else await unlink(join(supportUploadsDirectory, storageKey.replaceAll("/", "_")));
     }
   } catch (error) { console.warn("Could not delete support attachment", error); }
 }
@@ -61,8 +68,8 @@ export async function deleteSupportFile(storageKey: string) {
 export async function sendSupportFile(storageKey: string, response: import("express").Response) {
   if (!storageKey.startsWith("support/")) throw new ApiError(404, "Support attachment not found");
   if (env.isProduction) {
-    if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
-    const blob = await get(storageKey, { access: "private", token: env.supportBlobReadWriteToken });
+    if (!supportBlobConfigured()) throw new ApiError(503, "Configure private Blob OIDC access or SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
+    const blob = await get(storageKey, { access: "private", ...supportBlobOptions() });
     if (!blob) throw new ApiError(404, "Support attachment not found");
     return Readable.fromWeb(blob.stream as import("node:stream/web").ReadableStream).pipe(response);
   }
