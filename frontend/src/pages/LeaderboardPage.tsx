@@ -28,7 +28,7 @@ export function LeaderboardPage() {
   const visibleHistory = isAdmin ? selectedHistory.data : history.data;
   return (
     <div className="page">
-      {selected && !isAdmin && <PublicLineupModal userId={selected.id} name={selected.name} onClose={() => setSelected(null)} />}
+      {selected && <PublicLineupModal userId={selected.id} name={selected.name} admin={isAdmin} onClose={() => setSelected(null)} />}
       <header className="page-heading">
         <p className="eyebrow">{t("leaderboard.eyebrow")}</p>
         <h1>{t("leaderboard.title")}</h1>

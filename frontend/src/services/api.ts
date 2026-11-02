@@ -564,6 +564,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export type PublicLineup = { user: { id: string; name: string }; gameweek: { id: string; number: number } | null; players: Array<import("../types").SquadEntry & { points: number }> };
+export type HistoricalLineup = { user: { id: string; name: string }; gameweekId: string; players: Array<import("../types").SquadEntry & { points: number }> };
 export type NotificationLocaleKey = "es" | "uk" | "en" | "pt";
 export type NotificationContent = { title: string; message: string; action: string; url: string };
 export type UserNotification = NotificationContent & { id: string; type: string; createdAt: string; readAt: string | null; isRead: boolean };
@@ -612,6 +613,7 @@ export const api = {
   saveMatch: (id: string, data: { protocol: MatchProtocol; version: number; publish: boolean; kickoffAt: string | null }) => request<MatchRecord>(`/matches/${id}/editor`, { method: "PUT", body: JSON.stringify(data) }),
   playerPrices: () => request<Array<Player & { priceChanges: Array<{ id: string; gameweek: Gameweek; priceBefore: number; priceAfter: number; priceDelta: number }> }>>("/player-prices"),
   publicLineup: (id: string) => request<PublicLineup>("/users/" + id + "/lineup"),
+  adminHistoricalLineup: (userId: string, gameweekId: string) => request<HistoricalLineup>(`/gameweeks/history/${userId}/${gameweekId}/squad`),
   notifications: (status: "all" | "unread" | "read" = "all") => request<{ items: UserNotification[]; unreadCount: number; totalCount: number }>(`/notifications?status=${status}`),
   unreadNotificationCount: () => request<{ unreadCount: number }>("/notifications/unread-count"),
   markNotificationRead: (id: string) => request<{ ok: boolean }>(`/notifications/${id}/read`, { method: "POST" }),

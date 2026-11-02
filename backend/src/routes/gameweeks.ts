@@ -46,4 +46,27 @@ router.get("/history/:userId", requireAdmin, asyncRoute(async (request, response
   response.json(await prisma.userGameweekPoints.findMany({ where: { userId }, orderBy: { gameweek: { number: "desc" } }, include: { gameweek: true } }));
 }));
 
+router.get("/history/:userId/:gameweekId/squad", requireAdmin, asyncRoute(async (request, response) => {
+  const userId = z.string().cuid().parse(request.params.userId);
+  const gameweekId = z.string().cuid().parse(request.params.gameweekId);
+  const [user, snapshot] = await Promise.all([
+    prisma.user.findFirst({ where: { id: userId, role: "USER" }, select: { id: true, name: true } }),
+    prisma.userGameweekSquad.findUnique({
+      where: { gameweekId_userId: { gameweekId, userId } },
+      include: { players: { where: { status: "STARTER" }, include: { player: { include: { club: true } } } } },
+    }),
+  ]);
+  if (!user) throw new ApiError(404, "Пользователь не найден");
+  if (!snapshot) throw new ApiError(404, "Склад туру не знайдено");
+
+  const points = await prisma.userGameweekPoints.findUnique({ where: { gameweekId_userId: { gameweekId, userId } }, select: { breakdown: true } });
+  const breakdown = Array.isArray(points?.breakdown) ? points.breakdown as Array<{ playerId: string; points: number }> : [];
+  const pointsByPlayer = new Map(breakdown.map((entry) => [entry.playerId, entry.points]));
+  response.json({
+    user,
+    gameweekId,
+    players: snapshot.players.map(({ player, ...entry }) => ({ ...entry, player, points: pointsByPlayer.get(player.id) ?? 0 })),
+  });
+}));
+
 export default router;
