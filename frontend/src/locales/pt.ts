@@ -470,6 +470,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "leaderboard.description": "Resultados gerais e histórico das suas jornadas.",
   "leaderboard.overall": "Classificação geral",
   "leaderboard.myGameweeks": "As minhas jornadas",
+  "leaderboard.selectParticipant": "Selecione um participante para ver as suas jornadas.",
   "squad.purchasePrice": "Preço de compra",
   "squad.initialPrice": "Preço inicial",
   "squad.priceUnknown": "Não registado",

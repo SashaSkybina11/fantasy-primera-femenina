@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
-import { authenticate } from "../middleware/auth.js";
+import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { currentGameweek, scoringRules, synchronizeGameweeks } from "../services/gameweeks.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { overallStandings } from "../services/leaderboard.js";
@@ -37,6 +37,13 @@ router.get("/:id/leaderboard", asyncRoute(async (request, response) => {
 
 router.get("/history/me", asyncRoute(async (request, response) => {
   response.json(await prisma.userGameweekPoints.findMany({ where: { userId: request.auth!.userId }, orderBy: { gameweek: { number: "desc" } }, include: { gameweek: true } }));
+}));
+
+router.get("/history/:userId", requireAdmin, asyncRoute(async (request, response) => {
+  const userId = z.string().cuid().parse(request.params.userId);
+  const user = await prisma.user.findFirst({ where: { id: userId, role: "USER" }, select: { id: true } });
+  if (!user) throw new ApiError(404, "Пользователь не найден");
+  response.json(await prisma.userGameweekPoints.findMany({ where: { userId }, orderBy: { gameweek: { number: "desc" } }, include: { gameweek: true } }));
 }));
 
 export default router;

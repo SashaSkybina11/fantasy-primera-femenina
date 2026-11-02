@@ -5,10 +5,13 @@ import { PublicLineupModal } from "../components/PublicLineupModal";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export function LeaderboardPage() {
   const [selected, setSelected] = useState<{ id: string; name: string } | null>(null);
   const { t } = useLocale();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
   const leaderboard = useQuery({
     queryKey: ["overall-leaderboard"],
     queryFn: api.overallLeaderboard,
@@ -17,9 +20,15 @@ export function LeaderboardPage() {
     queryKey: ["gameweek-history"],
     queryFn: api.gameweekHistory,
   });
+  const selectedHistory = useQuery({
+    queryKey: ["admin-user-gameweek-history", selected?.id],
+    queryFn: () => api.adminUserGameweekHistory(selected!.id),
+    enabled: isAdmin && Boolean(selected?.id),
+  });
+  const visibleHistory = isAdmin ? selectedHistory.data : history.data;
   return (
     <div className="page">
-      {selected && <PublicLineupModal userId={selected.id} name={selected.name} onClose={() => setSelected(null)} />}
+      {selected && !isAdmin && <PublicLineupModal userId={selected.id} name={selected.name} onClose={() => setSelected(null)} />}
       <header className="page-heading">
         <p className="eyebrow">{t("leaderboard.eyebrow")}</p>
         <h1>{t("leaderboard.title")}</h1>
@@ -35,7 +44,7 @@ export function LeaderboardPage() {
           {leaderboard.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}
           {leaderboard.data?.length === 0 && <p className="state-card">{t("lineup.rankingEmpty")}</p>}
           {leaderboard.data?.map((row) => (
-            <button type="button" className="leaderboard-row leaderboard-row--interactive leaderboard-row--overall" key={row.id} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={t("lineup.view", { name: row.name ?? "" })}>
+            <button type="button" className="leaderboard-row leaderboard-row--interactive leaderboard-row--overall" key={row.id} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={isAdmin ? row.name ?? "" : t("lineup.view", { name: row.name ?? "" })}>
               <b className="leaderboard-position">{row.rank}{row.rankChange != null && <span className={`rank-change ${row.rankChange > 0 ? "price-delta--up" : row.rankChange < 0 ? "price-delta--down" : ""}`} aria-label={t(row.rankChange > 0 ? "leaderboard.movedUp" : row.rankChange < 0 ? "leaderboard.movedDown" : "leaderboard.unchanged", { count: Math.abs(row.rankChange) })}>{row.rankChange === 0 ? "—" : <><GoArrowRight className={`ui-arrow ${row.rankChange > 0 ? "ui-arrow--up" : "ui-arrow--down"}`} aria-hidden="true" />{Math.abs(row.rankChange)}</>}</span>}</b>
               <strong>{row.name}</strong>
               <em>{row.totalPoints} {t("common.pointsShort")} <i aria-hidden="true"><GoArrowRight className="ui-arrow" aria-hidden="true" /></i></em>
@@ -44,9 +53,12 @@ export function LeaderboardPage() {
         </section>
         <section className="admin-card">
           <div className="admin-card__head">
-            <h2>{t("leaderboard.myGameweeks")}</h2>
+            <h2>{t("leaderboard.myGameweeks")}{isAdmin && selected ? ` · ${selected.name}` : ""}</h2>
           </div>
-          {history.data?.map((row) => (
+          {isAdmin && !selected && <p className="muted">{t("leaderboard.selectParticipant")}</p>}
+          {isAdmin && selectedHistory.isPending && <p className="state-card"><Loader label={t("admin.loading")} /></p>}
+          {isAdmin && selectedHistory.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}
+          {visibleHistory?.map((row) => (
             <details className="history-row" key={row.id}>
               <summary>
                 <strong>{t("gameweek.label", { number: row.gameweek.number })}</strong>

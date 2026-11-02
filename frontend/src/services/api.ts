@@ -728,6 +728,15 @@ export const api = {
         gameweek: Gameweek;
       }>
     >("/gameweeks/history/me"),
+  adminUserGameweekHistory: (userId: string) =>
+    request<
+      Array<{
+        id: string;
+        totalPoints: number;
+        breakdown: Array<{ playerId: string; name: string; isCaptain: boolean; basePoints: number; points: number }> | null;
+        gameweek: Gameweek;
+      }>
+    >(`/gameweeks/history/${userId}`),
   adminGameweeks: () =>
     request<
       Array<
