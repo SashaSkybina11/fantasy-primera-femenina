@@ -212,7 +212,6 @@ router.post("/gameweeks/:id/complete", asyncRoute(async (request, response) => {
       tx.match.count({ where: { gameweekId: id, publishedAt: null } }),
     ]);
     if (expectedMatchCount === 0 || matchCount !== expectedMatchCount || unpublishedCount > 0) throw new ApiError(409, "MATCH_UNPUBLISHED");
-    if (gameweek.deadlineAt > new Date()) throw new ApiError(409, "GAMEWEEK_NOT_LOCKED");
     const oldWinners = await tx.gameweekWinner.findMany({ where: { gameweekId: id } });
     // Capture any eligible squads created after the first match was published.
     await snapshotGameweek(tx, id);

@@ -3010,10 +3010,11 @@ select:focus {
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: var(--text);
+  color: #394150;
   transform: translateY(-50%);
   cursor: pointer;
 }
+:root[data-theme="dark"] .password-input button { color: #c1cada; }
 .market-status {
   display: flex;
   align-items: center;
@@ -5206,7 +5207,8 @@ dialog.app-modal.share-team-modal {
 .support-inbox { padding: .85rem; }
 .support-inbox h2 { margin: .25rem .5rem .8rem; font-size: 1rem; }
 .support-inbox__item { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .65rem; padding: .7rem .55rem; border: 0; border-radius: 11px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
-.support-inbox__item:hover, .support-inbox__item.is-active { background: var(--surface-muted, #f1f3f6); }
+.support-inbox__item:hover, .support-inbox__item.is-active { background: #b8b8b8; }
+:root[data-theme="dark"] .support-inbox__item:hover, :root[data-theme="dark"] .support-inbox__item.is-active { background: #5a5a5a; }
 .support-inbox__info { min-width: 0; display: grid; gap: .2rem; }
 .support-inbox__info > * { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .support-inbox__info small, .support-inbox__item time { color: var(--muted, #6b7280); font-size: .75rem; }
@@ -5221,7 +5223,7 @@ dialog.app-modal.share-team-modal {
 .support-back { display: none; }
 .support-message-list { flex: 1; overflow: auto; display: flex; flex-direction: column; gap: .75rem; padding: 1rem; }
 .support-message { max-width: min(85%, 620px); align-self: flex-start; padding: .7rem .85rem; border-radius: 14px 14px 14px 4px; background: var(--surface-muted, #f1f3f6); overflow-wrap: anywhere; }
-:root[data-theme="dark"] .support-message { background: #4e4a4a; }
+:root[data-theme="dark"] .support-message:not(.support-message--own) { background: #000439a8; }
 .support-message--own { align-self: flex-end; border-radius: 14px 14px 4px 14px; background: color-mix(in srgb, #398650 13%, var(--surface, white)); }
 .support-message__meta { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; font-size: .8rem; }
 .support-message__meta time { color: var(--muted, #6b7280); font-size: .7rem; white-space: nowrap; }
@@ -5236,7 +5238,7 @@ dialog.app-modal.share-team-modal {
 .support-attach { position: relative; overflow: hidden; flex-shrink: 0; }
 .support-attach input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .support-file-queue { display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; margin: 0 0 .45rem; padding: 0; }
-.support-file-queue li { display: flex; align-items: center; gap: .35rem; max-width: 100%; overflow-wrap: anywhere; border-radius: 8px; padding: .25rem .45rem; background: var(--surface-muted, #f1f3f6); font-size: .75rem; }
+.support-file-queue li { display: flex; align-items: center; gap: .35rem; max-width: 100%; overflow-wrap: anywhere; border-radius: 8px; padding: .25rem .45rem; background: #5878a9; color: white; font-size: .75rem; }
 .support-file-queue button { border: 0; background: transparent; color: inherit; cursor: pointer; font-size: 1rem; }
 .support-error { color: #b42318; margin: .35rem 0; }
 @media (max-width: 760px) {
@@ -5246,14 +5248,16 @@ dialog.app-modal.share-team-modal {
   .support-admin-page .support-layout:not(.support-layout--selected) .support-admin-chat { display: none; }
   .support-chat { min-height: calc(100dvh - 210px); }
   .support-back { display: inline-flex; flex-shrink: 0; }
-  .support-composer__row { flex-wrap: wrap; }
-  .support-composer__row textarea { order: 1; flex-basis: 100%; }
-  .support-composer__row > .button:last-child { margin-left: auto; }
+  .support-composer__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; }
+  .support-composer__row textarea { grid-column: 1 / -1; order: 0; width: 100%; }
+  .support-composer__row > .support-attach { grid-column: 1 / -1; justify-self: start; }
+  .support-composer__row > .button:last-child { grid-column: 2; grid-row: 3; justify-self: end; margin-left: 0; font-size: clamp(.85rem, 3.6vw, 1rem); padding-inline: clamp(.65rem, 3vw, 1rem); }
   .support-message { max-width: 94%; }
 }
 @media (max-width: 400px) {
   .admin-contact-actions { flex-direction: column; align-items: stretch; }
   .support-composer__row > .button { padding-inline: .65rem; }
+  .support-composer__row > .button:last-child { font-size: .85rem; }
   .support-attach span { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 .notification-list,

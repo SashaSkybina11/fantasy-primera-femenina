@@ -543,7 +543,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (init.body && !(init.body instanceof FormData))
     headers.set("Content-Type", "application/json");
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), path === "/auth/me" ? 5000 : 20000);
+  const timeout = window.setTimeout(() => controller.abort(), path === "/auth/me" ? 5000 : init.body instanceof FormData ? 120000 : 20000);
   let response: Response;
   try {
     response = await fetch(`${API_URL}${path}`, { cache: "no-store", ...init, headers, signal: init.signal ?? controller.signal });

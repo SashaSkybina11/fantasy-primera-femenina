@@ -41,6 +41,24 @@ function localDate(value: string | null) { if (!value) return ""; const date = n
 function MatchEditor({ data }: { data: MatchEditorData }) {
   const { t } = useLocale(); const client = useQueryClient(); const navigate = useNavigate();
   const [protocol, setProtocol] = useState<MatchProtocol>(data.protocol); const [kickoff, setKickoff] = useState(localDate(data.match.kickoffAt)); const [dirty, setDirty] = useState(false);
+  const keeperStarters = protocol.players.filter(row => row.started && data.roster.some(player => player.id === row.playerId && player.position === "GOALKEEPER")).map(row => row.playerId).join(",");
+  useEffect(() => {
+    setProtocol(old => {
+      let changed = false;
+      const players = old.players.map(row => {
+        const player = data.roster.find(candidate => candidate.id === row.playerId);
+        if (player?.position !== "GOALKEEPER") return row;
+        const conceded = row.started
+          ? player.clubId === data.match.teams.find(team => team.side === "home")?.clubId ? old.awayScore : old.homeScore
+          : null;
+        if (row.goalsConceded === conceded) return row;
+        changed = true;
+        return { ...row, goalsConceded: conceded };
+      });
+      if (changed) setDirty(true);
+      return changed ? { ...old, players } : old;
+    });
+  }, [data.match.teams, data.roster, keeperStarters, protocol.homeScore, protocol.awayScore]);
   const rules = useQuery({ queryKey: ["scoring-rules"], queryFn: api.scoringRules });
   const locked = data.match.gameweek.status === "COMPLETED";
   useEffect(() => { const guard = (e: BeforeUnloadEvent) => { if (dirty) { e.preventDefault(); e.returnValue = ""; } }; window.addEventListener("beforeunload", guard); return () => window.removeEventListener("beforeunload", guard); }, [dirty]);
