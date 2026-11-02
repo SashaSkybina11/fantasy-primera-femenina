@@ -65,7 +65,11 @@ async function createMessage(conversationId: string, senderId: string, isAdmin: 
       if (!file.storageKey.startsWith(`support/${conversationId}/`) || file.size < 0 || file.size > maxSupportFileSize || !Object.values(allowedTypes).includes(file.contentType) && !allowedImageTypes.has(file.contentType)) throw new ApiError(400, "Invalid support attachment");
       let blob;
       try {
-        blob = await head(file.storageKey, supportBlobOptions());
+        const blobOptions = supportBlobOptions();
+        const privateBlobUrl = blobOptions.storeId
+          ? `https://${blobOptions.storeId.replace(/^store_/, "")}.private.blob.vercel-storage.com/${file.storageKey}`
+          : file.storageKey;
+        blob = await head(privateBlobUrl, blobOptions);
       } catch (error) {
         const details = error instanceof Error ? error.message : String(error);
         console.error("Support attachment verification failed", { conversationId, storageKey: file.storageKey, details, error });
