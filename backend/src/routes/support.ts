@@ -1,11 +1,42 @@
 import { Router } from "express";
 import { z } from "zod";
+import { handleUpload } from "@vercel/blob/client";
+import { head } from "@vercel/blob";
 import { prisma } from "../lib/prisma.js";
 import { authenticate } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
-import { deleteSupportFile, safeSupportFileName, sendSupportFile, storeSupportFile, supportUpload } from "../services/support-files.js";
+import { env } from "../config/env.js";
+import { allowedImageTypes, allowedTypes, deleteSupportFile, maxSupportFileSize, safeSupportFileName, sendSupportFile, storeSupportFile, supportUpload } from "../services/support-files.js";
 
 const router = Router();
+const blobUploadAuth: import("express").RequestHandler = (request, response, next) => request.body?.type === "blob.upload-completed" ? next() : authenticate(request, response, next);
+router.post("/blob-upload", blobUploadAuth, asyncRoute(async (request, response) => {
+  if (!env.supportBlobReadWriteToken) throw new ApiError(503, "Configure SUPPORT_BLOB_READ_WRITE_TOKEN for support attachments");
+  const body = request.body as import("@vercel/blob/client").HandleUploadBody;
+  const result = await handleUpload({
+    body,
+    request,
+    token: env.supportBlobReadWriteToken,
+    onBeforeGenerateToken: async (pathname, clientPayload) => {
+      const input = z.object({ conversationId: z.string().cuid() }).parse(JSON.parse(clientPayload ?? "{}"));
+      const viewer = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { id: true, role: true, status: true, email: true } });
+      const conversation = await prisma.supportConversation.findUnique({ where: { id: input.conversationId }, select: { userId: true } });
+      const allowed = viewer?.role === "USER"
+        ? viewer.status === "ACTIVE" && conversation?.userId === viewer.id
+        : viewer?.role === "ADMIN" && viewer.email?.toLowerCase() === "sashaskibina16@gmail.com" && Boolean(conversation);
+      if (!viewer || !allowed) throw new ApiError(403, "You cannot upload to this support conversation");
+      if (!pathname.startsWith(`support/${input.conversationId}/`)) throw new ApiError(400, "Invalid support attachment path");
+      return {
+        allowedContentTypes: [...new Set([...Object.values(allowedTypes), ...allowedImageTypes])],
+        maximumSizeInBytes: maxSupportFileSize,
+        addRandomSuffix: true,
+        tokenPayload: JSON.stringify({ conversationId: input.conversationId, uploaderId: viewer.id }),
+      };
+    },
+    onUploadCompleted: async () => {},
+  });
+  response.json(result);
+}));
 router.use(authenticate);
 async function requireSupportAdmin(request: import("express").Request, _response: import("express").Response, next: import("express").NextFunction) {
   try {
@@ -15,15 +46,24 @@ async function requireSupportAdmin(request: import("express").Request, _response
   } catch (error) { next(error); }
 }
 const bodySchema = z.string().trim().max(4000);
+const uploadedFilesSchema = z.array(z.object({ storageKey: z.string(), fileName: z.string(), contentType: z.string(), size: z.number().int() })).max(5);
 const messageInclude = { sender: { select: { id: true, name: true, role: true } }, attachments: { select: { id: true, fileName: true, contentType: true, size: true } } } as const;
 const conversationInclude = { user: { select: { id: true, name: true, email: true, avatarUrl: true } }, messages: { orderBy: { createdAt: "asc" as const }, include: messageInclude } };
 
-async function createMessage(conversationId: string, senderId: string, isAdmin: boolean, bodyText: string, files: Express.Multer.File[]) {
+type UploadedSupportFile = { storageKey: string; fileName: string; contentType: string; size: number };
+async function createMessage(conversationId: string, senderId: string, isAdmin: boolean, bodyText: string, files: Express.Multer.File[], uploaded: UploadedSupportFile[] = []) {
   const body = bodySchema.parse(bodyText);
-  if (!body && !files.length) throw new ApiError(400, "Write a message or attach a file");
+  if (!body && !files.length && !uploaded.length) throw new ApiError(400, "Write a message or attach a file");
   const stored = [] as Awaited<ReturnType<typeof storeSupportFile>>[];
   try {
     for (const file of files) stored.push(await storeSupportFile(file, conversationId));
+    for (const file of uploaded) {
+      const fileName = safeSupportFileName(file.fileName);
+      if (!file.storageKey.startsWith(`support/${conversationId}/`) || file.size < 0 || file.size > maxSupportFileSize || !Object.values(allowedTypes).includes(file.contentType) && !allowedImageTypes.has(file.contentType)) throw new ApiError(400, "Invalid support attachment");
+      const blob = await head(file.storageKey, { token: env.supportBlobReadWriteToken });
+      if (blob.size !== file.size || blob.contentType !== file.contentType) throw new ApiError(400, "Invalid support attachment");
+      stored.push({ ...file, fileName });
+    }
     const message = await prisma.$transaction(async tx => {
       const created = await tx.supportMessage.create({ data: { conversationId, senderId, isAdmin, body, attachments: { create: stored.map(file => file) } }, include: messageInclude });
       await tx.supportConversation.update({ where: { id: conversationId }, data: { lastMessageAt: created.createdAt, ...(isAdmin ? { lastReadByAdminAt: created.createdAt } : { lastReadByUserAt: created.createdAt }) } });
@@ -65,12 +105,19 @@ router.get("/conversation", asyncRoute(async (request, response) => {
   if (conversation) await prisma.supportConversation.update({ where: { id: conversation.id }, data: { lastReadByUserAt: new Date() } });
   response.json(conversation);
 }));
+router.post("/prepare", asyncRoute(async (request, response) => {
+  const user = await prisma.user.findUnique({ where: { id: request.auth!.userId }, select: { role: true, status: true } });
+  if (!user || user.role !== "USER" || user.status !== "ACTIVE") throw new ApiError(403, "Only active players can contact support");
+  const conversation = await prisma.supportConversation.upsert({ where: { userId: request.auth!.userId }, create: { userId: request.auth!.userId }, update: {} });
+  response.json({ id: conversation.id });
+}));
 router.post("/messages", supportUpload.array("attachments", 5), asyncRoute(async (request, response) => {
   const userId = request.auth!.userId;
   const user = await prisma.user.findUnique({ where: { id: userId }, select: { role: true, status: true } });
   if (!user || user.role !== "USER" || user.status !== "ACTIVE") throw new ApiError(403, "Only active players can contact support");
   const conversation = await prisma.supportConversation.upsert({ where: { userId }, create: { userId }, update: {} });
-  const message = await createMessage(conversation.id, userId, false, String(request.body?.body ?? ""), request.files as Express.Multer.File[] ?? []);
+  const uploaded = uploadedFilesSchema.parse(request.body?.uploads ?? []);
+  const message = await createMessage(conversation.id, userId, false, String(request.body?.body ?? ""), request.files as Express.Multer.File[] ?? [], uploaded);
   response.status(201).json(message);
 }));
 router.get("/admin/conversations", requireSupportAdmin, asyncRoute(async (_request, response) => {
@@ -87,7 +134,8 @@ router.get("/admin/conversations/:id/messages", requireSupportAdmin, asyncRoute(
 router.post("/admin/conversations/:id/messages", requireSupportAdmin, supportUpload.array("attachments", 5), asyncRoute(async (request, response) => {
   const id = z.string().cuid().parse(request.params.id);
   if (!(await prisma.supportConversation.findUnique({ where: { id }, select: { id: true } }))) throw new ApiError(404, "Conversation not found");
-  const message = await createMessage(id, request.auth!.userId, true, String(request.body?.body ?? ""), request.files as Express.Multer.File[] ?? []);
+  const uploaded = uploadedFilesSchema.parse(request.body?.uploads ?? []);
+  const message = await createMessage(id, request.auth!.userId, true, String(request.body?.body ?? ""), request.files as Express.Multer.File[] ?? [], uploaded);
   response.status(201).json(message);
 }));
 router.get("/attachments/:id", asyncRoute(async (request, response) => {

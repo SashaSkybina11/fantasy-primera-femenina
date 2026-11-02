@@ -1,3 +1,4 @@
+import { upload as uploadBlob } from "@vercel/blob/client";
 import { portugueseApi } from "../locales/pt-api";
 import { toBrazilian } from "../locales/pt";
 import { marketSpanish, marketUkrainian, marketEnglish } from "../locales/market";
@@ -569,15 +570,38 @@ export type NotificationContent = { title: string; message: string; action: stri
 export type UserNotification = NotificationContent & { id: string; type: string; createdAt: string; readAt: string | null; isRead: boolean };
 export type SupportAttachment = { id: string; fileName: string; contentType: string; size: number };
 export type SupportMessage = { id: string; body: string; isAdmin: boolean; createdAt: string; sender: { id: string; name: string; role: string }; attachments: SupportAttachment[] };
+async function uploadSupportFiles(conversationId: string, files: File[]) {
+  const token = authToken.get();
+  if (!token) throw new Error("Please sign in again.");
+  return Promise.all(files.map(async file => {
+    const name = file.name.replace(/[\\/]/g, "_");
+    const blob = await uploadBlob(`support/${conversationId}/${name}`, file, {
+      access: "private",
+      handleUploadUrl: `${API_URL}/support/blob-upload`,
+      headers: { Authorization: `Bearer ${token}` },
+      clientPayload: JSON.stringify({ conversationId }),
+      ...(file.type ? { contentType: file.type } : {}),
+      multipart: file.size > 5 * 1024 * 1024,
+    });
+    return { storageKey: blob.pathname, fileName: name, contentType: blob.contentType, size: file.size };
+  }));
+}
 export type SupportConversation = { id: string; lastMessageAt: string; user: { id: string; name: string; email: string; avatarUrl: string | null }; messages: SupportMessage[]; unreadCount?: number };
 export type NotificationAudience = "ALL" | "LEAGUE" | "USERS" | "INCOMPLETE_TEAM" | "CAPTAIN_MISSING";
 export type AdminFriendLeague = { id: string; name: string; logoUrl: string | null; inviteCode: string; createdAt: string; owner: { id: string; name: string }; _count: { members: number } };
 export const api = {
   supportConversation: () => request<SupportConversation | null>("/support/conversation"),
-  sendSupportMessage: (body: string, files: File[]) => { const form = new FormData(); form.set("body", body); files.forEach(file => form.append("attachments", file)); return request<SupportMessage>("/support/messages", { method: "POST", body: form }); },
+  sendSupportMessage: async (body: string, files: File[]) => {
+    const conversation = files.length ? await request<{ id: string }>("/support/prepare", { method: "POST" }) : null;
+    const uploads = conversation ? await uploadSupportFiles(conversation.id, files) : [];
+    return request<SupportMessage>("/support/messages", { method: "POST", body: JSON.stringify({ body, uploads }) });
+  },
   adminSupportConversations: () => request<SupportConversation[]>("/support/admin/conversations"),
   adminSupportMessages: (id: string) => request<SupportConversation>(`/support/admin/conversations/${id}/messages`),
-  sendAdminSupportMessage: (id: string, body: string, files: File[]) => { const form = new FormData(); form.set("body", body); files.forEach(file => form.append("attachments", file)); return request<SupportMessage>(`/support/admin/conversations/${id}/messages`, { method: "POST", body: form }); },
+  sendAdminSupportMessage: async (id: string, body: string, files: File[]) => {
+    const uploads = await uploadSupportFiles(id, files);
+    return request<SupportMessage>(`/support/admin/conversations/${id}/messages`, { method: "POST", body: JSON.stringify({ body, uploads }) });
+  },
   supportAttachment: async (id: string) => { const headers = new Headers({ "Accept-Language": getStoredLocale() }); const token = authToken.get(); if (token) headers.set("Authorization", `Bearer ${token}`); const response = await fetch(`${API_URL}/support/attachments/${id}`, { headers, cache: "no-store" }); if (response.status === 401 && token && authToken.get() === token) { authToken.clear(); window.dispatchEvent(new Event(authRequiredEvent)); } if (!response.ok) throw new Error("Attachment unavailable"); return response.blob(); },
   adminCurrentGameweek: () => request<{ gameweekId: string | null }>("/admin/current-gameweek"),
   setCurrentGameweek: (gameweekId: string | null) => request<{ gameweekId: string | null }>("/admin/current-gameweek", { method: "PATCH", body: JSON.stringify({ gameweekId }) }),
@@ -762,7 +786,6 @@ export const api = {
     }),
   leavePrivateLeague: (id: string) =>
     request<void>(`/private-leagues/${id}/leave`, { method: "POST" }),
-  inviteToPrivateLeague: (id: string, email: string) => request<{ ok: boolean }>(`/private-leagues/${id}/invitations`, { method: "POST", body: JSON.stringify({ email }) }),
   deletePrivateLeague: (id: string) =>
     request<void>(`/private-leagues/${id}`, { method: "DELETE" }),
   deleteAdminUser: (id: string) =>

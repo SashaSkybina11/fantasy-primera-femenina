@@ -8,19 +8,19 @@ import { env } from "../config/env.js";
 import { supportUploadsDirectory } from "../config/paths.js";
 import { ApiError } from "../utils/http.js";
 
-const allowedTypes: Record<string, string> = {
+export const allowedTypes: Record<string, string> = {
   ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".gif": "image/gif", ".avif": "image/avif", ".heic": "image/heic", ".heif": "image/heif",
   ".pdf": "application/pdf", ".txt": "text/plain", ".csv": "text/csv", ".doc": "application/msword", ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document", ".xls": "application/vnd.ms-excel", ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".odt": "application/vnd.oasis.opendocument.text", ".ods": "application/vnd.oasis.opendocument.spreadsheet",
 };
-const allowedImageTypes = new Set([
+export const allowedImageTypes = new Set([
   "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif", "image/heic", "image/heif",
 ]);
 const imageExtensionByType: Record<string, string> = {
   "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/gif": ".gif",
   "image/avif": ".avif", "image/heic": ".heic", "image/heif": ".heif",
 };
-const maxFileSize = 10 * 1024 * 1024;
-export const supportUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: maxFileSize, files: 5 }, fileFilter: (_request, file, callback) => {
+export const maxSupportFileSize = 10 * 1024 * 1024;
+export const supportUpload = multer({ storage: multer.memoryStorage(), limits: { fileSize: maxSupportFileSize, files: 5 }, fileFilter: (_request, file, callback) => {
   const extension = extname(basename(file.originalname)).toLowerCase();
   if (!allowedTypes[extension] && !allowedImageTypes.has(file.mimetype.toLowerCase())) return callback(new ApiError(400, "Unsupported support attachment format"));
   callback(null, true);
