@@ -24,6 +24,7 @@ export function AdminPlayerPointsPage() {
   const { t, locale } = useLocale();
   const queryClient = useQueryClient();
   const [gameweekId, setGameweekId] = useState("");
+  const defaultGameweekChosen = useRef(false);
   const [search, setSearch] = useState("");
   const [club, setClub] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
@@ -45,6 +46,13 @@ export function AdminPlayerPointsPage() {
     queryFn: api.adminGameweeks,
     enabled: user?.role === "ADMIN",
   });
+  useEffect(() => {
+    if (!defaultGameweekChosen.current && gameweeks.data?.length) {
+      const completed = gameweeks.data.filter((item) => item.status === "COMPLETED");
+      setGameweekId((completed.at(-1) ?? gameweeks.data[0]).id);
+      defaultGameweekChosen.current = true;
+    }
+  }, [gameweeks.data]);
   const players = useQuery({
     queryKey: ["admin-player-points", gameweekId],
     queryFn: () => api.adminPlayerPoints(gameweekId || undefined),
@@ -111,6 +119,9 @@ export function AdminPlayerPointsPage() {
     const needle = adjustUserSearch.trim().toLocaleLowerCase(locale);
     return users.filter((item) => !needle || item.name.toLocaleLowerCase(locale).includes(needle) || item.email.toLocaleLowerCase(locale).includes(needle));
   }, [users, adjustUserSearch, locale]);
+  useEffect(() => {
+    if (adjustUserSearch.trim() && filteredUsers.length === 1) setAdjustUserId(filteredUsers[0].id);
+  }, [filteredUsers, adjustUserSearch]);
   if (user?.role !== "ADMIN") return <Navigate to="/" replace />;
   const current = gameweeks.data?.find((item) => item.id === gameweekId);
   return (
@@ -189,11 +200,11 @@ export function AdminPlayerPointsPage() {
       <section className="admin-card team-results">
         <h2>{t("adminStats.manualAdjustment")}</h2>
         <div className="team-results-grid">
-          <label>{t("adminStats.participant")}<input type="search" value={adjustUserSearch} onChange={e => setAdjustUserSearch(e.target.value)} placeholder={t("adminStats.searchParticipant")} /><select value={adjustUserId} onChange={e => setAdjustUserId(e.target.value)}><option value="">{t("adminStats.selectParticipant")}</option>{filteredUsers.map(item => <option key={item.id} value={item.id}>{item.name} · {item.email}</option>)}</select></label>
-          <label>{t("adminStats.adjustment")}<input type="number" min="-100" max="100" step="1" value={adjustPoints} onChange={e => setAdjustPoints(e.target.value)} /></label>
-          <label>{t("adminStats.reason")}<input value={adjustReason} minLength={3} maxLength={500} onChange={e => setAdjustReason(e.target.value)} /></label>
+          <label>{t("adminStats.participant")}<input type="search" value={adjustUserSearch} onChange={e => { setAdjustUserSearch(e.target.value); setAdjustUserId(""); }} placeholder={t("adminStats.searchParticipant")} /><select value={adjustUserId} onChange={e => setAdjustUserId(e.target.value)}><option value="">{t("adminStats.selectParticipant")}</option>{filteredUsers.map(item => <option key={item.id} value={item.id}>{item.name} · {item.email}</option>)}</select></label>
+          <label>{t("adminStats.adjustment")}<input type="number" min="-1000" max="1000" step="1" value={adjustPoints} onChange={e => setAdjustPoints(e.target.value)} /></label>
+          <label>{t("adminStats.reason")}<input value={adjustReason} minLength={3} maxLength={500} onChange={e => setAdjustReason(e.target.value)} /><small className="muted">{t("adminStats.reasonMinLength")}</small></label>
         </div>
-        <button className="button" disabled={!gameweekId || !adjustUserId || !Number.isInteger(Number(adjustPoints)) || Number(adjustPoints) === 0 || Number(adjustPoints) < -100 || Number(adjustPoints) > 100 || adjustReason.trim().length < 3 || adjustment.isPending || current?.status === "COMPLETED"} onClick={() => adjustment.mutate()}>{t("adminStats.addPoints")}</button>
+        <button className="button" disabled={!gameweekId || !adjustUserId || !Number.isInteger(Number(adjustPoints)) || Number(adjustPoints) === 0 || Number(adjustPoints) < -1000 || Number(adjustPoints) > 1000 || adjustReason.trim().length < 3 || adjustment.isPending} onClick={() => adjustment.mutate()}>{t("adminStats.addPoints")}</button>
       </section>
       <section className="admin-card team-results">
         <h2>{t("adminStats.teamResults")}</h2>

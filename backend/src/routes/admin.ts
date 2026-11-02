@@ -299,11 +299,10 @@ router.post("/gameweeks/:id/recalculate", asyncRoute(async (request, response) =
 
 router.post("/gameweeks/:gameweekId/users/:userId/adjustments", asyncRoute(async (request, response) => {
   const gameweekId = z.string().cuid().parse(request.params.gameweekId); const userId = z.string().cuid().parse(request.params.userId);
-  const input = z.object({ points: z.number().int().min(-100).max(100).refine((value) => value !== 0), reason: z.string().trim().min(3).max(500) }).parse(request.body);
+  const input = z.object({ points: z.number().int().min(-1000).max(1000).refine((value) => value !== 0), reason: z.string().trim().min(3).max(500) }).parse(request.body);
   const saved = await inTransaction(async (tx) => {
     const [gameweek, user] = await Promise.all([tx.gameweek.findUnique({ where: { id: gameweekId } }), tx.user.findUnique({ where: { id: userId } })]);
     if (!gameweek || !user) throw new ApiError(404, "Тур или пользователь не найден");
-    if (gameweek.status === GameweekStatus.COMPLETED) throw new ApiError(409, "Сначала повторно откройте завершённый тур");
     const adjustment = await tx.userPointAdjustment.create({ data: { gameweekId, userId, adminId: request.auth!.userId, ...input } });
     await audit(tx, request.auth!.userId, AdminActionType.PLAYER_POINTS_ADJUSTED, "UserPointAdjustment", adjustment.id, null, adjustment);
     await recalculateGameweek(tx, gameweekId); return adjustment;

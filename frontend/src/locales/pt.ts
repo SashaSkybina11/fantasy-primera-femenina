@@ -459,6 +459,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "adminStats.participant": "Participante",
   "adminStats.selectParticipant": "Escolha um participante",
   "adminStats.searchParticipant": "Pesquisar por nome ou e-mail",
+  "adminStats.reasonMinLength": "Indique o motivo com pelo menos 3 caracteres.",
   "adminStats.addPoints": "Aplicar ajuste",
   "adminStats.adjustmentSaved": "Ajuste aplicado e classificação recalculada",
   "adminStats.price": "Preço da jogadora",
