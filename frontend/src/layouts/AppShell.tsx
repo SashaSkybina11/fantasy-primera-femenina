@@ -5,7 +5,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoHomeOutline, IoFootballOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
 import { FaRankingStar } from "react-icons/fa6";
-import { FaUsers } from "react-icons/fa";
+import { FaInstagram, FaUsers } from "react-icons/fa";
 import { RiTargetFill } from "react-icons/ri";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings, MdAlternateEmail, MdSupportAgent } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -322,8 +322,9 @@ export function AppShell() {
         <Outlet />
         <footer className="site-footer">
           <div className="admin-contact-actions">
-            <a className="admin-contact" href="mailto:fantasyfutsalspain@gmail.com"><MdAlternateEmail aria-hidden="true" /><span>{t("support.email")}</span><small>{t("footer.email")}</small></a>
-            <button className="admin-contact" type="button" onClick={() => navigate(user?.role === "ADMIN" ? "/admin/support" : "/support")}><MdSupportAgent aria-hidden="true" /><span>{user?.role === "ADMIN" ? t("support.adminInbox") : t("support.openChat")}</span></button>
+            <a className="admin-contact" href="mailto:fantasyfutsalspain@gmail.com" aria-label={t("footer.email")} title={t("footer.email")}><MdAlternateEmail aria-hidden="true" /></a>
+            <button className="admin-contact" type="button" aria-label={user?.role === "ADMIN" ? t("support.adminInbox") : t("support.openChat")} title={user?.role === "ADMIN" ? t("support.adminInbox") : t("support.openChat")} onClick={() => navigate(user?.role === "ADMIN" ? "/admin/support" : "/support")}><MdSupportAgent aria-hidden="true" /></button>
+            <a className="admin-contact" href="https://www.instagram.com/fantasyfutsal_es/" target="_blank" rel="noreferrer" aria-label="Instagram Fantasy Futsal" title="Instagram"><FaInstagram aria-hidden="true" /></a>
           </div>
         </footer>
       </main>

@@ -188,7 +188,8 @@ router.put("/gameweeks/:gameweekId/players/:playerId/stats", asyncRoute(async (r
     const [gameweek, player, old] = await Promise.all([tx.gameweek.findUnique({ where: { id: gameweekId } }), tx.player.findUnique({ where: { id: playerId } }), tx.playerGameweekStats.findUnique({ where: { gameweekId_playerId: { gameweekId, playerId } } })]);
     if (!gameweek || !player) throw new ApiError(404, "Тур или игрок не найден");
     if (gameweek.status === GameweekStatus.COMPLETED) throw new ApiError(409, "Сначала повторно откройте завершённый тур");
-    if (await tx.matchTeam.findFirst({ where: { gameweekId, clubId: player.clubId, match: { publishedAt: { not: null } } } })) throw new ApiError(409, "MATCH_USE_EDITOR");
+    const publishedMatch = await tx.matchTeam.findFirst({ where: { gameweekId, clubId: player.clubId, match: { publishedAt: { not: null } } }, select: { id: true } });
+    if (publishedMatch && (!old || old.started !== parsed.started || old.result !== parsed.result || old.goals !== parsed.goals || old.yellowCards !== parsed.yellowCards || old.redCards !== parsed.redCards || old.cleanSheet !== parsed.cleanSheet || old.goalsConceded !== parsed.goalsConceded)) throw new ApiError(409, "MATCH_USE_EDITOR");
     const input = { ...parsed, adjustmentPoints: parsed.adjustmentPoints ?? old?.adjustmentPoints ?? 0, adjustmentReason: parsed.adjustmentReason ?? old?.adjustmentReason ?? undefined };
     Object.assign(input, normalizeGoalkeeperStats(player.position, input));
     if (input.adjustmentPoints !== 0 && !input.adjustmentReason) throw new ApiError(400, "Укажите причину корректировки");

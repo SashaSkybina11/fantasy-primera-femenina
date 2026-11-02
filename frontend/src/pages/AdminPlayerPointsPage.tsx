@@ -37,6 +37,7 @@ export function AdminPlayerPointsPage() {
   const [teamResults, setTeamResults] = useState<Record<string, string>>({});
   const [users, setUsers] = useState<Array<{ id: string; name: string; email: string }>>([]);
   const [adjustUserId, setAdjustUserId] = useState("");
+  const [adjustUserSearch, setAdjustUserSearch] = useState("");
   const [adjustPoints, setAdjustPoints] = useState("");
   const [adjustReason, setAdjustReason] = useState("");
   const gameweeks = useQuery({
@@ -101,6 +102,10 @@ export function AdminPlayerPointsPage() {
       ) ?? [],
     [players.data, search, club],
   );
+  const filteredUsers = useMemo(() => {
+    const needle = adjustUserSearch.trim().toLocaleLowerCase(locale);
+    return users.filter((item) => !needle || item.name.toLocaleLowerCase(locale).includes(needle) || item.email.toLocaleLowerCase(locale).includes(needle));
+  }, [users, adjustUserSearch, locale]);
   if (user?.role !== "ADMIN") return <Navigate to="/" replace />;
   const current = gameweeks.data?.find((item) => item.id === gameweekId);
   return (
@@ -179,7 +184,7 @@ export function AdminPlayerPointsPage() {
       <section className="admin-card team-results">
         <h2>{t("adminStats.manualAdjustment")}</h2>
         <div className="team-results-grid">
-          <label>{t("adminStats.participant")}<select value={adjustUserId} onChange={e => setAdjustUserId(e.target.value)}><option value="">{t("adminStats.selectParticipant")}</option>{users.map(item => <option key={item.id} value={item.id}>{item.name} · {item.email}</option>)}</select></label>
+          <label>{t("adminStats.participant")}<input type="search" value={adjustUserSearch} onChange={e => setAdjustUserSearch(e.target.value)} placeholder={t("adminStats.searchParticipant")} /><select value={adjustUserId} onChange={e => setAdjustUserId(e.target.value)}><option value="">{t("adminStats.selectParticipant")}</option>{filteredUsers.map(item => <option key={item.id} value={item.id}>{item.name} · {item.email}</option>)}</select></label>
           <label>{t("adminStats.adjustment")}<input type="number" min="-100" max="100" step="1" value={adjustPoints} onChange={e => setAdjustPoints(e.target.value)} /></label>
           <label>{t("adminStats.reason")}<input value={adjustReason} maxLength={500} onChange={e => setAdjustReason(e.target.value)} /></label>
         </div>
@@ -305,6 +310,9 @@ export function AdminPlayerPointsPage() {
                 {t("adminStats.adjustment")}
                 <input
                   type="number"
+                  min="-100"
+                  max="100"
+                  step="1"
                   value={form.adjustmentPoints}
                   onChange={(e) =>
                     setForm({
@@ -313,10 +321,13 @@ export function AdminPlayerPointsPage() {
                     })
                   }
                 />
+                <small className="muted">{t("adminStats.playerAdjustmentHelp")}</small>
               </label>
               <label>
                 {t("adminStats.reason")}
                 <textarea
+                  required={form.adjustmentPoints !== 0}
+                  maxLength={500}
                   value={form.adjustmentReason}
                   onChange={(e) =>
                     setForm({ ...form, adjustmentReason: e.target.value })

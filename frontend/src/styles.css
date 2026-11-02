@@ -5196,9 +5196,8 @@ dialog.app-modal.share-team-modal {
 }
 
 .admin-contact-actions { display: flex; justify-content: center; gap: .75rem; flex-wrap: wrap; }
-.admin-contact-actions .admin-contact { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .25rem .55rem; text-decoration: none; cursor: pointer; }
-.admin-contact-actions .admin-contact > svg { grid-row: span 2; font-size: 1.35rem; }
-.admin-contact-actions .admin-contact small { grid-column: 2; }
+.admin-contact-actions .admin-contact { display: grid; place-items: center; width: 2.85rem; height: 2.85rem; padding: .5rem; text-decoration: none; cursor: pointer; }
+.admin-contact-actions .admin-contact > svg { font-size: 1.45rem; }
 .support-page { min-width: 0; }
 .support-page .page-heading h1 { display: flex; align-items: center; gap: .5rem; }
 .support-layout { display: grid; grid-template-columns: minmax(260px, 360px) minmax(0, 1fr); gap: 1rem; min-height: min(70vh, 760px); }
