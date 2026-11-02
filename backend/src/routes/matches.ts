@@ -50,7 +50,21 @@ router.get("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
   }));
   const reported = z.object({ homeScore: z.number(), awayScore: z.number() }).safeParse(match.reportedResult);
   const initial = { homeScore: reported.success ? reported.data.homeScore : null, awayScore: reported.success ? reported.data.awayScore : null, homeOwnGoals: 0, awayOwnGoals: 0, players: roster.map(p => ({ playerId: p.id, started: p.gameweekStats[0]?.started ?? false, goals: p.gameweekStats[0]?.goals ?? 0, yellowCards: p.gameweekStats[0]?.yellowCards ?? 0, redCards: p.gameweekStats[0]?.redCards ?? 0, goalsConceded: p.gameweekStats[0]?.goalsConceded ?? null })) };
-  res.json({ match, roster, previousStarters, protocol: match.draft ?? match.published ?? initial });
+  const saved = protocolSchema.safeParse(match.draft ?? match.published);
+  const savedProtocol = saved.success ? saved.data : initial;
+  const savedPlayers = new Map(savedProtocol.players.map(player => [player.playerId, player]));
+  const protocol = {
+    ...savedProtocol,
+    players: roster.map(player => savedPlayers.get(player.id) ?? {
+      playerId: player.id,
+      started: player.gameweekStats[0]?.started ?? false,
+      goals: player.gameweekStats[0]?.goals ?? 0,
+      yellowCards: player.gameweekStats[0]?.yellowCards ?? 0,
+      redCards: player.gameweekStats[0]?.redCards ?? 0,
+      goalsConceded: player.gameweekStats[0]?.goalsConceded ?? null,
+    }),
+  };
+  res.json({ match, roster, previousStarters, protocol });
 }));
 router.put("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
   const id = z.string().cuid().parse(req.params.id);
