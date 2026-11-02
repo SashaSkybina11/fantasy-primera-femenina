@@ -49,13 +49,13 @@ export async function ensureSeasonGameweeks() {
 
 export function calculatePlayerPoints(input: {
   started: boolean; result: MatchResult; goals: number; yellowCards: number;
-  redCards: number; cleanSheet: boolean; position: PlayerPosition;
+  redCards: number; cleanSheet: boolean; goalsConceded?: number | null; position: PlayerPosition;
 }) {
   return (input.started ? scoringRules.started : 0)
     + (input.result === MatchResult.WIN ? scoringRules.win : input.result === MatchResult.DRAW ? scoringRules.draw : 0)
     + input.goals * (input.position === PlayerPosition.GOALKEEPER ? scoringRules.goalkeeperGoal : scoringRules.fieldGoal)
     + (input.goals >= 3 ? scoringRules.hatTrickBonus : 0)
-    + (input.position === PlayerPosition.GOALKEEPER && input.cleanSheet ? scoringRules.goalkeeperCleanSheet : 0)
+    + (input.position === PlayerPosition.GOALKEEPER && (input.goalsConceded === 0 || input.cleanSheet) ? scoringRules.goalkeeperCleanSheet : 0)
     + input.yellowCards * scoringRules.yellowCard
     + input.redCards * scoringRules.redCard;
 }
@@ -129,8 +129,9 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
   const gameweek = await tx.gameweek.findUniqueOrThrow({ where: { id: gameweekId } });
   const sourceStats = await tx.playerGameweekStats.findMany({ where: { gameweekId }, include: { player: true } });
   for (const stat of sourceStats) {
-    const calculatedPoints = calculatePlayerPoints({ ...stat, position: stat.player.position });
-    await tx.playerGameweekStats.update({ where: { id: stat.id }, data: { calculatedPoints, totalPoints: calculatedPoints + stat.adjustmentPoints } });
+    const cleanSheet = stat.player.position === PlayerPosition.GOALKEEPER && stat.goalsConceded === 0;
+    const calculatedPoints = calculatePlayerPoints({ ...stat, cleanSheet, position: stat.player.position });
+    await tx.playerGameweekStats.update({ where: { id: stat.id }, data: { cleanSheet, calculatedPoints, totalPoints: calculatedPoints + stat.adjustmentPoints } });
   }
   if (gameweek.status === "COMPLETED" || (gameweek.status === "CALCULATING" && await tx.playerPriceChange.count({ where: { gameweekId } }) > 0)) {
     const preview = await previewPlayerPrices(tx, gameweekId);

@@ -766,6 +766,8 @@ export const api = {
       `/admin/gameweeks/${gameweekId}/players/${playerId}/stats`,
       { method: "PUT", body: JSON.stringify(payload) },
     ),
+  adjustPlayerPoints: (gameweekId: string, playerId: string, points: number, reason: string) =>
+    request<unknown>(`/admin/gameweeks/${gameweekId}/players/${playerId}/points-adjustment`, { method: "PUT", body: JSON.stringify({ points, reason }) }),
   completeGameweek: (id: string) =>
     request<Gameweek>(`/admin/gameweeks/${id}/complete`, { method: "POST" }),
   reopenGameweek: (id: string) =>

@@ -447,6 +447,8 @@ export const portuguese: Record<TranslationKey, string> = {
   "adminStats.cleanSheet": "Sem sofrer golos",
   "adminStats.adjustment": "Ajuste",
   "adminStats.playerAdjustmentHelp": "Use um valor negativo para retirar pontos. Só a administração pode ver o motivo.",
+  "adminStats.savePlayerAdjustment": "Guardar ajuste de pontos da jogadora",
+  "adminStats.playerAdjustmentSaved": "Ajuste de pontos guardado e jornada recalculada",
   "adminStats.reason": "Motivo",
   "adminStats.save": "Guardar e recalcular",
   "adminStats.saved": "Estatísticas guardadas e classificação recalculada",

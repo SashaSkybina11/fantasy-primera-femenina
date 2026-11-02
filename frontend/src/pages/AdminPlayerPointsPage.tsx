@@ -58,6 +58,11 @@ export function AdminPlayerPointsPage() {
     },
     onError: (error) => toast.error(error.message),
   });
+  const playerPointAdjustment = useMutation({
+    mutationFn: () => api.adjustPlayerPoints(gameweekId, selected!, form.adjustmentPoints, form.adjustmentReason),
+    onSuccess: () => { toast.success(t("adminStats.playerAdjustmentSaved")); void queryClient.invalidateQueries(); },
+    onError: (error) => toast.error(error.message),
+  });
   const complete = useMutation({
     mutationFn: (id: string) => api.completeGameweek(id),
     onSuccess: () => {
@@ -179,7 +184,7 @@ export function AdminPlayerPointsPage() {
               {t("adminStats.complete")}
             </button>
           ))}
-        {current && current.status !== "COMPLETED" && <button className="button button--secondary" disabled={recalculate.isPending || !current} onClick={() => recalculate.mutate(current.id)}>{t("adminStats.recalculate")}</button>}
+        {current && <button className="button button--secondary" disabled={recalculate.isPending || !current} onClick={() => recalculate.mutate(current.id)}>{t("adminStats.recalculate")}</button>}
       </section>
       <section className="admin-card team-results">
         <h2>{t("adminStats.manualAdjustment")}</h2>
@@ -336,6 +341,9 @@ export function AdminPlayerPointsPage() {
               </label>
               <button className="button" disabled={save.isPending || current?.status === "COMPLETED"}>
                 {t("adminStats.save")}
+              </button>
+              <button type="button" className="button button--secondary" disabled={playerPointAdjustment.isPending || !Number.isInteger(form.adjustmentPoints) || form.adjustmentPoints < -100 || form.adjustmentPoints > 100 || (form.adjustmentPoints !== 0 && form.adjustmentReason.trim().length < 3)} onClick={() => playerPointAdjustment.mutate()}>
+                {t("adminStats.savePlayerAdjustment")}
               </button>
             </form>
           ) : (

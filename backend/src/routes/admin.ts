@@ -177,7 +177,14 @@ router.post("/gameweeks", asyncRoute(async (request, response) => {
 router.get("/player-points", asyncRoute(async (request, response) => {
   const gameweekId = z.string().cuid().optional().parse(request.query.gameweekId);
   const players = await prisma.player.findMany({ include: { club: true, priceChanges: { orderBy: { gameweek: { number: "desc" } }, take: 1 }, gameweekStats: { ...(gameweekId ? { where: { gameweekId } } : {}), orderBy: { gameweek: { number: "desc" } }, include: { gameweek: true } } }, orderBy: { name: "asc" } });
-  response.json(players.map((player) => ({ ...player, lastPriceDelta: player.priceChanges[0]?.priceDelta ?? 0, totalFantasyPoints: player.gameweekStats.reduce((sum, stat) => sum + stat.totalPoints, 0), lastGameweekPoints: player.gameweekStats[0]?.totalPoints ?? 0 })));
+  response.json(players.map((player) => {
+    const gameweekStats = player.gameweekStats.map((stat) => {
+      const cleanSheet = player.position === PlayerPosition.GOALKEEPER && stat.goalsConceded === 0;
+      const calculatedPoints = calculatePlayerPoints({ ...stat, cleanSheet, position: player.position });
+      return { ...stat, cleanSheet, calculatedPoints, totalPoints: calculatedPoints + stat.adjustmentPoints };
+    });
+    return { ...player, gameweekStats, lastPriceDelta: player.priceChanges[0]?.priceDelta ?? 0, totalFantasyPoints: gameweekStats.reduce((sum, stat) => sum + stat.totalPoints, 0), lastGameweekPoints: gameweekStats[0]?.totalPoints ?? 0 };
+  }));
 }));
 
 
@@ -201,6 +208,51 @@ router.put("/gameweeks/:gameweekId/players/:playerId/stats", asyncRoute(async (r
     return saved;
   });
   response.json(result);
+}));
+
+router.put("/gameweeks/:gameweekId/players/:playerId/points-adjustment", asyncRoute(async (request, response) => {
+  const gameweekId = z.string().cuid().parse(request.params.gameweekId);
+  const playerId = z.string().cuid().parse(request.params.playerId);
+  const input = z.object({
+    points: z.number().int().min(-100).max(100),
+    reason: z.string().trim().max(500).optional().default(""),
+  }).superRefine((value, context) => {
+    if (value.points !== 0 && value.reason.length < 3) context.addIssue({ code: z.ZodIssueCode.custom, message: "Укажите причину корректировки (минимум 3 символа)" });
+  }).parse(request.body);
+
+  const saved = await inTransaction(async (tx) => {
+    const [gameweek, player, old] = await Promise.all([
+      tx.gameweek.findUnique({ where: { id: gameweekId } }),
+      tx.player.findUnique({ where: { id: playerId } }),
+      tx.playerGameweekStats.findUnique({ where: { gameweekId_playerId: { gameweekId, playerId } } }),
+    ]);
+    if (!gameweek || !player) throw new ApiError(404, "Тур или игрок не найден");
+    const points = input.points;
+    const data = {
+      started: old?.started ?? false,
+      result: old?.result ?? MatchResult.LOSS,
+      goals: old?.goals ?? 0,
+      yellowCards: old?.yellowCards ?? 0,
+      redCards: old?.redCards ?? 0,
+      cleanSheet: old?.cleanSheet ?? false,
+      goalsConceded: old?.goalsConceded ?? null,
+      calculatedPoints: old?.calculatedPoints ?? 0,
+      adjustmentPoints: points,
+      totalPoints: (old?.calculatedPoints ?? 0) + points,
+      adjustmentReason: points === 0 ? null : input.reason,
+      adjustedById: points === 0 ? null : request.auth!.userId,
+      adjustedAt: points === 0 ? null : new Date(),
+    };
+    const adjustment = await tx.playerGameweekStats.upsert({
+      where: { gameweekId_playerId: { gameweekId, playerId } },
+      create: { gameweekId, playerId, ...data },
+      update: data,
+    });
+    await audit(tx, request.auth!.userId, AdminActionType.PLAYER_POINTS_ADJUSTED, "PlayerGameweekStats", adjustment.id, old, adjustment);
+    await recalculateGameweek(tx, gameweekId);
+    return adjustment;
+  });
+  response.json(saved);
 }));
 
 router.post("/gameweeks/:id/complete", asyncRoute(async (request, response) => {
