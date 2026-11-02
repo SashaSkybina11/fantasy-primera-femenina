@@ -5254,7 +5254,7 @@ dialog.app-modal.share-team-modal {
   .support-message { max-width: 94%; }
 }
 @media (max-width: 400px) {
-  .admin-contact-actions { flex-direction: column; align-items: stretch; }
+  .admin-contact-actions { flex-direction: row; align-items: center; flex-wrap: nowrap; }
   .support-composer__row > .button { padding-inline: .65rem; }
   .support-composer__row > .button:last-child { font-size: .85rem; }
   .support-attach span { max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -79,14 +79,15 @@ router.put("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
         const own = player.clubId === home.clubId ? input.protocol.homeScore! : input.protocol.awayScore!;
         const other = player.clubId === home.clubId ? input.protocol.awayScore! : input.protocol.homeScore!;
         const result = own === other ? "DRAW" as const : own > other ? "WIN" as const : "LOSS" as const;
-        const { playerId, ...stats } = row;
+        const { playerId, ...protocolStats } = row;
+        const stats = { ...protocolStats, ...(player.position === "GOALKEEPER" && row.started ? { goalsConceded: other } : {}) };
         const cleanSheet = player.position === "GOALKEEPER" && stats.goalsConceded === 0;
         const calculatedPoints = calculatePlayerPoints({ ...stats, cleanSheet, result, position: player.position });
         const old = await tx.playerGameweekStats.findUnique({ where: { gameweekId_playerId: { gameweekId: match.gameweekId, playerId } } });
         const totalPoints = calculatedPoints + (old?.adjustmentPoints ?? 0);
         const data = { ...stats, cleanSheet, result, calculatedPoints, totalPoints };
         await tx.playerGameweekStats.upsert({ where: { gameweekId_playerId: { gameweekId: match.gameweekId, playerId } }, create: { ...data, gameweekId: match.gameweekId, playerId }, update: data });
-        rows.push({ ...row, name: player.name, number: player.number, clubId: player.clubId, position: player.position, totalPoints, calculatedPoints, adjustmentPoints: old?.adjustmentPoints ?? 0, result });
+        rows.push({ ...row, goalsConceded: stats.goalsConceded, name: player.name, number: player.number, clubId: player.clubId, position: player.position, totalPoints, calculatedPoints, adjustmentPoints: old?.adjustmentPoints ?? 0, result });
       }
       published = { ...input.protocol, players: rows };
       await recalculateGameweek(tx, match.gameweekId);
