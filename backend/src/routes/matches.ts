@@ -66,7 +66,9 @@ router.put("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
     validateProtocol(input.protocol, roster, home.clubId, away.clubId, input.publish);
     let published;
     if (input.publish) {
-      if (match.gameweek.deadlineAt > new Date()) throw new ApiError(409, "GAMEWEEK_NOT_LOCKED");
+      // deadlineAt closes transfers and locks fantasy lineups; it does not
+      // determine when match reports may be published. Publishing is an
+      // explicit admin action and is what locks the gameweek for scoring.
       if (match.gameweek.status === "OPEN" || match.gameweek.status === "UPCOMING") {
         await snapshotGameweek(tx, match.gameweekId);
         await tx.gameweek.update({ where: { id: match.gameweekId }, data: { status: "LOCKED" } });
