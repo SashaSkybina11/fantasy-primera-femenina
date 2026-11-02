@@ -63,7 +63,13 @@ async function createMessage(conversationId: string, senderId: string, isAdmin: 
     for (const file of uploaded) {
       const fileName = safeSupportFileName(file.fileName);
       if (!file.storageKey.startsWith(`support/${conversationId}/`) || file.size < 0 || file.size > maxSupportFileSize || !Object.values(allowedTypes).includes(file.contentType) && !allowedImageTypes.has(file.contentType)) throw new ApiError(400, "Invalid support attachment");
-      const blob = await head(file.storageKey, supportBlobOptions());
+      let blob;
+      try {
+        blob = await head(file.storageKey, supportBlobOptions());
+      } catch (error) {
+        console.error("Support attachment verification failed", { conversationId, storageKey: file.storageKey, error });
+        throw new ApiError(502, "Не вдалося перевірити завантажений файл. Спробуйте прикріпити його ще раз.");
+      }
       if (blob.size !== file.size || blob.contentType !== file.contentType) throw new ApiError(400, "Invalid support attachment");
       stored.push({ ...file, fileName });
     }
@@ -81,8 +87,6 @@ async function createMessage(conversationId: string, senderId: string, isAdmin: 
           en: { title: `New message from ${sender.name}`, message: `${sender.email}: ${shortText}`, action: "Open chat", url: "/admin/support" },
           pt: { title: `Nova mensagem de ${sender.name}`, message: `${sender.email}: ${shortText}`, action: "Abrir conversa", url: "/admin/support" },
         };
-        const notification = await tx.notification.create({ data: { type: "SUPPORT_MESSAGE", audience: "USERS", createdById: senderId, eventKey: `SUPPORT_MESSAGE:${created.id}`, payload: { contents }, recipients: { create: { userId: admin.id } } } });
-        void notification;
       } else {
         const owner = await tx.supportConversation.findUniqueOrThrow({ where: { id: conversationId }, select: { userId: true } });
         const sender = await tx.user.findUniqueOrThrow({ where: { id: senderId }, select: { name: true } });
@@ -92,10 +96,31 @@ async function createMessage(conversationId: string, senderId: string, isAdmin: 
           en: { title: "Reply from the administrator", message: `${sender.name}: ${body.slice(0, 240) || `${stored.length} attachment(s)}`}`, action: "Open chat", url: "/support" },
           pt: { title: "Resposta do administrador", message: `${sender.name}: ${body.slice(0, 240) || `${stored.length} ficheiro(s) anexado(s)`}`, action: "Abrir conversa", url: "/support" },
         };
-        await tx.notification.create({ data: { type: "SUPPORT_MESSAGE", audience: "USERS", createdById: senderId, eventKey: `SUPPORT_MESSAGE:${created.id}`, payload: { contents }, recipients: { create: { userId: owner.userId } } } });
       }
       return created;
     });
+    // Chat delivery must not fail because the optional notification could not be created.
+    try {
+      const recipientId = isAdmin
+        ? (await prisma.supportConversation.findUniqueOrThrow({ where: { id: conversationId }, select: { userId: true } })).userId
+        : (await prisma.user.findUniqueOrThrow({ where: { email: "sashaskibina16@gmail.com" }, select: { id: true } })).id;
+      const sender = await prisma.user.findUniqueOrThrow({ where: { id: senderId }, select: { name: true, email: true } });
+      const shortText = body.slice(0, 240) || `${stored.length} attachment(s)`;
+      const contents = isAdmin ? {
+        es: { title: "Respuesta del administrador", message: `${sender.name}: ${shortText}`, action: "Abrir chat", url: "/support" },
+        uk: { title: "Відповідь адміністратора", message: `${sender.name}: ${shortText}`, action: "Відкрити чат", url: "/support" },
+        en: { title: "Reply from the administrator", message: `${sender.name}: ${shortText}`, action: "Open chat", url: "/support" },
+        pt: { title: "Resposta da administração", message: `${sender.name}: ${shortText}`, action: "Abrir conversa", url: "/support" },
+      } : {
+        es: { title: `Nuevo mensaje de ${sender.name}`, message: `${sender.email}: ${shortText}`, action: "Abrir chat", url: "/admin/support" },
+        uk: { title: `Нове повідомлення від ${sender.name}`, message: `${sender.email}: ${shortText}`, action: "Відкрити чат", url: "/admin/support" },
+        en: { title: `New message from ${sender.name}`, message: `${sender.email}: ${shortText}`, action: "Open chat", url: "/admin/support" },
+        pt: { title: `Nova mensagem de ${sender.name}`, message: `${sender.email}: ${shortText}`, action: "Abrir conversa", url: "/admin/support" },
+      };
+      await prisma.notification.create({ data: { type: "SUPPORT_MESSAGE", audience: "USERS", createdById: senderId, eventKey: `SUPPORT_MESSAGE:${message.id}`, payload: { contents }, recipients: { create: { userId: recipientId } } } });
+    } catch (error) {
+      console.error("Support notification creation failed after message was saved", { conversationId, messageId: message.id, error });
+    }
     return message;
   } catch (error) {
     await Promise.all(stored.map(file => deleteSupportFile(file.storageKey)));
