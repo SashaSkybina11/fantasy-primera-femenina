@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "../services/api";
 import { useLocale } from "../contexts/LocaleContext";
 import { useAuth } from "../contexts/AuthContext";
+import { FaTrophy } from "react-icons/fa";
 
 export function LeaderboardPage() {
   const [selected, setSelected] = useState<{ id: string; name: string } | null>(null);
@@ -44,8 +45,8 @@ export function LeaderboardPage() {
           {leaderboard.isError && <p className="state-card state-card--error">{t("error.generic")}</p>}
           {leaderboard.data?.length === 0 && <p className="state-card">{t("lineup.rankingEmpty")}</p>}
           {leaderboard.data?.map((row) => (
-            <button type="button" className="leaderboard-row leaderboard-row--interactive leaderboard-row--overall" key={row.id} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={isAdmin ? row.name ?? "" : t("lineup.view", { name: row.name ?? "" })}>
-              <b className="leaderboard-position">{row.rank}{row.rankChange != null && <span className={`rank-change ${row.rankChange > 0 ? "price-delta--up" : row.rankChange < 0 ? "price-delta--down" : ""}`} aria-label={t(row.rankChange > 0 ? "leaderboard.movedUp" : row.rankChange < 0 ? "leaderboard.movedDown" : "leaderboard.unchanged", { count: Math.abs(row.rankChange) })}>{row.rankChange === 0 ? "—" : <><GoArrowRight className={`ui-arrow ${row.rankChange > 0 ? "ui-arrow--up" : "ui-arrow--down"}`} aria-hidden="true" />{Math.abs(row.rankChange)}</>}</span>}</b>
+            <button type="button" className={`leaderboard-row leaderboard-row--interactive leaderboard-row--overall${row.id === user?.id || row.userId === user?.id ? " leaderboard-row--self" : ""}`} key={row.id ?? row.userId} onClick={() => row.id && setSelected({ id: row.id, name: row.name ?? "" })} aria-label={isAdmin ? row.name ?? "" : t("lineup.view", { name: row.name ?? "" })}>
+              <b className="leaderboard-position">{row.rank}{row.rank != null && row.rank <= 3 && <FaTrophy className="leaderboard-trophy" style={{ color: ["#EAB308", "#9CA3AF", "#B87333"][row.rank - 1] }} aria-label={t("leaderboard.place", { place: row.rank })} />}{row.rankChange != null && <span className={`rank-change ${row.rankChange > 0 ? "price-delta--up" : row.rankChange < 0 ? "price-delta--down" : ""}`} aria-label={t(row.rankChange > 0 ? "leaderboard.movedUp" : row.rankChange < 0 ? "leaderboard.movedDown" : "leaderboard.unchanged", { count: Math.abs(row.rankChange) })}>{row.rankChange === 0 ? "—" : <><GoArrowRight className={`ui-arrow ${row.rankChange > 0 ? "ui-arrow--up" : "ui-arrow--down"}`} aria-hidden="true" />{Math.abs(row.rankChange)}</>}</span>}</b>
               <strong>{row.name}</strong>
               <em>{row.totalPoints} {t("common.pointsShort")} <i aria-hidden="true"><GoArrowRight className="ui-arrow" aria-hidden="true" /></i></em>
             </button>

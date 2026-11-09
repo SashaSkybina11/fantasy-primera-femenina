@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { IoAttachOutline, IoArrowBackOutline, IoDownloadOutline, IoSendOutline } from "react-icons/io5";
+import { IoAttachOutline, IoArrowBackOutline, IoCloseOutline, IoDownloadOutline, IoSendOutline } from "react-icons/io5";
 import { MdSupportAgent } from "react-icons/md";
 import { Navigate } from "react-router-dom";
 import { Avatar } from "../components/Avatar";
@@ -12,8 +12,19 @@ import { api, type SupportAttachment, type SupportConversation, type SupportMess
 function AttachmentItem({ file }: { file: SupportAttachment }) {
   const { t } = useLocale();
   const [url, setUrl] = useState<string>();
+  const [previewOpen, setPreviewOpen] = useState(false);
   useEffect(() => { let active = true; let objectUrl: string | undefined; void api.supportAttachment(file.id).then(blob => { objectUrl = URL.createObjectURL(blob); if (active) setUrl(objectUrl); else URL.revokeObjectURL(objectUrl); }).catch(() => {}); return () => { active = false; if (objectUrl) URL.revokeObjectURL(objectUrl); }; }, [file.id]);
-  return <a href={url} target="_blank" rel="noreferrer" download={file.fileName} className="support-attachment">{url && file.contentType.startsWith("image/") ? <img src={url} alt={file.fileName} /> : <IoDownloadOutline aria-hidden="true" />}<span>{file.fileName}</span><small>{url ? t("support.download") : "…"}</small></a>;
+  const isImage = file.contentType.startsWith("image/");
+  return <>
+    {isImage ? <button type="button" className="support-attachment support-attachment--image" onClick={() => url && setPreviewOpen(true)} disabled={!url} aria-label={file.fileName}>
+      {url ? <img src={url} alt={file.fileName} /> : <span>…</span>}<span>{file.fileName}</span><small>{url ? t("support.previewImage") : "…"}</small>
+    </button> : <a href={url} target="_blank" rel="noreferrer" download={file.fileName} className="support-attachment"><IoDownloadOutline aria-hidden="true" /><span>{file.fileName}</span><small>{url ? t("support.download") : "…"}</small></a>}
+    {previewOpen && url && <div className="support-image-preview" role="dialog" aria-modal="true" aria-label={file.fileName} onClick={() => setPreviewOpen(false)} onKeyDown={event => { if (event.key === "Escape") setPreviewOpen(false); }}>
+      <button type="button" className="support-image-preview__close" aria-label={t("support.closePreview")} onClick={() => setPreviewOpen(false)}><IoCloseOutline /></button>
+      <img src={url} alt={file.fileName} onClick={event => event.stopPropagation()} />
+      <span>{file.fileName}</span>
+    </div>}
+  </>;
 }
 
 function AttachmentList({ attachments }: { attachments: SupportAttachment[] }) {

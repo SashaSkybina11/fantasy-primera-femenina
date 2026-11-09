@@ -1,4 +1,5 @@
 import { GoArrowRight } from "react-icons/go";
+import { FaTrophy } from "react-icons/fa";
 import { Avatar } from "../components/Avatar";
 import { Loader } from "../components/Loader";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -67,8 +68,8 @@ export function PrivateLeaguePage() {
           <span>{league.data.members.length}</span>
         </div>
         {league.data.members.map((member) => (
-          <div className="leaderboard-row" key={member.id}>
-            <b>{member.rank}</b>
+          <div className={`leaderboard-row${member.id === user?.id ? " leaderboard-row--self" : ""}`} key={member.id}>
+            <b className="leaderboard-position">{member.rank}{member.rank <= 3 && <FaTrophy className="leaderboard-trophy" style={{ color: ["#EAB308", "#9CA3AF", "#B87333"][member.rank - 1] }} aria-label={t("leaderboard.place", { place: member.rank })} />}</b>
             <strong>{member.name}</strong>
             <span>
               {member.id === league.data.ownerId ? t("friends.owner") : ""}

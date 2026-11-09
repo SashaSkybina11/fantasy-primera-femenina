@@ -5230,6 +5230,11 @@ dialog.app-modal.share-team-modal {
 .support-attachments { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .5rem; margin-top: .5rem; }
 .support-attachment { min-width: 0; display: grid; justify-items: start; gap: .25rem; color: inherit; text-decoration: none; font-size: .75rem; overflow-wrap: anywhere; }
 .support-attachment img { width: 140px; max-width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
+.support-attachment--image { padding: 0; border: 0; background: transparent; text-align: left; cursor: zoom-in; }
+.support-attachment--image:disabled { cursor: wait; }
+.support-image-preview { position: fixed; inset: 0; z-index: 1000; display: grid; place-content: center; justify-items: center; gap: .75rem; padding: 3rem 1rem 1rem; background: rgb(0 0 0 / 88%); color: white; cursor: zoom-out; }
+.support-image-preview img { max-width: min(94vw, 1400px); max-height: 82dvh; object-fit: contain; cursor: default; }
+.support-image-preview__close { position: absolute; top: 1rem; right: 1rem; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 50%; background: rgb(255 255 255 / 18%); color: white; font-size: 1.75rem; cursor: pointer; }
 .support-composer { padding: .7rem .85rem; border-top: 1px solid var(--border, #d6d9df); }
 .support-composer__hint { margin: 0 0 .45rem; color: var(--muted, #6b7280); font-size: .75rem; }
 .support-composer__row { display: flex; align-items: end; gap: .5rem; }
@@ -5751,6 +5756,10 @@ dialog.app-modal.share-team-modal {
   align-items: center;
   gap: 8px;
 }
+.leaderboard-row--self { position: relative; background: color-mix(in srgb, #22c55e 12%, var(--surface, white)); box-shadow: inset 3px 0 #22c55e; }
+.leaderboard-row--self:hover { background: color-mix(in srgb, #22c55e 18%, var(--surface, white)); }
+:root[data-theme="dark"] .leaderboard-row--self { background: color-mix(in srgb, #22c55e 17%, var(--surface, #111827)); }
+.leaderboard-trophy { flex: 0 0 auto; width: .9em; height: .9em; filter: drop-shadow(0 1px 1px rgb(0 0 0 / 18%)); }
 .rank-change {
   color: var(--muted);
   font-size: 12px;
