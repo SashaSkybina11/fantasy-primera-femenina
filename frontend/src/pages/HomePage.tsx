@@ -6,7 +6,6 @@ import { useLocale } from "../contexts/LocaleContext";
 import { api } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
 import { ShareTeamButton } from "../components/ShareTeamButton";
-import { ClubLogo } from "../components/ClubLogo";
 
 export function HomePage() {
   const { t } = useLocale();
@@ -14,7 +13,6 @@ export function HomePage() {
   const team = useQuery({ queryKey: ["team"], queryFn: api.team });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs });
   const league = useQuery({ queryKey: ["league"], queryFn: api.league, refetchInterval: 30000 });
-  const supporters = useQuery({ queryKey: ["supporters"], queryFn: api.supporters, refetchInterval: 60000 });
   const gameweek = useQuery({
     queryKey: ["current-gameweek"],
     queryFn: api.currentGameweek,
@@ -24,8 +22,6 @@ export function HomePage() {
     mutationFn: api.setFavoriteClub,
     onSuccess: (profile) => setUser(profile),
   });
-  const totalSupport = supporters.data?.reduce((total, club) => total + club.count, 0) ?? 0;
-  const maxSupport = Math.max(...(supporters.data?.map(club => club.count) ?? []), 1);
 
   return (
     <div className="page home-page">
@@ -36,6 +32,7 @@ export function HomePage() {
           <p>{t("home.description")}</p>
         </div>
       </section>
+      <Link className="home-participants-card" to="/league"><span>{t("home.allParticipants")}</span><strong>{league.data?._count.members ?? "—"}</strong><GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
       {gameweek.data && (
         <section
           className={`market-status market-status--${gameweek.data.marketIsOpen ? "open" : "closed"}`}
@@ -94,8 +91,6 @@ export function HomePage() {
           </select>
         </label>
       </section>
-      <Link className="home-participants-card" to="/league"><span>{t("home.allParticipants")}</span><strong>{league.data?._count.members ?? "—"}</strong><GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
-      <section className="supporters-card"><div className="supporters-card__head"><div><p className="eyebrow">{t("league.supportersEyebrow")}</p><h2>{t("league.supportersTitle")}</h2></div><span>{t("league.supportersCount", { count: totalSupport })}</span></div>{supporters.data?.length ? <div className="supporters-list">{supporters.data.map(club => <div className="supporter-row" key={club.id}><ClubLogo club={{ ...club, coach: null, president: null }} /><div><div><strong>{club.name}</strong><span>{club.count}</span></div><i><b style={{ width: `${(club.count / maxSupport) * 100}%` }} /></i></div></div>)}</div> : supporters.isLoading ? <p className="supporters-empty">…</p> : <p className="supporters-empty">{t("league.supportersEmpty")}</p>}</section>
     </div>
   );
 }

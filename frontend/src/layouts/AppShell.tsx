@@ -53,6 +53,12 @@ function NavLinks({
   const { t } = useLocale();
   const notifications = useQuery({ queryKey: ["notification-unread-count"], queryFn: api.unreadNotificationCount, refetchInterval: 30000 });
   const navigation = [
+    {
+      to: "/rules",
+      label: t("nav.rules"),
+      icon: "rules" as const,
+      special: true,
+    },
     { to: "/notifications", label: t("notifications.title"), icon: "notifications" as const },
     { to: "/", label: t("nav.home"), icon: "home" as const, end: true },
     {
@@ -61,36 +67,18 @@ function NavLinks({
       mobile: t("nav.team"),
       icon: "my-team" as const,
     },
-    {
-      to: "/purchase-players",
-      label: t("nav.purchase"),
-      icon: "purchase" as const,
-    },
-    {
-      to: "/player-prices",
-      label: t("prices.title"),
-      icon: "prices" as const,
-    },
+    { to: "/leaderboard", label: t("nav.leaderboard"), icon: "ranking" as const },
+    { to: "/friend-leagues", label: t("nav.friends"), icon: "friends" as const },
+    { to: "/results", label: t("matches.title"), icon: "trophy" as const },
+    { to: "/purchase-players", label: t("nav.purchase"), icon: "purchase" as const },
+    { to: "/player-prices", label: t("prices.title"), icon: "prices" as const },
     { to: "/standings", label: t("calendar.standingsTitle"), icon: "standings" as const },
     { to: "/scorers", label: t("scorers.title"), icon: "scorers" as const },
-    { to: "/results", label: t("matches.title"), icon: "trophy" as const },
-    { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/league", label: t("nav.league"), icon: "participants" as const },
-    { to: "/friend-leagues", label: t("nav.friends"), icon: "friends" as const },
-    {
-      to: "/leaderboard",
-      label: t("nav.leaderboard"),
-      icon: "ranking" as const,
-    },
+    { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },
     ...(isAdmin ? [{ to: "/admin/notifications", label: t("notifications.adminTitle"), icon: "admin" as const }] : []),
     ...(isAdmin ? [{ to: "/admin/support", label: t("support.adminInbox"), icon: "support" as const }] : []),
-    {
-      to: "/rules",
-      label: t("nav.rules"),
-      icon: "rules" as const,
-      special: true,
-    },
     ...(isAdmin
       ? [
           {
