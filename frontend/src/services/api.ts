@@ -701,7 +701,7 @@ export const api = {
     }),
   transferStatus: () => request<TransferStatus>("/my-team/transfers"),
   league: () => request<League>("/league"),
-  members: () => request<LeagueMember[]>("/league/members"),
+  members: (offset = 0) => request<{ members: LeagueMember[]; hasMore: boolean }>(`/league/members?offset=${offset}`),
   supporters: () => request<ClubSupport[]>("/league/supporters"),
   member: (id: string) => request<MemberDetail>(`/league/members/${id}`),
   applyTeamResults: (gameweekId: string, results: Array<{ clubId: string; result: string }>) => request<{ ok: boolean }>(`/admin/gameweeks/${gameweekId}/team-results`, { method: "PUT", body: JSON.stringify({ results }) }),

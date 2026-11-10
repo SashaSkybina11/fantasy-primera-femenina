@@ -32,7 +32,6 @@ export function HomePage() {
           <p>{t("home.description")}</p>
         </div>
       </section>
-      <Link className="home-participants-card" to="/league"><span>{t("home.allParticipants")}</span><strong>{league.data?._count.members ?? "—"}</strong><GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
       {gameweek.data && (
         <section
           className={`market-status market-status--${gameweek.data.marketIsOpen ? "open" : "closed"}`}
@@ -45,10 +44,6 @@ export function HomePage() {
                 : t("purchase.marketClosed")}
             </h2>
           </div>
-          <p className="market-status__schedule">
-            {t("purchase.weeklySchedule")}
-            <small>{t("purchase.timezoneLabel")}: Europe/Madrid</small>
-          </p>
           <Link className="button market-status__team-link" to="/my-team">
             {t("nav.myTeam")} <GoArrowRight className="ui-arrow" aria-hidden="true" />
           </Link>
@@ -91,6 +86,7 @@ export function HomePage() {
           </select>
         </label>
       </section>
+      <Link className="home-participants-card" to="/league"><span>{t("home.allParticipants")}</span><strong>{league.data?._count.members ?? "—"}</strong><GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
     </div>
   );
 }

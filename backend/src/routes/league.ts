@@ -21,6 +21,7 @@ router.get("/", asyncRoute(async (_request, response) => {
 }));
 
 router.get("/members", asyncRoute(async (_request, response) => {
+  const { offset } = z.object({ offset: z.coerce.number().int().min(0).default(0) }).parse(_request.query);
   const league = await prisma.league.findUnique({ where: { name: mainLeagueName } });
   if (!league) throw new ApiError(404, "Лига не найдена");
   const members = await prisma.leagueMember.findMany({
@@ -28,9 +29,11 @@ router.get("/members", asyncRoute(async (_request, response) => {
     include: {
       user: { select: { id: true, name: true, avatarUrl: true, fantasyTeam: { select: { id: true, name: true, _count: { select: { players: true } } } } } },
     },
-    orderBy: { createdAt: "asc" },
+    orderBy: [{ createdAt: "asc" }, { id: "asc" }],
+    skip: offset,
+    take: 21,
   });
-  response.json(members.map((member) => member.user));
+  response.json({ members: members.slice(0, 20).map((member) => member.user), hasMore: members.length > 20 });
 }));
 
 router.get("/supporters", asyncRoute(async (_request, response) => {

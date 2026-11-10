@@ -652,6 +652,8 @@ export const portuguese: Record<TranslationKey, string> = {
   "league.supportersCount": "{{count}} votos",
   "league.supportersEmpty": "Ainda ninguém escolheu um clube favorito.",
   "league.allParticipants": "Todos os participantes",
+  "league.loadMore": "Mostrar mais {{count}}",
+  "league.loadingMore": "A carregar…",
   "member.back": "Voltar aos participantes",
   "member.compare": "Comparar com a minha equipa",
   "member.hideComparison": "Ocultar comparação",
