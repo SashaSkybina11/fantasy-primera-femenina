@@ -144,18 +144,16 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
   const stats = await tx.playerGameweekStats.findMany({ where: { gameweekId } });
   const statsByPlayer = new Map(stats.map((item) => [item.playerId, item]));
   const adjustments = await tx.userPointAdjustment.groupBy({ by: ["userId"], where: { gameweekId }, _sum: { points: true } });
-  const postponedAwards = await tx.postponedMatchAward.groupBy({ by: ["userId"], where: { gameweekId }, _sum: { points: true } });
   const awardDetails = await tx.postponedMatchAward.findMany({ where: { gameweekId }, include: { snapshot: { include: { match: { include: { teams: { include: { club: true } } } } } } } });
   const adjustmentsByUser = new Map(adjustments.map((item) => [item.userId, item._sum.points ?? 0]));
-  const postponedByUser = new Map(postponedAwards.map((item) => [item.userId, item._sum.points ?? 0]));
   const awardDetailsByUser = new Map<string, typeof awardDetails>();
   for (const award of awardDetails) awardDetailsByUser.set(award.userId, [...(awardDetailsByUser.get(award.userId) ?? []), award]);
 
   const squadUsers = new Set(squads.map(squad => squad.userId));
-  const additionalUsers = new Set([...adjustmentsByUser.keys(), ...postponedByUser.keys()]);
+  const additionalUsers = new Set([...adjustmentsByUser.keys(), ...awardDetails.map(award => award.userId)]);
   const targets = [...squads, ...[...additionalUsers].filter(userId => !squadUsers.has(userId)).map(userId => ({ userId, players: [] as typeof squads[number]["players"] }))];
   for (const squad of targets) {
-    let playerPoints = postponedByUser.get(squad.userId) ?? 0; const captainBonus = 0; let starterGoals = 0;
+    let playerPoints = 0; const captainBonus = 0; let starterGoals = 0;
     const breakdown = squad.players.filter((item) => item.status === SquadStatus.STARTER).map((item) => {
       const stat = statsByPlayer.get(item.playerId);
       const basePoints = stat?.totalPoints ?? 0;
@@ -165,7 +163,10 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
       return { playerId: item.playerId, name: item.player.name, isCaptain: item.isCaptain, basePoints, points };
     });
     const adjustmentPoints = adjustmentsByUser.get(squad.userId) ?? 0;
-    const pointsBreakdown = [...breakdown, ...(awardDetailsByUser.get(squad.userId) ?? []).map(award => ({ playerId: `postponed:${award.id}`, name: award.snapshot.match.teams.map(team => team.club.name).join(" · "), isCaptain: false, basePoints: award.points, points: award.points, postponed: true }))];
+    const postponedForUser = awardDetailsByUser.get(squad.userId) ?? [];
+    const includePostponed = gameweek.status === "COMPLETED";
+    if (includePostponed) playerPoints += postponedForUser.reduce((sum, award) => sum + award.points, 0);
+    const pointsBreakdown = [...breakdown, ...(includePostponed ? postponedForUser.map(award => ({ playerId: `postponed:${award.id}`, name: award.snapshot.match.teams.map(team => team.club.name).join(" · "), isCaptain: false, basePoints: award.points, points: award.points, postponed: true })) : [])];
     await tx.userGameweekPoints.upsert({
       where: { gameweekId_userId: { gameweekId, userId: squad.userId } },
       update: { playerPoints, captainBonus, adjustmentPoints, totalPoints: playerPoints + captainBonus + adjustmentPoints, starterGoals, breakdown: pointsBreakdown },

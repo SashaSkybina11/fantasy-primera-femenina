@@ -6383,6 +6383,117 @@ form.admin-card.match-create {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.postponed-admin-page {
+  --postponed-gap: clamp(1rem, 2.4vw, 1.6rem);
+  gap: var(--postponed-gap);
+}
+.postponed-admin-page .page-heading {
+  margin-bottom: 0.25rem;
+}
+.postponed-admin-page > .admin-card {
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+  border-radius: 24px;
+}
+.postponed-workflow-card,
+.postponed-selector-card,
+.postponed-participants-card {
+  display: grid;
+  gap: 1rem;
+}
+.postponed-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.postponed-section-heading h2 {
+  margin: 0;
+  line-height: 1.25;
+}
+.postponed-section-heading p {
+  margin: 0.35rem 0 0;
+}
+.postponed-step-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--on-primary, #fff);
+  font-weight: 800;
+}
+.postponed-workflow-card > p,
+.postponed-freeze-hint {
+  margin: 0;
+  line-height: 1.6;
+}
+.postponed-workflow-card > .button,
+.postponed-selector-card > .button,
+.postponed-participants-card > .button {
+  justify-self: start;
+  margin-top: 0.2rem;
+}
+.postponed-selector-card > label,
+.postponed-filters > label {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.postponed-selector-card select,
+.postponed-filters select {
+  width: 100%;
+  min-height: 3.15rem;
+  margin-top: 0;
+}
+.postponed-selector-card .state-card {
+  margin: 0;
+}
+.postponed-participants-heading {
+  align-items: flex-start;
+}
+.postponed-freeze-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+  line-height: 1.5;
+}
+.postponed-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+.postponed-participants-card > h3 {
+  margin: 0.4rem 0 0;
+}
+.postponed-participant {
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0.25rem;
+}
+.postponed-participant > div {
+  gap: 0.45rem;
+}
+.postponed-participant small {
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+.postponed-participant-points {
+  flex: none;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  white-space: nowrap;
+}
 .match-editor .match-team-title {
   flex-wrap: wrap;
   gap: 10px;
@@ -6391,6 +6502,32 @@ form.admin-card.match-create {
   margin-left: auto;
 }
 @media (max-width: 600px) {
+  .postponed-admin-page > .admin-card {
+    padding: 1rem;
+    border-radius: 18px;
+  }
+  .postponed-filters {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+  }
+  .postponed-participant {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+  .postponed-participant > div {
+    min-width: 0;
+  }
+  .postponed-freeze-status {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .postponed-workflow-card > .button,
+  .postponed-selector-card > .button,
+  .postponed-participants-card > .button {
+    width: 100%;
+    justify-content: center;
+  }
   .admin-page .page-heading > a {
     display: flex;
   }

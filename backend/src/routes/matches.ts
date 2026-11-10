@@ -155,7 +155,6 @@ router.post("/:id/postponed-awards", requireAdmin, asyncRoute(async (req, res) =
     const pointsByPlayer = new Map(publishedRows.map(player => [player.playerId, player.totalPoints ?? 0]));
     const preview = match.postponedSnapshot.squads.map(squad => ({ userId: squad.userId, name: squad.userName, points: squad.players.reduce((sum, player) => sum + (pointsByPlayer.get(player.playerId) ?? 0), 0), players: squad.players.map(player => ({ playerId: player.playerId, isCaptain: player.isCaptain, points: pointsByPlayer.get(player.playerId) ?? 0 })) }));
     for (const row of preview) await tx.postponedMatchAward.create({ data: { snapshotId: match.postponedSnapshot.id, gameweekId: match.gameweekId, userId: row.userId, points: row.points, breakdown: row.players } });
-    await recalculateGameweek(tx, match.gameweekId);
     await audit(tx, req.auth!.userId, "PLAYER_STATS_UPDATED", "PostponedMatchAwards", match.postponedSnapshot.id, null, { matchId: id, gameweekId: match.gameweekId, participantCount: preview.length, totalPoints: preview.reduce((sum, row) => sum + row.points, 0) });
     return { participants: preview.length, totalPoints: preview.reduce((sum, row) => sum + row.points, 0) };
   });
