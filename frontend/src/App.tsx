@@ -10,7 +10,6 @@ import { useLocale } from "./contexts/LocaleContext";
 import { AppShell } from "./layouts/AppShell";
 import { AuthPage } from "./pages/AuthPage";
 import { ClubPage } from "./pages/ClubPage";
-import { CalendarPage } from "./pages/CalendarPage";
 import { HomePage } from "./pages/HomePage";
 import { LeaguePage } from "./pages/LeaguePage";
 import { MemberTeamPage } from "./pages/MemberTeamPage";
@@ -31,6 +30,7 @@ import { NotificationsPage } from "./pages/NotificationsPage";
 import { AdminNotificationsPage } from "./pages/AdminNotificationsPage";
 import { SupportPage } from "./pages/SupportPage";
 import { AdminSupportPage } from "./pages/AdminSupportPage";
+import { AdminPostponedMatchesPage } from "./pages/AdminPostponedMatchesPage";
 
 function ProtectedLayout() {
   const { user, isLoading } = useAuth();
@@ -76,7 +76,8 @@ export function App() {
         <Route path="/results/:id" element={<MatchReportPage />} />
         <Route path="/admin/matches" element={<AdminMatchesPage />} />
         <Route path="/admin/matches/:id" element={<AdminMatchEditorPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
+        <Route path="/admin/postponed-matches" element={<AdminPostponedMatchesPage />} />
+        <Route path="/calendar" element={<Navigate to="/results" replace />} />
         <Route path="/teams" element={<TeamsPage />} />
         <Route path="/teams/:clubId" element={<ClubPage />} />
         <Route path="/league" element={<LeaguePage />} />

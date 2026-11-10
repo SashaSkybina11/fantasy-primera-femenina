@@ -74,7 +74,6 @@ function NavLinks({
     { to: "/standings", label: t("calendar.standingsTitle"), icon: "standings" as const },
     { to: "/scorers", label: t("scorers.title"), icon: "scorers" as const },
     { to: "/results", label: t("matches.title"), icon: "trophy" as const },
-    { to: "/calendar", label: t("nav.calendar"), icon: "calendar" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/league", label: t("nav.league"), icon: "participants" as const },
     { to: "/friend-leagues", label: t("nav.friends"), icon: "friends" as const },
@@ -103,6 +102,11 @@ function NavLinks({
           {
             to: "/admin/matches",
             label: t("matches.admin"),
+            icon: "admin" as const,
+          },
+          {
+            to: "/admin/postponed-matches",
+            label: t("matches.postponedAdmin"),
             icon: "admin" as const,
           },
           {

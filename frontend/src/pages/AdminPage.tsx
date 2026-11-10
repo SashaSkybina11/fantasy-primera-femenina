@@ -56,6 +56,7 @@ export function AdminPage() {
         <Link to="/admin/player-prices">{t("prices.title")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
         <Link to="/admin/players">{t("adminPlayers.title")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
         <Link to="/admin/matches">{t("matches.admin")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
+        <Link to="/admin/postponed-matches">{t("matches.postponedAdmin")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
         <Link to="/admin/player-points">{t("admin.playerPointsLink")} <GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
       </header>
       <section className="admin-card">

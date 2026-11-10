@@ -149,6 +149,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "matches.removeConfirm": "Eliminar este jogo e o seu rascunho?",
   "matches.title": "Resultados",
   "matches.admin": "Jogos e pontos",
+  "matches.postponedAdmin": "Jogos adiados",
   "matches.intro": "Escolha uma jornada e abra a ficha de um jogo.",
   "matches.create": "Adicionar jogo",
   "matches.home": "Casa",
@@ -304,7 +305,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "nav.purchase": "Comprar jogadoras",
   "nav.calendar": "Calendário",
   "nav.teams": "Clubes",
-  "nav.league": "Participantes",
+  "nav.league": "Todos os participantes",
   "nav.friends": "Liga de amigos",
   "friends.empty":
     "Crie a sua liga ou entre na liga dos seus amigos com um código.",
@@ -650,6 +651,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "league.supportersTitle": "Clubes com mais apoio",
   "league.supportersCount": "{{count}} votos",
   "league.supportersEmpty": "Ainda ninguém escolheu um clube favorito.",
+  "league.allParticipants": "Todos os participantes",
   "member.back": "Voltar aos participantes",
   "member.compare": "Comparar com a minha equipa",
   "member.hideComparison": "Ocultar comparação",
@@ -687,6 +689,7 @@ export const portuguese: Record<TranslationKey, string> = {
     "O voto conta para a classificação de adeptos da liga. Pode alterá-lo a qualquer momento.",
   "home.favoriteLabel": "O meu clube favorito",
   "home.favoritePlaceholder": "Escolha um clube",
+  "home.allParticipants": "Todos os participantes da liga",
   "home.conceptEyebrow": "Como funciona o jogo",
   "home.conceptTitle": "Todo o futsal feminino num só lugar",
   "home.conceptDescription":
@@ -715,6 +718,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "calendar.description":
     "Calendário oficial da Primeira Divisão de Futsal Feminino",
   "calendar.open": "Abrir calendário RFEF",
+  "calendar.official": "Calendário oficial · Primera División Fútbol Sala Femenino",
   "calendar.resultsTitle": "Resultados",
   "calendar.resultsDescription":
     "Resultados oficiais da jornada no site da RFEF.",

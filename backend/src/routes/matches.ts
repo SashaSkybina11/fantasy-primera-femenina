@@ -6,10 +6,11 @@ import { authenticate, requireAdmin } from "../middleware/auth.js";
 import { asyncRoute, ApiError } from "../utils/http.js";
 import { audit, calculatePlayerPoints, recalculateGameweek, synchronizeGameweeks, snapshotGameweek } from "../services/gameweeks.js";
 import { protocolSchema, validateProtocol } from "../services/match-protocol.js";
+import { marketIsOpen } from "../services/market-schedule.js";
 
 const router = Router();
 router.use(authenticate);
-const include = { teams: { include: { club: true }, orderBy: { side: "desc" as const } }, gameweek: true };
+const include = { teams: { include: { club: true }, orderBy: { side: "desc" as const } }, gameweek: true, postponedSnapshot: true };
 router.get("/weeks", asyncRoute(async (_req, res) => {
   await synchronizeGameweeks();
   res.json(await prisma.gameweek.findMany({ orderBy: { number: "asc" } }));
@@ -66,6 +67,101 @@ router.get("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
   };
   res.json({ match, roster, previousStarters, protocol });
 }));
+
+router.get("/:id/postponed-snapshot", requireAdmin, asyncRoute(async (req, res) => {
+  const id = z.string().cuid().parse(req.params.id);
+  const match = await prisma.match.findUnique({
+    where: { id },
+    include: {
+      teams: { include: { club: true } },
+      gameweek: { select: { id: true, number: true, status: true, marketOverride: true, marketOpenAt: true, deadlineAt: true, endsAt: true } },
+      postponedSnapshot: {
+        include: {
+          frozenBy: { select: { name: true } },
+          squads: {
+            include: {
+              user: { select: { id: true, name: true } },
+              players: { include: { player: { include: { club: true } } } },
+            },
+          },
+          awards: true,
+        },
+      },
+    },
+  });
+  if (!match) throw new ApiError(404, "MATCH_NOT_FOUND");
+  const protocol = protocolSchema.safeParse(match.published);
+  const publishedRows = (match.published as { players?: Array<{ playerId: string; totalPoints?: number }> } | null)?.players ?? [];
+  const savedSquads = match.postponedSnapshot?.squads;
+  const participants = savedSquads ? savedSquads.map(squad => ({ userId: squad.user.id, name: squad.user.name, players: squad.players.map(entry => ({ playerId: entry.playerId, name: entry.player.name, number: entry.player.number, clubId: entry.player.clubId, club: entry.player.club.name, isCaptain: entry.isCaptain })) })) : await (async () => {
+    const clubIds = match.teams.map(team => team.clubId);
+    const teams = await prisma.fantasyTeam.findMany({ where: { user: { role: "USER", status: "ACTIVE" } }, include: { user: { select: { id: true, name: true } }, players: { include: { player: { include: { club: true } } } } } });
+    return teams.flatMap(team => {
+      const starters = team.players.filter(entry => entry.status === "STARTER");
+      const valid = team.players.length === 10 && team.players.filter(entry => entry.player.position === "GOALKEEPER").length === 2 && team.players.filter(entry => entry.player.position === "FIELD_PLAYER").length === 8 && starters.length === 5 && starters.filter(entry => entry.player.position === "GOALKEEPER").length === 1 && starters.filter(entry => entry.player.position === "FIELD_PLAYER").length === 4 && team.players.filter(entry => entry.isCaptain).length === 1 && starters.filter(entry => entry.isCaptain).length === 1;
+      if (!valid || !team.players.some(entry => clubIds.includes(entry.player.clubId))) return [];
+      return [{ userId: team.user.id, name: team.user.name, players: starters.map(entry => ({ playerId: entry.playerId, name: entry.player.name, number: entry.player.number, clubId: entry.player.clubId, club: entry.player.club.name, isCaptain: entry.isCaptain })) }];
+    });
+  })();
+  const rows = participants.map(squad => {
+    const starters = squad.players;
+    const points = protocol.success ? starters.map(player => ({ ...player, points: publishedRows.find(row => row.playerId === player.playerId)?.totalPoints ?? 0 })) : starters.map(player => ({ ...player, points: null }));
+    return { userId: squad.userId, name: squad.name, players: points, totalPoints: points.reduce((sum, player) => sum + (player.points ?? 0), 0), settled: match.postponedSnapshot?.awards.some(award => award.userId === squad.userId) ?? false };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+  res.json({ match: { id: match.id, gameweekId: match.gameweekId, gameweekNumber: match.gameweek.number, kickoffAt: match.kickoffAt, marketIsOpen: marketIsOpen(match.gameweek), publishedAt: match.publishedAt, teams: match.teams.map(team => ({ clubId: team.clubId, club: team.club.name })) }, snapshot: match.postponedSnapshot ? { id: match.postponedSnapshot.id, frozenAt: match.postponedSnapshot.frozenAt, frozenBy: match.postponedSnapshot.frozenBy.name, settled: match.postponedSnapshot.awards.length > 0, participantCount: rows.length, participants: rows } : { id: null, frozenAt: null, frozenBy: null, settled: false, participantCount: rows.length, participants: rows } });
+}));
+
+router.post("/:id/postponed-snapshot", requireAdmin, asyncRoute(async (req, res) => {
+  const id = z.string().cuid().parse(req.params.id);
+  const result = await inTransaction(async tx => {
+    const match = await tx.match.findUnique({ where: { id }, include: { teams: true, postponedSnapshot: true, gameweek: true } });
+    if (!match) throw new ApiError(404, "MATCH_NOT_FOUND");
+    if (match.publishedAt || match.gameweek.status === "COMPLETED") throw new ApiError(409, "Нельзя зафиксировать составы после публикации матча");
+    if (marketIsOpen(match.gameweek)) throw new ApiError(409, "Сначала закройте рынок этого тура");
+    if (!match.kickoffAt || match.kickoffAt <= new Date()) throw new ApiError(409, "Составы можно фиксировать только до начала матча");
+    if (match.postponedSnapshot) throw new ApiError(409, "Составы для этого матча уже зафиксированы");
+    const clubIds = match.teams.map(team => team.clubId);
+    if (clubIds.length !== 2) throw new ApiError(409, "У матча должны быть указаны обе команды");
+    const teams = await tx.fantasyTeam.findMany({ where: { user: { role: "USER", status: "ACTIVE" } }, include: { user: { select: { id: true, name: true } }, players: { include: { player: { select: { id: true, clubId: true, position: true } } } } } });
+    const eligible = teams.flatMap(team => {
+      const starters = team.players.filter(entry => entry.status === "STARTER");
+      const goalkeepers = team.players.filter(entry => entry.player.position === "GOALKEEPER");
+      const fieldPlayers = team.players.filter(entry => entry.player.position === "FIELD_PLAYER");
+      const valid = team.players.length === 10 && goalkeepers.length === 2 && fieldPlayers.length === 8 && starters.length === 5
+        && starters.filter(entry => entry.player.position === "GOALKEEPER").length === 1
+        && starters.filter(entry => entry.player.position === "FIELD_PLAYER").length === 4
+        && team.players.filter(entry => entry.isCaptain).length === 1
+        && starters.filter(entry => entry.isCaptain).length === 1;
+      if (!valid || !team.players.some(entry => clubIds.includes(entry.player.clubId))) return [];
+      return [{ userId: team.user.id, userName: team.user.name, starters }];
+    });
+    if (!eligible.length) throw new ApiError(409, "Нет участников с корректным составом и игроками этих клубов");
+    const snapshot = await tx.postponedMatchSnapshot.create({ data: { matchId: id, frozenById: req.auth!.userId, squads: { create: eligible.map(team => ({ userId: team.userId, userName: team.userName, players: { create: team.starters.map(entry => ({ playerId: entry.playerId, isCaptain: entry.isCaptain })) } })) } }, include: { squads: true } });
+    await audit(tx, req.auth!.userId, "PLAYER_STATS_UPDATED", "PostponedMatchSnapshot", snapshot.id, null, { matchId: id, gameweekId: match.gameweekId, frozenAt: snapshot.frozenAt, participantCount: snapshot.squads.length, clubs: clubIds });
+    return snapshot;
+  });
+  res.status(201).json({ id: result.id, frozenAt: result.frozenAt, participantCount: result.squads.length });
+}));
+
+router.post("/:id/postponed-awards", requireAdmin, asyncRoute(async (req, res) => {
+  const id = z.string().cuid().parse(req.params.id);
+  const result = await inTransaction(async tx => {
+    const match = await tx.match.findUnique({ where: { id }, include: { postponedSnapshot: { include: { squads: { include: { players: true } } } } } });
+    if (!match?.postponedSnapshot) throw new ApiError(409, "Сначала зафиксируйте составы для этого матча");
+    if (!match.publishedAt) throw new ApiError(409, "Сначала внесите и опубликуйте протокол матча");
+    if (await tx.postponedMatchAward.count({ where: { snapshotId: match.postponedSnapshot.id } })) throw new ApiError(409, "Очки за этот матч уже начислены");
+    protocolSchema.parse(match.published);
+    const publishedRows = (match.published as { players?: Array<{ playerId: string; totalPoints?: number }> } | null)?.players ?? [];
+    const pointsByPlayer = new Map(publishedRows.map(player => [player.playerId, player.totalPoints ?? 0]));
+    const preview = match.postponedSnapshot.squads.map(squad => ({ userId: squad.userId, name: squad.userName, points: squad.players.reduce((sum, player) => sum + (pointsByPlayer.get(player.playerId) ?? 0), 0), players: squad.players.map(player => ({ playerId: player.playerId, isCaptain: player.isCaptain, points: pointsByPlayer.get(player.playerId) ?? 0 })) }));
+    for (const row of preview) await tx.postponedMatchAward.create({ data: { snapshotId: match.postponedSnapshot.id, gameweekId: match.gameweekId, userId: row.userId, points: row.points, breakdown: row.players } });
+    await recalculateGameweek(tx, match.gameweekId);
+    await audit(tx, req.auth!.userId, "PLAYER_STATS_UPDATED", "PostponedMatchAwards", match.postponedSnapshot.id, null, { matchId: id, gameweekId: match.gameweekId, participantCount: preview.length, totalPoints: preview.reduce((sum, row) => sum + row.points, 0) });
+    return { participants: preview.length, totalPoints: preview.reduce((sum, row) => sum + row.points, 0) };
+  });
+  res.json({ ok: true, ...result });
+}));
+
 router.put("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
   const id = z.string().cuid().parse(req.params.id);
   const input = z.object({ protocol: protocolSchema, version: z.number().int(), publish: z.boolean(), kickoffAt: z.string().datetime().nullable() }).parse(req.body);
@@ -74,6 +170,7 @@ router.put("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
     if (!match) throw new ApiError(404, "MATCH_NOT_FOUND");
     if (match.gameweek.status === "COMPLETED") throw new ApiError(409, "MATCH_LOCKED");
     if (input.version !== match.version) throw new ApiError(409, "MATCH_STALE");
+    if (match.postponedSnapshot && await tx.postponedMatchAward.count({ where: { snapshotId: match.postponedSnapshot.id } })) throw new ApiError(409, "Очки уже начислены; изменять протокол нельзя");
     const home = match.teams.find(t => t.side === "home")!;
     const away = match.teams.find(t => t.side === "away")!;
     const roster = await tx.player.findMany({ where: { clubId: { in: [home.clubId, away.clubId] } } });
@@ -97,14 +194,16 @@ router.put("/:id/editor", requireAdmin, asyncRoute(async (req, res) => {
         const stats = { ...protocolStats, ...(player.position === "GOALKEEPER" && row.started ? { goalsConceded: other } : {}) };
         const cleanSheet = player.position === "GOALKEEPER" && stats.goalsConceded === 0;
         const calculatedPoints = calculatePlayerPoints({ ...stats, cleanSheet, result, position: player.position });
-        const old = await tx.playerGameweekStats.findUnique({ where: { gameweekId_playerId: { gameweekId: match.gameweekId, playerId } } });
+        const old = match.postponedSnapshot ? null : await tx.playerGameweekStats.findUnique({ where: { gameweekId_playerId: { gameweekId: match.gameweekId, playerId } } });
         const totalPoints = calculatedPoints + (old?.adjustmentPoints ?? 0);
-        const data = { ...stats, cleanSheet, result, calculatedPoints, totalPoints };
-        await tx.playerGameweekStats.upsert({ where: { gameweekId_playerId: { gameweekId: match.gameweekId, playerId } }, create: { ...data, gameweekId: match.gameweekId, playerId }, update: data });
+        if (!match.postponedSnapshot) {
+          const data = { ...stats, cleanSheet, result, calculatedPoints, totalPoints };
+          await tx.playerGameweekStats.upsert({ where: { gameweekId_playerId: { gameweekId: match.gameweekId, playerId } }, create: { ...data, gameweekId: match.gameweekId, playerId }, update: data });
+        }
         rows.push({ ...row, goalsConceded: stats.goalsConceded, name: player.name, number: player.number, clubId: player.clubId, position: player.position, totalPoints, calculatedPoints, adjustmentPoints: old?.adjustmentPoints ?? 0, result });
       }
       published = { ...input.protocol, players: rows };
-      await recalculateGameweek(tx, match.gameweekId);
+      if (!match.postponedSnapshot) await recalculateGameweek(tx, match.gameweekId);
     }
     const saved = await tx.match.update({ where: { id }, data: { draft: input.protocol, kickoffAt: input.kickoffAt, ...(published ? { published, publishedAt: new Date() } : {}), version: { increment: 1 } }, include });
     await audit(tx, req.auth!.userId, "PLAYER_STATS_UPDATED", "Match", id, match, saved);

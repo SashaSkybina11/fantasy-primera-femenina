@@ -99,6 +99,7 @@ const spanish = {
   "matches.removeConfirm": "¿Eliminar este partido y su borrador?",
   "matches.title": "Resultados",
   "matches.admin": "Partidos y puntos",
+  "matches.postponedAdmin": "Partidos aplazados",
   "matches.intro": "Selecciona una jornada y abre el acta de un partido.",
   "matches.create": "Añadir partido",
   "matches.home": "Local",
@@ -263,7 +264,7 @@ const spanish = {
   "nav.purchase": "Comprar jugadoras",
   "nav.calendar": "Calendario",
   "nav.teams": "Clubes",
-  "nav.league": "Participantes",
+  "nav.league": "Todos los participantes",
   "nav.friends": "Liga de amigos",
   "friends.empty":
     "Crea tu propia liga o únete a la liga de tus amigos con un código.",
@@ -633,6 +634,7 @@ const spanish = {
   "league.supportersTitle": "Clubes con más apoyo",
   "league.supportersCount": "{{count}} votos",
   "league.supportersEmpty": "Todavía nadie ha elegido su club favorito.",
+  "league.allParticipants": "Todos los participantes",
   "member.back": "Volver a participantes",
   "member.compare": "Comparar con mi equipo",
   "member.hideComparison": "Ocultar comparación",
@@ -663,6 +665,7 @@ const spanish = {
     "Tu voto cuenta en el ranking de aficiones de la liga. Puedes cambiarlo cuando quieras.",
   "home.favoriteLabel": "Mi club favorito",
   "home.favoritePlaceholder": "Elegir un club",
+  "home.allParticipants": "Todos los participantes de la liga",
   "home.conceptEyebrow": "Guía de juego",
   "home.conceptTitle": "Todo el fútbol sala femenino, en un solo lugar",
   "home.conceptDescription":
@@ -691,6 +694,7 @@ const spanish = {
   "calendar.description":
     "Calendario oficial de Primera División Fútbol Sala Femenino",
   "calendar.open": "Abrir calendario RFEF",
+  "calendar.official": "Calendario oficial · Primera División Fútbol Sala Femenino",
   "calendar.resultsTitle": "Resultados",
   "calendar.resultsDescription":
     "Resultados oficiales de la jornada en la web de la RFEF.",
@@ -825,6 +829,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "matches.removeConfirm": "Видалити цей матч і його чернетку?",
   "matches.title": "Результати",
   "matches.admin": "Матчі та очки",
+  "matches.postponedAdmin": "Перенесені матчі",
   "matches.intro": "Оберіть тур і відкрийте протокол матчу.",
   "matches.create": "Додати матч",
   "matches.home": "Господарі",
@@ -987,7 +992,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "nav.purchase": "Купівля гравчинь",
   "nav.calendar": "Календар",
   "nav.teams": "Клуби",
-  "nav.league": "Учасники",
+  "nav.league": "Усі учасники",
   "nav.friends": "Ліга друзів",
   "friends.empty":
     "Створіть власну лігу або приєднайтеся до ліги друзів за кодом.",
@@ -1354,6 +1359,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "league.supportersTitle": "Клуби з найбільшою підтримкою",
   "league.supportersCount": "{{count}} голосів",
   "league.supportersEmpty": "Ще ніхто не обрав улюблений клуб.",
+  "league.allParticipants": "Усі учасники",
   "member.back": "До учасників",
   "member.compare": "Порівняти з моєю командою",
   "member.hideComparison": "Приховати порівняння",
@@ -1384,6 +1390,7 @@ const ukrainian: Record<TranslationKey, string> = {
     "Ваш голос враховується в рейтингу підтримки ліги. Його можна змінити будь-коли.",
   "home.favoriteLabel": "Мій улюблений клуб",
   "home.favoritePlaceholder": "Обрати клуб",
+  "home.allParticipants": "Усі учасники ліги",
   "home.conceptEyebrow": "Як працює гра",
   "home.conceptTitle": "Увесь жіночий футзал в одному місці",
   "home.conceptDescription":
@@ -1411,6 +1418,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "calendar.description":
     "Офіційний календар Primera División Fútbol Sala Femenino",
   "calendar.open": "Відкрити календар RFEF",
+  "calendar.official": "Офіційний календар · Primera División Fútbol Sala Femenino",
   "calendar.resultsTitle": "Результати",
   "calendar.resultsDescription": "Офіційні результати туру на сайті RFEF.",
   "calendar.openResults": "Відкрити результати RFEF",
@@ -1542,6 +1550,7 @@ const english: Record<TranslationKey, string> = {
   "matches.removeConfirm": "Delete this match and its draft?",
   "matches.title": "Results",
   "matches.admin": "Matches and points",
+  "matches.postponedAdmin": "Postponed matches",
   "matches.intro": "Choose a gameweek and open a match report.",
   "matches.create": "Add match",
   "matches.home": "Home",
@@ -1706,7 +1715,7 @@ const english: Record<TranslationKey, string> = {
   "nav.purchase": "Buy players",
   "nav.calendar": "Calendar",
   "nav.teams": "Clubs",
-  "nav.league": "Participants",
+  "nav.league": "All participants",
   "nav.friends": "Friends' league",
   "friends.empty":
     "Create your own league or join your friends' league with a code.",
@@ -2074,6 +2083,7 @@ const english: Record<TranslationKey, string> = {
   "league.supportersTitle": "Most supported clubs",
   "league.supportersCount": "{{count}} votes",
   "league.supportersEmpty": "No one has chosen a favourite club yet.",
+  "league.allParticipants": "All participants",
   "member.back": "Back to members",
   "member.compare": "Compare with my team",
   "member.hideComparison": "Hide comparison",
@@ -2104,6 +2114,7 @@ const english: Record<TranslationKey, string> = {
     "Your vote counts towards the league's supporter rankings. You can change it at any time.",
   "home.favoriteLabel": "My favourite club",
   "home.favoritePlaceholder": "Choose a club",
+  "home.allParticipants": "All league participants",
   "home.conceptEyebrow": "How the game works",
   "home.conceptTitle": "All of women's futsal in one place",
   "home.conceptDescription":
@@ -2131,6 +2142,7 @@ const english: Record<TranslationKey, string> = {
   "calendar.title": "Calendar",
   "calendar.description": "Official Women's Futsal First Division calendar",
   "calendar.open": "Open RFEF calendar",
+  "calendar.official": "Official calendar · Primera División Fútbol Sala Femenino",
   "calendar.resultsTitle": "Results",
   "calendar.resultsDescription":
     "Official gameweek results on the RFEF website.",

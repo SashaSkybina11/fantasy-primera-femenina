@@ -1,7 +1,7 @@
 import { portugueseApi } from "../locales/pt-api";
 import { toBrazilian } from "../locales/pt";
 import { marketSpanish, marketUkrainian, marketEnglish } from "../locales/market";
-import type { MatchRecord, MatchEditorData, MatchProtocol } from "../types/matches";
+import type { MatchRecord, MatchEditorData, MatchProtocol, PostponedSnapshotData } from "../types/matches";
 import type {
   AdminUser,
   Club,
@@ -611,6 +611,9 @@ export const api = {
   matches: (week: string) => request<MatchRecord[]>(`/matches?gameweekId=${week}`),
   match: (id: string) => request<MatchRecord>(`/matches/${id}`),
   matchEditor: (id: string) => request<MatchEditorData>(`/matches/${id}/editor`),
+  postponedSnapshot: (id: string) => request<PostponedSnapshotData>(`/matches/${id}/postponed-snapshot`),
+  freezePostponedSnapshot: (id: string) => request<{ id: string; frozenAt: string; participantCount: number }>(`/matches/${id}/postponed-snapshot`, { method: "POST" }),
+  settlePostponedAwards: (id: string) => request<{ ok: boolean; participants: number; totalPoints: number }>(`/matches/${id}/postponed-awards`, { method: "POST" }),
   createMatch: (data: { gameweekId: string; homeId: string; awayId: string; kickoffAt: string | null }) => request<MatchRecord>("/matches", { method: "POST", body: JSON.stringify(data) }),
   saveMatch: (id: string, data: { protocol: MatchProtocol; version: number; publish: boolean; kickoffAt: string | null }) => request<MatchRecord>(`/matches/${id}/editor`, { method: "PUT", body: JSON.stringify(data) }),
   playerPrices: () => request<Array<Player & { priceChanges: Array<{ id: string; gameweek: Gameweek; priceBefore: number; priceAfter: number; priceDelta: number }> }>>("/player-prices"),
