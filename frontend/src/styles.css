@@ -607,6 +607,22 @@ select:focus {
 .page-heading h1 {
   margin: 0.6rem 0 0.7rem;
 }
+.results-page > .page-heading,
+.teams-page > .page-heading,
+.profile-page > .page-heading {
+  text-align: center;
+}
+.results-page > .page-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.results-page .results-calendar-link {
+  align-self: center;
+}
+.results-page > .page-heading > a:not(.results-calendar-link) {
+  align-self: center;
+}
 .mobile-header,
 .mobile-menu,
 .mobile-menu-backdrop {

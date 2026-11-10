@@ -100,7 +100,7 @@ export function ProfilePage() {
     );
   const data = profile.data;
   return (
-    <div className="page page--narrow">
+    <div className="page page--narrow profile-page">
       <header className="page-heading">
         <p className="eyebrow">{t("profile.space")}</p>
         <h1>{t("profile.title")}</h1>
