@@ -694,7 +694,7 @@ const spanish = {
   "calendar.description":
     "Calendario oficial de Primera División Fútbol Sala Femenino",
   "calendar.open": "Abrir calendario RFEF",
-  "calendar.official": "Calendario oficial · Primera División Fútbol Sala Femenino",
+  "calendar.official": "Calendario Primera División Fútbol Sala Femenino 2026-27",
   "calendar.resultsTitle": "Resultados",
   "calendar.resultsDescription":
     "Resultados oficiales de la jornada en la web de la RFEF.",
@@ -1418,7 +1418,7 @@ const ukrainian: Record<TranslationKey, string> = {
   "calendar.description":
     "Офіційний календар Primera División Fútbol Sala Femenino",
   "calendar.open": "Відкрити календар RFEF",
-  "calendar.official": "Офіційний календар · Primera División Fútbol Sala Femenino",
+  "calendar.official": "Календар Primera División Fútbol Sala Femenino 2026-27",
   "calendar.resultsTitle": "Результати",
   "calendar.resultsDescription": "Офіційні результати туру на сайті RFEF.",
   "calendar.openResults": "Відкрити результати RFEF",
@@ -2142,7 +2142,7 @@ const english: Record<TranslationKey, string> = {
   "calendar.title": "Calendar",
   "calendar.description": "Official Women's Futsal First Division calendar",
   "calendar.open": "Open RFEF calendar",
-  "calendar.official": "Official calendar · Primera División Fútbol Sala Femenino",
+  "calendar.official": "Calendar Primera División Fútbol Sala Femenino 2026-27",
   "calendar.resultsTitle": "Results",
   "calendar.resultsDescription":
     "Official gameweek results on the RFEF website.",

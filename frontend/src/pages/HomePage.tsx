@@ -57,6 +57,19 @@ export function HomePage() {
           </Link>
         </section>
       )}
+      {team.data && (
+        <section className="home-team-summary">
+          <div>
+            <p className="eyebrow">{t("home.yourTeam")}</p>
+            <h2>{team.data.name}</h2>
+          </div>
+          <BudgetDisplay
+            budget={team.data.budget}
+            count={team.data.players.length}
+          />
+          <ShareTeamButton team={team.data} />
+        </section>
+      )}
       <section className="home-support-card">
         <div>
           <p className="eyebrow">{t("home.favoriteEyebrow")}</p>
@@ -83,19 +96,6 @@ export function HomePage() {
       </section>
       <Link className="home-participants-card" to="/league"><span>{t("home.allParticipants")}</span><strong>{league.data?._count.members ?? "—"}</strong><GoArrowRight className="ui-arrow" aria-hidden="true" /></Link>
       <section className="supporters-card"><div className="supporters-card__head"><div><p className="eyebrow">{t("league.supportersEyebrow")}</p><h2>{t("league.supportersTitle")}</h2></div><span>{t("league.supportersCount", { count: totalSupport })}</span></div>{supporters.data?.length ? <div className="supporters-list">{supporters.data.map(club => <div className="supporter-row" key={club.id}><ClubLogo club={{ ...club, coach: null, president: null }} /><div><div><strong>{club.name}</strong><span>{club.count}</span></div><i><b style={{ width: `${(club.count / maxSupport) * 100}%` }} /></i></div></div>)}</div> : supporters.isLoading ? <p className="supporters-empty">…</p> : <p className="supporters-empty">{t("league.supportersEmpty")}</p>}</section>
-      {team.data && (
-        <section className="home-team-summary">
-          <div>
-            <p className="eyebrow">{t("home.yourTeam")}</p>
-            <h2>{team.data.name}</h2>
-          </div>
-          <BudgetDisplay
-            budget={team.data.budget}
-            count={team.data.players.length}
-          />
-          <ShareTeamButton team={team.data} />
-        </section>
-      )}
     </div>
   );
 }

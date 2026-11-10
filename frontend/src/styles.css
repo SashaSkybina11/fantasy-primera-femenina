@@ -601,6 +601,9 @@ select:focus {
 .page-heading {
   margin-bottom: 2.7rem;
 }
+.results-calendar-link {
+  margin-top: 1.1rem;
+}
 .page-heading h1 {
   margin: 0.6rem 0 0.7rem;
 }
@@ -773,6 +776,9 @@ select:focus {
 .home-hero {
   order: 0;
 }
+.home-page > .market-status {
+  order: 1;
+}
 .home-concept {
   order: 1;
 }
@@ -780,7 +786,7 @@ select:focus {
   order: 2;
 }
 .home-team-summary {
-  order: 3;
+  order: 2;
 }
 .home-participants-card {
   display: flex;
@@ -809,7 +815,13 @@ select:focus {
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 .home-support-card {
+  order: 3;
+}
+.home-page > .home-participants-card {
   order: 4;
+}
+.home-page > .supporters-card {
+  order: 5;
 }
 .home-hero {
   position: relative;

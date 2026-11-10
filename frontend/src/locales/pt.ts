@@ -718,7 +718,7 @@ export const portuguese: Record<TranslationKey, string> = {
   "calendar.description":
     "Calendário oficial da Primeira Divisão de Futsal Feminino",
   "calendar.open": "Abrir calendário RFEF",
-  "calendar.official": "Calendário oficial · Primera División Fútbol Sala Femenino",
+  "calendar.official": "Calendário Primera División Fútbol Sala Femenino 2026-27",
   "calendar.resultsTitle": "Resultados",
   "calendar.resultsDescription":
     "Resultados oficiais da jornada no site da RFEF.",
