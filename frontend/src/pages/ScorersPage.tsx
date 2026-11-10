@@ -8,7 +8,7 @@ import { api } from "../services/api";
 export function ScorersPage() {
   const { t } = useLocale();
   const scorers = useQuery({ queryKey: ["scorers"], queryFn: api.scorers, refetchInterval: 30000 });
-  return <div className="page page--narrow">
+  return <div className="page page--narrow scorers-page">
     <header className="page-heading"><h1><RiTargetFill aria-hidden="true" /> {t("scorers.title")}</h1></header>
     {scorers.isPending && <Loader label={t("loading.players")} />}
     {scorers.isError && <p role="alert">{t("error.generic")} <button className="button" onClick={() => void scorers.refetch()}>{t("matches.retry")}</button></p>}

@@ -5,7 +5,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoHomeOutline, IoFootballOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
 import { FaRankingStar } from "react-icons/fa6";
-import { FaInstagram, FaUsers } from "react-icons/fa";
+import { FaInstagram, FaShoppingCart, FaUsers } from "react-icons/fa";
 import { RiTargetFill } from "react-icons/ri";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings, MdAlternateEmail, MdSupportAgent } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -36,7 +36,7 @@ type IconName =
   | "standings";
 
 function FootballIcon({ name }: { name: IconName }) {
-  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: HiArrowsRightLeft, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: FaUsers, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: RiTargetFill, admin: MdAdminPanelSettings, standings: FaRankingStar };
+  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: FaShoppingCart, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: FaUsers, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: RiTargetFill, admin: MdAdminPanelSettings, standings: FaRankingStar };
   const Icon = icons[name];
   return <Icon aria-hidden="true" />;
 }
