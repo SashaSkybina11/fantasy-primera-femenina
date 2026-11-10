@@ -6537,6 +6537,21 @@ form.admin-card.match-create {
   border-radius: 14px;
   background: var(--surface);
 }
+.club-standings-page > .page-heading {
+  text-align: center;
+}
+.club-standings-page > .page-heading h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-inline: auto;
+  text-align: center;
+}
+.club-standings-page > .page-heading h1 svg {
+  flex: 0 0 auto;
+}
 .club-standings-table {
   width: 100%;
   min-width: 700px;
