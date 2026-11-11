@@ -203,6 +203,7 @@ model Gameweek {
   marketOverride Boolean?
   deadlineAt     DateTime
   completedAt    DateTime?
+  idealFiveBonusesEnabled Boolean @default(false)
   entryFeeCents  Int                   @default(0)
   currency       String                @default("EUR")
   prizePoolCents Int                   @default(0)

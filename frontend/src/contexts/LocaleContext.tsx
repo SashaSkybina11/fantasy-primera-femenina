@@ -482,6 +482,9 @@ const spanish = {
   "idealFive.adminHelp": "Elige una jugadora por posición. Debe haber una portera, un pívot, un cierre y dos alas.",
   "idealFive.incomplete": "Completa las cinco posiciones antes de guardar.",
   "idealFive.noRounds": "Todavía no se ha publicado ningún quinteto.",
+  "idealFive.rewardMode": "Modo de publicación",
+  "idealFive.publishOnly": "Publicar solo el quinteto, sin premios Fantasy",
+  "idealFive.publishRewards": "Publicar y conceder +3 puntos y +100 €",
   "nav.idealFive": "Quinteto ideal",
   "rules.marketTitle": "Mercado de fichajes",
   "rules.marketBody":
@@ -1235,6 +1238,9 @@ const ukrainian: Record<TranslationKey, string> = {
   "idealFive.adminHelp": "Оберіть гравчинь на позиції воротарки, стовпа, захисниці та двох флангів.",
   "idealFive.incomplete": "Заповніть усі п'ять позицій перед збереженням.",
   "idealFive.noRounds": "Ще не опубліковано жодної п'ятірки.",
+  "idealFive.rewardMode": "Режим публікації",
+  "idealFive.publishOnly": "Опублікувати п'ятірку без бонусів Fantasy",
+  "idealFive.publishRewards": "Опублікувати й нарахувати +3 бали та +100 €",
   "nav.idealFive": "Ідеальна п'ятірка",
   "rules.marketTitle": "Трансферний ринок",
   "rules.marketBody":
@@ -1984,6 +1990,9 @@ const english: Record<TranslationKey, string> = {
   "idealFive.adminHelp": "Choose one player for each position: goalkeeper, pivot, defender and two wingers.",
   "idealFive.incomplete": "Fill all five positions before saving.",
   "idealFive.noRounds": "No Ideal Five has been published yet.",
+  "idealFive.rewardMode": "Publication mode",
+  "idealFive.publishOnly": "Publish the Ideal Five only, without Fantasy rewards",
+  "idealFive.publishRewards": "Publish and award +3 points and +€100",
   "nav.idealFive": "Ideal Five",
   "rules.marketTitle": "Transfer market",
   "rules.marketBody":

@@ -525,6 +525,9 @@ export const portuguese: Record<TranslationKey, string> = {
   "idealFive.adminHelp": "Escolha uma jogadora por posição: guarda-redes, pivô, fixa e duas alas.",
   "idealFive.incomplete": "Preencha as cinco posições antes de guardar.",
   "idealFive.noRounds": "Ainda não foi publicado nenhum quinteto.",
+  "idealFive.rewardMode": "Modo de publicação",
+  "idealFive.publishOnly": "Publicar apenas o quinteto, sem prémios Fantasy",
+  "idealFive.publishRewards": "Publicar e atribuir +3 pontos e +100 €",
   "nav.idealFive": "Quinteto ideal",
   "rules.marketTitle": "Mercado de transferências",
   "rules.marketBody":
@@ -908,6 +911,9 @@ export const brazilian: Record<TranslationKey, string> = {
   "idealFive.adminHelp": "Escolha uma jogadora por posição: goleira, pivô, fixa e duas alas.",
   "idealFive.incomplete": "Preencha as cinco posições antes de salvar.",
   "idealFive.noRounds": "Nenhum quinteto foi publicado ainda.",
+  "idealFive.rewardMode": "Modo de publicação",
+  "idealFive.publishOnly": "Publicar apenas o quinteto, sem prémios Fantasy",
+  "idealFive.publishRewards": "Publicar e atribuir +3 pontos e +100 €",
   "nav.idealFive": "Quinteto ideal",
   "team.lineupRequirements":
     "10 jogadoras · 5 titulares · 1 goleira · capitã titular",

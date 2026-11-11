@@ -36,7 +36,9 @@ export async function previewPlayerPrices(tx: Prisma.TransactionClient, gameweek
     orderBy: { id: "asc" },
     include: { club: true, gameweekStats: { where: { gameweekId } }, priceChanges: { include: { gameweek: true }, orderBy: { gameweek: { number: "asc" } } } },
   });
-  const idealFiveEntries = await tx.gameweekIdealFiveEntry.findMany({ where: { gameweekId }, select: { playerId: true } });
+  const idealFiveEntries = gameweek.idealFiveBonusesEnabled
+    ? await tx.gameweekIdealFiveEntry.findMany({ where: { gameweekId }, select: { playerId: true } })
+    : [];
   const idealFivePlayerIds = new Set(idealFiveEntries.map(entry => entry.playerId));
   const rows = players.map(player => {
     const stat = player.gameweekStats[0];

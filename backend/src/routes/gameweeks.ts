@@ -14,6 +14,7 @@ router.use(authenticate);
 const idealFiveSlots = ["GOALKEEPER", "PIVOT", "CLOSER", "WINGER_ONE", "WINGER_TWO"] as const;
 const idealFiveInput = z.object({
   players: z.array(z.object({ playerId: z.string().cuid(), slot: z.enum(idealFiveSlots) })).length(5),
+  awardBonuses: z.boolean(),
 });
 
 router.get("/ideal-five", asyncRoute(async (_request, response) => {
@@ -26,7 +27,7 @@ router.get("/ideal-five", asyncRoute(async (_request, response) => {
 
 router.put("/:gameweekId/ideal-five", requireAdmin, asyncRoute(async (request, response) => {
   const gameweekId = z.string().cuid().parse(request.params.gameweekId);
-  const { players } = idealFiveInput.parse(request.body);
+  const { players, awardBonuses } = idealFiveInput.parse(request.body);
   if (new Set(players.map(player => player.slot)).size !== 5 || new Set(players.map(player => player.playerId)).size !== 5) {
     throw new ApiError(400, "IDEAL_FIVE_DUPLICATE");
   }
@@ -51,6 +52,7 @@ router.put("/:gameweekId/ideal-five", requireAdmin, asyncRoute(async (request, r
   const saved = await prisma.$transaction(async tx => {
     await tx.gameweekIdealFiveEntry.deleteMany({ where: { gameweekId } });
     await tx.gameweekIdealFiveEntry.createMany({ data: players.map(item => ({ gameweekId, playerId: item.playerId, slot: item.slot })) });
+    await tx.gameweek.update({ where: { id: gameweekId }, data: { idealFiveBonusesEnabled: awardBonuses } });
     if (gameweek.status === "COMPLETED") await recalculateGameweek(tx, gameweekId);
     return tx.gameweekIdealFiveEntry.findMany({ where: { gameweekId }, orderBy: { slot: "asc" }, include: { gameweek: true, player: { include: { club: true } } } });
   });

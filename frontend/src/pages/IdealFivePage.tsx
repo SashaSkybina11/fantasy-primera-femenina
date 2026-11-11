@@ -40,6 +40,7 @@ export function IdealFivePage() {
   const isAdmin = user?.role === "ADMIN";
   const [selectedWeekId, setSelectedWeekId] = useState("");
   const [draft, setDraft] = useState<Partial<Record<IdealFiveSlot, string>>>({});
+  const [awardBonuses, setAwardBonuses] = useState(false);
   const [clubFilters, setClubFilters] = useState<Partial<Record<IdealFiveSlot, string>>>({});
   const currentWeek = useQuery({ queryKey: ["current-gameweek"], queryFn: api.currentGameweek });
   const history = useQuery({ queryKey: ["ideal-five-history"], queryFn: api.idealFiveHistory });
@@ -62,10 +63,13 @@ export function IdealFivePage() {
   const savedEntries = useMemo(() => (history.data ?? []).filter(entry => entry.gameweekId === selectedWeekId), [history.data, selectedWeekId]);
   useEffect(() => {
     setDraft(Object.fromEntries(savedEntries.map(entry => [entry.slot, entry.playerId])));
-  }, [savedEntries]);
+    const publishedSetting = savedEntries[0]?.gameweek.idealFiveBonusesEnabled;
+    const selectedWeek = weeks.find(item => item.id === selectedWeekId);
+    setAwardBonuses(publishedSetting ?? ((selectedWeek?.number ?? 0) >= 8));
+  }, [savedEntries, selectedWeekId, weeks]);
 
   const save = useMutation({
-    mutationFn: () => api.saveIdealFive(selectedWeekId, slots.map(slot => ({ slot: slot.id, playerId: draft[slot.id]! }))),
+    mutationFn: () => api.saveIdealFive(selectedWeekId, slots.map(slot => ({ slot: slot.id, playerId: draft[slot.id]! })), awardBonuses),
     onSuccess: async () => { toast.success(t("idealFive.saved")); await queryClient.invalidateQueries(); },
     onError: error => toast.error(error.message),
   });
@@ -118,6 +122,11 @@ export function IdealFivePage() {
           </fieldset>;
         })}
       </div>
+      <fieldset className="ideal-five-reward-mode">
+        <legend>{t("idealFive.rewardMode")}</legend>
+        <label><input type="radio" name="ideal-five-reward-mode" checked={!awardBonuses} onChange={() => setAwardBonuses(false)} /> {t("idealFive.publishOnly")}</label>
+        <label><input type="radio" name="ideal-five-reward-mode" checked={awardBonuses} onChange={() => setAwardBonuses(true)} /> {t("idealFive.publishRewards")}</label>
+      </fieldset>
       {!savingReady && <p className="ideal-five-editor__hint">{t("idealFive.incomplete")}</p>}
       <button className="button" type="button" disabled={!savingReady || save.isPending} onClick={() => save.mutate()}>{save.isPending ? t("idealFive.saving") : t("idealFive.save")}</button>
     </section>}

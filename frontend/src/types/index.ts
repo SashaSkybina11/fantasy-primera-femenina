@@ -70,6 +70,7 @@ export type GameweekStatus =
   | "CALCULATING"
   | "COMPLETED";
 export type Gameweek = {
+  idealFiveBonusesEnabled?: boolean;
   marketOverride?: boolean | null;
   marketIsOpen?: boolean;
   id: string;

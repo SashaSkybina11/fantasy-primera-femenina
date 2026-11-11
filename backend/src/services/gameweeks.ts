@@ -145,7 +145,9 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
   const statsByPlayer = new Map(stats.map((item) => [item.playerId, item]));
   const adjustments = await tx.userPointAdjustment.groupBy({ by: ["userId"], where: { gameweekId }, _sum: { points: true } });
   const awardDetails = await tx.postponedMatchAward.findMany({ where: { gameweekId }, include: { snapshot: { include: { match: { include: { teams: { include: { club: true } } } } } } } });
-  const idealFivePlayerIds = new Set((await tx.gameweekIdealFiveEntry.findMany({ where: { gameweekId }, select: { playerId: true } })).map(entry => entry.playerId));
+  const idealFivePlayerIds = gameweek.idealFiveBonusesEnabled
+    ? new Set((await tx.gameweekIdealFiveEntry.findMany({ where: { gameweekId }, select: { playerId: true } })).map(entry => entry.playerId))
+    : new Set<string>();
   const adjustmentsByUser = new Map(adjustments.map((item) => [item.userId, item._sum.points ?? 0]));
   const awardDetailsByUser = new Map<string, typeof awardDetails>();
   for (const award of awardDetails) awardDetailsByUser.set(award.userId, [...(awardDetailsByUser.get(award.userId) ?? []), award]);

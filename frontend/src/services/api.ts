@@ -710,7 +710,7 @@ export const api = {
   adminUsers: () => request<AdminUser[]>("/admin/users"),
   currentGameweek: () => request<Gameweek | null>("/gameweeks/current"),
   idealFiveHistory: () => request<import("../types").IdealFiveEntry[]>("/gameweeks/ideal-five"),
-  saveIdealFive: (gameweekId: string, players: Array<{ playerId: string; slot: import("../types").IdealFiveSlot }>) => request<import("../types").IdealFiveEntry[]>(`/gameweeks/${gameweekId}/ideal-five`, { method: "PUT", body: JSON.stringify({ players }) }),
+  saveIdealFive: (gameweekId: string, players: Array<{ playerId: string; slot: import("../types").IdealFiveSlot }>, awardBonuses: boolean) => request<import("../types").IdealFiveEntry[]>(`/gameweeks/${gameweekId}/ideal-five`, { method: "PUT", body: JSON.stringify({ players, awardBonuses }) }),
   scoringRules: () =>
     request<Record<string, number>>("/gameweeks/scoring-rules"),
   overallLeaderboard: () => request<LeaderboardRow[]>("/gameweeks/leaderboard"),
