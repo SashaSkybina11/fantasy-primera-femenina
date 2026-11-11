@@ -14,8 +14,8 @@ const slots: Array<{ id: IdealFiveSlot; key: TranslationKey; role: Player["role"
   { id: "GOALKEEPER", key: "idealFive.goalkeeper", role: "PORTERA", goalkeeper: true },
   { id: "PIVOT", key: "idealFive.slotPivot", role: "PIVOT" },
   { id: "CLOSER", key: "idealFive.slotCloser", role: "CIERRE" },
-  { id: "WINGER_ONE", key: "idealFive.slotWingerOne", role: "ALA" },
-  { id: "WINGER_TWO", key: "idealFive.slotWingerTwo", role: "ALA" },
+  { id: "WINGER_ONE", key: "idealFive.slotWinger", role: "ALA" },
+  { id: "WINGER_TWO", key: "idealFive.slotWinger", role: "ALA" },
 ];
 
 function IdealPlayerCard({ entry, label }: { entry?: IdealFiveEntry; label: string }) {
