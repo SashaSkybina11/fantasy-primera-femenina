@@ -46,11 +46,16 @@ export function IdealFivePage() {
   const adminWeeks = useQuery({ queryKey: ["admin-gameweeks"], queryFn: api.adminGameweeks, enabled: isAdmin });
   const clubs = useQuery({ queryKey: ["clubs"], queryFn: api.clubs, enabled: isAdmin });
   const players = useQuery({ queryKey: ["ideal-five-players"], queryFn: () => api.players({}), enabled: isAdmin });
-  const weeks = useMemo(() => isAdmin ? adminWeeks.data ?? [] : Array.from(new Map((history.data ?? []).map(entry => [entry.gameweekId, entry.gameweek])).values()).sort((a, b) => b.number - a.number), [adminWeeks.data, history.data, isAdmin]);
+  const weeks = useMemo<Gameweek[]>(() => {
+    if (isAdmin) return adminWeeks.data ?? [];
+    const published = Array.from(new Map((history.data ?? []).map(entry => [entry.gameweekId, entry.gameweek])).values());
+    if (currentWeek.data && !published.some(item => item.id === currentWeek.data!.id)) published.push(currentWeek.data);
+    return published.sort((a, b) => b.number - a.number);
+  }, [adminWeeks.data, currentWeek.data, history.data, isAdmin]);
 
   useEffect(() => {
     if (selectedWeekId) return;
-    const fallback = (isAdmin ? currentWeek.data?.id : undefined) ?? weeks[0]?.id ?? currentWeek.data?.id;
+    const fallback = currentWeek.data?.id ?? weeks[0]?.id;
     if (fallback) setSelectedWeekId(fallback);
   }, [currentWeek.data, isAdmin, selectedWeekId, weeks]);
 
@@ -117,8 +122,8 @@ export function IdealFivePage() {
       <button className="button" type="button" disabled={!savingReady || save.isPending} onClick={() => save.mutate()}>{save.isPending ? t("idealFive.saving") : t("idealFive.save")}</button>
     </section>}
 
-    {chosenEntries.length > 0 ? <section className="ideal-five-field" aria-label={heading}>
+    <section className="ideal-five-field" aria-label={heading}>
       {slots.map(slot => <IdealPlayerCard key={slot.id} entry={chosenBySlot.get(slot.id)} label={t(slot.key)} />)}
-    </section> : <p className="ideal-five-empty">{isAdmin ? t("idealFive.adminHelp") : weeks.length ? t("idealFive.empty") : t("idealFive.noRounds")}</p>}
+    </section>
   </div>;
 }

@@ -6839,19 +6839,17 @@ form.admin-card.match-create {
   font-weight: 700;
   text-align: center;
 }
-.rules-source-link {
-  width: 40px;
-  height: 40px;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  font-size: 20px;
-  text-decoration: none;
-}
-.rules-source-link:hover,
 .ideal-five-source:hover {
   color: var(--text);
 }
+.rules-ideal-five > h2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.rules-ideal-five > h2 svg { font-size: 1.5em; }
 .ideal-five-field {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
