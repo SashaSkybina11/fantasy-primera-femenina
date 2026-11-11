@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "../contexts/LocaleContext";
 import { api, formatEuro } from "../services/api";
-import { FaFaceGrinStars } from "react-icons/fa6";
 
 export function RulesPage() {
   const { locale, t } = useLocale();
@@ -53,7 +52,7 @@ export function RulesPage() {
           </ul>
         </article>
         <article className="rules-ideal-five">
-          <h2><FaFaceGrinStars aria-hidden="true" /> {t("rules.captainTitle")}</h2>
+          <h2><span aria-hidden="true">🌟</span> {t("rules.captainTitle")}</h2>
           <p>{t("rules.idealFiveIntro")}</p>
           <p>{t("rules.idealFivePoints")}</p>
           <p>{t("rules.idealFiveBench")}</p>

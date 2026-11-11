@@ -6844,12 +6844,11 @@ form.admin-card.match-create {
 }
 .rules-ideal-five > h2 {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 8px;
   text-align: center;
 }
-.rules-ideal-five > h2 svg { font-size: 1.5em; }
 .ideal-five-field {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
