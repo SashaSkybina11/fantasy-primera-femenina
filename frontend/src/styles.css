@@ -6816,6 +6816,94 @@ form.admin-card.match-create {
   box-shadow: inset 0 0 0 3px #fbe8b0;
 }
 
+.ideal-five-page .page-heading h1 {
+  max-width: 900px;
+}
+.ideal-five-source,
+.rules-source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent-strong, var(--accent));
+}
+.ideal-five-source {
+  width: fit-content;
+  margin-top: 8px;
+  font-weight: 700;
+}
+.rules-source-link {
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 20px;
+  text-decoration: none;
+}
+.rules-source-link:hover,
+.ideal-five-source:hover {
+  color: var(--text);
+}
+.ideal-five-field {
+  display: grid;
+  gap: clamp(18px, 4vw, 34px);
+  max-width: 900px;
+  margin: 28px auto 18px;
+  padding: clamp(18px, 4vw, 36px);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 12%, transparent), transparent 68%),
+    var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.ideal-five-slot {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--text);
+  text-align: center;
+}
+.ideal-five-slot__portrait {
+  display: grid;
+  place-items: center;
+  width: clamp(66px, 14vw, 106px);
+  aspect-ratio: 1;
+  border: 2px solid color-mix(in srgb, var(--accent) 65%, var(--border));
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--surface) 82%, var(--accent));
+  color: var(--muted);
+  font-size: 24px;
+  font-weight: 800;
+  box-shadow: 0 5px 18px color-mix(in srgb, var(--text) 12%, transparent);
+}
+.ideal-five-slot strong {
+  max-width: 100%;
+  font-size: clamp(12px, 2vw, 15px);
+  overflow-wrap: anywhere;
+}
+.ideal-five-field__players {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(8px, 3vw, 28px);
+}
+.ideal-five-empty {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--muted);
+  text-align: center;
+}
+@media (max-width: 480px) {
+  .ideal-five-field { border-radius: 18px; }
+  .ideal-five-field__players { gap: 5px; }
+  .ideal-five-slot { gap: 6px; }
+}
+
 .fut-player-card::before {
   /* content: "";
   position: absolute;

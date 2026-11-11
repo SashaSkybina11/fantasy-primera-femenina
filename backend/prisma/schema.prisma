@@ -20,6 +20,14 @@ enum PlayerRole {
   PIVOT
 }
 
+enum IdealFiveSlot {
+  GOALKEEPER
+  PIVOT
+  CLOSER
+  WINGER_ONE
+  WINGER_TWO
+}
+
 enum SquadStatus {
   STARTER
   BENCH
@@ -168,6 +176,7 @@ model Player {
   fantasyTeams    FantasyTeamPlayer[]
   priceChanges    PlayerPriceChange[]
   gameweekStats   PlayerGameweekStats[]
+  idealFiveEntries GameweekIdealFiveEntry[]
   snapshotEntries UserGameweekPlayer[]
   postponedSnapshotEntries PostponedMatchSquadPlayer[]
   transfers       UserTransfer[]
@@ -200,6 +209,7 @@ model Gameweek {
   squads         UserGameweekSquad[]
   priceChanges   PlayerPriceChange[]
   playerStats    PlayerGameweekStats[]
+  idealFiveEntries GameweekIdealFiveEntry[]
   userPoints     UserGameweekPoints[]
   adjustments    UserPointAdjustment[]
   winners        GameweekWinner[]
@@ -209,6 +219,20 @@ model Gameweek {
   updatedAt      DateTime              @updatedAt
 
   @@index([status, deadlineAt])
+}
+
+model GameweekIdealFiveEntry {
+  id         String        @id @default(cuid())
+  gameweekId String
+  playerId   String
+  slot       IdealFiveSlot
+  gameweek   Gameweek      @relation(fields: [gameweekId], references: [id], onDelete: Cascade)
+  player     Player        @relation(fields: [playerId], references: [id], onDelete: Restrict)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@unique([gameweekId, slot])
+  @@unique([gameweekId, playerId])
 }
 
 model GameweekControl {
@@ -594,6 +618,7 @@ model PlayerPriceChange {
   yellowCardsPriceDelta Int @map("yellowCardsDelta")
   redCardsPriceDelta Int @map("redCardsDelta")
   goalkeeperPriceDelta Int @map("goalkeeperDelta")
+  idealFivePriceDelta Int @default(0)
   // Legacy storage only; cleared to null on recalculation.
   teamWinBonus Int?
   player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)

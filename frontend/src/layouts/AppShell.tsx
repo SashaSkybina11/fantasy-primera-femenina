@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { IoSunnyOutline, IoMoonOutline, IoMenuOutline, IoHomeOutline, IoFootballOutline, IoTrophyOutline, IoCalendarOutline, IoShieldOutline, IoPersonOutline, IoPeopleCircleOutline, IoPodiumOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
-import { FaRankingStar } from "react-icons/fa6";
+import { FaFaceGrinStars, FaRankingStar } from "react-icons/fa6";
 import { FaInstagram, FaShoppingCart, FaUsers } from "react-icons/fa";
 import { RiTargetFill } from "react-icons/ri";
 import { MdOutlineEuroSymbol, MdAdminPanelSettings, MdAlternateEmail, MdSupportAgent } from "react-icons/md";
@@ -33,10 +33,11 @@ type IconName =
   | "teams"
   | "profile"
   | "admin"
-  | "standings";
+  | "standings"
+  | "ideal-five";
 
 function FootballIcon({ name }: { name: IconName }) {
-  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: FaShoppingCart, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: FaUsers, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: RiTargetFill, admin: MdAdminPanelSettings, standings: FaRankingStar };
+  const icons = { home: IoHomeOutline, "my-team": IoFootballOutline, purchase: FaShoppingCart, trophy: IoTrophyOutline, calendar: IoCalendarOutline, teams: IoShieldOutline, participants: FaUsers, friends: IoPeopleCircleOutline, ranking: IoPodiumOutline, rules: LuBookOpenText, profile: IoPersonOutline, prices: MdOutlineEuroSymbol, scorers: RiTargetFill, admin: MdAdminPanelSettings, standings: FaRankingStar, "ideal-five": FaFaceGrinStars };
   const Icon = icons[name];
   return <Icon aria-hidden="true" />;
 }
@@ -74,6 +75,7 @@ function NavLinks({
     { to: "/player-prices", label: t("prices.title"), icon: "prices" as const },
     { to: "/standings", label: t("calendar.standingsTitle"), icon: "standings" as const },
     { to: "/scorers", label: t("scorers.title"), icon: "scorers" as const },
+    { to: "/ideal-five", label: t("nav.idealFive"), icon: "ideal-five" as const },
     { to: "/league", label: t("nav.league"), icon: "participants" as const },
     { to: "/teams", label: t("nav.teams"), icon: "teams" as const },
     { to: "/profile", label: t("nav.profile"), icon: "profile" as const },

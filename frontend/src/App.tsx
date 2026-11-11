@@ -31,6 +31,7 @@ import { AdminNotificationsPage } from "./pages/AdminNotificationsPage";
 import { SupportPage } from "./pages/SupportPage";
 import { AdminSupportPage } from "./pages/AdminSupportPage";
 import { AdminPostponedMatchesPage } from "./pages/AdminPostponedMatchesPage";
+import { IdealFivePage } from "./pages/IdealFivePage";
 
 function ProtectedLayout() {
   const { user, isLoading } = useAuth();
@@ -70,6 +71,7 @@ export function App() {
         <Route path="/player-prices" element={<PlayerPricesPage />} />
         <Route path="/standings" element={<ClubStandingsPage />} />
         <Route path="/scorers" element={<ScorersPage />} />
+        <Route path="/ideal-five" element={<IdealFivePage />} />
         <Route path="/my-team" element={<MyTeamPage />} />
         <Route path="/purchase-players" element={<PurchasePlayersPage />} />
         <Route path="/results" element={<ResultsPage />} />

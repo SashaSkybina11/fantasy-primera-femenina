@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "../contexts/LocaleContext";
 import { api, formatEuro } from "../services/api";
+import { FaRegNewspaper } from "react-icons/fa6";
 
 export function RulesPage() {
   const { locale, t } = useLocale();
@@ -53,7 +54,11 @@ export function RulesPage() {
         </article>
         <article>
           <h2>© {t("rules.captainTitle")}</h2>
-          <p>{t("rules.captainBody")}</p>
+          <p>{t("rules.idealFiveIntro")}</p>
+          <a className="rules-source-link" href="https://rfef.es/es/noticias/futbol-sala/primera-femenina-futsal?baseFilters=79393" target="_blank" rel="noreferrer" aria-label={t("idealFive.source")} title={t("idealFive.source")}><FaRegNewspaper aria-hidden="true" /></a>
+          <p>{t("rules.idealFivePoints")}</p>
+          <p>{t("rules.idealFiveBench")}</p>
+          <p>{t("rules.idealFivePrice")}</p>
         </article>
         <article>
           <h2>🔄 {t("rules.marketTitle")}</h2>

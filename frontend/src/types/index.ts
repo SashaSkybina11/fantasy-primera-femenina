@@ -82,6 +82,8 @@ export type Gameweek = {
   deadlineAt: string;
   completedAt: string | null;
 };
+export type IdealFiveSlot = "GOALKEEPER" | "PIVOT" | "CLOSER" | "WINGER_ONE" | "WINGER_TWO";
+export type IdealFiveEntry = { id: string; gameweekId: string; playerId: string; slot: IdealFiveSlot; gameweek: Gameweek; player: Player & { club: Club } };
 export type LeaderboardRow = {
   id?: string;
   userId?: string;
