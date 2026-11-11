@@ -6819,6 +6819,12 @@ form.admin-card.match-create {
 .ideal-five-page .page-heading h1 {
   max-width: 900px;
 }
+.ideal-five-page > .page-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 .ideal-five-source,
 .rules-source-link {
   display: inline-flex;
@@ -6829,7 +6835,9 @@ form.admin-card.match-create {
 .ideal-five-source {
   width: fit-content;
   margin-top: 8px;
+  margin-inline: auto;
   font-weight: 700;
+  text-align: center;
 }
 .rules-source-link {
   width: 40px;
@@ -6846,7 +6854,9 @@ form.admin-card.match-create {
 }
 .ideal-five-field {
   display: grid;
-  gap: clamp(18px, 4vw, 34px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(14px, 3vw, 28px);
   max-width: 900px;
   margin: 28px auto 18px;
   padding: clamp(18px, 4vw, 36px);
@@ -6857,18 +6867,20 @@ form.admin-card.match-create {
     var(--surface);
   box-shadow: var(--shadow-sm);
 }
-.ideal-five-slot {
+.ideal-five-card {
   display: grid;
   justify-items: center;
-  gap: 8px;
+  gap: 7px;
   min-width: 0;
   color: var(--text);
   text-align: center;
 }
-.ideal-five-slot__portrait {
+.ideal-five-card:first-child { grid-column: 2 / 4; }
+.ideal-five-card__portrait {
+  position: relative;
   display: grid;
   place-items: center;
-  width: clamp(66px, 14vw, 106px);
+  width: clamp(74px, 13vw, 112px);
   aspect-ratio: 1;
   border: 2px solid color-mix(in srgb, var(--accent) 65%, var(--border));
   border-radius: 50%;
@@ -6877,17 +6889,107 @@ form.admin-card.match-create {
   font-size: 24px;
   font-weight: 800;
   box-shadow: 0 5px 18px color-mix(in srgb, var(--text) 12%, transparent);
+  overflow: hidden;
 }
-.ideal-five-slot strong {
+.ideal-five-card__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ideal-five-card__portrait b {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 2px 6px;
+  border-radius: 8px 0 0;
+  background: var(--accent);
+  color: var(--text);
+  font-size: 11px;
+}
+.ideal-five-card__name {
   max-width: 100%;
   font-size: clamp(12px, 2vw, 15px);
   overflow-wrap: anywhere;
 }
-.ideal-five-field__players {
+.ideal-five-card__club {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.ideal-five-card__club span:last-child {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ideal-five-card__club .club-logo,
+.ideal-five-card__club .club-mark {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  font-size: 8px;
+}
+.ideal-five-card__position {
+  color: var(--muted);
+  font-size: 11px;
+}
+.ideal-five-editor {
+  max-width: 1000px;
+  margin: 22px auto;
+  padding: clamp(16px, 3vw, 24px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+.ideal-five-editor > p { margin-top: 0; color: var(--muted); }
+.ideal-five-editor__slots {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: start;
-  gap: clamp(8px, 3vw, 28px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ideal-five-editor__slot {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.ideal-five-editor__slot:first-child { grid-column: 1 / -1; }
+.ideal-five-editor__slot legend { padding: 0 5px; font-weight: 800; }
+.ideal-five-editor__slot label,
+.ideal-five-round-picker {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+.ideal-five-editor select,
+.ideal-five-round-picker select {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.ideal-five-round-picker {
+  max-width: 340px;
+  margin: 16px 0;
+}
+.ideal-five-card--empty .ideal-five-card__portrait {
+  font-size: 22px;
+  font-weight: 800;
 }
 .ideal-five-empty {
   max-width: 900px;
@@ -6900,8 +7002,10 @@ form.admin-card.match-create {
 }
 @media (max-width: 480px) {
   .ideal-five-field { border-radius: 18px; }
-  .ideal-five-field__players { gap: 5px; }
-  .ideal-five-slot { gap: 6px; }
+  .ideal-five-field { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 8px; }
+  .ideal-five-card:first-child { grid-column: 1 / -1; }
+  .ideal-five-editor__slots { grid-template-columns: minmax(0, 1fr); }
+  .ideal-five-editor__slot:first-child { grid-column: auto; }
 }
 
 .fut-player-card::before {
