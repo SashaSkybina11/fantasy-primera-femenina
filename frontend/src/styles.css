@@ -6873,7 +6873,11 @@ form.admin-card.match-create {
   color: var(--text);
   text-align: center;
 }
-.ideal-five-card:first-child { grid-column: 2 / 4; }
+.ideal-five-card:first-child { grid-column: 2 / 4; grid-row: 1; }
+.ideal-five-card:nth-child(2) { grid-column: 1; grid-row: 2; }
+.ideal-five-card:nth-child(3) { grid-column: 2; grid-row: 2; }
+.ideal-five-card:nth-child(4) { grid-column: 3; grid-row: 2; }
+.ideal-five-card:nth-child(5) { grid-column: 4; grid-row: 2; }
 .ideal-five-card__portrait {
   position: relative;
   display: grid;
@@ -6977,13 +6981,37 @@ form.admin-card.match-create {
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 10px;
-  background: var(--surface);
+  background-color: var(--surface);
   color: var(--text);
   font: inherit;
 }
 .ideal-five-round-picker {
-  max-width: 340px;
-  margin: 16px 0;
+  position: relative;
+  width: min(340px, 100%);
+  margin: 16px auto;
+  text-align: center;
+}
+.ideal-five-round-picker select {
+  appearance: none;
+  padding: 10px 42px 10px 14px;
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  border-radius: 13px;
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--text) 8%, transparent);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color .16s ease, box-shadow .16s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23818b9c' d='m3.2 5.7 4.8 4.8 4.8-4.8 1.1 1.1L8 12.7 2.1 6.8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.ideal-five-round-picker select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+.ideal-five-round-picker option {
+  background: var(--surface);
+  color: var(--text);
 }
 .ideal-five-card--empty .ideal-five-card__portrait {
   font-size: 22px;
@@ -7001,9 +7029,13 @@ form.admin-card.match-create {
 @media (max-width: 480px) {
   .ideal-five-field { border-radius: 18px; }
   .ideal-five-field { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 8px; }
-  .ideal-five-card:first-child { grid-column: 1 / -1; }
+  .ideal-five-card:first-child { grid-column: 1 / -1; grid-row: auto; }
+  .ideal-five-card:nth-child(n + 2) { grid-column: auto; grid-row: auto; }
   .ideal-five-editor__slots { grid-template-columns: minmax(0, 1fr); }
   .ideal-five-editor__slot:first-child { grid-column: auto; }
+}
+@media (max-width: 1024px) {
+  .ideal-five-round-picker { margin-inline: auto; }
 }
 
 .fut-player-card::before {
