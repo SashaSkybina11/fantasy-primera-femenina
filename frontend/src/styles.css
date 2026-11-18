@@ -5100,8 +5100,9 @@ dialog.app-modal.share-team-modal {
 .squad-player-details__portrait {
   display: grid;
   place-items: center;
-  width: 50%;
-  height: clamp(48px, 7vw, 82px);
+  width: 45%;
+  height: clamp(48px, 9vw, 82px);
+  margin-top: -4px;
   overflow: hidden;
   border-radius: 10px;
   background-color: #ffffffcf;
