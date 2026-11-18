@@ -1528,17 +1528,20 @@ select:focus {
 .player-card h3 {
   margin-top: 1.1rem;
   font-size: 1rem;
+  text-align: center;
 }
 .player-card p {
   margin-top: 0.3rem;
   color: var(--muted);
   font-size: 0.7rem;
+  text-align: center;
 }
 .player-card__meta {
   margin-top: 0.55rem;
   color: var(--muted);
   font-size: 0.69rem;
   line-height: 1.45;
+  text-align: center;
 }
 .player-card footer {
   display: flex;
@@ -5068,10 +5071,7 @@ dialog.app-modal.share-team-modal {
   height: auto;
   padding: 34px 8px 8px;
   border-radius: 8%;
-  background:
-    radial-gradient(ellipse at 50% 8%, #fff9df 0, transparent 48%),
-    linear-gradient(145deg, #ffc400, #ffeeb7 35%, #ffcf2e 68%, #ffedb2);
-  box-shadow: inset 0 0 0 2px #fbe8b0, 0 6px 16px #00000024;
+  box-shadow: inset 0 0 0 2px #ffffff, 0 6px 16px #00000024;
   color: #362811;
 }
 .squad-player-details {
@@ -5101,6 +5101,8 @@ dialog.app-modal.share-team-modal {
   width: 50%;
   height: clamp(48px, 7vw, 82px);
   overflow: hidden;
+  border-radius: 10px;
+  background-color: #ffffffcf;
 }
 .squad-player-details__portrait img {
   width: 100%;
@@ -5169,15 +5171,15 @@ dialog.app-modal.share-team-modal {
 }
 .squad-icon--captain {
   left: 0;
-  color: #858b96;
+  color: #fff;
 }
 .captain-status-star,
 .squad-icon--captain.is-captain {
-  color: #f4b400;
+  color: #000;
 }
 .squad-icon--remove {
   right: 0;
-  color: var(--danger);
+  color: #ff000e;
 }
 .squad-bench-button {
   margin-top: auto;
@@ -5304,8 +5306,7 @@ dialog.app-modal.share-team-modal {
   background: var(--fut-card-background);
 }
 .squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) {
-  background:
-    var(--fut-card-background);
+  background: var(--fut-card-background);
 }
 
 .squad-player-card--bench {
@@ -7299,7 +7300,7 @@ form.admin-card.match-create {
     font-size: 0.8rem;
   }
   .squad-field--editable .squad-player-card h3 {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     line-height: 1.25;
   }
 }
