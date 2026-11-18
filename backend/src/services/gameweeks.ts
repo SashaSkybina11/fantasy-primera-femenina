@@ -166,10 +166,10 @@ export async function recalculateGameweek(tx: Db, gameweekId: string) {
       playerPoints += basePoints;
       if (item.isCaptain) captainBonus += basePoints;
       starterGoals += stat?.goals ?? 0;
-      return { playerId: item.playerId, name: item.player.name, isCaptain: item.isCaptain, basePoints, points };
+      return { playerId: item.playerId, name: item.player.name, isCaptain: item.isCaptain, basePoints, points, idealFiveBonus: idealBonus };
     });
     for (const item of squad.players.filter(entry => entry.status !== SquadStatus.STARTER && idealFivePlayerIds.has(entry.playerId))) {
-      breakdown.push({ playerId: item.playerId, name: item.player.name, isCaptain: false, basePoints: 3, points: 3 });
+      breakdown.push({ playerId: item.playerId, name: item.player.name, isCaptain: false, basePoints: 0, points: 3, idealFiveBonus: 3 });
     }
     const adjustmentPoints = adjustmentsByUser.get(squad.userId) ?? 0;
     const postponedForUser = awardDetailsByUser.get(squad.userId) ?? [];

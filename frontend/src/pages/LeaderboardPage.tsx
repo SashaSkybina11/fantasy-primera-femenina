@@ -70,6 +70,7 @@ export function LeaderboardPage() {
                   <span>
                     {entry.name}
                     {entry.isCaptain ? " 👑" : ""}
+                    {entry.idealFiveBonus ? ` · +${entry.idealFiveBonus} ${t("common.pointsShort")}` : ""}
                   </span>
                   <b>{entry.points} {t("common.pointsShort")}</b>
                 </div>

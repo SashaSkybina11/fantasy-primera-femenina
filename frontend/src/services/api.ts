@@ -727,6 +727,7 @@ export const api = {
           isCaptain: boolean;
           basePoints: number;
           points: number;
+          idealFiveBonus?: number;
         }>;
         gameweek: Gameweek;
       }>
@@ -736,7 +737,7 @@ export const api = {
       Array<{
         id: string;
         totalPoints: number;
-        breakdown: Array<{ playerId: string; name: string; isCaptain: boolean; basePoints: number; points: number }> | null;
+        breakdown: Array<{ playerId: string; name: string; isCaptain: boolean; basePoints: number; points: number; idealFiveBonus?: number }> | null;
         gameweek: Gameweek;
       }>
     >(`/gameweeks/history/${userId}`),
