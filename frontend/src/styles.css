@@ -1463,12 +1463,13 @@ select:focus {
   box-shadow: var(--shadow);
 }
 .player-card__photo {
-  width: 52px;
-  height: 52px;
-  flex: 0 0 52px;
+  width: 80px;
+  height: 80px;
+  flex: 0 0 80px;
   align-self: center;
   margin: 0 0 0.35rem;
   border-radius: 10px;
+  background-color: #fff;
   object-fit: cover;
 }
 .player-card__photo--empty {
@@ -1550,6 +1551,7 @@ select:focus {
 .player-card footer strong {
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
   font-size: 0.86rem;
+  text-align: center;
 }
 .player-card__notice {
   display: block;
