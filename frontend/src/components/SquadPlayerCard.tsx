@@ -42,7 +42,7 @@ export function SquadPlayerCard({
   const initialPrice = entry.player.initialPrice;
   const priceDelta = initialPrice == null ? null : entry.player.price - initialPrice;
   const priceClass = priceDelta === null || priceDelta === 0 ? "" : priceDelta > 0 ? "price-delta--up" : "price-delta--down";
-  const cardTier = entry.player.price < 4000 ? "bronze" : entry.player.price < 5500 ? "silver" : "gold";
+  const cardTier = entry.player.price < 4000 ? "bronze" : entry.player.price < 5500 ? "silver" : entry.player.price < 7000 ? "gold" : "diamond";
   const moveLabel =
     entry.status === "STARTER" ? t("squad.moveBench") : t("squad.moveStarter");
   if (compact) return <>

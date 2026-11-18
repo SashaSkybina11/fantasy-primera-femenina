@@ -5300,9 +5300,13 @@ dialog.app-modal.share-team-modal {
 .fut-tier--gold {
   --fut-card-background: radial-gradient(ellipse at 50% 8%, #fff9df 0, transparent 48%), linear-gradient(145deg, #ffc400, #ffeeb7 35%, #ffcf2e 68%, #ffedb2);
 }
+.fut-tier--diamond {
+  --fut-card-background: radial-gradient(ellipse at 50% 8%, #ffffff 0, transparent 48%), linear-gradient(145deg, #a8e8f5, #ffffff 35%, #b9d9ff 68%, #f0fdff);
+}
 .fut-player-card.fut-tier--bronze,
 .fut-player-card.fut-tier--silver,
-.fut-player-card.fut-tier--gold {
+.fut-player-card.fut-tier--gold,
+.fut-player-card.fut-tier--diamond {
   background: var(--fut-card-background);
 }
 .squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) {
