@@ -42,10 +42,11 @@ export function SquadPlayerCard({
   const initialPrice = entry.player.initialPrice;
   const priceDelta = initialPrice == null ? null : entry.player.price - initialPrice;
   const priceClass = priceDelta === null || priceDelta === 0 ? "" : priceDelta > 0 ? "price-delta--up" : "price-delta--down";
+  const cardTier = entry.player.price < 4000 ? "bronze" : entry.player.price < 5500 ? "silver" : "gold";
   const moveLabel =
     entry.status === "STARTER" ? t("squad.moveBench") : t("squad.moveStarter");
   if (compact) return <>
-    <article className={`squad-player-card squad-player-card--compact ${entry.status === "BENCH" ? "squad-player-card--bench" : ""}`}>
+    <article className={`squad-player-card squad-player-card--compact ${entry.status === "BENCH" ? "squad-player-card--bench" : `fut-tier--${cardTier}`}`}>
       {!readOnly && <>
         {entry.status === "STARTER" && <button className={`squad-icon squad-icon--captain ${entry.isCaptain ? "is-captain" : ""}`} aria-label={entry.isCaptain ? t("squad.removeCaptain") : t("squad.captain")} aria-pressed={entry.isCaptain} disabled={disabled} onClick={onCaptain}>★</button>}
         <button className="squad-icon squad-icon--remove" aria-label={t("squad.remove")} disabled={disabled} onClick={onRemove}><RxCross1 className="ui-cross" aria-hidden="true" /></button>
@@ -62,7 +63,7 @@ export function SquadPlayerCard({
       {!readOnly && <button className={entry.status === "BENCH" ? "squad-exchange-button" : "squad-bench-button"} aria-label={moveLabel} title={moveLabel} disabled={disabled} onClick={onMove}>{entry.status === "BENCH" ? <GoArrowRight className="ui-arrow" aria-hidden="true" /> : t("squad.moveStarter")}</button>}
     </article>
     {detailsOpen && createPortal(<Modal title={entry.player.name} onClose={() => setDetailsOpen(false)} className="squad-detail-modal fut-player-modal" hideCloseButton>
-      <article className="fut-player-card">
+      <article className={`fut-player-card fut-tier--${cardTier}`}>
       <button type="button" className="compact-modal__close" aria-label={t("friends.close")} onClick={() => setDetailsOpen(false)} autoFocus><RxCross1 className="ui-cross" aria-hidden="true" /></button>
       <div className="fut-player-card__portrait">
         {photo && failedPhoto !== photo

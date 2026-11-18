@@ -5096,7 +5096,7 @@ dialog.app-modal.share-team-modal {
 .squad-player-details__portrait {
   display: grid;
   place-items: center;
-  width: 100%;
+  width: 50%;
   height: clamp(48px, 7vw, 82px);
   overflow: hidden;
 }
@@ -5285,9 +5285,25 @@ dialog.app-modal.share-team-modal {
 }
 .squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench),
 :root[data-theme="dark"] .squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) {
+  background: var(--fut-card-background);
+}
+.fut-tier--bronze {
+  --fut-card-background: radial-gradient(ellipse at 50% 8%, #fff1dc 0, transparent 48%), linear-gradient(145deg, #a85d32, #e8b889 35%, #bd7845 68%, #f2d2a8);
+}
+.fut-tier--silver {
+  --fut-card-background: radial-gradient(ellipse at 50% 8%, #ffffff 0, transparent 48%), linear-gradient(145deg, #8e969f, #e8edf2 35%, #aeb7c1 68%, #f5f7fa);
+}
+.fut-tier--gold {
+  --fut-card-background: radial-gradient(ellipse at 50% 8%, #fff9df 0, transparent 48%), linear-gradient(145deg, #ffc400, #ffeeb7 35%, #ffcf2e 68%, #ffedb2);
+}
+.fut-player-card.fut-tier--bronze,
+.fut-player-card.fut-tier--silver,
+.fut-player-card.fut-tier--gold {
+  background: var(--fut-card-background);
+}
+.squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) {
   background:
-    radial-gradient(ellipse at 50% 8%, #fff9df 0, transparent 48%),
-    linear-gradient(145deg, #ffc400, #ffeeb7 35%, #ffcf2e 68%, #ffedb2);
+    var(--fut-card-background);
 }
 
 .squad-player-card--bench {
