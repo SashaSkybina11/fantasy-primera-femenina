@@ -1553,8 +1553,9 @@ select:focus {
 }
 .player-card footer strong {
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 0.86rem;
+  font-size: 1.1rem;
   text-align: center;
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
 }
 .player-card__notice {
   display: block;
@@ -1563,6 +1564,7 @@ select:focus {
   font-size: 0.67rem;
   font-weight: 700;
   line-height: 1.35;
+  text-align: center;
 }
 .purchase-panel {
   overflow: hidden;

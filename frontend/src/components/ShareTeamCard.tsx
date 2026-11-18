@@ -257,11 +257,29 @@ async function drawPoster(
     ctx.shadowBlur = 22;
     ctx.shadowOffsetY = 12;
     drawRoundedRect(ctx, x, y, cardW, cardH, 28);
-    ctx.fillStyle = "#081a35";
+    const tierColors = entry.player.price < 4000
+      ? ["#fff1dc", "#a85d32", "#e8b889", "#bd7845", "#f2d2a8"]
+      : entry.player.price < 5500
+        ? ["#ffffff", "#8e969f", "#e8edf2", "#aeb7c1", "#f5f7fa"]
+        : entry.player.price < 7000
+          ? ["#fff9df", "#ffc400", "#ffeeb7", "#ffcf2e", "#ffedb2"]
+          : ["#ffffff", "#a8e8f5", "#ffffff", "#b9d9ff", "#f0fdff"];
+    const cardGradient = ctx.createLinearGradient(x, y, x + cardW, y + cardH);
+    cardGradient.addColorStop(0, tierColors[1]!);
+    cardGradient.addColorStop(0.35, tierColors[2]!);
+    cardGradient.addColorStop(0.68, tierColors[3]!);
+    cardGradient.addColorStop(1, tierColors[4]!);
+    ctx.fillStyle = cardGradient;
     ctx.fill();
     ctx.restore();
-    ctx.strokeStyle = entry.isCaptain ? "#ffc400" : "rgba(255,255,255,.72)";
-    ctx.lineWidth = entry.isCaptain ? 6 : 3;
+    const highlight = ctx.createRadialGradient(cx, y + 20, 0, cx, y + 20, cardW * 0.72);
+    highlight.addColorStop(0, tierColors[0]!);
+    highlight.addColorStop(1, "rgba(255,255,255,0)");
+    drawRoundedRect(ctx, x, y, cardW, cardH, 28);
+    ctx.fillStyle = highlight;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.9)";
+    ctx.lineWidth = entry.isCaptain ? 4 : 2;
     drawRoundedRect(ctx, x, y, cardW, cardH, 28);
     ctx.stroke();
 
@@ -270,7 +288,7 @@ async function drawPoster(
       portraitSize = 82;
     ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, portraitY + portraitSize / 2, portraitSize / 2, 0, Math.PI * 2);
+    ctx.roundRect(portraitX, portraitY, portraitSize, portraitSize, 12);
     ctx.clip();
     if (photos[index])
       drawCover(
