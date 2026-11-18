@@ -104,6 +104,7 @@ export function MemberTeamPage() {
           status="STARTER"
           players={starterPlayers}
           readOnly
+          pitchView
         />
         <SquadSection
           title={t("team.bench")}

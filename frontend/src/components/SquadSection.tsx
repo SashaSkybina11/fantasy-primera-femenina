@@ -15,6 +15,7 @@ export function SquadSection({
   onChange,
   onRemove,
   onAdd,
+  pitchView = false,
 }: {
   title: string;
   subtitle: string;
@@ -22,6 +23,7 @@ export function SquadSection({
   players: SquadEntry[];
   showEmptySlots?: boolean;
   readOnly?: boolean;
+  pitchView?: boolean;
   disabled?: boolean;
   onMove?: (entry: SquadEntry) => void;
   onCaptain?: (entry: SquadEntry) => void;
@@ -75,7 +77,7 @@ export function SquadSection({
       </header>
 
       {status === "STARTER" ? (
-        <div className={`squad-field ${onAdd ? "squad-field--editable" : ""}`}>
+        <div className={`squad-field ${onAdd || pitchView ? "squad-field--editable" : ""}`}>
           <div className="squad-field__goalkeeper">
             {goalkeeper ? (
               renderPlayer(goalkeeper)

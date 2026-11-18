@@ -5031,6 +5031,13 @@ dialog.app-modal.share-team-modal {
   padding: var(--field-block-padding) 10px;
   background: repeating-linear-gradient(90deg, #ffffff09 0, #ffffff09 56px, #00000006 56px, #00000006 112px), linear-gradient(180deg, #76582b, #795c34);
 }
+.squad-field--editable:not(:has(.squad-slot--field)) {
+  min-height: 680px;
+  grid-template-rows: auto 1fr;
+  background:
+    repeating-linear-gradient(90deg, #ffffff09 0, #ffffff09 56px, #00000006 56px, #00000006 112px),
+    linear-gradient(180deg, #76582b, #795c34);
+}
 .squad-field--editable .squad-field__goalkeeper,
 .squad-field--editable .squad-field__players {
   position: relative;
@@ -5280,6 +5287,7 @@ dialog.app-modal.share-team-modal {
   outline-offset: 2px;
 }
 @media (max-width: 599px) {
+  .squad-field--editable:not(:has(.squad-slot--field)) { min-height: 500px; }
   .squad-field--editable .squad-bench-button {
     min-height: 32px;
     padding: 4px 6px;
