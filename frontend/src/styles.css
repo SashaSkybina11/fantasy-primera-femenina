@@ -1462,6 +1462,23 @@ select:focus {
   transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
+.player-card__photo {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  align-self: center;
+  margin: 0 0 0.35rem;
+  border-radius: 10px;
+  object-fit: cover;
+}
+.player-card__photo--empty {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: var(--surface-soft);
+  font-size: 34px;
+}
+.player-card__photo--empty svg { width: 28px; height: 28px; }
 .player-card__top {
   display: flex;
   align-items: center;
@@ -5042,6 +5059,19 @@ dialog.app-modal.share-team-modal {
 .squad-player-card--compact {
   position: relative;
 }
+.squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) {
+  align-items: center;
+  gap: 4px;
+  min-height: 0;
+  height: auto;
+  padding: 34px 8px 8px;
+  border-radius: 8%;
+  background:
+    radial-gradient(ellipse at 50% 8%, #fff9df 0, transparent 48%),
+    linear-gradient(145deg, #ffc400, #ffeeb7 35%, #ffcf2e 68%, #ffedb2);
+  box-shadow: inset 0 0 0 2px #fbe8b0, 0 6px 16px #00000024;
+  color: #362811;
+}
 .squad-player-details {
   display: flex;
   flex-direction: column;
@@ -5054,6 +5084,61 @@ dialog.app-modal.share-team-modal {
   background: transparent;
   cursor: pointer;
   font: inherit;
+}
+.squad-field--editable .squad-player-details {
+  flex: 1 1 auto;
+  min-height: 0;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 0;
+  color: #362811;
+}
+.squad-player-details__portrait {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: clamp(48px, 7vw, 82px);
+  overflow: hidden;
+}
+.squad-player-details__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
+.squad-player-details__portrait .fut-player-card__initials {
+  width: 48px;
+  height: 48px;
+  border-color: #a5813b77;
+  background: linear-gradient(150deg, #fff7da99, #b78b3d33);
+  font-size: 1.25rem;
+}
+.squad-player-details__number {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: .75em;
+  white-space: nowrap;
+}
+.squad-player-details__club {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  font-size: .7rem;
+  line-height: 1.15;
+}
+.squad-player-details__club > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.squad-player-details__club .club-logo,
+.squad-player-details__club .club-mark {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
 }
 .squad-field--editable .squad-player-card h3 {
   display: block;
@@ -5103,6 +5188,20 @@ dialog.app-modal.share-team-modal {
   font: inherit;
   font-size: 0.8rem;
   cursor: pointer;
+}
+.squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) .squad-bench-button {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 30px;
+  margin-top: 3px;
+  padding: 3px 5px;
+  border: 1px solid #9b742a66;
+  border-radius: 6px;
+  background: #fff7d2a8;
+  color: #362811;
+  font-size: .7rem;
+  font-weight: 750;
+  text-decoration: none;
 }
 .squad-detail-modal {
   width: min(320px, calc(100vw - 24px));
@@ -5160,6 +5259,7 @@ dialog.app-modal.share-team-modal {
   .squad-field--editable .squad-slot--field {
     min-height: 146px;
   }
+  .squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) { min-height: 0; }
 }
 @media (min-width: 600px) {
   .squad-field--editable {
@@ -5182,6 +5282,12 @@ dialog.app-modal.share-team-modal {
 .squad-field--editable .squad-player-card,
 :root[data-theme="dark"] .squad-field--editable .squad-player-card {
   background: var(--surface);
+}
+.squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench),
+:root[data-theme="dark"] .squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) {
+  background:
+    radial-gradient(ellipse at 50% 8%, #fff9df 0, transparent 48%),
+    linear-gradient(145deg, #ffc400, #ffeeb7 35%, #ffcf2e 68%, #ffedb2);
 }
 
 .squad-player-card--bench {
@@ -7166,6 +7272,7 @@ form.admin-card.match-create {
     max-width: 144px;
     min-height: 132px;
   }
+  .squad-field--editable .squad-player-card--compact:not(.squad-player-card--bench) { min-height: 0; }
   .squad-field--editable .squad-player-details {
     gap: 4px;
   }

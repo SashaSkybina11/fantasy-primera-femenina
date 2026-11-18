@@ -51,10 +51,15 @@ export function SquadPlayerCard({
         <button className="squad-icon squad-icon--remove" aria-label={t("squad.remove")} disabled={disabled} onClick={onRemove}><RxCross1 className="ui-cross" aria-hidden="true" /></button>
       </>}
       <button className="squad-player-details" onClick={() => setDetailsOpen(true)} aria-label={t("squad.details", { name: entry.player.name })}>
-        <span className="jersey-number">#{entry.player.displayNumber ?? entry.player.number}</span>
-        <h3>{entry.player.name}</h3>
+        {entry.status === "STARTER" && <span className="squad-player-details__portrait">
+          {photo && failedPhoto !== photo
+            ? <img src={photo} alt="" onError={() => setFailedPhoto(photo)} />
+            : <span className="fut-player-card__initials" aria-hidden="true">{playerInitials(entry.player.name)}</span>}
+        </span>}
+        <h3>{entry.player.name}<span className="squad-player-details__number">#{entry.player.displayNumber ?? entry.player.number}</span></h3>
+        {entry.status === "STARTER" && <span className="squad-player-details__club"><ClubLogo club={entry.player.club} /><span>{entry.player.club.name}</span></span>}
       </button>
-      {!readOnly && <button className={entry.status === "BENCH" ? "squad-exchange-button" : "squad-bench-button"} aria-label={moveLabel} title={moveLabel} disabled={disabled} onClick={onMove}>{entry.status === "BENCH" ? <GoArrowRight className="ui-arrow" aria-hidden="true" /> : moveLabel}</button>}
+      {!readOnly && <button className={entry.status === "BENCH" ? "squad-exchange-button" : "squad-bench-button"} aria-label={moveLabel} title={moveLabel} disabled={disabled} onClick={onMove}>{entry.status === "BENCH" ? <GoArrowRight className="ui-arrow" aria-hidden="true" /> : t("squad.moveStarter")}</button>}
     </article>
     {detailsOpen && createPortal(<Modal title={entry.player.name} onClose={() => setDetailsOpen(false)} className="squad-detail-modal fut-player-modal" hideCloseButton>
       <article className="fut-player-card">
