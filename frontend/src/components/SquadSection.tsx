@@ -50,7 +50,7 @@ export function SquadSection({
     <SquadPlayerCard
       key={entry.id}
       entry={entry}
-      compact={!readOnly}
+      compact={status === "STARTER" || !readOnly}
       readOnly={readOnly}
       disabled={disabled}
       onMove={() => { onChange?.(); onMove?.(entry); }}

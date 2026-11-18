@@ -323,7 +323,7 @@ async function drawPoster(
       ctx.font = "800 18px system-ui, sans-serif";
       ctx.fillText(`#${entry.player.displayNumber ?? entry.player.number}`, cx, y + 116);
     }
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = "#000000";
     ctx.textAlign = "center";
     const nameSize = fitText(ctx, entry.player.name, cardW - 30, 24, 800);
     ctx.font = `800 ${nameSize}px system-ui, sans-serif`;
@@ -332,20 +332,25 @@ async function drawPoster(
       ctx.fillText(line, cx, y + 145 + lineIndex * 25, cardW - 30),
     );
     const clubY = y + 224;
-    ctx.fillStyle = "#d5deed";
+    ctx.fillStyle = "#000000";
     ctx.font = "600 16px system-ui, sans-serif";
     const logo = logos[index];
     if (logo) {
       ctx.save();
+      const clubFontSize = fitText(ctx, entry.player.club.name, cardW - 72, 16, 600);
+      ctx.font = `600 ${clubFontSize}px system-ui, sans-serif`;
+      const clubWidth = ctx.measureText(entry.player.club.name).width;
+      const logoSize = 32;
+      const groupWidth = logoSize + 8 + clubWidth;
+      const groupX = cx - groupWidth / 2;
       ctx.beginPath();
-      ctx.arc(x + 29, clubY - 7, 20, 0, Math.PI * 2);
+      ctx.arc(groupX + logoSize / 2, clubY - 7, logoSize / 2, 0, Math.PI * 2);
       ctx.clip();
-      drawCover(ctx, logo, x + 9, clubY - 27, 40, 40);
+      drawCover(ctx, logo, groupX, clubY - 23, logoSize, logoSize);
       ctx.restore();
       ctx.textAlign = "left";
-      const clubTextX = x + 50;
-      fitText(ctx, entry.player.club.name, cardW - 66, 17, 600);
-      ctx.fillText(entry.player.club.name, clubTextX, clubY, cardW - 66);
+      ctx.font = `600 ${clubFontSize}px system-ui, sans-serif`;
+      ctx.fillText(entry.player.club.name, groupX + logoSize + 8, clubY, cardW - 30);
     } else {
       ctx.textAlign = "center";
       fitText(ctx, entry.player.club.name, cardW - 30, 16, 600);

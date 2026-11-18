@@ -4222,6 +4222,22 @@ dialog.app-modal.share-team-modal {
   min-width: 0;
   padding: 0.65rem;
 }
+.public-lineup-player .squad-player-card--compact:not(.squad-player-card--bench) {
+  width: 100%;
+  max-width: none;
+  min-height: 0;
+  padding: 34px 8px 8px;
+  border-radius: 8%;
+  box-shadow: inset 0 0 0 2px #fff, 0 6px 16px #00000024;
+}
+.public-lineup-player .squad-player-details__portrait {
+  height: clamp(48px, 9vw, 82px);
+}
+.public-lineup-player .squad-player-card--compact .squad-player-details h3 {
+  font-size: 0.8rem;
+  color: #362811;
+}
+.public-lineup-player .squad-player-details__club { color: #362811; }
 .public-lineup-player .squad-player-card__main {
   min-width: 0;
 }
@@ -5013,6 +5029,7 @@ dialog.app-modal.share-team-modal {
   gap: 18px;
   min-height: 0;
   padding: var(--field-block-padding) 10px;
+  background: repeating-linear-gradient(90deg, #ffffff09 0, #ffffff09 56px, #00000006 56px, #00000006 112px), linear-gradient(180deg, #76582b, #795c34);
 }
 .squad-field--editable .squad-field__goalkeeper,
 .squad-field--editable .squad-field__players {
