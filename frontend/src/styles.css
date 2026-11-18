@@ -5172,10 +5172,16 @@ dialog.app-modal.share-team-modal {
 .squad-icon--captain {
   left: 0;
   color: #fff;
+  -webkit-text-stroke: 1px #000;
+  paint-order: stroke fill;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 45%));
 }
 .captain-status-star,
 .squad-icon--captain.is-captain {
-  color: #000;
+  color: #ffe000;
+  -webkit-text-stroke: 1px #000;
+  paint-order: stroke fill;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 45%));
 }
 .squad-icon--remove {
   right: 0;
